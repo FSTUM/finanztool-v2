@@ -1,0 +1,9 @@
+{% if letzte_rechnungen_liste %}
+    <ul>
+    {% for rechnung in letzte_rechnungen_list %}
+    <li><a href="{% url 'rechnung:rechnung' rechnung.id %}/">{{ rechnung.name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Es sind keine Rechnungen verfügbar.</p>
+{% endif %}

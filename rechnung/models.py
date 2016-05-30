@@ -17,6 +17,7 @@ class Rechnung(models.Model):
             )
     rnr = models.IntegerField(
             verbose_name='Rechnungsnummer',
+            unique=True,
             )
     rdatum = models.DateField(
             verbose_name='Rechnungsdatum',
@@ -49,11 +50,14 @@ class Rechnung(models.Model):
             'Kategorie',
             )
     def __str__(self):
-        return "{} ({})".format(self.name, self.date)
+        return "RE {} ({})".format(self.rnr, self.name)
+    def wurde_vor_kurzem_gestellt(self):
+        return self.rdatum >= timezone.now() - datetime.timedelta(days=16)
 
 class Kunde(models.Model):
     knr = models.IntegerField(
             verbose_name='Kundennummer',
+            unique=True,
             )
     organisation = models.CharField(
             verbose_name='Organisation',
@@ -102,12 +106,20 @@ class Kunde(models.Model):
             verbose_name='Stadt',
             max_length=200,
             )
+    kommentar = models.TextField(
+            verbose_name='Kommentar',
+            max_length=1000,
+            null=True,
+            blank=True,
+            )
+    def __str__(self):
+        return "{}: {} ({})".format(self.knr, self.name, self.organisation)
 
 class Kategorie(models.Model):
     name = models.CharField(
             verbose_name='Kategorie',
             max_length=100,
-            default='Unkategorisiert',
+            unique=True,
             )
     def __str__(self):
         return self.name
@@ -145,4 +157,6 @@ class AnzahlPosten(models.Model):
             verbose_name='Anzahl',
             default=1,
             )
+    def __str__(self):
+        return "{}: {} ({}x)".format(self.rechnung, self.posten, self.anzahl)
 

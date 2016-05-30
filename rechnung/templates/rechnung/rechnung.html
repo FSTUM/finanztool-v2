@@ -1,0 +1,6 @@
+<h1>{{ rechnung.name }}</h1>
+<ul>
+{% for posten in rechnung.posten.all %}
+<li>{{ posten.name }} ({{ posten.einzelpreis }} €)   [{{ posten.mwst }}%]</li>
+{% endfor %}
+</ul>
