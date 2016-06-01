@@ -1,6 +1,67 @@
-<h1>{{ rechnung.name }}</h1>
-<ul>
-{% for posten in rechnung.posten.all %}
-<li>{{ posten.name }} ({{ posten.einzelpreis }} €)   [{{ posten.mwst }}%]</li>
-{% endfor %}
-</ul>
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}RE {{ rechnung.rnr }}{% endblock %}
+
+{% block content %}
+<h1>RE {{ rechnung.rnr }}: {{ rechnung.name }}</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Übersicht</h3>
+        <br/>
+    <table class="table table-striped" >
+            <tr>
+                <th>Rechnungsdatum</th>
+                <td>{{ rechnung.rdatum }}</td>
+            </tr>
+            <tr>
+                <th>Lieferdatum</div>
+                <td>{{ rechnung.ldatum }}</td>
+            </tr>
+            <tr>
+                <th>Gestellt von</th>
+                <td>{{ rechnung.ersteller }}</td>
+            </tr>
+            <tr>
+                <th>Rechnung gestellt?</th>
+                <td>
+                    {% if rechnung.gestellt %}
+                        {% bootstrap_icon "ok" %}
+                    {% else %}
+                        {% bootstrap_icon "remove" %}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Kunde</th>
+                <td>{{ rechnung.kunde }}</td>
+            </tr>
+            <tr>
+                <th>Kategorie</th>
+                <td>{{ rechnung.kategorie }}</td>
+            </tr>
+        </table>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Posten</h3>
+        <br/>
+    <table class="table" >
+        <tr>
+            <th>Bezeichnung</th>
+            <th>Einzelpreis</th>
+            <th>Mwst-Satz</th>
+        </tr>
+        {% for posten in rechnung.posten.all %}
+        <tr>
+            <td>{{ posten.name }}</td>
+            <td>{{ posten.einzelpreis }} €</td>
+            <td>{{ posten.mwst }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
