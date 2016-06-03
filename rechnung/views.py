@@ -23,7 +23,9 @@ def index(request):
 
 def rechnung(request, rechnung_id):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
+#    anzahlposten = get_object_or_404(AnzahlPosten, pk=rechnung_id)
     return render(request, 'rechnung/rechnung.html', {'rechnung': rechnung})
+#    return render(request, 'rechnung/rechnung.html', {'rechnung': rechnung},{'anzahlposten':anzahlposten})
 
 
 def rechnungpdf(request, rechnung_id):
@@ -34,7 +36,7 @@ def rechnungpdf(request, rechnung_id):
     latex_file, latex_filename = mkstemp(suffix='.tex', dir=tmplatex)
 
     # Pass the TeX template through Django templating engine and into the temp file
-    os.write(latex_file, render_to_string('rechnung/rechnung.tex', {'content': 'whatever'}).encode('utf8'))
+    os.write(latex_file, render_to_string('rechnung/latex_rechnung.tex', {'rechnung': rechnung}).encode('utf8'))
     os.close(latex_file)
 
     # Compile the TeX file with PDFLaTeX
@@ -42,7 +44,6 @@ def rechnungpdf(request, rechnung_id):
         subprocess.check_output(["pdflatex", "-halt-on-error", "-output-directory", tmplatex, latex_filename])
     except subprocess.CalledProcessError as e:
         return render(request, 'rechnung/rechnungpdf_error.html', { 'erroroutput': e.output })
-
 
     # replace '%RECHNUNGSINHALT%'
 #    latex = template.replace('%RECHNUNGSINHALT%', latex_code)
@@ -61,6 +62,8 @@ def rechnungpdf(request, rechnung_id):
 
     with open(pdf_filename, 'rb') as f:
         response.write(f.read())
+
+    shutil.rmtree(tmplatex)
 
     return response
 

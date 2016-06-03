@@ -4,7 +4,11 @@
 {% block title %}RE {{ rechnung.rnr }}{% endblock %}
 
 {% block content %}
-<h1>RE {{ rechnung.rnr }}: {{ rechnung.name }}</h1>
+<h1>RE {{ rechnung.rnr }}: {{ rechnung.name }} 
+    <a href="{% url "rechnung:rechnungpdf" rechnung.id %}" class="btn btn-info" role="button">
+        {% bootstrap_icon "download-alt" %} Download Rechnung
+    </a>
+</h1>
 
 <div class="row">
     <div class="col-md-6">
@@ -50,15 +54,19 @@
         <br/>
     <table class="table" >
         <tr>
+{#            <th>Anzahl</th> #}
             <th>Bezeichnung</th>
             <th>Einzelpreis</th>
             <th>Mwst-Satz</th>
         </tr>
         {% for posten in rechnung.posten.all %}
         <tr>
+{#            {% for countposten in posten.anzahlposten.all %} #}
+{#            <td>{{ countposten.anzahl }} </td> #}
             <td>{{ posten.name }}</td>
             <td>{{ posten.einzelpreis }} €</td>
-            <td>{{ posten.mwst }}%</td>
+            <td>{{ posten.mwst }}</td>
+{#            {% endfor %} #}
         </tr>
         {% endfor %}
     </table>

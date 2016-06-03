@@ -1,0 +1,61 @@
+\documentclass[a4paper,12pt,top=1.5cm,bottom=1.5cm]{article}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{eurosym}
+\usepackage{geometry}
+\usepackage{etoolbox}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\geometry{margin=2cm}
+%\pagestyle{empty}
+
+
+\begin{document}
+%Firma oben rechts
+\raggedleft{\parbox[c]{10cm}{
+    \raggedleft \bf Verein zur Studienförderung der Fachschaft Mathematik/Physik/Informatik e. V.}}
+\\[8ex]
+
+%Adressfeld
+\raggedright{\parbox[c]{8cm}{
+    \raggedright \scriptsize Verein zur Studienförderung der FS MPI e. V., Boltzmannstraße 3, 85748 Garching\\[1ex] \hrule}}\\[3ex]
+\raggedright
+\notblank{ {{ rechnung.kunde.organisation }} }{ {{ rechnung.kunde.organisation }} \\}{}
+\notblank{ {{ rechnung.kunde.suborganisation }} }{ {{ rechnung.kunde.suborganisation }} \\}{}
+\notblank{ {{ rechnung.kunde.vorname }}{{ rechnung.kunde.name }} }{ {{ rechnung.kunde.vorname }} {{ rechnung.kunde.name}} \\}{}
+{{ rechnung.kunde.strasse }}\\
+{{ rechnung.kunde.plz }} {{ rechnung.kunde.stadt }}\\[3ex]
+
+%Infofeld
+\hfill{\parbox[c]{7.5cm}{
+    \begin{tabular}{ll}
+        Kundennummer: & {{ rechnung.kunde.knr }} \\[-0.5ex]
+        Rechnungsnummer: & {{ rechnung.rnr }} \\[-0.5ex]
+        Rechnungsdatum: & {{ rechnung.rdatum }} \\[-0.5ex]
+        Lieferdatum: & {{ rechnung.ldatum }} \\[2ex]
+    \end{tabular}
+}}
+
+%Text
+\large{\bf Rechnung}\\[3ex]
+\normalsize
+\if{rechnung.kunde.anrede='w'}
+Sehr geehrte Frau
+\else{Sehr geehrter Herr}
+\fi
+{{ rechnung.kunde.name }},\\[2ex]
+
+{{ rechnung.einleitung }}\\[2ex]
+
+\hfil
+\begin{tabular}{llll}
+    \toprule
+    Anzahl & Bezeichnung & Einzelpreis & Mwst-Satz\\
+    \midrule
+    \forall{ {{ posten }} \in {{ rechnung.posten.all }} }
+        a & b & c & d\\
+%        anzahl & {{ posten.name }} & {{ posten.einzelpreis }} & {{ posten.mwst }}\\
+    \endfor
+    \bottomrule
+\end{tabular}
+\end{document}
