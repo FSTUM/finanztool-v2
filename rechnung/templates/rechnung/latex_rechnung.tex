@@ -6,19 +6,56 @@
 \usepackage{etoolbox}
 \usepackage{booktabs}
 \usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{longtable}
 \geometry{margin=2cm}
-%\pagestyle{empty}
-
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\textheight = 670pt
+\textwidth = 18cm
 
 \begin{document}
-%Firma oben rechts
-\raggedleft{\parbox[c]{10cm}{
-    \raggedleft \bf Verein zur Studienförderung der Fachschaft Mathematik/Physik/Informatik e. V.}}
-\\[8ex]
+%Header%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lhead{}
+\chead{}
+\rhead{\bf Verein zur Studienförderung der Fachschaft\\Mathematik/Physik/Informatik e. V.}
+\headsep = 2 cm
 
-%Adressfeld
+%Footer%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lfoot{}
+\cfoot{
+    \parbox[c][2.5cm][t]{5.5cm}{
+        \scriptsize
+        Studienförderung der Fachschaft\\
+        Mathematik/Physik/Informatik e. V.\\
+        Boltzmannstraße 3\\
+        85748 Garching}
+    \parbox[c][2.5cm][t]{3.5cm}{
+        \scriptsize
+        Kreissparkasse München-\\
+        Starnberg-Ebersberg\\
+        Konto 027 003 722\\
+        BLZ 702 501 50}
+    \parbox[c][2.5cm][t]{4.5cm}{
+        {\tiny IBAN \& BIC:\\}
+        \scriptsize
+        DE68 7025 0150 0027 0037 22\\
+        BYLADEM1KMS\\[0.75ex]
+        USt-ID: DE129519467}
+    \parbox[c][2.5cm][t]{3cm}{
+        \scriptsize
+        T 089/289 18545\\
+        F 089/289 18546\\
+        finanz@fs.tum.de\\
+        http://mpi.fs.tum.de}
+}
+\rfoot{}
+\footskip = -30pt
+
+
+%Adressfeld%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \raggedright{\parbox[c]{8cm}{
-    \raggedright \scriptsize Verein zur Studienförderung der FS MPI e. V., Boltzmannstraße 3, 85748 Garching\\[1ex] \hrule}}\\[3ex]
+    \raggedright \scriptsize Verein zur Studienförderung der FS MPI e. V., Boltzmannstraße 3, 85748 Garching\\[1ex] \hrule}}\\[2ex]
 \raggedright
 \notblank{ {{ rechnung.kunde.organisation }} }{ {{ rechnung.kunde.organisation }} \\}{}
 \notblank{ {{ rechnung.kunde.suborganisation }} }{ {{ rechnung.kunde.suborganisation }} \\}{}
@@ -26,7 +63,7 @@
 {{ rechnung.kunde.strasse }}\\
 {{ rechnung.kunde.plz }} {{ rechnung.kunde.stadt }}\\[3ex]
 
-%Infofeld
+%Infofeld%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hfill{\parbox[c]{7.5cm}{
     \begin{tabular}{ll}
         Kundennummer: & {{ rechnung.kunde.knr }} \\[-0.5ex]
@@ -36,7 +73,7 @@
     \end{tabular}
 }}
 
-%Text
+%Text%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \large{\bf Rechnung}\\[3ex]
 \normalsize
 \if{rechnung.kunde.anrede='w'}
@@ -47,15 +84,26 @@ Sehr geehrte Frau
 
 {{ rechnung.einleitung }}\\[3ex]
 
-\begin{tabular}{llll}
+%Posten%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{longtable}{rp{8cm}rr}
     \toprule
     Anzahl & Bezeichnung & Einzelpreis & Summe Netto\\
     \midrule
+    \endhead
     {% for posten in rechnung.anzahlposten_set.all %}
         {{ posten.anzahl }} & {{ posten.posten.name }} & {{ posten.posten.einzelpreis }} \euro & {{ posten.summenetto }} \euro\\[1.5ex]
     {% endfor %}
     \bottomrule
-    Gesamt & & & {{ rechnung.gesamtsumme }} \euro\\
+     & & Zwischensumme: & {{ rechnung.zwischensumme }} \euro\\
+     & & Gesamt: & {{ rechnung.gesamtsumme }} \euro\\
     \bottomrule
-\end{tabular}
+    \bottomrule\\[4ex]
+\end{longtable}
+
+Bitte überweisen Sie den Rechnungsbetrag ohne Abzug bis zum {{ rechnung.rdatum }}
+auf das unten angegebene Konto mit Verwendungszweck {\bf RE {{ rechnung.rnr }} \ 
+KD {{ rechnung.kunde.knr }}}.\\[2ex]
+Bei Rückfragen stehen wir Ihnen gerne zur Verfügung!
+
+
 \end{document}

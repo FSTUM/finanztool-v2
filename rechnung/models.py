@@ -54,6 +54,13 @@ class Rechnung(models.Model):
         return "RE {} ({})".format(self.rnr, self.name)
 
     @property
+    def zwischensumme(self):
+        summe = Decimal(0)
+        for posten in self.anzahlposten_set.all():
+            summe = summe + posten.summenetto
+        return Decimal(round(summe,2))
+
+    @property
     def gesamtsumme(self):
         summe = Decimal(0)
         for posten in self.anzahlposten_set.all():
@@ -180,11 +187,13 @@ class AnzahlPosten(models.Model):
 
     @property
     def summenetto(self):
-        return self.anzahl * self.posten.einzelpreis
+        summe = self.anzahl * self.posten.einzelpreis
+        return Decimal(round(summe,2))
 
     @property
     def summebrutto(self):
-        return self.summenetto * (1+self.posten.get_mwst)
+        summe= self.summenetto * (1+self.posten.get_mwst)
+        return Decimal(round(summe,2))
 
     def __str__(self):
         return "{}: {} ({}x)".format(self.rechnung, self.posten, self.anzahl)
