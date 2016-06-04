@@ -49,8 +49,17 @@ class Rechnung(models.Model):
     kategorie = models.ForeignKey(
             'Kategorie',
             )
+
     def __str__(self):
         return "RE {} ({})".format(self.rnr, self.name)
+
+    @property
+    def gesamtsumme(self):
+        summe = Decimal(0)
+        for posten in self.anzahlposten_set.all():
+            summe = summe + posten.summebrutto
+        return Decimal(round(summe,2))
+
     def wurde_vor_kurzem_gestellt(self):
         return self.rdatum >= timezone.now() - datetime.timedelta(days=16)
 
@@ -134,10 +143,21 @@ class Posten(models.Model):
             decimal_places=6,
             max_digits=20,
             )
+    MWSTSATZ = (
+            (0 , '0 %'),
+            (7 , '7 %'),
+            (19 , '19 %'),
+            )
     mwst = models.IntegerField(
             verbose_name='Mehrwertsteuersatz',
-            default=19,
+            choices=MWSTSATZ,
+            default = 19,
             )
+
+    @property
+    def get_mwst(self):
+        return Decimal(int(self.mwst)) / Decimal(100)
+
     def __str__(self):
         return self.name
 
@@ -157,6 +177,15 @@ class AnzahlPosten(models.Model):
             verbose_name='Anzahl',
             default=1,
             )
+
+    @property
+    def summenetto(self):
+        return self.anzahl * self.posten.einzelpreis
+
+    @property
+    def summebrutto(self):
+        return self.summenetto * (1+self.posten.get_mwst)
+
     def __str__(self):
         return "{}: {} ({}x)".format(self.rechnung, self.posten, self.anzahl)
 

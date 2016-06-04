@@ -49,26 +49,32 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-10">
         <h3>Posten</h3>
         <br/>
     <table class="table" >
         <tr>
-{#            <th>Anzahl</th> #}
+            <th>Anzahl</th>
             <th>Bezeichnung</th>
             <th>Einzelpreis</th>
+            <th>Summe Netto</th>
             <th>Mwst-Satz</th>
+            <th>Summe Brutto</th>
         </tr>
-        {% for posten in rechnung.posten.all %}
+        {% for posten in rechnung.anzahlposten_set.all %}
         <tr>
-{#            {% for countposten in posten.anzahlposten.all %} #}
-{#            <td>{{ countposten.anzahl }} </td> #}
-            <td>{{ posten.name }}</td>
-            <td>{{ posten.einzelpreis }} €</td>
-            <td>{{ posten.mwst }}</td>
-{#            {% endfor %} #}
+            <td>{{ posten.anzahl }} </td>
+            <td>{{ posten.posten.name }}</td>
+            <td>{{ posten.posten.einzelpreis }} €</td>
+            <td>{{ posten.summenetto }} €</td>
+            <td>{{ posten.posten.get_mwst_display }}</td>
+            <td>{{ posten.summebrutto }} €</td>
         </tr>
         {% endfor %}
+        <tr>
+            <th>Gesamt (brutto):</th>
+            <td>{{ rechnung.gesamtsumme }} €</td>
+        </tr>
     </table>
 </div>
 

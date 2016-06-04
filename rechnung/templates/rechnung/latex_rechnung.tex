@@ -45,17 +45,17 @@ Sehr geehrte Frau
 \fi
 {{ rechnung.kunde.name }},\\[2ex]
 
-{{ rechnung.einleitung }}\\[2ex]
+{{ rechnung.einleitung }}\\[3ex]
 
-\hfil
 \begin{tabular}{llll}
     \toprule
-    Anzahl & Bezeichnung & Einzelpreis & Mwst-Satz\\
+    Anzahl & Bezeichnung & Einzelpreis & Summe Netto\\
     \midrule
-    \forall{ {{ posten }} \in {{ rechnung.posten.all }} }
-        a & b & c & d\\
-%        anzahl & {{ posten.name }} & {{ posten.einzelpreis }} & {{ posten.mwst }}\\
-    \endfor
+    {% for posten in rechnung.anzahlposten_set.all %}
+        {{ posten.anzahl }} & {{ posten.posten.name }} & {{ posten.posten.einzelpreis }} \euro & {{ posten.summenetto }} \euro\\[1.5ex]
+    {% endfor %}
+    \bottomrule
+    Gesamt & & & {{ rechnung.gesamtsumme }} \euro\\
     \bottomrule
 \end{tabular}
 \end{document}
