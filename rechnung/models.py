@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils import timezone
-from datetime import date
+from datetime import date, datetime, timedelta
 from decimal import Decimal
 
 # Create your models here.
@@ -29,6 +29,10 @@ class Rechnung(models.Model):
             null=True,
             blank=True,
             )
+#    fdatum = models.DateField(
+#            verbose_name='Fälligkeit am',
+#            default=date.today + timedelta(days=15),
+#            )
     gestellt = models.BooleanField(
             verbose_name='Rechnung gestellt?',
             )
@@ -188,12 +192,17 @@ class AnzahlPosten(models.Model):
     @property
     def summenetto(self):
         summe = self.anzahl * self.posten.einzelpreis
+        return summe
+
+    @property
+    def summenettogerundet(self):
+        summe = self.anzahl * self.posten.einzelpreis
         return Decimal(round(summe,2))
 
     @property
     def summebrutto(self):
         summe= self.summenetto * (1+self.posten.get_mwst)
-        return Decimal(round(summe,2))
+        return summe
 
     def __str__(self):
         return "{}: {} ({}x)".format(self.rechnung, self.posten, self.anzahl)

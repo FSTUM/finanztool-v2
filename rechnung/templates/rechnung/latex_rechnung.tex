@@ -18,7 +18,9 @@
 %Header%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \lhead{}
 \chead{}
-\rhead{\bf Verein zur Studienförderung der Fachschaft\\Mathematik/Physik/Informatik e. V.}
+\rhead{\bf
+    Verein zur Studienförderung der Fachschaft\\
+    Mathematik/Physik/Informatik e. V.}
 \headsep = 2 cm
 
 %Footer%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -55,30 +57,38 @@
 
 %Adressfeld%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \raggedright{\parbox[c]{8cm}{
-    \raggedright \scriptsize Verein zur Studienförderung der FS MPI e. V., Boltzmannstraße 3, 85748 Garching\\[1ex] \hrule}}\\[2ex]
+    \raggedright \scriptsize
+    Verein zur Studienförderung der FS MPI e. V.,
+    Boltzmannstraße 3, 85748 Garching\\[1ex] \hrule}}\\[2ex]
 \raggedright
-\notblank{ {{ rechnung.kunde.organisation }} }{ {{ rechnung.kunde.organisation }} \\}{}
-\notblank{ {{ rechnung.kunde.suborganisation }} }{ {{ rechnung.kunde.suborganisation }} \\}{}
-\notblank{ {{ rechnung.kunde.vorname }}{{ rechnung.kunde.name }} }{ {{ rechnung.kunde.vorname }} {{ rechnung.kunde.name}} \\}{}
+\notblank{ {{ rechnung.kunde.organisation }} }
+    { {{ rechnung.kunde.organisation }} \\}{}
+\notblank{ {{ rechnung.kunde.suborganisation }} }
+    { {{ rechnung.kunde.suborganisation }} \\}{}
+\notblank{ {{ rechnung.kunde.vorname }}{{ rechnung.kunde.name }} }
+    { {{ rechnung.kunde.vorname }} {{ rechnung.kunde.name}} \\}{}
 {{ rechnung.kunde.strasse }}\\
 {{ rechnung.kunde.plz }} {{ rechnung.kunde.stadt }}\\[3ex]
+
 
 %Infofeld%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hfill{\parbox[c]{7.5cm}{
     \begin{tabular}{ll}
         Kundennummer: & {{ rechnung.kunde.knr }} \\[-0.5ex]
         Rechnungsnummer: & {{ rechnung.rnr }} \\[-0.5ex]
-        Rechnungsdatum: & {{ rechnung.rdatum }} \\[-0.5ex]
-        Lieferdatum: & {{ rechnung.ldatum }} \\[2ex]
+        \notblank{rechnung.ldatum}
+            {Lieferdatum: & {{ rechnung.ldatum }} \\[-0.5ex]}{}
+        Rechnungsdatum: & {{ rechnung.rdatum }} \\[2ex]
     \end{tabular}
 }}
 
 %Text%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \large{\bf Rechnung}\\[3ex]
 \normalsize
-\if{rechnung.kunde.anrede='w'}
+\ifnum\pdfstrcmp{ {{ rechnung.kunde.anrede }} }{ w }=0
 Sehr geehrte Frau
-\else{Sehr geehrter Herr}
+\else
+Sehr geehrter Herr
 \fi
 {{ rechnung.kunde.name }},\\[2ex]
 
@@ -87,22 +97,26 @@ Sehr geehrte Frau
 %Posten%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{longtable}{rp{8cm}rr}
     \toprule
-    Anzahl & Bezeichnung & Einzelpreis & Summe Netto\\
+    Anzahl & Bezeichnung & Einzelpreis & Summe {\small (netto)}\\
     \midrule
     \endhead
     {% for posten in rechnung.anzahlposten_set.all %}
-        {{ posten.anzahl }} & {{ posten.posten.name }} & {{ posten.posten.einzelpreis }} \euro & {{ posten.summenetto }} \euro\\[1.5ex]
+        {{ posten.anzahl }} &
+        {{ posten.posten.name }} &
+        {{ posten.posten.einzelpreis }} \euro &
+        {{ posten.summenettogerundet }} \euro\\[2ex]
     {% endfor %}
     \bottomrule
      & & Zwischensumme: & {{ rechnung.zwischensumme }} \euro\\
-     & & Gesamt: & {{ rechnung.gesamtsumme }} \euro\\
+     & & {\bf Gesamt:} & {\bf {{ rechnung.gesamtsumme }} \euro}\\
     \bottomrule
-    \bottomrule\\[4ex]
+    \bottomrule\\[3ex]
 \end{longtable}
 
-Bitte überweisen Sie den Rechnungsbetrag ohne Abzug bis zum {{ rechnung.rdatum }}
-auf das unten angegebene Konto mit Verwendungszweck {\bf RE {{ rechnung.rnr }} \ 
-KD {{ rechnung.kunde.knr }}}.\\[2ex]
+%Endtext%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Bitte überweisen Sie den Rechnungsbetrag ohne Abzug bis zum
+{{ rechnung.rdatum }} auf das unten angegebene Konto mit Verwendungszweck
+{\bf RE {{ rechnung.rnr }} \ KD {{ rechnung.kunde.knr }}}.\\[2ex]
 Bei Rückfragen stehen wir Ihnen gerne zur Verfügung!
 
 
