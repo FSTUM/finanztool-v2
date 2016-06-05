@@ -1,6 +1,7 @@
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.template.loader import render_to_string
+from .forms import KundeForm
 
 from tempfile import mkdtemp, mkstemp
 from subprocess import call
@@ -74,9 +75,20 @@ def rechnungpdf(request, rechnung_id):
 
 
 def kunde(request, kunde_id):
-    response = "Kunde %s."
-    return HttpResponse(response % kunde_id)
+    kunde = get_object_or_404(Kunde, pk=kunde_id)
+    return render(request, 'rechnung/kunde.html', {'kunde': kunde})
 
+def form_kunde(request):
+    if request.method == "POST":
+        form = KundeForm(request.POST)
+
+        if form.is_valid():
+            kunde = form.save()
+            return redirect('rechnung:kunde', kunde_id=kunde.pk)
+    else:
+        form = KundeForm()
+
+    return render(request, 'rechnung/form_kunde.html', {'form': form})
 
 def posten(request, posten_id):
     return HttpResponse("Posten %s." % posten_id)

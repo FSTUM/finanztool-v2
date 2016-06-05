@@ -27,7 +27,10 @@ urlpatterns = [
 #Kunde##############################################################
 
     # ex: /kunde/5/
-    url(r'^(?P<kunde_id>[0-9]+)/$', views.kunde, name='kunde'),
+    url(r'^kunde/(?P<kunde_id>[0-9]+)/$', views.kunde, name='kunde'),
+
+    #ex: /kunde/
+    url(r'^kunde/$', views.form_kunde, name='form_kunde'),
 
 
 #Posten#############################################################

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Kunde {{ kunde.knr }}{% endblock %}
+
+{% block content %}
+<h1>Kunde {{ kunde.knr }}</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Details</h3>
+        <br/>
+    <table class="table table-striped" >
+            <tr>
+                <th>Organisation</th>
+                <td>{{ kunde.organisation }}</td>
+            </tr>
+            <tr>
+                <th>Suborganisation</th>
+                <td>{{ kunde.suborganisation }}</td>
+            </tr>
+            <tr>
+                <th>Person</th>
+                <td>{{ kunde.andrede }} {{ kunde.vorname }} {{ kunde.name }}</td>
+            </tr>
+            <tr>
+                <th>Adresse</th>
+                <td>{{ kunde.strasse }}, {{ kunde.plz }} {{ kunde.stadt }}</td>
+            </tr>
+            <tr>
+                <th>Kommentar</th>
+                <td>{{ kunde.kommentar }}</td>
+            </tr>
+    </table>
+</div>
+
+{% endblock %}
