@@ -2,6 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.template.loader import render_to_string
 from .forms import KundeForm
+from .forms import RechnungForm
+from .forms import KategorieForm
 
 from tempfile import mkdtemp, mkstemp
 from subprocess import call
@@ -69,9 +71,17 @@ def rechnungpdf(request, rechnung_id):
     return response
 
 
-#def rechnung_add(request):
-#    context = {}
-#    return render(request, 'rechnung/rechnung_add.html', context)
+def form_rechnung(request):
+    if request.method == "POST":
+        form = RechnungForm(request.POST)
+
+        if form.is_valid():
+            rechnung = form.save()
+            return redirect('rechnung:rechnung', rechnung_id=rechnung.pk)
+    else:
+        form = RechnungForm()
+
+    return render(request, 'rechnung/form_rechnung.html', {'form': form})
 
 
 def kunde(request, kunde_id):
@@ -93,3 +103,20 @@ def form_kunde(request):
 def posten(request, posten_id):
     return HttpResponse("Posten %s." % posten_id)
 
+#Kategorie####################################################################
+
+def kategorie(request, kategorie_id):
+    kategorie = get_object_or_404(Kategorie, pk=kategorie_id)
+    return render(request, 'rechnung/kategorie.html', {'kategorie': kategorie})
+
+def form_kategorie(request):
+    if request.method == "POST":
+        form = KategorieForm(request.POST)
+
+        if form.is_valid():
+            kategorie = form.save()
+            return redirect('rechnung:kategorie', kategorie_id=kategorie.pk)
+    else:
+        form = KategorieForm()
+
+    return render(request, 'rechnung/form_kategorie.html', {'form': form})
