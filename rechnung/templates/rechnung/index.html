@@ -5,6 +5,38 @@
 
 {% block content %}
     {% if letzte_rechnungen_liste %}
+        <div class="row">
+            <div class="col-md-10">
+                <h3>Letzte Rechnungen</h3>
+                <br/>
+                <table class="table borderless">
+                    <tr>
+                        <th>Rechnungsnr.</th>
+                        <th>Zweck</th>
+                        <th>Kunde</th>
+                        <th>Rechnungsdatum</th>
+                        <th>Kategorie</th>
+                        <th>Gestellt?</th>
+                    </tr>
+                    {% for rechnung in letzte_rechnungen_liste %}
+                    <tr>
+                        <td><a href="{% url 'rechnung:rechnung' rechnung.id %}">RE {{ rechnung.rnr }}</a></td>
+                        <td>{{ rechnung.name }}</td>
+                        <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde }}</td>
+                        <td>{{ rechnung.rdatum }}</td>
+                        <td><a href="{% url 'rechnung:kategorie' rechnung.kategorie.id %}">{{ rechnung.kategorie }}</td>
+                        <td>
+                            {% if rechnung.gestellt %}
+                                {% bootstrap_icon "ok" %}
+                            {% else %}
+                                {% bootstrap_icon "remove" %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
         <ul>
         {% for rechnung in letzte_rechnungen_liste %}
         <li><a href="{% url 'rechnung:rechnung' rechnung.id %}">{{ rechnung.name }}</a></li>

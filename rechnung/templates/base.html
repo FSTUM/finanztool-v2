@@ -50,6 +50,9 @@
                                 {% endblocktrans %}
                              </p>
                             <li><a href="{% url "rechnung:index" %}">Index</a></li>
+                            <li><a href="{% url "rechnung:form_rechnung" %}">{% bootstrap_icon "plus" %} Rechnung</a></li>
+                            <li><a href="{% url "rechnung:form_kunde" %}">{% bootstrap_icon "plus" %} Kunde</a></li>
+                            <li><a href="{% url "rechnung:form_kategorie" %}">{% bootstrap_icon "plus" %} Kategorie</a></li>
                             {# {% if user.is_superuser or user|has_perm_group %} #}
                             {# <li><a href="{% url "admin" %}">{% trans "Admin" context "Admin interface" %}</a></li> #}
                             {# {% endif %} #}
