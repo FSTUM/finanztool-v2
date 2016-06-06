@@ -19,10 +19,12 @@ from .models import Posten
 from .models import AnzahlPosten
 
 def index(request):
-    letzte_rechnungen_liste = Rechnung.objects.order_by('-rdatum')[:5]
+    letzte_rechnungen_liste = Rechnung.objects.order_by('-rdatum')[:10]
     context = {'letzte_rechnungen_liste': letzte_rechnungen_liste}
     return render(request, 'rechnung/index.html', context)
 
+
+#Rechnung#####################################################################
 
 def rechnung(request, rechnung_id):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
@@ -30,6 +32,8 @@ def rechnung(request, rechnung_id):
     return render(request, 'rechnung/rechnung.html', {'rechnung': rechnung})
 #    return render(request, 'rechnung/rechnung.html', {'rechnung': rechnung},{'anzahlposten':anzahlposten})
 
+def rechnungsuchen(request):
+    return render(request, 'rechnung/rechnungsuchen.html')
 
 def rechnungpdf(request, rechnung_id):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
@@ -48,17 +52,8 @@ def rechnungpdf(request, rechnung_id):
     except subprocess.CalledProcessError as e:
         return render(request, 'rechnung/rechnungpdf_error.html', { 'erroroutput': e.output })
 
-    # replace '%RECHNUNGSINHALT%'
-#    latex = template.replace('%RECHNUNGSINHALT%', latex_code)
-
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="RE%s.pdf"' % rechnung.rnr
-
-# da latex code rein
-# latex aufrufen (pdflatex)
-# fehler prüfne
-# keine fehler: ausgeben und ordner löschen
-# fehler: meldung
 
     # return path to pdf
     pdf_filename= "%s.pdf" % os.path.splitext(latex_filename)[0]
@@ -84,9 +79,14 @@ def form_rechnung(request):
     return render(request, 'rechnung/form_rechnung.html', {'form': form})
 
 
+#Kunde########################################################################
+
 def kunde(request, kunde_id):
     kunde = get_object_or_404(Kunde, pk=kunde_id)
     return render(request, 'rechnung/kunde.html', {'kunde': kunde})
+
+def kundesuchen(request):
+    return render(request, 'rechnung/kundesuchen.html')
 
 def form_kunde(request):
     if request.method == "POST":
@@ -100,8 +100,12 @@ def form_kunde(request):
 
     return render(request, 'rechnung/form_kunde.html', {'form': form})
 
+
+#Posten#######################################################################
+
 def posten(request, posten_id):
     return HttpResponse("Posten %s." % posten_id)
+
 
 #Kategorie####################################################################
 

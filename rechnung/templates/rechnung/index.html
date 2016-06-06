@@ -37,11 +37,6 @@
                 </table>
             </div>
         </div>
-        <ul>
-        {% for rechnung in letzte_rechnungen_liste %}
-        <li><a href="{% url 'rechnung:rechnung' rechnung.id %}">{{ rechnung.name }}</a></li>
-        {% endfor %}
-        </ul>
     {% else %}
         <p>Es sind keine Rechnungen verfügbar.</p>
     {% endif %}

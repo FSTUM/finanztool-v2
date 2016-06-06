@@ -20,6 +20,9 @@ urlpatterns = [
     #ex: /rechnung/5/pdf
     url(r'^(?P<rechnung_id>[0-9]+)/pdf/$', views.rechnungpdf, name='rechnungpdf'),
 
+    # ex: /rechnung/suchen
+    url(r'^suchen/$', views.rechnungsuchen, name='rechnungsuchen'),
+
     # ex: /rechnung/add
     url(r'^add/$', views.form_rechnung, name='form_rechnung'),
 
@@ -28,6 +31,9 @@ urlpatterns = [
 
     # ex: /rechnung/kunde/5/
     url(r'^kunde/(?P<kunde_id>[0-9]+)/$', views.kunde, name='kunde'),
+
+    # ex: /rechnung/kunde/suchen/
+    url(r'^kunde/suchen/$', views.kundesuchen, name='kundesuchen'),
 
     #ex: /rechnung/kunde/add/
     url(r'^kunde/add/$', views.form_kunde, name='form_kunde'),
