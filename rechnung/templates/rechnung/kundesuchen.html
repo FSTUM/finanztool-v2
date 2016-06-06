@@ -16,12 +16,36 @@
 
     {% if not new_search %}
         {% if result %}
-            <h3>Ergebnisse</h3>
-            <ul>
-                {% for kunde in result %}
-                    <li><a href="{% url "rechnung:kunde" kunde.id %}">{{ kunde }}</a></li>
-                {% endfor %}
-            </ul>
+        <div class="row">
+            <div class="col-md-10">
+                <h3>Ergebnisse</h3>
+                <br/>
+                <table class="table borderless">
+                    <tr>
+                        <th>Kundennr.</th>
+                        <th>Organisation</th>
+                        <th>Suborganisation</th>
+                        <th>Name</th>
+                        <th>Adresse</th>
+                        <th>Kommentar</th>
+                    </tr>
+                    {% for kunde in result %}
+                    <tr>
+                        <td><a href="{% url 'rechnung:kunde' kunde.id %}">RE {{ kunde.knr }}</a></td>
+                        <td>{{ kunde.organisation }}</td>
+                        <td>{{ kunde.suborganisation }}</td>
+                        {% if kunde.anrede == "w" %}
+                            <td>Frau {{ kunde.vorname }} {{ kunde.name }}</td>
+                        {% else %}
+                            <td>Herr {{ kunde.vorname }} {{ kunde.name }}</td>
+                        {% endif %}
+                        <td>{{ kunde.strasse }},{{ kunde.plz }} {{ kunde.stadt }}</td>
+                        <td>{{ kunde.kommentar }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
         {% else %}
         {% endif %}
     {% endif %}

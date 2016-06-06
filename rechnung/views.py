@@ -5,6 +5,7 @@ from .forms import KundeForm
 from .forms import RechnungForm
 from .forms import KategorieForm
 from .forms import KundeSuchenForm
+from .forms import RechnungSuchenForm
 
 from tempfile import mkdtemp, mkstemp
 from subprocess import call
@@ -34,7 +35,23 @@ def rechnung(request, rechnung_id):
 #    return render(request, 'rechnung/rechnung.html', {'rechnung': rechnung},{'anzahlposten':anzahlposten})
 
 def rechnungsuchen(request):
-    return render(request, 'rechnung/rechnungsuchen.html')
+
+    form = RechnungSuchenForm(request.POST or None)
+
+    result = None
+    new_search = True
+
+    if form.is_valid():
+        result = form.get()
+        new_search = False
+
+    context = {
+            'form': form,
+            'result': result,
+            'new_search': new_search
+            }
+
+    return render(request, 'rechnung/rechnungsuchen.html', context)
 
 def rechnungpdf(request, rechnung_id):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)

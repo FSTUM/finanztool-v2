@@ -57,6 +57,30 @@ class RechnungForm(forms.ModelForm):
                 'kategorie',
                 )
 
+class RechnungSuchenForm(forms.Form):
+    pattern = forms.CharField(
+        min_length=2,
+        max_length=100,
+        label=("Suche"),
+    )
+
+    def get(self):
+        p = self.cleaned_data['pattern']
+
+        data = Rechnung.objects.filter(Q(name__icontains=p) |
+                                            Q(rnr__icontains=p) |
+                                            Q(einleitung__icontains=p) |
+                                            Q(kategorie__name__icontains=p) |
+                                            Q(kunde__knr__icontains=p) |
+                                            Q(kunde__organisation__icontains=p) |
+                                            Q(kunde__suborganisation__icontains=p) |
+                                            Q(kunde__name__icontains=p) |
+                                            Q(kunde__vorname__icontains=p) |
+                                            Q(kunde__strasse__icontains=p) |
+                                            Q(kunde__stadt__icontains=p) |
+                                            Q(kunde__kommentar__icontains=p))
+        return data
+
 class KategorieForm(forms.ModelForm):
     class Meta:
         model = Kategorie
