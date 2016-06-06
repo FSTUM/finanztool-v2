@@ -143,9 +143,14 @@ def posten(request, posten_id):
 
 #Kategorie####################################################################
 
-def kategorie(request, kategorie_id):
-    kategorie = get_object_or_404(Kategorie, pk=kategorie_id)
-    return render(request, 'rechnung/kategorie.html', {'kategorie': kategorie})
+def kategorie(request):
+    kategorien_liste = Kategorie.objects.order_by('name')
+    context = {'kategorien_liste': kategorien_liste}
+    return render(request, 'rechnung/kategorie.html', context)
+
+def kategorie_detail(request, kategorie_detail_id):
+    kategorie_detail = get_object_or_404(Kategorie, pk=kategorie_detail_id)
+    return render(request, 'rechnung/kategorie_detail.html', {'kategorie_detail': kategorie_detail})
 
 def form_kategorie(request):
     if request.method == "POST":

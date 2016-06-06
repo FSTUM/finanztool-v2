@@ -46,8 +46,11 @@ urlpatterns = [
 
 #Kategorie##########################################################
 
+    #ex: /rechnung/kategorie/
+    url(r'^kategorie/$', views.kategorie, name='kategorie'),
+
     #ex: /rechnung/kategorie/5/
-    url(r'^kategorie/(?P<kategorie_id>[0-9]+)/$', views.kategorie, name='kategorie'),
+    url(r'^kategorie/(?P<kategorie_detail_id>[0-9]+)/$', views.kategorie_detail, name='kategorie_detail'),
 
     #ex: /rechnung/kategorie/add/
     url(r'^kategorie/add/$', views.form_kategorie, name='form_kategorie'),
