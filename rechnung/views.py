@@ -4,6 +4,7 @@ from django.template.loader import render_to_string
 from .forms import KundeForm
 from .forms import RechnungForm
 from .forms import KategorieForm
+from .forms import KundeSuchenForm
 
 from tempfile import mkdtemp, mkstemp
 from subprocess import call
@@ -86,7 +87,23 @@ def kunde(request, kunde_id):
     return render(request, 'rechnung/kunde.html', {'kunde': kunde})
 
 def kundesuchen(request):
-    return render(request, 'rechnung/kundesuchen.html')
+
+    form = KundeSuchenForm(request.POST or None)
+
+    result = None
+    new_search = True
+
+    if form.is_valid():
+        result = form.get()
+        new_search = False
+
+    context = {
+            'form': form,
+            'result': result,
+            'new_search': new_search
+            }
+
+    return render(request, 'rechnung/kundesuchen.html', context)
 
 def form_kunde(request):
     if request.method == "POST":
