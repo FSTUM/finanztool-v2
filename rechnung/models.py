@@ -7,6 +7,9 @@ from django.utils import timezone
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 
+def get_faelligkeit_default():
+    return date.today() + timedelta(days=15)
+
 # Create your models here.
 class Rechnung(models.Model):
     name = models.CharField(
@@ -29,12 +32,17 @@ class Rechnung(models.Model):
             null=True,
             blank=True,
             )
-#    fdatum = models.DateField(
-#            verbose_name='Fälligkeit am',
-#            default=date.today + timedelta(days=15),
-#            )
+    fdatum = models.DateField(
+            verbose_name='Fälligkeitsdatum (default: +15 Tage)',
+            default=get_faelligkeit_default
+            )
     gestellt = models.BooleanField(
             verbose_name='Rechnung gestellt?',
+            default=False,
+            )
+    bezahlt = models.BooleanField(
+            verbose_name='Rechnung beglichen?',
+            default=False,
             )
     ersteller = models.ForeignKey(
             User,

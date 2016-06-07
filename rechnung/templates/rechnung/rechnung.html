@@ -9,6 +9,11 @@
         {% bootstrap_icon "download-alt" %} Download Rechnung
     </a>
 </h1>
+<h2>
+    <a href="{% url "rechnung:rechnung_aendern" rechnung.id %}" class="btn btn-info" role="button">
+        {% bootstrap_icon "edit" %} Rechnung bearbeiten
+    </a>
+</h2>
 
 <div class="row">
     <div class="col-md-6">
@@ -20,8 +25,12 @@
                 <td>{{ rechnung.rdatum }}</td>
             </tr>
             <tr>
-                <th>Lieferdatum</div>
+                <th>Lieferdatum</th>
                 <td>{{ rechnung.ldatum }}</td>
+            </tr>
+            <tr>
+                <th>Fälligkeitsdatum</th>
+                <td>{{ rechnung.fdatum }}</td>
             </tr>
             <tr>
                 <th>Gestellt von</th>
@@ -31,6 +40,16 @@
                 <th>Rechnung gestellt?</th>
                 <td>
                     {% if rechnung.gestellt %}
+                        {% bootstrap_icon "ok" %}
+                    {% else %}
+                        {% bootstrap_icon "remove" %}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Rechnung bezahlt?</th>
+                <td>
+                    {% if rechnung.bezahlt %}
                         {% bootstrap_icon "ok" %}
                     {% else %}
                         {% bootstrap_icon "remove" %}

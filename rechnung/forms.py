@@ -49,8 +49,10 @@ class RechnungForm(forms.ModelForm):
                 'rnr',
                 'name',
                 'rdatum',
+                'fdatum',
                 'ldatum',
                 'gestellt',
+                'bezahlt',
                 'ersteller',
                 'kunde',
                 'einleitung',
@@ -80,6 +82,9 @@ class RechnungSuchenForm(forms.Form):
                                             Q(kunde__stadt__icontains=p) |
                                             Q(kunde__kommentar__icontains=p))
         return data
+
+class RechnungAendernForm(forms.Form):
+    
 
 class KategorieForm(forms.ModelForm):
     class Meta:
