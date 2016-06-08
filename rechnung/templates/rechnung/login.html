@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <h1>Login</h1>
+
+    <form action="{% url "rechnung:login" %}" method="post" accept-charset="utf-8" role="form">
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-xs-12 col-lg-5">
+                {% bootstrap_form form %}
+            </div>
+        </div>
+
+        <input type="hidden" name="next" value="{{ next }}" />
+        <input type="submit" value="Login" class="btn btn-default" />
+    </form>
+{% endblock %}
+
+

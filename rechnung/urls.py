@@ -1,4 +1,8 @@
-from django.conf.urls import url
+from django.conf import settings
+from django.conf.urls import url, include
+from django.views.generic import TemplateView
+from django.contrib.auth import views as auth_views
+
 from . import views
 
 app_name = 'rechnung'
@@ -10,6 +14,21 @@ urlpatterns = [
 
     # ex: /rechnung/
     url(r'^$', views.index, name='index'),
+
+    # ex: /rechnung/admin/
+    url(r'^admin/$', views.admin, name='admin'),
+
+    # ex: /rechnung/login/
+    url(r'^login/$',
+        auth_views.login,
+        {'template_name': 'rechnung/login.html'},
+        name='login'),
+
+    # ex: /rechnung/logout/
+    url(r'^logout/$',
+        auth_views.logout,
+        {'next_page': '/rechnung/'},
+        name='logout'),
 
 
 #Rechnung###########################################################

@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.template.loader import render_to_string
+
 from .forms import KundeForm
 from .forms import RechnungForm
 from .forms import KategorieForm
@@ -24,6 +26,12 @@ def index(request):
     letzte_rechnungen_liste = Rechnung.objects.order_by('-rdatum')[:10]
     context = {'letzte_rechnungen_liste': letzte_rechnungen_liste}
     return render(request, 'rechnung/index.html', context)
+
+def admin(request):
+    return render(request, 'rechnung/admin.html')
+
+def logout(request):
+    return render(request, 'rechnung/logout.html')
 
 
 #Rechnung#####################################################################
@@ -82,22 +90,6 @@ def rechnungpdf(request, rechnung_id):
     shutil.rmtree(tmplatex)
 
     return response
-
-def form_rechnung_aendern(request, rechnung_id):
-    rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
-
-    if request.method == "POST":
-        form = RechnungAendernForm(request.POST, instance=rechnung)
-
-        if form.is_valid():
-            rechnung=form.save()
-            return redirect('rechnung:rechnung', rechnung_id=rechnung.pk)
-        else:
-            form = RechnungAendernForm(instance=rechnung)
-    else:
-        form = RechnungAendernForm(instance=rechnung)
-
-    return render(request, 'rechnung/form_rechnung_aendern.html', {'rechnung': rechnung})
 
 def form_rechnung(request, rechnung_id=None):
     rechnung = None

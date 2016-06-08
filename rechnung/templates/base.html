@@ -50,6 +50,10 @@
                                 {% endblocktrans %}
                              </p>
                             <li><a href="{% url "rechnung:index" %}">Index</a></li>
+                            {#{% if user.is_superuser or user|has_perm_group %}#}
+                            {#{% if user.is_superuser %}#}
+                                <li><a href="{% url "rechnung:admin" %}">Admin</a></li>
+                                {# {% endif %}#}
                             <li>
                                 <div class="dropdown">
                                   <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px;">Rechnung
@@ -80,13 +84,10 @@
                                   </ul>
                                 </div>
                             </li>
-                            {# {% if user.is_superuser or user|has_perm_group %} #}
-                            {# <li><a href="{% url "admin" %}">{% trans "Admin" context "Admin interface" %}</a></li> #}
-                            {# {% endif %} #}
-                            {# <li><a href="{% url "change_user" %}">{% trans "Account" %}</a></li> #}
-                            {# <li><a href="{% url "logout" %}">{% trans "Logout" %}</a></li> #}
+                            <li><a href="{% url "rechnung:logout" %}">{% trans "Logout" %}</a></li> 
                         {% else %}
                             <li><a href="{% url "rechnung:index" %}">Index</a></li>
+                            <li><a href="{% url "rechnung:login" %}">Login</a></li>
                         {% endif %}
                         {# end login #}
                     </ul>
@@ -100,8 +101,16 @@
                 {% bootstrap_messages messages %}
             {% endif %}
 
-            {# content #}
-            {% block content %}{% endblock %}
+            {% if user.is_authenticated %}
+                {# content #}
+                {% block content %}
+                {% endblock %}
+            {% else %}
+                {% block notloggedin %}
+                    <h1>Willkommen beim Rechnungstool!</h1>
+                    <h3><a href="{% url 'rechnung:login' %}">Melde dich an.</a></h3>
+                {%endblock %}
+            {% endif %}
         </div>
 
         <footer class="footer">
