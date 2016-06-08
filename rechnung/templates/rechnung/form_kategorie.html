@@ -9,7 +9,9 @@
         <div class="col-md-5">
             <form method="POST">{% csrf_token %}
                 {% bootstrap_form form %}
-                <button type="submit" class"save btn btn-default">Sichern</button>
+                <button type="submit" class="save btn btn-default">
+                    {% bootstrap_icon "floppy-disk" %} Sichern
+                </button>
             </form>
         </div>
     </div>

@@ -32,6 +32,11 @@
                             {% bootstrap_icon "ok" %}
                             </td>
                             <td>
+                                {% if rechnung.faellig %}
+                                    {% if not rechnung.bezahlt %}
+                                        <span style="color : red;">
+                                    {% endif %}
+                                {% endif %}
                                 {{ rechnung.fdatum }}
                             </td>
                             <td>
