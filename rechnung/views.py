@@ -85,25 +85,33 @@ def rechnungpdf(request, rechnung_id):
 
 def form_rechnung_aendern(request, rechnung_id):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
+
     if request.method == "POST":
         form = RechnungAendernForm(request.POST, instance=rechnung)
+
         if form.is_valid():
             rechnung=form.save()
             return redirect('rechnung:rechnung', rechnung_id=rechnung.pk)
         else:
             form = RechnungAendernForm(instance=rechnung)
-    form = RechnungAendernForm(instance=rechnung)
+    else:
+        form = RechnungAendernForm(instance=rechnung)
+
     return render(request, 'rechnung/form_rechnung_aendern.html', {'rechnung': rechnung})
 
-def form_rechnung(request):
+def form_rechnung(request, rechnung_id=None):
+    rechnung = None
+    if rechnung_id:
+        rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
+
     if request.method == "POST":
-        form = RechnungForm(request.POST)
+        form = RechnungForm(request.POST, instance=rechnung)
 
         if form.is_valid():
             rechnung = form.save()
             return redirect('rechnung:rechnung', rechnung_id=rechnung.pk)
     else:
-        form = RechnungForm()
+        form = RechnungForm(instance=rechnung)
 
     return render(request, 'rechnung/form_rechnung.html', {'form': form})
 

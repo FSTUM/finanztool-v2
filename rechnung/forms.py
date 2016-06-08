@@ -59,6 +59,12 @@ class RechnungForm(forms.ModelForm):
                 'kategorie',
                 )
 
+    def __init__(self, *args, **kwargs):
+        super(RechnungForm, self).__init__(*args, **kwargs)
+
+        if self.instance.pk:
+            self.fields.pop('rnr')
+
 class RechnungSuchenForm(forms.Form):
     pattern = forms.CharField(
         min_length=2,
@@ -82,9 +88,6 @@ class RechnungSuchenForm(forms.Form):
                                             Q(kunde__stadt__icontains=p) |
                                             Q(kunde__kommentar__icontains=p))
         return data
-
-class RechnungAendernForm(forms.Form):
-    
 
 class KategorieForm(forms.ModelForm):
     class Meta:
