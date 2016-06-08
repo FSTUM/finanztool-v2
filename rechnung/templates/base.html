@@ -19,7 +19,11 @@
 
         <link href="{% static "rechnung/style.css" %}" media="all" rel="stylesheet">
 
-        <title>{% block title %}Finanz - Rechnungen{% endblock %}</title>
+        {% if user.is_authenticated %}
+            <title>{% block title %}Finanz - Rechnungen{% endblock %}</title>
+        {% else %}
+            <title>Finanz - Rechnungen</title>
+        {% endif %}
     </head>
 
     <body>
@@ -46,10 +50,10 @@
                         {% if user.is_authenticated %}
                             <p class="navbar-text">
                                 {% blocktrans trimmed with username=user.first_name %}
-                                    Hello {{ username }}!
+                                    Hallo {{ username }}!
                                 {% endblocktrans %}
                              </p>
-                            <li><a href="{% url "rechnung:index" %}">Index</a></li>
+                            <li><a href="{% url "rechnung:index" %}">Übersicht</a></li>
                             {#{% if user.is_superuser or user|has_perm_group %}#}
                             {#{% if user.is_superuser %}#}
                                 <li><a href="{% url "rechnung:admin" %}">Admin</a></li>
