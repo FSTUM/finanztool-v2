@@ -24,7 +24,7 @@
                             <th class="text-right">Mwst-Satz</th>
                             <th class="text-right">Summe Brutto</th>
                         </tr>
-                        {% for posten in rechnung.posten.anzahlposten_set.all %}
+                        {% for posten in rechnung.anzahlposten_set.all %}
                         <tr>
                             <td align="right">{{ posten.anzahl }} </td>
                             <td><a href="{% url 'rechnung:posten' posten.id %}">{{ posten.posten.name }}</td>
