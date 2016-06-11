@@ -2,9 +2,11 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.template.loader import render_to_string
+from django.forms import inlineformset_factory
 
 from .forms import KundeForm
 from .forms import RechnungForm
+from .forms import PostenForm
 from .forms import KategorieForm
 from .forms import KundeSuchenForm
 from .forms import RechnungSuchenForm
@@ -38,9 +40,7 @@ def logout(request):
 
 def rechnung(request, rechnung_id):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
-#    anzahlposten = get_object_or_404(AnzahlPosten, pk=rechnung_id)
     return render(request, 'rechnung/rechnung.html', {'rechnung': rechnung})
-#    return render(request, 'rechnung/rechnung.html', {'rechnung': rechnung},{'anzahlposten':anzahlposten})
 
 def rechnungsuchen(request):
 
@@ -108,6 +108,14 @@ def form_rechnung(request, rechnung_id=None):
     return render(request, 'rechnung/form_rechnung.html', {'form': form})
 
 
+# Formular rechnung bis auf Posten
+# Formular Posten
+# view schreiben, der die rechnung form anzeigt, und darunter eine tabelle mit allen posten und darunter ein neues posten formular
+# form prefix (wenn field name gleich z.b.)
+# posten form anpassen, damit sie anzahlposten beinhaltet
+# view: formulare speichern, anzahlposten, wenn neu angelegt, zur rechnung hinzufügen
+
+
 #Kunde########################################################################
 
 def kunde(request, kunde_id):
@@ -149,8 +157,24 @@ def form_kunde(request):
 #Posten#######################################################################
 
 def posten(request, posten_id):
-    return HttpResponse("Posten %s." % posten_id)
+    posten = get_object_or_404(Posten, pk=posten_id)
+    return render(request, 'rechnung/posten.html', {'posten': posten})
 
+def form_posten(request, posten_id=None):
+    posten = None
+    if posten_id:
+        posten = get_object_or_404(Posten, pk=posten_id)
+
+    if request.method == "POST":
+        form = PostenForm(request.POST, instance=posten)
+
+        if form.is_valid():
+            posten = form.save()
+            return redirect('rechnung:posten', posten_id=posten.pk)
+    else:
+        form = PostenForm(instance=posten)
+
+    return render(request, 'rechnung/form_posten.html', {'form': form})
 
 #Kategorie####################################################################
 

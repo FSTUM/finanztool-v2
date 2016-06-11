@@ -66,6 +66,9 @@ urlpatterns = [
     # ex: /rechnung/posten/5/
     url(r'^posten/(?P<posten_id>[0-9]+)/$', views.posten, name='posten'),
 
+    # ex: /rechnung/posten/5/aendern
+    url(r'^posten/(?P<posten_id>[0-9]+)/aendern/$', views.form_posten, name='posten_aendern'),
+
 #Kategorie##########################################################
 
     #ex: /rechnung/kategorie/

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Posten {{ posten.name }}{% endblock %}
+
+{% block content %}
+<h1>Posten {{ posten.name }}</h1>
+<h2>
+    <a href="{% url "rechnung:posten_aendern" posten.id %}" class="btn btn-info" role="button">
+        {% bootstrap_icon "pencil" %} Posten bearbeiten
+    </a>
+</h2>
+
+<div class="row">
+    <div class="col-md-3">
+        <h3>Übersicht</h3>
+        <br/>
+    <table class="table table-striped">
+            <tr>
+                <th>Einzelpreis</th>
+                <td>{{ posten.einzelpreis }} €</td>
+            </tr>
+            <tr>
+                <th>Mehrwertsteuersatz</th>
+                <td>{{ posten.mwst }} %</td>
+            </tr>
+    </table>
+    </div>
+</div>
+{% endblock %}
+

@@ -31,7 +31,7 @@
                     </tr>
                     {% for kunde in result %}
                     <tr>
-                        <td><a href="{% url 'rechnung:kunde' kunde.id %}">RE {{ kunde.knr }}</a></td>
+                        <td><a href="{% url 'rechnung:kunde' kunde.id %}">{{ kunde.knr }}</a></td>
                         <td>{{ kunde.organisation }}</td>
                         <td>{{ kunde.suborganisation }}</td>
                         {% if kunde.anrede == "w" %}
