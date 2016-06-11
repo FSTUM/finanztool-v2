@@ -105,11 +105,9 @@ def form_rechnung(request, rechnung_id=None):
     else:
         form = RechnungForm(instance=rechnung)
 
-    return render(request, 'rechnung/form_rechnung.html', {'form': form})
+    return render(request, 'rechnung/form_rechnung.html', {'form': form, 'rechnung':rechnung})
 
 
-# Formular rechnung bis auf Posten
-# Formular Posten
 # view schreiben, der die rechnung form anzeigt, und darunter eine tabelle mit allen posten und darunter ein neues posten formular
 # form prefix (wenn field name gleich z.b.)
 # posten form anpassen, damit sie anzahlposten beinhaltet

@@ -45,8 +45,8 @@ urlpatterns = [
     # ex: /rechnung/suchen
     url(r'^suchen/$', views.rechnungsuchen, name='rechnungsuchen'),
 
-    # ex: /rechnung/add
-    url(r'^add/$', views.form_rechnung, name='form_rechnung'),
+    # ex: /rechnung/edit
+    url(r'^edit/$', views.form_rechnung, name='form_rechnung'),
 
 
 #Kunde##############################################################

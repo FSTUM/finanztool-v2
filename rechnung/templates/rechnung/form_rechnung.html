@@ -9,6 +9,35 @@
         <div class="col-md-5">
             <form method="POST">{% csrf_token %}
                 {% bootstrap_form form %}
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <h3>Posten</h3>
+                        <br/>
+                    <table class="table" >
+                        <tr>
+                            <th class="text-right">Anzahl</th>
+                            <th>Bezeichnung</th>
+                            <th class="text-right">Einzelpreis</th>
+                            <th class="text-right">Summe Netto</th>
+                            <th class="text-right">Summe Netto Gerundet</th>
+                            <th class="text-right">Mwst-Satz</th>
+                            <th class="text-right">Summe Brutto</th>
+                        </tr>
+                        {% for posten in rechnung.posten.anzahlposten_set.all %}
+                        <tr>
+                            <td align="right">{{ posten.anzahl }} </td>
+                            <td><a href="{% url 'rechnung:posten' posten.id %}">{{ posten.posten.name }}</td>
+                            <td align="right">{{ posten.posten.einzelpreis }} €</td>
+                            <td align="right">{{ posten.summenetto }} €</td>
+                            <td align="right">{{ posten.summenettogerundet }} €</td>
+                            <td align="right">{{ posten.posten.get_mwst_display }}</td>
+                            <td align="right">{{ posten.summebrutto }} €</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+                </div>
                 <button type="submit" class="save btn btn-default">
                     {% bootstrap_icon "floppy-disk" %} Sichern
                 </button>
