@@ -76,8 +76,8 @@ class PostenForm(forms.ModelForm):
                 'anzahl',
                 )
 
-    def __init__(self, *args, **kwargs):
-        super(PostenForm, self).__init__(*args, **kwargs)
+#    def __init__(self):
+#        self._meta.get_fields['name'].widget.attrs.update({'autofocus': ''})
 
 class RechnungSuchenForm(forms.Form):
     pattern = forms.CharField(

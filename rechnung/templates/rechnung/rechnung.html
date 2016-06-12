@@ -81,19 +81,15 @@
                 <th>Bezeichnung</th>
                 <th class="text-right">Einzelpreis</th>
                 <th class="text-right">Summe Netto</th>
-                <th class="text-right">Netto Gerundet</th>
                 <th class="text-right">Mwst-Satz</th>
-                <th class="text-right">Summe Brutto</th>
             </tr>
             {% for posten in rechnung.posten_set.all %}
             <tr>
                 <td align="right">{{ posten.anzahl }} </td>
                 <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</td>
                 <td align="right">{{ posten.einzelpreis }} €</td>
-                <td align="right">{{ posten.summenetto }} €</td>
                 <td align="right">{{ posten.summenettogerundet }} €</td>
                 <td align="right">{{ posten.get_mwst_display }}</td>
-                <td align="right">{{ posten.summebrutto }} €</td>
             </tr>
             {% endfor %}
         </table>
@@ -106,11 +102,15 @@
             </tr>
             <tr>
                 <th>Zzgl. Mehrwertsteuer 7%</th>
-                <td align="right">{{ rechnung.gesamtsumme }} €</td>
+                <td align="right">{{ rechnung.summe_mwst_7 }} €</td>
+            </tr>
+            <tr>
+                <th>Zzgl. Mehrwertsteuer 19%</th>
+                <td align="right">{{ rechnung.summe_mwst_19 }} €</td>
             </tr>
             <tr>
                 <th>Gesamt (brutto):</th>
-                <td align="right">{{ rechnung.gesamtsumme }} €</td>
+                <td align="right"><b>{{ rechnung.gesamtsumme }} €<b></td>
             </tr>
         </table>
     </div>

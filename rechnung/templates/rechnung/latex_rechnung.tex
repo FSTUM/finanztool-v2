@@ -87,37 +87,50 @@
     \large{\bf Rechnung}\\[3ex]
     \normalsize
     \ifnum\pdfstrcmp{ {{ rechnung.kunde.anrede }} }{ w }=0
-    Sehr geehrte Frau{{ rechnung.kunde.name }},\\[2ex]
-    \elifnum\pdfstrcmp{ {{ rechnung.kunde.anrede }} }{ m }=0
-    Sehr geehrter Herr{{ rechnung.kunde.name }},\\[2ex]
+        Sehr geehrte Frau {{ rechnung.kunde.name }},\\[2ex]
     \else
-    Sehr geehrte Damen und Herren,\\[2ex]
+        \ifnum\pdfstrcmp{ {{ rechnung.kunde.anrede }} }{ m }=0
+            Sehr geehrter Herr {{ rechnung.kunde.name }},\\[2ex]
+        \else
+            Sehr geehrte Damen und Herren,\\[2ex]
+        \fi
     \fi
 
     {{ rechnung.einleitung }}\\[3ex]
 
     %Posten%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    \begin{longtable}{rp{8cm}rr}
+    \begin{longtable}{rp{8cm}rrp{0.75cm}}
         \toprule
-        Anzahl & Bezeichnung & Einzelpreis & Summe {\small (netto)}\\
+        Anzahl & Bezeichnung & Einzelpreis & Summe {\small (netto)} & Mwst\\
         \midrule
         \endhead
         {% for posten in rechnung.posten_set.all %}
             {{ posten.anzahl }} &
             {{ posten.name }} &
             {{ posten.einzelpreis }} \euro &
-            {{ posten.summenettogerundet }} \euro\\[2ex]
+            {{ posten.summenettogerundet }} \euro &
+            \ifnum\pdfstrcmp{ {{ posten.mwst }} }{ 7 }=0
+                B\\[1.5ex]
+            \else
+                \ifnum\pdfstrcmp{ {{ posten.mwst }} }{ 19 }=0
+                    A\\[1.5ex]
+                \else
+                    \\[1.5ex]
+                \fi
+            \fi
         {% endfor %}
         \bottomrule
-         & & Zwischensumme: & {{ rechnung.zwischensumme }} \euro\\
-         & & {\bf Gesamt:} & {\bf {{ rechnung.gesamtsumme }} \euro}\\
+         & Zwischensumme: & & {{ rechnung.zwischensumme }} \euro &\\
+         & {\footnotesize\ Zzgl. Mwst 19 \% (A):} & & {\footnotesize{{ rechnung.summe_mwst_19 }} \euro} &\\
+         & {\footnotesize\ Zzgl. Mwst 7 \% (B):} & & {\footnotesize{{ rechnung.summe_mwst_7 }} \euro} &\\
+         & {\bf Gesamt:} & & {\bf {{ rechnung.gesamtsumme }} \euro} &\\
         \bottomrule
-        \bottomrule\\[3ex]
+        \bottomrule\\[-1ex]
     \end{longtable}
 
     %Endtext%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    Bitte überweisen Sie den Rechnungsbetrag ohne Abzug bis zum
-    {{ rechnung.rdatum }} auf das unten angegebene Konto mit Verwendungszweck
+    Bitte überweisen Sie den Rechnungsbetrag von {\bf {{ rechnung.gesamtsumme }}} \euro\ ohne Abzug bis zum
+    {{ rechnung.fdatum }} auf das unten angegebene Konto mit Verwendungszweck
     {\bf RE {{ rechnung.rnr }} \ KD {{ rechnung.kunde.knr }}}.\\[2ex]
     Bei Rückfragen stehen wir Ihnen gerne zur Verfügung!
 

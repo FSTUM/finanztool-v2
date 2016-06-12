@@ -70,18 +70,25 @@ class Rechnung(models.Model):
         return Decimal(round(summe,2))
 
     @property
-    def gesamtsumme(self):
+    def summe_mwst_7(self):
         summe = Decimal(0)
-        for posten in self.posten_set.all():
-            summe = summe + posten.summebrutto
+        for posten in self.posten_set.filter(mwst=7):
+            summe = summe + (posten.summenetto * Decimal(0.07))
         return Decimal(round(summe,2))
 
-#    @property
-#    def summe_mwst_7(self):
-#        summe = Decimal(0)
-#        for posten in self.posten_set.get(mwst=7):
-#            summe = summe + (posten.einzelpreis * Decimal(0.07))
-#        return Decimal(summe)
+    @property
+    def summe_mwst_19(self):
+        summe = Decimal(0)
+        for posten in self.posten_set.filter(mwst=19):
+            summe = summe + (posten.einzelpreis * Decimal(0.19))
+        return Decimal(round(summe,2))
+
+    #durch addieren mit mwst berechnet
+    @property
+    def gesamtsumme(self):
+        summe = Decimal(self.zwischensumme + self.summe_mwst_7 + self.summe_mwst_19)
+        return Decimal(round(summe,2))
+
 
     def wurde_vor_kurzem_gestellt(self):
         return self.rdatum >= timezone.now() - datetime.timedelta(days=16)
@@ -201,10 +208,6 @@ class Posten(models.Model):
     def summenettogerundet(self):
         summe = self.anzahl * self.einzelpreis
         return Decimal(round(summe,2))
-
-#    @property
-#    def mwst_anteil(self):
-#        return Decimal 
 
     @property
     def summebrutto(self):
