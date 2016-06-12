@@ -7,6 +7,7 @@ from django.utils import timezone
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 
+
 def get_faelligkeit_default():
     return date.today() + timedelta(days=15)
 
@@ -74,6 +75,13 @@ class Rechnung(models.Model):
         for posten in self.posten_set.all():
             summe = summe + posten.summebrutto
         return Decimal(round(summe,2))
+
+#    @property
+#    def summe_mwst_7(self):
+#        summe = Decimal(0)
+#        for posten in self.posten_set.get(mwst=7):
+#            summe = summe + (posten.einzelpreis * Decimal(0.07))
+#        return Decimal(summe)
 
     def wurde_vor_kurzem_gestellt(self):
         return self.rdatum >= timezone.now() - datetime.timedelta(days=16)
@@ -193,6 +201,10 @@ class Posten(models.Model):
     def summenettogerundet(self):
         summe = self.anzahl * self.einzelpreis
         return Decimal(round(summe,2))
+
+#    @property
+#    def mwst_anteil(self):
+#        return Decimal 
 
     @property
     def summebrutto(self):

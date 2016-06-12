@@ -7,6 +7,9 @@
     <h1>Posten hinzufügen</h1>
     <div class="row">
         <div class="col-md-5">
+            <h4><b><span style="color : red;">
+                Bitte gültige LaTex-Formatierung verwenden (z.B. \& für &, \\ für Absatz)
+            </b></h4>
             <form method="POST">{% csrf_token %}
                 {% bootstrap_form form %}
                 <button type="submit" name="weiter" class="save btn btn-default">

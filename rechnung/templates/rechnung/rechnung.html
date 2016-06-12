@@ -81,7 +81,7 @@
                 <th>Bezeichnung</th>
                 <th class="text-right">Einzelpreis</th>
                 <th class="text-right">Summe Netto</th>
-                <th class="text-right">Summe Netto Gerundet</th>
+                <th class="text-right">Netto Gerundet</th>
                 <th class="text-right">Mwst-Satz</th>
                 <th class="text-right">Summe Brutto</th>
             </tr>
@@ -96,22 +96,20 @@
                 <td align="right">{{ posten.summebrutto }} €</td>
             </tr>
             {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-10">
+        <table class="table">
             <tr>
-                <td></td>
-                <th>Zwischensumme:</th>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <th>Zwischensumme (netto):</th>
                 <td align="right">{{ rechnung.zwischensumme }} €</td>
             </tr>
             <tr>
-                <td></td>
+                <th>Zzgl. Mehrwertsteuer 7%</th>
+                <td align="right">{{ rechnung.gesamtsumme }} €</td>
+            </tr>
+            <tr>
                 <th>Gesamt (brutto):</th>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
                 <td align="right">{{ rechnung.gesamtsumme }} €</td>
             </tr>
         </table>

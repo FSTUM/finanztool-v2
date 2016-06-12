@@ -6,13 +6,16 @@
 {% block content %}
     <h1>Rechnung hinzufügen</h1>
     <div class="row">
-        <form method="POST">{% csrf_token %}
-            <div class="col-md-6">
+        <div class="col-md-6">
+            <h4><b><span style="color : red;">
+                Bitte gültige LaTex-Formatierung verwenden (z.B. \& für &, \\ für Absatz)
+            </b></h4>
+            <form method="POST">{% csrf_token %}
                 {% bootstrap_form form %}
-            <button type="submit" class="save btn btn-default">
-                {% bootstrap_icon "floppy-disk" %} Sichern
-            </button>
-            </div>
-        </form>
+                <button type="submit" class="save btn btn-default">
+                    {% bootstrap_icon "floppy-disk" %} Sichern
+                </button>
+            </form>
+        </div>
     </div>
 {% endblock %}
