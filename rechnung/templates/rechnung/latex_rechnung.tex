@@ -100,7 +100,7 @@ Sehr geehrter Herr
     Anzahl & Bezeichnung & Einzelpreis & Summe {\small (netto)}\\
     \midrule
     \endhead
-    {% for posten in rechnung.anzahlposten_set.all %}
+    {% for posten in rechnung.posten_set.all %}
         {{ posten.anzahl }} &
         {{ posten.posten.name }} &
         {{ posten.posten.einzelpreis }} \euro &

@@ -54,10 +54,6 @@ class Rechnung(models.Model):
             verbose_name='Einleitender Text nach "Sehr geehrte..."',
             max_length=1000,
             )
-    posten = models.ManyToManyField(
-            'Posten',
-            through="AnzahlPosten",
-            )
     kategorie = models.ForeignKey(
             'Kategorie',
             )
@@ -68,14 +64,14 @@ class Rechnung(models.Model):
     @property
     def zwischensumme(self):
         summe = Decimal(0)
-        for posten in self.anzahlposten_set.all():
+        for posten in self.posten_set.all():
             summe = summe + posten.summenetto
         return Decimal(round(summe,2))
 
     @property
     def gesamtsumme(self):
         summe = Decimal(0)
-        for posten in self.anzahlposten_set.all():
+        for posten in self.posten_set.all():
             summe = summe + posten.summebrutto
         return Decimal(round(summe,2))
 
@@ -156,6 +152,10 @@ class Kategorie(models.Model):
         return self.name
 
 class Posten(models.Model):
+    rechnung = models.ForeignKey(
+            Rechnung,
+            on_delete=models.CASCADE
+            )
     name = models.CharField(
             verbose_name='Bezeichnung',
             max_length=100,
@@ -175,46 +175,30 @@ class Posten(models.Model):
             choices=MWSTSATZ,
             default = 19,
             )
+    anzahl = models.IntegerField(
+            verbose_name='Anzahl',
+            default = 1,
+            )
 
     @property
     def get_mwst(self):
         return Decimal(int(self.mwst)) / Decimal(100)
 
-    def __str__(self):
-        return self.name
-
-class AnzahlPosten(models.Model):
-    class Meta:
-        unique_together = (
-                'posten',
-                'rechnung',
-                )
-    posten = models.ForeignKey(
-            'Posten',
-            )
-    rechnung = models.ForeignKey(
-            'Rechnung',
-            )
-    anzahl = models.IntegerField(
-            verbose_name='Anzahl',
-            default=1,
-            )
-
     @property
     def summenetto(self):
-        summe = self.anzahl * self.posten.einzelpreis
+        summe = self.anzahl * self.einzelpreis
         return summe
 
     @property
     def summenettogerundet(self):
-        summe = self.anzahl * self.posten.einzelpreis
+        summe = self.anzahl * self.einzelpreis
         return Decimal(round(summe,2))
 
     @property
     def summebrutto(self):
-        summe= self.summenetto * (1+self.posten.get_mwst)
+        summe= self.summenetto * (1+self.get_mwst)
         return summe
 
     def __str__(self):
-        return "{}: {} ({}x)".format(self.rechnung, self.posten, self.anzahl)
+        return self.name
 

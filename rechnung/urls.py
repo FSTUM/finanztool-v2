@@ -36,17 +36,21 @@ urlpatterns = [
     # ex: /rechnung/5/
     url(r'^(?P<rechnung_id>[0-9]+)/$', views.rechnung, name='rechnung'),
 
-    #ex: /rechnung/5/pdf
-    url(r'^(?P<rechnung_id>[0-9]+)/pdf/$', views.rechnungpdf, name='rechnungpdf'),
+    # ex: /rechnung/neu
+    url(r'^neu/$', views.form_rechnung, name='rechnung_neu'),
 
     #ex: /rechnung/5/aendern
     url(r'^(?P<rechnung_id>[0-9]+)/aendern/$', views.form_rechnung, name='rechnung_aendern'),
 
+    # ex: /rechnung/5/posten/neu
+    url(r'^(?P<rechnung_id>[0-9]+)/posten/neu/$', views.form_posten, name='rechnung_posten_neu'),
+
+    #ex: /rechnung/5/pdf
+    url(r'^(?P<rechnung_id>[0-9]+)/pdf/$', views.rechnungpdf, name='rechnungpdf'),
+
     # ex: /rechnung/suchen
     url(r'^suchen/$', views.rechnungsuchen, name='rechnungsuchen'),
 
-    # ex: /rechnung/edit
-    url(r'^edit/$', views.form_rechnung, name='form_rechnung'),
 
 
 #Kunde##############################################################
@@ -54,11 +58,14 @@ urlpatterns = [
     # ex: /rechnung/kunde/5/
     url(r'^kunde/(?P<kunde_id>[0-9]+)/$', views.kunde, name='kunde'),
 
+    #ex: /rechnung/kunde/neu/
+    url(r'^kunde/neu/$', views.form_kunde, name='kunde_neu'),
+
+    #ex: /rechnung/kunde/5/aendern/
+    url(r'^kunde/(?P<kunde_id>[0-9]+)/aendern/$', views.form_kunde, name='kunde_aendern'),
+
     # ex: /rechnung/kunde/suchen/
     url(r'^kunde/suchen/$', views.kundesuchen, name='kundesuchen'),
-
-    #ex: /rechnung/kunde/add/
-    url(r'^kunde/add/$', views.form_kunde, name='form_kunde'),
 
 
 #Posten#############################################################

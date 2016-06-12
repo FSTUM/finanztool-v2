@@ -10,6 +10,9 @@
     <a href="{% url "rechnung:rechnung_aendern" rechnung.id %}" class="btn btn-info" role="button">
         {% bootstrap_icon "pencil" %} Rechnung bearbeiten
     </a>
+    <a href="{% url "rechnung:rechnung_posten_neu" rechnung.id %}" class="btn btn-info" role="button">
+        {% bootstrap_icon "plus" %} Neuer Posten
+    </a>
     <a href="{% url "rechnung:rechnungpdf" rechnung.id %}" class="btn btn-info" role="button">
         {% bootstrap_icon "download-alt" %} Rechnung herunterladen
     </a>
@@ -81,7 +84,7 @@
             <th class="text-right">Mwst-Satz</th>
             <th class="text-right">Summe Brutto</th>
         </tr>
-        {% for posten in rechnung.anzahlposten_set.all %}
+        {% for posten in rechnung.posten_set.all %}
         <tr>
             <td align="right">{{ posten.anzahl }} </td>
             <td><a href="{% url 'rechnung:posten' posten.id %}">{{ posten.posten.name }}</td>

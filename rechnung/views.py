@@ -22,7 +22,6 @@ from .models import Rechnung
 from .models import Kunde
 from .models import Kategorie
 from .models import Posten
-from .models import AnzahlPosten
 
 def index(request):
     letzte_rechnungen_liste = Rechnung.objects.order_by('-rdatum')[:10]
@@ -91,6 +90,7 @@ def rechnungpdf(request, rechnung_id):
 
     return response
 
+
 def form_rechnung(request, rechnung_id=None):
     rechnung = None
     if rechnung_id:
@@ -107,21 +107,29 @@ def form_rechnung(request, rechnung_id=None):
 
     return render(request, 'rechnung/form_rechnung.html', {'form': form, 'rechnung':rechnung})
 
-
-# view schreiben, der die rechnung form anzeigt, und darunter eine tabelle mit allen posten und darunter ein neues posten formular
-# form prefix (wenn field name gleich z.b.)
-# posten form anpassen, damit sie anzahlposten beinhaltet
-# view: formulare speichern, anzahlposten, wenn neu angelegt, zur rechnung hinzufügen
-
-
 #Kunde########################################################################
 
 def kunde(request, kunde_id):
     kunde = get_object_or_404(Kunde, pk=kunde_id)
     return render(request, 'rechnung/kunde.html', {'kunde': kunde})
 
-def kundesuchen(request):
+def form_kunde(request, kunde_id=None):
+    kunde = None
+    if kunde_id:
+        kunde = get_object_or_404(Kunde, pk=kunde_id)
 
+    if request.method == "POST":
+        form = KundeForm(request.POST, instance=kunde)
+
+        if form.is_valid():
+            kunde = form.save()
+            return redirect('rechnung:kunde', kunde_id=kunde.pk)
+    else:
+        form = KundeForm(instance=kunde)
+
+    return render(request, 'rechnung/form_kunde.html', {'form': form, 'kunde':kunde})
+
+def kundesuchen(request):
     form = KundeSuchenForm(request.POST or None)
 
     result = None
@@ -139,18 +147,6 @@ def kundesuchen(request):
 
     return render(request, 'rechnung/kundesuchen.html', context)
 
-def form_kunde(request):
-    if request.method == "POST":
-        form = KundeForm(request.POST)
-
-        if form.is_valid():
-            kunde = form.save()
-            return redirect('rechnung:kunde', kunde_id=kunde.pk)
-    else:
-        form = KundeForm()
-
-    return render(request, 'rechnung/form_kunde.html', {'form': form})
-
 
 #Posten#######################################################################
 
@@ -158,10 +154,9 @@ def posten(request, posten_id):
     posten = get_object_or_404(Posten, pk=posten_id)
     return render(request, 'rechnung/posten.html', {'posten': posten})
 
-def form_posten(request, posten_id=None):
-    posten = None
-    if posten_id:
-        posten = get_object_or_404(Posten, pk=posten_id)
+#Vorhandenen Posten bearbeiten
+def form_posten(request, posten_id):
+    posten = get_object_or_404(Posten, pk=posten_id)
 
     if request.method == "POST":
         form = PostenForm(request.POST, instance=posten)
@@ -171,6 +166,23 @@ def form_posten(request, posten_id=None):
             return redirect('rechnung:posten', posten_id=posten.pk)
     else:
         form = PostenForm(instance=posten)
+
+    return render(request, 'rechnung/form_posten.html', {'form': form})
+
+#Neuen Posten zu vorhandener Rechnung hinzufügen
+def form_posten(request, rechnung_id):
+    rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
+
+    if request.method == "POST":
+        form = PostenForm(request.POST, instance=Posten())
+
+        if form.is_valid():
+            posten = form.save()
+            #rechnung.posten = posten
+            #posten = form.save()
+            return redirect('rechnung/form_posten.html', {'form': form})
+    else:
+        form = PostenForm()
 
     return render(request, 'rechnung/form_posten.html', {'form': form})
 
