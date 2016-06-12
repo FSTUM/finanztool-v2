@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Posten hinzufügen{% endblock %}
+
+{% block content %}
+    <h1>Posten hinzufügen</h1>
+    <div class="row">
+        <div class="col-md-5">
+            <form method="POST">{% csrf_token %}
+                {% bootstrap_form form %}
+                <button type="submit" name="weiter" class="save btn btn-default">
+                    {% bootstrap_icon "floppy-disk" %} & neuen Posten
+                </button>
+                <button type="submit" name="zurueck" class="save btn btn-default">
+                    {% bootstrap_icon "floppy-disk" %} & zurück zur Rechnung
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

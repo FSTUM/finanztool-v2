@@ -43,7 +43,7 @@ urlpatterns = [
     url(r'^(?P<rechnung_id>[0-9]+)/aendern/$', views.form_rechnung, name='rechnung_aendern'),
 
     # ex: /rechnung/5/posten/neu
-    url(r'^(?P<rechnung_id>[0-9]+)/posten/neu/$', views.form_posten, name='rechnung_posten_neu'),
+    url(r'^(?P<rechnung_id>[0-9]+)/posten/neu/$', views.form_rechnung_posten, name='rechnung_posten_neu'),
 
     #ex: /rechnung/5/pdf
     url(r'^(?P<rechnung_id>[0-9]+)/pdf/$', views.rechnungpdf, name='rechnungpdf'),
@@ -74,7 +74,7 @@ urlpatterns = [
     url(r'^posten/(?P<posten_id>[0-9]+)/$', views.posten, name='posten'),
 
     # ex: /rechnung/posten/5/aendern
-    url(r'^posten/(?P<posten_id>[0-9]+)/aendern/$', views.form_posten, name='posten_aendern'),
+    url(r'^posten/(?P<posten_id>[0-9]+)/aendern/$', views.form_exist_posten, name='posten_aendern'),
 
 #Kategorie##########################################################
 

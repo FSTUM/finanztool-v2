@@ -73,6 +73,7 @@ class PostenForm(forms.ModelForm):
                 'name',
                 'einzelpreis',
                 'mwst',
+                'anzahl',
                 )
 
     def __init__(self, *args, **kwargs):
