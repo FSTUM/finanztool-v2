@@ -17,5 +17,51 @@
                 </button>
             </form>
         </div>
+        <div class="row">
+            <div class="col-md-10">
+                <h3>Posten</h3>
+                <br/>
+                <table class="table" >
+                    <tr>
+                        <th class="text-right">Anzahl</th>
+                        <th>Bezeichnung</th>
+                        <th class="text-right">Einzelpreis</th>
+                        <th class="text-right">Summe Netto</th>
+                        <th class="text-right">Summe Netto Gerundet</th>
+                        <th class="text-right">Mwst-Satz</th>
+                        <th class="text-right">Summe Brutto</th>
+                    </tr>
+                    {% for posten in rechnung.posten_set.all %}
+                    <tr>
+                        <td align="right">{{ posten.anzahl }} </td>
+                        <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</td>
+                        <td align="right">{{ posten.einzelpreis }} €</td>
+                        <td align="right">{{ posten.summenetto }} €</td>
+                        <td align="right">{{ posten.summenettogerundet }} €</td>
+                        <td align="right">{{ posten.get_mwst_display }}</td>
+                        <td align="right">{{ posten.summebrutto }} €</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td></td>
+                        <th>Zwischensumme:</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td align="right">{{ rechnung.zwischensumme }} €</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <th>Gesamt (brutto):</th>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td align="right">{{ rechnung.gesamtsumme }} €</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock %}

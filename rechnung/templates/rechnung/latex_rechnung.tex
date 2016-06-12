@@ -75,7 +75,7 @@
 \hfill{\parbox[c]{7.5cm}{
     \begin{tabular}{ll}
         Kundennummer: & {{ rechnung.kunde.knr }} \\[-0.5ex]
-        Rechnungsnummer: & {{ rechnung.rnr }} \\[-0.5ex]
+        Rechnungsnummer: & RE {{ rechnung.rnr }} \\[-0.5ex]
         \notblank{rechnung.ldatum}
             {Lieferdatum: & {{ rechnung.ldatum }} \\[-0.5ex]}{}
         Rechnungsdatum: & {{ rechnung.rdatum }} \\[2ex]
@@ -86,11 +86,12 @@
 \large{\bf Rechnung}\\[3ex]
 \normalsize
 \ifnum\pdfstrcmp{ {{ rechnung.kunde.anrede }} }{ w }=0
-Sehr geehrte Frau
+Sehr geehrte Frau{{ rechnung.kunde.name }},\\[2ex]
+\elifnum\pdfstrcmp{ {{ rechnung.kunde.anrede }} }{ m }=0
+Sehr geehrter Herr{{ rechnung.kunde.name }},\\[2ex]
 \else
-Sehr geehrter Herr
+Sehr geehrte Damen und Herren,\\[2ex]
 \fi
-{{ rechnung.kunde.name }},\\[2ex]
 
 {{ rechnung.einleitung }}\\[3ex]
 
@@ -102,8 +103,8 @@ Sehr geehrter Herr
     \endhead
     {% for posten in rechnung.posten_set.all %}
         {{ posten.anzahl }} &
-        {{ posten.posten.name }} &
-        {{ posten.posten.einzelpreis }} \euro &
+        {{ posten.name }} &
+        {{ posten.einzelpreis }} \euro &
         {{ posten.summenettogerundet }} \euro\\[2ex]
     {% endfor %}
     \bottomrule

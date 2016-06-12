@@ -161,9 +161,12 @@ def form_exist_posten(request, posten_id):
     if request.method == "POST":
         form = PostenForm(request.POST, instance=posten)
 
-        if form.is_valid():
-            posten = form.save()
-            return redirect('rechnung:rechnung', rechnung_id=posten.rechnung.pk)
+        if 'loeschen' in request.POST:
+            posten.delete()
+        else:
+            if form.is_valid():
+                posten = form.save()
+        return redirect('rechnung:rechnung', rechnung_id=posten.rechnung.pk)
     else:
         form = PostenForm(instance=posten)
 
@@ -187,7 +190,7 @@ def form_rechnung_posten(request, rechnung_id):
     else:
         form = PostenForm()
 
-    return render(request, 'rechnung/form_posten_neu.html', {'form': form})
+    return render(request, 'rechnung/form_posten_neu.html', {'form': form, 'rechnung':rechnung})
 
 #Kategorie####################################################################
 
@@ -196,9 +199,9 @@ def kategorie(request):
     context = {'kategorien_liste': kategorien_liste}
     return render(request, 'rechnung/kategorie.html', context)
 
-def kategorie_detail(request, kategorie_detail_id):
-    kategorie_detail = get_object_or_404(Kategorie, pk=kategorie_detail_id)
-    return render(request, 'rechnung/kategorie_detail.html', {'kategorie_detail': kategorie_detail})
+def kategorie_detail(request, kategorie_id):
+    kategorie = get_object_or_404(Kategorie, pk=kategorie_id)
+    return render(request, 'rechnung/kategorie_detail.html', {'kategorie': kategorie})
 
 def form_kategorie(request):
     if request.method == "POST":
@@ -206,7 +209,7 @@ def form_kategorie(request):
 
         if form.is_valid():
             kategorie = form.save()
-            return redirect('rechnung:kategorie', kategorie_id=kategorie.pk)
+            return redirect('rechnung:kategorie_detail', kategorie_id=kategorie.pk)
     else:
         form = KategorieForm()
 
