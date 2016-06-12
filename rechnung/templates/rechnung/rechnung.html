@@ -61,11 +61,11 @@
             </tr>
             <tr>
                 <th>Kunde</th>
-                <td>{{ rechnung.kunde }}</td>
+                <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde }}</td>
             </tr>
             <tr>
                 <th>Kategorie</th>
-                <td>{{ rechnung.kategorie }}</td>
+                <td><a href="{% url 'rechnung:kategorie_detail' rechnung.kategorie.id %}">{{ rechnung.kategorie }}</td>
             </tr>
         </table>
 </div>
@@ -87,8 +87,8 @@
         {% for posten in rechnung.posten_set.all %}
         <tr>
             <td align="right">{{ posten.anzahl }} </td>
-            <td><a href="{% url 'rechnung:posten' posten.id %}">{{ posten.posten.name }}</td>
-            <td align="right">{{ posten.posten.einzelpreis }} €</td>
+            <td><a href="{% url 'rechnung:posten' posten.id %}">{{ posten.name }}</td>
+            <td align="right">{{ posten.einzelpreis }} €</td>
             <td align="right">{{ posten.summenetto }} €</td>
             <td align="right">{{ posten.summenettogerundet }} €</td>
             <td align="right">{{ posten.posten.get_mwst_display }}</td>
