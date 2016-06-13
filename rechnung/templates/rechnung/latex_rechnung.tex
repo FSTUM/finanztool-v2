@@ -83,10 +83,13 @@
     \hfill{\parbox[c]{7.5cm}{
         \begin{tabular}{ll}
             Kundennummer: & {{ rechnung.kunde.knr }} \\[-0.5ex]
-            Rechnungsnummer: & RE {{ rechnung.rnr }} \\[-0.5ex]
-            \notblank{rechnung.ldatum}
-                {Lieferdatum: & {{ rechnung.ldatum }} \\[-0.5ex]}{}
-            Rechnungsdatum: & {{ rechnung.rdatum }} \\[2ex]
+            Rechnungsnummer: & {{ rechnung.rnr }} \\[-0.5ex]
+            \ifnum\pdfstrcmp{ {{ rechnung.ldatum }} }{ None }=0
+                Rechnungsdatum: & {{ rechnung.rdatum }} \\[7.5ex]
+            \else
+                Lieferdatum: & {{ rechnung.ldatum }} \\[-0.5ex]
+                Rechnungsdatum: & {{ rechnung.rdatum }} \\[2ex]
+            \fi
         \end{tabular}
     }}
 
