@@ -36,8 +36,7 @@ class RechnungForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RechnungForm, self).__init__(*args, **kwargs)
 
-        if self.instance.pk:
-            self.fields.pop('rnr')
+        self.fields.pop('rnr')
         if self.instance.gestellt:
             self.fields.pop('rdatum')
             self.fields.pop('fdatum')
@@ -79,6 +78,11 @@ class KundeForm(forms.ModelForm):
                 'stadt',
                 'kommentar',
                 )
+
+    def __init__(self, *args, **kwargs):
+        super(KundeForm, self).__init__(*args, **kwargs)
+
+        self.fields.pop('knr')
 
 class KategorieForm(forms.ModelForm):
     class Meta:

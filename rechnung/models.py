@@ -1,6 +1,7 @@
 import datetime
 
 from django.db import models
+from django.db.models import Max
 from django.contrib.auth.models import User
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils import timezone
@@ -10,6 +11,14 @@ from decimal import Decimal
 
 def get_faelligkeit_default():
     return date.today() + timedelta(days=15)
+
+def get_new_highest_rnr():
+    new_rnr = Rechnung.objects.all().aggregate(Max('rnr'))['rnr__max']+1
+    return new_rnr
+
+def get_new_highest_knr():
+    new_knr = Kunde.objects.all().aggregate(Max('knr'))['knr__max']+1
+    return new_knr
 
 # Create your models here.
 class Rechnung(models.Model):
@@ -21,6 +30,7 @@ class Rechnung(models.Model):
             )
     rnr = models.IntegerField(
             verbose_name='Rechnungsnummer *',
+            default = get_new_highest_rnr,
             unique=True,
             )
     rdatum = models.DateField(
@@ -99,6 +109,7 @@ class Rechnung(models.Model):
 class Kunde(models.Model):
     knr = models.IntegerField(
             verbose_name='Kundennummer *',
+            default = get_new_highest_knr,
             unique=True,
             )
     organisation = models.CharField(

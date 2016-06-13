@@ -24,7 +24,7 @@ from .models import Kategorie
 from .models import Posten
 
 def index(request):
-        letzte_rechnungen_liste = Rechnung.objects.order_by('-rdatum')[:10]
+        letzte_rechnungen_liste = Rechnung.objects.order_by('-rnr')[:10]
         context = {'letzte_rechnungen_liste': letzte_rechnungen_liste}
         return render(request, 'rechnung/index.html', context)
 
