@@ -7,9 +7,66 @@ from .models import Rechnung
 from .models import Kategorie
 from .models import Posten
 
+class RechnungForm(forms.ModelForm):
+    class Meta:
+        model = Rechnung
+        help_texts = {
+                'name': 'Nur für uns, wird nicht nach außen gezeigt.',
+                'fdatum': 'default: +15 Tage',
+                'kunde': 'Falls noch nicht angelegt, in neuem Tab anlegen und dieses Formular neu laden, Daten bleiben erhalten.',
+                'einleitung': 'Beispiel: für X stellen wir Ihnen hiermit folgende Posten in Rechnung:',
+                }
+        widgets = {
+                }
+
+        fields = (
+                'rnr',
+                'name',
+                'rdatum',
+                'fdatum',
+                'ldatum',
+                'ersteller',
+                'kunde',
+                'einleitung',
+                'kategorie',
+                'gestellt',
+                'bezahlt',
+                )
+
+    def __init__(self, *args, **kwargs):
+        super(RechnungForm, self).__init__(*args, **kwargs)
+
+        if self.instance.pk:
+            self.fields.pop('rnr')
+        if self.instance.gestellt:
+            self.fields.pop('rdatum')
+            self.fields.pop('fdatum')
+            self.fields.pop('ldatum')
+            self.fields.pop('ersteller')
+            self.fields.pop('einleitung')
+
+class PostenForm(forms.ModelForm):
+    class Meta:
+        model = Posten
+        help_texts = {
+                'mwst': 'Druck, Vereinszweck: 7%',
+                }
+        fields = (
+                'name',
+                'einzelpreis',
+                'mwst',
+                'anzahl',
+                )
+
+#    def __init__(self):
+#        self._meta.get_fields['name'].widget.attrs.update({'autofocus': ''})
+
 class KundeForm(forms.ModelForm):
     class Meta:
         model = Kunde
+        help_texts = {
+                'kommentar': 'Nur für uns, wird nicht nach außen gezeigt.',
+                }
         fields = (
                 'knr',
                 'organisation',
@@ -23,61 +80,12 @@ class KundeForm(forms.ModelForm):
                 'kommentar',
                 )
 
-class KundeSuchenForm(forms.Form):
-    pattern = forms.CharField(
-        min_length=2,
-        max_length=100,
-        label=("Suche"),
-    )
-
-    def get(self):
-        p = self.cleaned_data['pattern']
-
-        data = Kunde.objects.filter(Q(vorname__icontains=p) |
-                                            Q(knr__icontains=p) |
-                                            Q(name__icontains=p) |
-                                            Q(organisation__icontains=p) |
-                                            Q(suborganisation__icontains=p) |
-                                            Q(kommentar__icontains=p) |
-                                            Q(strasse__icontains=p) |
-                                            Q(stadt__icontains=p))
-        return data
-
-class RechnungForm(forms.ModelForm):
+class KategorieForm(forms.ModelForm):
     class Meta:
-        model = Rechnung
-        fields = (
-                'rnr',
-                'name',
-                'rdatum',
-                'fdatum',
-                'ldatum',
-                'gestellt',
-                'bezahlt',
-                'ersteller',
-                'kunde',
-                'einleitung',
-                'kategorie',
-                )
-
-    def __init__(self, *args, **kwargs):
-        super(RechnungForm, self).__init__(*args, **kwargs)
-
-        if self.instance.pk:
-            self.fields.pop('rnr')
-
-class PostenForm(forms.ModelForm):
-    class Meta:
-        model = Posten
+        model = Kategorie
         fields = (
                 'name',
-                'einzelpreis',
-                'mwst',
-                'anzahl',
                 )
-
-#    def __init__(self):
-#        self._meta.get_fields['name'].widget.attrs.update({'autofocus': ''})
 
 class RechnungSuchenForm(forms.Form):
     pattern = forms.CharField(
@@ -103,9 +111,23 @@ class RechnungSuchenForm(forms.Form):
                                             Q(kunde__kommentar__icontains=p))
         return data
 
-class KategorieForm(forms.ModelForm):
-    class Meta:
-        model = Kategorie
-        fields = (
-                'name',
-                )
+class KundeSuchenForm(forms.Form):
+    pattern = forms.CharField(
+        min_length=2,
+        max_length=100,
+        label=("Suche"),
+    )
+
+    def get(self):
+        p = self.cleaned_data['pattern']
+
+        data = Kunde.objects.filter(Q(vorname__icontains=p) |
+                                            Q(knr__icontains=p) |
+                                            Q(name__icontains=p) |
+                                            Q(organisation__icontains=p) |
+                                            Q(suborganisation__icontains=p) |
+                                            Q(kommentar__icontains=p) |
+                                            Q(strasse__icontains=p) |
+                                            Q(stadt__icontains=p))
+        return data
+

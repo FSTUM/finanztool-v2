@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% load bootstrap3 %}
 
 {% block title %}Rechnung hinzufügen{% endblock %}
@@ -10,12 +11,21 @@
             <h4><b><span style="color : red;">
                 Bitte gültige LaTex-Formatierung verwenden (z.B. \& für &, \\ für Absatz)
             </b></h4>
+            <h5>Mit * markierte Felder sind verpflichtend</h5>
+            <br></br>
             <form method="POST">{% csrf_token %}
                 {% bootstrap_form form %}
                 <button type="submit" class="save btn btn-default">
                     {% bootstrap_icon "floppy-disk" %} Sichern
                 </button>
             </form>
+            <script type="text/javascript">
+                $(function () {
+                    $('.datetime').datetimepicker({
+                        format: 'DD.MM.YYYY'
+                    });
+                });
+            </script>
         </div>
     </div>
 {% endblock %}

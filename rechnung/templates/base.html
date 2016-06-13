@@ -19,6 +19,10 @@
 
         <link href="{% static "rechnung/style.css" %}" media="all" rel="stylesheet">
 
+        {# bootstrap-datetimepicker #}
+        <link href="{% static "rechnung/extern/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" %}" media="all" rel="stylesheet">
+        <script src="{% static "rechnung/extern/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" %}"></script>
+
         {% if user.is_authenticated %}
             <title>{% block title %}Finanz - Rechnungen{% endblock %}</title>
         {% else %}

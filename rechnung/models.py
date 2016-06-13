@@ -20,11 +20,11 @@ class Rechnung(models.Model):
             blank=True,
             )
     rnr = models.IntegerField(
-            verbose_name='Rechnungsnummer',
+            verbose_name='Rechnungsnummer *',
             unique=True,
             )
     rdatum = models.DateField(
-            verbose_name='Rechnungsdatum',
+            verbose_name='Rechnungsdatum *',
             default=date.today,
             )
     ldatum = models.DateField(
@@ -34,7 +34,7 @@ class Rechnung(models.Model):
             blank=True,
             )
     fdatum = models.DateField(
-            verbose_name='Fälligkeitsdatum (default: +15 Tage)',
+            verbose_name='Fälligkeitsdatum *',
             default=get_faelligkeit_default
             )
     gestellt = models.BooleanField(
@@ -52,7 +52,7 @@ class Rechnung(models.Model):
             'Kunde',
             )
     einleitung = models.TextField(
-            verbose_name='Einleitender Text nach "Sehr geehrte..."',
+            verbose_name='Einleitender Text nach "Sehr geehrte..." *',
             max_length=1000,
             )
     kategorie = models.ForeignKey(
@@ -98,7 +98,7 @@ class Rechnung(models.Model):
 
 class Kunde(models.Model):
     knr = models.IntegerField(
-            verbose_name='Kundennummer',
+            verbose_name='Kundennummer *',
             unique=True,
             )
     organisation = models.CharField(
@@ -137,15 +137,15 @@ class Kunde(models.Model):
             blank=True,
             )
     strasse = models.CharField(
-            verbose_name='Straße',
+            verbose_name='Straße *',
             max_length=100,
             )
     plz = models.CharField(
-            verbose_name='PLZ',
+            verbose_name='PLZ *',
             max_length=20,
             )
     stadt = models.CharField(
-            verbose_name='Stadt',
+            verbose_name='Stadt *',
             max_length=200,
             )
     kommentar = models.TextField(
@@ -159,7 +159,7 @@ class Kunde(models.Model):
 
 class Kategorie(models.Model):
     name = models.CharField(
-            verbose_name='Kategorie',
+            verbose_name='Kategorie *',
             max_length=100,
             unique=True,
             )
@@ -188,7 +188,7 @@ class Posten(models.Model):
     mwst = models.IntegerField(
             verbose_name='Mehrwertsteuersatz',
             choices=MWSTSATZ,
-            default = 19,
+            default = 7,
             )
     anzahl = models.IntegerField(
             verbose_name='Anzahl',

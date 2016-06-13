@@ -48,6 +48,27 @@ def rechnung(request, rechnung_id):
     else:
         return redirect('rechnung:index')
 
+
+def form_rechnung(request, rechnung_id=None):
+    if request.user.is_authenticated():
+        rechnung = None
+        if rechnung_id:
+            rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
+
+        if request.method == "POST":
+            form = RechnungForm(request.POST, instance=rechnung)
+
+            if form.is_valid():
+                rechnung = form.save()
+                return redirect('rechnung:rechnung', rechnung_id=rechnung.pk)
+        else:
+            form = RechnungForm(instance=rechnung)
+
+        return render(request, 'rechnung/form_rechnung.html', {'form': form, 'rechnung':rechnung})
+
+    else:
+        return redirect('rechnung:index')
+
 def rechnungsuchen(request):
     if request.user.is_authenticated():
         form = RechnungSuchenForm(request.POST or None)
@@ -66,61 +87,6 @@ def rechnungsuchen(request):
                 }
 
         return render(request, 'rechnung/rechnungsuchen.html', context)
-
-    else:
-        return redirect('rechnung:index')
-
-def rechnungpdf(request, rechnung_id):
-    if request.user.is_authenticated():
-        rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
-
-        #create temporary files
-        tmplatex = mkdtemp()
-        latex_file, latex_filename = mkstemp(suffix='.tex', dir=tmplatex)
-
-        # Pass the TeX template through Django templating engine and into the temp file
-        os.write(latex_file, render_to_string('rechnung/latex_rechnung.tex', {'rechnung': rechnung}).encode('utf8'))
-        os.close(latex_file)
-
-        # Compile the TeX file with PDFLaTeX
-        try:
-            subprocess.check_output(["pdflatex", "-halt-on-error", "-output-directory", tmplatex, latex_filename])
-        except subprocess.CalledProcessError as e:
-            return render(request, 'rechnung/rechnungpdf_error.html', { 'erroroutput': e.output })
-
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="RE%s.pdf"' % rechnung.rnr
-
-        # return path to pdf
-        pdf_filename= "%s.pdf" % os.path.splitext(latex_filename)[0]
-
-        with open(pdf_filename, 'rb') as f:
-            response.write(f.read())
-
-        shutil.rmtree(tmplatex)
-
-        return response
-
-    else:
-        return redirect('rechnung:index')
-
-
-def form_rechnung(request, rechnung_id=None):
-    if request.user.is_authenticated():
-        rechnung = None
-        if rechnung_id:
-            rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
-
-        if request.method == "POST":
-            form = RechnungForm(request.POST, instance=rechnung)
-
-            if form.is_valid():
-                rechnung = form.save()
-                return redirect('rechnung:rechnung', rechnung_id=rechnung.pk)
-        else:
-            form = RechnungForm(instance=rechnung)
-
-        return render(request, 'rechnung/form_rechnung.html', {'form': form, 'rechnung':rechnung})
 
     else:
         return redirect('rechnung:index')
@@ -268,3 +234,38 @@ def form_kategorie(request):
 
     else:
         return redirect('rechnung:index')
+
+def rechnungpdf(request, rechnung_id):
+    if request.user.is_authenticated():
+        rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
+
+        #create temporary files
+        tmplatex = mkdtemp()
+        latex_file, latex_filename = mkstemp(suffix='.tex', dir=tmplatex)
+
+        # Pass the TeX template through Django templating engine and into the temp file
+        os.write(latex_file, render_to_string('rechnung/latex_rechnung.tex', {'rechnung': rechnung}).encode('utf8'))
+        os.close(latex_file)
+
+        # Compile the TeX file with PDFLaTeX
+        try:
+            subprocess.check_output(["pdflatex", "-halt-on-error", "-output-directory", tmplatex, latex_filename])
+        except subprocess.CalledProcessError as e:
+            return render(request, 'rechnung/rechnungpdf_error.html', { 'erroroutput': e.output })
+
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="RE%s.pdf"' % rechnung.rnr
+
+        # return path to pdf
+        pdf_filename= "%s.pdf" % os.path.splitext(latex_filename)[0]
+
+        with open(pdf_filename, 'rb') as f:
+            response.write(f.read())
+
+        shutil.rmtree(tmplatex)
+
+        return response
+
+    else:
+        return redirect('rechnung:index')
+
