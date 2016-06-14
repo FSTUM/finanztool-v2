@@ -90,7 +90,7 @@ class Rechnung(models.Model):
     def summe_mwst_19(self):
         summe = Decimal(0)
         for posten in self.posten_set.filter(mwst=19):
-            summe = summe + (posten.einzelpreis * Decimal(0.19))
+            summe = summe + (posten.summenetto * Decimal(0.19))
         return Decimal(round(summe,2))
 
     #durch addieren mit mwst berechnet
