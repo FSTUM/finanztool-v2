@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.template.loader import render_to_string
 from django.forms import inlineformset_factory
+from django.contrib.auth.decorators import login_required
 
 from .forms import KundeForm
 from .forms import RechnungForm
@@ -23,15 +24,21 @@ from .models import Kunde
 from .models import Kategorie
 from .models import Posten
 
+def willkommen(request):
+    return render(request, 'rechnung/willkommen.html')
+
 @login_required
 def index(request):
-        letzte_rechnungen_liste = Rechnung.objects.order_by('-rnr')[:10]
-        context = {'letzte_rechnungen_liste': letzte_rechnungen_liste}
-        return render(request, 'rechnung/index.html', context)
+    letzte_rechnungen_liste = Rechnung.objects.order_by('-rnr')[:10]
+    context = {'letzte_rechnungen_liste': letzte_rechnungen_liste}
+    return render(request, 'rechnung/index.html', context)
 
 @login_required
 def admin(request):
     return render(request, 'rechnung/admin.html')
+
+def login(request):
+    return render(request, 'rechnung/login.html')
 
 @login_required
 def logout(request):

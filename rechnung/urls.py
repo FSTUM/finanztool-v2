@@ -13,7 +13,10 @@ urlpatterns = [
 #Index##############################################################
 
     # ex: /rechnung/
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.willkommen, name='willkommen'),
+
+    # ex: /rechnung/index
+    url(r'^index/$', views.index, name='index'),
 
     # ex: /rechnung/admin/
     url(r'^admin/$', views.admin, name='admin'),

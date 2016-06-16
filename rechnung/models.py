@@ -13,7 +13,7 @@ def get_faelligkeit_default():
     return date.today() + timedelta(days=15)
 
 def get_new_highest_rnr():
-    new_rnr = Rechnung.objects.all().aggregate(Max('rnr'))['rnr__max']+1
+    new_rnr = (Rechnung.objects.all().aggregate(Max('rnr'))['rnr__max'])+1
     return new_rnr
 
 def get_new_highest_knr():

@@ -54,7 +54,9 @@ MIDDLEWARE_CLASSES = [
 ]
 
 ROOT_URLCONF = 'finanz.urls'
-LOGIN_REDIRECT_URL = '/rechnung/'
+LOGIN_URL = '/rechnung/login/'
+LOGOUT_URL = '/rechnung/logout/'
+LOGIN_REDIRECT_URL = '/rechnung/index'
 
 TEMPLATES = [
     {
