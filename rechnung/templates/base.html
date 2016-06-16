@@ -75,16 +75,6 @@
                                   </ul>
                                 </div>
                             </li>
-                            <li>
-                                <div class="dropdown">
-                                  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px;">Kategorie
-                                  <span class="caret"></span></button>
-                                  <ul class="dropdown-menu">
-                                      <li><a  href="{% url "rechnung:form_kategorie" %}">{% bootstrap_icon "plus" %} Hinzufügen</a></li>
-                                      <li><a  href="{% url "rechnung:kategorie" %}">{% bootstrap_icon "eye-open" %} Alle</a></li>
-                                  </ul>
-                                </div>
-                            </li>
                             <li><a href="{% url "rechnung:logout" %}">{% trans "Logout" %}</a></li> 
                         {% else %}
                             <li><a href="{% url "rechnung:index" %}">Index</a></li>

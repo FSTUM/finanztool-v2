@@ -4,5 +4,7 @@
 
 {% block content %}
 Willkommen beim Finanztool!
+{% if not user.is_authenticated %}
 Melde dich an, um fortzufahren.
+{% endif %}
 {% endblock %}
