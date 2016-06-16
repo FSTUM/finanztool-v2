@@ -23,11 +23,7 @@
         <link href="{% static "rechnung/extern/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" %}" media="all" rel="stylesheet">
         <script src="{% static "rechnung/extern/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" %}"></script>
 
-        {% if user.is_authenticated %}
             <title>{% block title %}Finanz - Rechnungen{% endblock %}</title>
-        {% else %}
-            <title>Finanz - Rechnungen</title>
-        {% endif %}
     </head>
 
     <body>
@@ -59,9 +55,6 @@
                              </p>
                             <li><a href="{% url "rechnung:index" %}">Übersicht</a></li>
                             {#{% if user.is_superuser or user|has_perm_group %}#}
-                            {#{% if user.is_superuser %}#}
-                                <li><a href="{% url "rechnung:admin" %}">Admin</a></li>
-                                {# {% endif %}#}
                             <li>
                                 <div class="dropdown">
                                   <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px;">Rechnung
@@ -109,16 +102,9 @@
                 {% bootstrap_messages messages %}
             {% endif %}
 
-            {% if user.is_authenticated %}
                 {# content #}
                 {% block content %}
                 {% endblock %}
-            {% else %}
-                {% block notloggedin %}
-                    <h1>Willkommen beim Rechnungstool!</h1>
-                    <h3><a href="{% url 'rechnung:login' %}">Melde dich an.</a></h3>
-                {%endblock %}
-            {% endif %}
         </div>
 
         <footer class="footer">
