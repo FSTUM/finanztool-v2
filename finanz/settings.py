@@ -126,12 +126,8 @@ USE_TZ = True
 USE_THOUSAND_SEPARATOR = True
 
 from django.conf.locale.de import formats as de_formats
-
-DATE_FORMAT = "d.m.Y"
-#DATETIME_FORMAT = "d.m.Y"
-#SHORT_DATE_FORMAT = "d.m.Y"
-#SHORT_DATETIME_FORMAT = "d.m.Y"
-
+de_formats.DATETIME_FORMAT = "d.m.Y H:i:s"
+de_formats.DATE_FORMAT = "d.m.Y"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/

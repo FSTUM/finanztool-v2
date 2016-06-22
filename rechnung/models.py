@@ -190,12 +190,12 @@ class Posten(models.Model):
             )
     name = models.CharField(
             verbose_name='Bezeichnung',
-            max_length=50,
+            max_length=100,
             )
     einzelpreis = models.DecimalField(
             verbose_name='Einzelpreis',
             decimal_places=5,
-            max_digits=20,
+            max_digits=15,
             )
     MWSTSATZ = (
             (0 , '0 %'),
