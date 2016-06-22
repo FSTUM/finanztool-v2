@@ -4,7 +4,6 @@ from django.db.models import Q
 
 from .models import Kunde
 from .models import Rechnung
-from .models import Kategorie
 from .models import Posten
 
 class RechnungForm(forms.ModelForm):
@@ -86,13 +85,6 @@ class KundeForm(forms.ModelForm):
         super(KundeForm, self).__init__(*args, **kwargs)
 
         self.fields.pop('knr')
-
-class KategorieForm(forms.ModelForm):
-    class Meta:
-        model = Kategorie
-        fields = (
-                'name',
-                )
 
 class RechnungSuchenForm(forms.Form):
     pattern = forms.CharField(

@@ -8,7 +8,6 @@ from django.contrib.auth.decorators import login_required
 from .forms import KundeForm
 from .forms import RechnungForm
 from .forms import PostenForm
-from .forms import KategorieForm
 from .forms import KundeSuchenForm
 from .forms import RechnungSuchenForm
 
@@ -195,19 +194,6 @@ def kategorie(request):
 def kategorie_detail(request, kategorie_id):
     kategorie = get_object_or_404(Kategorie, pk=kategorie_id)
     return render(request, 'rechnung/kategorie_detail.html', {'kategorie': kategorie})
-
-@login_required
-def form_kategorie(request):
-    if request.method == "POST":
-        form = KategorieForm(request.POST)
-
-        if form.is_valid():
-            kategorie = form.save()
-            return redirect('rechnung:kategorie_detail', kategorie_id=kategorie.pk)
-    else:
-        form = KategorieForm()
-
-    return render(request, 'rechnung/form_kategorie.html', {'form': form})
 
 @login_required
 def rechnungpdf(request, rechnung_id):
