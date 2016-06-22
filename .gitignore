@@ -17,6 +17,7 @@ Session.vim
 
 # upload directory
 /media/
+/rechnung/migrations/
 
 # sqlite database
 /db.sqlite3*

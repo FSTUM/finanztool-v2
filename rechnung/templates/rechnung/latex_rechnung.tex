@@ -9,12 +9,16 @@
     \usepackage{amsmath}
     \usepackage{fancyhdr}
     \usepackage{longtable}
+    \usepackage{tabularx}
     \usepackage[absolute]{textpos}
     \geometry{margin=2cm}
     \pagestyle{fancy}
     \renewcommand{\headrulewidth}{0pt}
     \textheight = 670pt
     \textwidth = 18cm
+    \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}} % linksbündig mit Breitenangabe
+    \newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}} % zentriert mit Breitenangabe
+    \newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}} % rechtsbündig mit Breitenangabe
 
     \begin{document}
     %Folding marks%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -29,7 +33,7 @@
     \rhead{\bf
         Verein zur Studienförderung der Fachschaft\\
         Mathematik/Physik/Informatik e. V.}
-    \headsep = 3 cm
+    \headsep = 2.5 cm
 
     %Footer%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \lfoot{}
@@ -60,7 +64,7 @@
             http://mpi.fs.tum.de}
     }
     \rfoot{}
-    \footskip = 0pt
+    \footskip = -0.5cm
 
 
     %Adressfeld%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -70,13 +74,13 @@
         Boltzmannstraße 3, 85748 Garching\\[1ex] \hrule}}\\[2ex]
     \raggedright
     \notblank{ {{ rechnung.kunde.organisation }} }
-        { {{ rechnung.kunde.organisation }} \\}{}
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.organisation }} }\\}{}
     \notblank{ {{ rechnung.kunde.suborganisation }} }
-        { {{ rechnung.kunde.suborganisation }} \\}{}
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.suborganisation }} }\\}{}
     \notblank{ {{ rechnung.kunde.vorname }}{{ rechnung.kunde.name }} }
-        { {{ rechnung.kunde.vorname }} {{ rechnung.kunde.name}} \\}{}
-    {{ rechnung.kunde.strasse }}\\
-    {{ rechnung.kunde.plz }} {{ rechnung.kunde.stadt }}\\[3ex]
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.vorname }} {{ rechnung.kunde.name }}  }\\}{}
+    {\parbox[c]{8cm}{ {{ rechnung.kunde.strasse }} }\\}
+    {\parbox[c]{8cm}{ {{ rechnung.kunde.plz }} {{ rechnung.kunde.stadt }} }\\[3ex]}
 
 
     %Infofeld%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -109,34 +113,37 @@
     {{ rechnung.einleitung }}\\[3ex]
 
     %Posten%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    \begin{longtable}{rp{8cm}rrp{0.75cm}}
-        \toprule
-        Anzahl & Bezeichnung & Einzelpreis & Summe {\small (netto)} & Mwst\\
-        \midrule
-        \endhead
-        {% for posten in rechnung.posten_set.all %}
-            {{ posten.anzahl }} &
-            {{ posten.name }} &
-            {{ posten.einzelpreis }} \euro &
-            {{ posten.summenettogerundet }} \euro &
-            \ifnum\pdfstrcmp{ {{ posten.mwst }} }{ 7 }=0
-                B\\[1.5ex]
-            \else
-                \ifnum\pdfstrcmp{ {{ posten.mwst }} }{ 19 }=0
-                    A\\[1.5ex]
+        \setlength\LTleft{0pt}
+        \setlength\LTright{0pt}
+        \begin{longtable}{@{\extracolsep{\fill}}R{2cm}L{7.5cm}R{3cm}R{2.75cm}C{0.85cm}}
+        %\begin{longtable}{@{\extracolsep{\fill}}rlp{2cm}rp{0.75cm}}
+            \toprule
+            Anzahl & Bezeichnung & Einzelpreis & Summe {\small (netto)} & Mwst\\
+            \midrule
+            \endhead
+            {% for posten in rechnung.posten_set.all %}
+                {{ posten.anzahl }} &
+                {{ posten.name }} &
+                {{ posten.einzelpreis }} \euro &
+                {{ posten.summenettogerundet }} \euro &
+                \ifnum\pdfstrcmp{ {{ posten.mwst }} }{ 7 }=0
+                    B\\[1.5ex]
                 \else
-                    \\[1.5ex]
+                    \ifnum\pdfstrcmp{ {{ posten.mwst }} }{ 19 }=0
+                        A\\[1.5ex]
+                    \else
+                        \\[1.5ex]
+                    \fi
                 \fi
-            \fi
-        {% endfor %}
-        \bottomrule
-         & Zwischensumme: & & {{ rechnung.zwischensumme }} \euro &\\
-         & {\footnotesize\ Zzgl. Mwst 19 \% (A):} & & {\footnotesize{{ rechnung.summe_mwst_19 }} \euro} &\\
-         & {\footnotesize\ Zzgl. Mwst 7 \% (B):} & & {\footnotesize{{ rechnung.summe_mwst_7 }} \euro} &\\
-         & {\bf Gesamt:} & & {\bf {{ rechnung.gesamtsumme }} \euro} &\\
-        \bottomrule
-        \bottomrule\\[-1ex]
-    \end{longtable}
+            {% endfor %}
+            \bottomrule
+             & Zwischensumme: & & {{ rechnung.zwischensumme }} \euro &\\[1ex]
+             & {\footnotesize\ Zzgl. Mwst 19 \% (A):} & & {\footnotesize{{ rechnung.summe_mwst_19 }} \euro} &\\
+             & {\footnotesize\ Zzgl. Mwst 7 \% (B):} & & {\footnotesize{{ rechnung.summe_mwst_7 }} \euro} &\\[1ex]
+             & {\bf Gesamt:} & & {\bf {{ rechnung.gesamtsumme }} \euro} &\\
+            \bottomrule
+            \bottomrule\\[-1ex]
+        \end{longtable}
 
     %Endtext%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     Bitte überweisen Sie den Rechnungsbetrag von {\bf {{ rechnung.gesamtsumme }}} \euro\ ohne Abzug bis zum

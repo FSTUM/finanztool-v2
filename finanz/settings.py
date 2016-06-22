@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'bootstrap3',
     'rechnung.apps.RechnungConfig',
 ]
@@ -112,18 +113,24 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'de-de'
 
+LOCALE_NAME = 'de'
+
 TIME_ZONE = 'Europe/Berlin'
 
-USE_I18N = True
+USE_I18N = False
 
-USE_L10N = False
+USE_L10N = True
 
 USE_TZ = True
 
+USE_THOUSAND_SEPARATOR = True
+
+from django.conf.locale.de import formats as de_formats
+
 DATE_FORMAT = "d.m.Y"
-DATETIME_FORMAT = "d.m.Y"
-SHORT_DATE_FORMAT = "d.m.Y"
-SHORT_DATETIME_FORMAT = "d.m.Y"
+#DATETIME_FORMAT = "d.m.Y"
+#SHORT_DATE_FORMAT = "d.m.Y"
+#SHORT_DATETIME_FORMAT = "d.m.Y"
 
 
 # Static files (CSS, JavaScript, Images)

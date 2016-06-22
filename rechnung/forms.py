@@ -57,8 +57,11 @@ class PostenForm(forms.ModelForm):
                 'anzahl',
                 )
 
-#    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super(PostenForm, self).__init__(*args, **kwargs)
 #        self._meta.get_fields['name'].widget.attrs.update({'autofocus': ''})
+#        if self.instance.rechnung.gestellt:
+#            self.fields.pop('einzelpreis')
 
 class KundeForm(forms.ModelForm):
     class Meta:
