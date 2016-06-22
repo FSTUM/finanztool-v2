@@ -6,7 +6,9 @@
 
 {% block content %}
     <h1>Rechnung hinzufügen</h1>
+    {% if rechnung.pk %}
         <a href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}" class="btn btn-default" role="button">{% bootstrap_icon "arrow-left" %} Zurück zur Rechnung</a>
+    {% endif %}
     <div class="row">
         <div class="col-md-6">
             <h4><b><span style="color : red;">

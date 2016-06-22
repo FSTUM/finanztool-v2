@@ -67,7 +67,6 @@ class KundeForm(forms.ModelForm):
     class Meta:
         model = Kunde
         help_texts = {
-                'strasse': 'Bei Adresszusatz bitte in dieses Feld mit Bindestrich oder oben in Suborganisation. Sonst wird der Text zu groß für das Fenster im Briefumschlag.',
                 'kommentar': 'Nur für uns, wird nicht nach außen gezeigt.',
                 }
         fields = (
