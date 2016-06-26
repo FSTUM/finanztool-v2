@@ -10,9 +10,11 @@
     <a href="{% url "rechnung:rechnung_aendern" rechnung.id %}" class="btn btn-info" role="button">
         {% bootstrap_icon "pencil" %} Rechnung bearbeiten
     </a>
-    <a href="{% url "rechnung:rechnung_posten_neu" rechnung.id %}" class="btn btn-info" role="button">
-        {% bootstrap_icon "plus" %} Neuer Posten
-    </a>
+    {% if not rechnung.gestellt %}
+        <a href="{% url "rechnung:rechnung_posten_neu" rechnung.id %}" class="btn btn-info" role="button">
+            {% bootstrap_icon "plus" %} Neuer Posten
+        </a>
+    {% endif %}
     <a href="{% url "rechnung:rechnungpdf" rechnung.id %}" class="btn btn-info" role="button">
         {% bootstrap_icon "download-alt" %} Rechnung herunterladen
     </a>
@@ -86,7 +88,11 @@
             {% for posten in rechnung.posten_set.all %}
             <tr>
                 <td align="right">{{ posten.anzahl }} </td>
-                <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</td>
+                {% if rechnung.gestellt %}
+                    <td>{{ posten.name }}</td>
+                {% else %}
+                    <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</td>
+                {% endif %}
                 <td align="right">{{ posten.einzelpreis }} €</td>
                 <td align="right">{{ posten.summenettogerundet }} €</td>
                 <td align="right">{{ posten.get_mwst_display }}</td>

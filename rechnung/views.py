@@ -146,40 +146,46 @@ def posten(request, posten_id):
 def form_exist_posten(request, posten_id):
     posten = get_object_or_404(Posten, pk=posten_id)
 
-    if request.method == "POST":
-        form = PostenForm(request.POST, instance=posten)
-
-        if 'loeschen' in request.POST:
-            posten.delete()
-        else:
-            if form.is_valid():
-                posten = form.save()
+    if posten.rechnung.gestellt:
         return redirect('rechnung:rechnung', rechnung_id=posten.rechnung.pk)
     else:
-        form = PostenForm(instance=posten)
+        if request.method == "POST":
+            form = PostenForm(request.POST, instance=posten)
 
-    return render(request, 'rechnung/form_posten_aendern.html', {'form': form})
+            if 'loeschen' in request.POST:
+                posten.delete()
+            else:
+                if form.is_valid():
+                    posten = form.save()
+            return redirect('rechnung:rechnung', rechnung_id=posten.rechnung.pk)
+        else:
+            form = PostenForm(instance=posten)
+
+        return render(request, 'rechnung/form_posten_aendern.html', {'form': form})
 
 #Neuen Posten zu vorhandener Rechnung hinzufügen
 @login_required
 def form_rechnung_posten(request, rechnung_id):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
-    if request.method == "POST":
-        form = PostenForm(request.POST, instance=Posten())
-
-        if form.is_valid():
-            posten = form.save(commit=False)
-            posten.rechnung = rechnung
-            pisten = form.save()
-            if 'zurueck' in request.POST:
-                return redirect('rechnung:rechnung', rechnung_id=rechnung.pk)
-            else:
-                return redirect('rechnung:rechnung_posten_neu', rechnung_id=rechnung.pk)
+    if rechnung.gestellt:
+        return redirect('rechnung:rechnung', rechnung_id=rechnung.pk)
     else:
-        form = PostenForm()
+        if request.method == "POST":
+            form = PostenForm(request.POST, instance=Posten())
 
-    return render(request, 'rechnung/form_posten_neu.html', {'form': form, 'rechnung':rechnung})
+            if form.is_valid():
+                posten = form.save(commit=False)
+                posten.rechnung = rechnung
+                pisten = form.save()
+                if 'zurueck' in request.POST:
+                    return redirect('rechnung:rechnung', rechnung_id=rechnung.pk)
+                else:
+                    return redirect('rechnung:rechnung_posten_neu', rechnung_id=rechnung.pk)
+        else:
+            form = PostenForm()
+
+        return render(request, 'rechnung/form_posten_neu.html', {'form': form, 'rechnung':rechnung})
 
 
 #Kategorie####################################################################
