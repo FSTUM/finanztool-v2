@@ -2,7 +2,11 @@
 {% load i18n %}
 {% load bootstrap3 %}
 
-{% block title %}Rechnung hinzufügen{% endblock %}
+{% if rechnung.pk %}
+    {% block title %}Rechnung ändern{% endblock %}
+{% else %}
+    {% block title %}Rechnung hinzufügen{% endblock %}
+{% endif %}
 
 {% block content %}
     <h1>Rechnung hinzufügen</h1>
