@@ -34,6 +34,8 @@ class RechnungForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(RechnungForm, self).__init__(*args, **kwargs)
+        users=User.objects.all()
+        self.fields['ersteller'].choices = [(user.pk, user.get_short_name()) for user in users]
 
         self.fields.pop('rnr')
         if self.instance.gestellt:
