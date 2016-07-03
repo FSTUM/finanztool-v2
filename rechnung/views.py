@@ -64,7 +64,7 @@ def form_rechnung(request, rechnung_id=None):
             rechnung = form.save()
             return redirect('rechnung:rechnung', rechnung_id=rechnung.pk)
     else:
-        form = RechnungForm(instance=rechnung)
+        form = RechnungForm(initial={'ersteller':request.user}, instance=rechnung)
 
     return render(request, 'rechnung/form_rechnung.html', {'form': form, 'rechnung':rechnung})
 
