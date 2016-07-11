@@ -40,6 +40,8 @@ class RechnungForm(forms.ModelForm):
         self.fields['ersteller'].choices = [(user.pk, user.get_short_name()) for user in users]
         kategorien = Kategorie.objects.exclude(name='Test').exclude(name='test')
         self.fields['kategorie'].queryset = kategorien
+        kunden = Kunde.objects.exclude(name__contains='Test').exclude(organisation__contains='Test')
+        self.fields['kunde'].queryset = kunden
 
         self.fields.pop('rnr')
         if self.instance.gestellt:
