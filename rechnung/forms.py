@@ -5,6 +5,8 @@ from django.db.models import Q
 from .models import Kunde
 from .models import Rechnung
 from .models import Posten
+from .models import User
+from .models import Kategorie
 
 class RechnungForm(forms.ModelForm):
     class Meta:
@@ -36,6 +38,8 @@ class RechnungForm(forms.ModelForm):
         super(RechnungForm, self).__init__(*args, **kwargs)
         users=User.objects.all()
         self.fields['ersteller'].choices = [(user.pk, user.get_short_name()) for user in users]
+        kategorien = Kategorie.objects.exclude(name='Test').exclude(name='test')
+        self.fields['kategorie'].queryset = kategorien
 
         self.fields.pop('rnr')
         if self.instance.gestellt:
