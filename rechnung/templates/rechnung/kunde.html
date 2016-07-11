@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
+{% load l10n %}
 
-{% block title %}Kunde {{ kunde.knr }}{% endblock %}
+{% block title %}Kunde {% localize off %} {{ kunde.knr }} {% endlocalize %} {% endblock %}
 
 {% block content %}
-<h1>Kunde {{ kunde.knr }}</h1>
+<h1>Kunde {% localize off %} {{ kunde.knr }} {% endlocalize %}</h1>
 <h2>
     <a href="{% url "rechnung:kunde_aendern" kunde.id %}" class="btn btn-info" role="button">
         {% bootstrap_icon "pencil" %} Kunde bearbeiten

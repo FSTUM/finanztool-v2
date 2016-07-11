@@ -1,4 +1,5 @@
 {% autoescape off %}
+    {% load l10n %}
     \documentclass[a4paper,12pt,top=1.5cm,bottom=1.5cm]{article}
     \usepackage[ngerman]{babel}
     \usepackage[utf8]{inputenc}
@@ -86,7 +87,7 @@
     %Infofeld%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \hfill{\parbox[c]{7.5cm}{
         \begin{tabular}{ll}
-            Kundennummer: & {{ rechnung.kunde.knr }} \\[-0.5ex]
+            Kundennummer: & {% localize off %}{{ rechnung.kunde.knr }}{% endlocalize %} \\[-0.5ex]
             Rechnungsnummer: & {{ rechnung.rnr }} \\[-0.5ex]
             \ifnum\pdfstrcmp{ {{ rechnung.ldatum }} }{ None }=0
                 Rechnungsdatum: & {{ rechnung.rdatum }} \\[7.5ex]
@@ -148,7 +149,7 @@
     %Endtext%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     Bitte überweisen Sie den Rechnungsbetrag von {\bf {{ rechnung.gesamtsumme }}} \euro\ ohne Abzug bis zum
     {{ rechnung.fdatum }} auf das unten angegebene Konto mit Verwendungszweck
-    {\bf RE {{ rechnung.rnr }} \ KD {{ rechnung.kunde.knr }}}.\\[2ex]
+            {\bf RE {{ rechnung.rnr }} \ KD {% localize off %}{{ rechnung.kunde.knr }}{% endlocalize %}}.\\[2ex]
     Bei Rückfragen stehen wir Ihnen gerne zur Verfügung!
 
 

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load l10n %}
 {% load bootstrap3 %}
 
 {% block title %}Kunde suchen{% endblock %}
@@ -31,7 +32,7 @@
                     </tr>
                     {% for kunde in result %}
                     <tr>
-                        <td><a href="{% url 'rechnung:kunde' kunde.id %}">{{ kunde.knr }}</a></td>
+                        <td><a href="{% url 'rechnung:kunde' kunde.id %}">{% localize off %} {{ kunde.knr }} {% endlocalize %}</a></td>
                         <td>{{ kunde.organisation }}</td>
                         <td>{{ kunde.suborganisation }}</td>
                         {% if kunde.anrede == "w" %}
