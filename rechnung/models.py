@@ -76,7 +76,11 @@ class Rechnung(models.Model):
             )
 
     def __str__(self):
-        return "RE {} ({})".format(self.rnr, self.name)
+        return "RE {} ({})".format(self.rnr_string, self.name)
+
+    @property
+    def rnr_string(self):
+        return str(self.rnr).zfill(5)
 
     @property
     def zwischensumme(self):

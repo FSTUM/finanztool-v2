@@ -31,7 +31,7 @@
                             </tr>
                             {% for rechnung in result %}
                             <tr>
-                                <td><a href="{% url 'rechnung:rechnung' rechnung.id %}">RE {{ rechnung.rnr }}</a></td>
+                                <td><a href="{% url 'rechnung:rechnung' rechnung.id %}">RE {{ rechnung.rnr_string }}</a></td>
                                 <td>{{ rechnung.name }}</td>
                                 <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde }}</td>
                                 <td>{{ rechnung.rdatum }}</td>

@@ -220,7 +220,7 @@ def rechnungpdf(request, rechnung_id):
         return render(request, 'rechnung/rechnungpdf_error.html', { 'erroroutput': e.output })
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="RE%s_%s.pdf"' % (rechnung.rnr, rechnung.kunde.knr)
+    response['Content-Disposition'] = 'attachment; filename="RE%s_%s.pdf"' % (rechnung.rnr_string, rechnung.kunde.knr)
 
     # return path to pdf
     pdf_filename= "%s.pdf" % os.path.splitext(latex_filename)[0]
