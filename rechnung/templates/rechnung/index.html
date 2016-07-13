@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
+{% load l10n %}
 
 {% block title %}Letzte Rechnungen{% endblock %}
 
@@ -9,35 +10,35 @@
             <div class="col-md-10">
                 <h3>Letzte Rechnungen</h3>
                 <br/>
-                <table class="table borderless">
+                <table class="table table-hover">
                     <tr>
                         <th>Rechnungsnr.</th>
                         <th>Zweck</th>
                         <th>Kunde</th>
-                        <th>Rechnungsdatum</th>
-                        <th>Kategorie</th>
+                        <th>Datum</th>
                         <th>Gestellt?</th>
-                        <th>Fälligkeitsdatum</th>
+                        <th>Betrag</th>
+                        <th>Fällig</th>
                         <th>Bezahlt?</th>
                     </tr>
                     {% for rechnung in letzte_rechnungen_liste %}
                     <tr>
                         <td><a href="{% url 'rechnung:rechnung' rechnung.id %}">RE {{ rechnung.rnr_string }}</a></td>
                         <td>{{ rechnung.name }}</td>
-                        <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde }}</td>
+                        <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}"> {% localize off %} {{ rechnung.kunde.knr }} {% endlocalize %} </td>
                         <td>{{ rechnung.rdatum }}</td>
-                        <td><a href="{% url 'rechnung:kategorie_detail' rechnung.kategorie.id %}">{{ rechnung.kategorie }}</td>
                         {% if rechnung.gestellt %}
                             <td>
                             {% bootstrap_icon "ok" %}
                             </td>
+                            <td align="right">{{ rechnung.gesamtsumme }} €</td>
                             <td>
                                 {% if rechnung.faellig %}
                                     {% if not rechnung.bezahlt %}
                                         <span style="color : red;">
                                     {% endif %}
                                 {% endif %}
-                                {{ rechnung.fdatum }}
+                                {{ rechnung.fdatum|date:"SHORT_DATE_FORMAT" }}
                             </td>
                             <td>
                                 {% if rechnung.bezahlt %}
@@ -49,6 +50,8 @@
                         {% else %}
                             <td>
                             {% bootstrap_icon "remove" %}
+                            </td>
+                            <td>
                             </td>
                             <td>
                             </td>
