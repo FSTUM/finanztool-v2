@@ -118,7 +118,7 @@ class RechnungSuchenForm(forms.Form):
                                             Q(kunde__vorname__icontains=p) |
                                             Q(kunde__strasse__icontains=p) |
                                             Q(kunde__stadt__icontains=p) |
-                                            Q(kunde__kommentar__icontains=p))
+                                            Q(kunde__kommentar__icontains=p)).order_by('-rnr')
         return data
 
 class KundeSuchenForm(forms.Form):
@@ -138,6 +138,6 @@ class KundeSuchenForm(forms.Form):
                                             Q(suborganisation__icontains=p) |
                                             Q(kommentar__icontains=p) |
                                             Q(strasse__icontains=p) |
-                                            Q(stadt__icontains=p))
+                                            Q(stadt__icontains=p)).order_by('-knr')
         return data
 

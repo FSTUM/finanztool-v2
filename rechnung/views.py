@@ -28,7 +28,7 @@ def willkommen(request):
 
 @login_required
 def index(request):
-    letzte_rechnungen_liste = Rechnung.objects.order_by('-rnr')[:10]
+    letzte_rechnungen_liste = Rechnung.objects.order_by('-rnr')[:20]
     context = {'letzte_rechnungen_liste': letzte_rechnungen_liste}
     return render(request, 'rechnung/index.html', context)
 
