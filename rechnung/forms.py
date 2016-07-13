@@ -10,6 +10,9 @@ from .models import Kategorie
 
 class RechnungForm(forms.ModelForm):
     class Meta:
+        rdatum = forms.DateField(
+                widget=forms.DateInput(attrs={'class': 'datepicker'})
+                )
         model = Rechnung
         help_texts = {
                 'name': 'Nur für uns, wird nicht nach außen gezeigt.',
