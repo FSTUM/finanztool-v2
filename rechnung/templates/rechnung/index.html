@@ -34,7 +34,9 @@
                             <td align="right">{{ rechnung.gesamtsumme }} €</td>
                             <td>
                                 {% if rechnung.faellig %}
-                                    {% if not rechnung.bezahlt %}
+                                    {% if rechnung.bezahlt %}
+                                        <span style="color : green;">
+                                    {% else %}
                                         <span style="color : red;">
                                     {% endif %}
                                 {% endif %}
