@@ -53,7 +53,7 @@
                                     Hallo {{ username }}!
                                 {% endblocktrans %}
                              </p>
-                            <li><a href="{% url "rechnung:index" %}">Übersicht</a></li>
+                            <li><a href="{% url "rechnung:index" %}">Unbezahlt</a></li>
                             {#{% if user.is_superuser or user|has_perm_group %}#}
                             <li>
                                 <div class="dropdown">
@@ -62,6 +62,7 @@
                                   <ul class="dropdown-menu">
                                       <li><a  href="{% url "rechnung:rechnung_neu" %}">{% bootstrap_icon "plus" %} Hinzufügen</a></li>
                                       <li><a  href="{% url "rechnung:rechnungsuchen" %}">{% bootstrap_icon "search" %} Suchen</a></li>
+                                      <li><a  href="{% url "rechnung:alle" %}">{% bootstrap_icon "eye-open" %} Alle</a></li>
                                   </ul>
                                 </div>
                             </li>

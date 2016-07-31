@@ -18,6 +18,9 @@ urlpatterns = [
     # ex: /rechnung/index
     url(r'^index/$', views.index, name='index'),
 
+    # ex: /rechnung/alle
+    url(r'^alle/$', views.alle, name='alle'),
+
     # ex: /rechnung/admin/
     url(r'^admin/$', views.admin, name='admin'),
 

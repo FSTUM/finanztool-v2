@@ -2,31 +2,35 @@
 {% load bootstrap3 %}
 {% load l10n %}
 
-{% block title %}Unbezahlte Rechnungen{% endblock %}
+{% block title %}Alle Rechnungen{% endblock %}
 
 {% block content %}
-    {% if letzte_rechnungen_liste %}
+    {% if rechnungen_liste %}
         <div class="row">
-            <div class="col-md-10">
-                <h3>Unbezahlte Rechnungen</h3>
+            <div class="col-md-12">
+                <h3>Alle Rechnungen</h3>
                 <br/>
                 <table class="table table-hover">
                     <tr>
                         <th>Rechnungsnr.</th>
                         <th>Zweck</th>
+                        <th>Kategorie</th>
                         <th>Kunde</th>
                         <th>Datum</th>
+                        <th>Ersteller</th>
                         <th>Gestellt?</th>
                         <th>Betrag</th>
                         <th>Fällig</th>
                         <th>Bezahlt?</th>
                     </tr>
-                    {% for rechnung in letzte_rechnungen_liste %}
+                    {% for rechnung in rechnungen_liste %}
                     <tr>
                         <td><a href="{% url 'rechnung:rechnung' rechnung.id %}">RE {{ rechnung.rnr_string }}</a></td>
                         <td>{{ rechnung.name }}</td>
+                        <td><a href="{% url 'rechnung:kategorie_detail' rechnung.kategorie.id %}">{{ rechnung.kategorie }}</td>
                         <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}"> {% localize off %} {{ rechnung.kunde.knr }} {% endlocalize %} </td>
                         <td>{{ rechnung.rdatum }}</td>
+                        <td>{{ rechnung.ersteller.get_short_name }}</td>
                         {% if rechnung.gestellt %}
                             <td>
                             {% bootstrap_icon "ok" %}

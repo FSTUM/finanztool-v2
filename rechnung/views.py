@@ -28,9 +28,15 @@ def willkommen(request):
 
 @login_required
 def index(request):
-    letzte_rechnungen_liste = Rechnung.objects.order_by('-rnr')[:20]
+    letzte_rechnungen_liste = Rechnung.objects.filter(bezahlt=False).order_by('-rnr')
     context = {'letzte_rechnungen_liste': letzte_rechnungen_liste}
     return render(request, 'rechnung/index.html', context)
+
+@login_required
+def alle(request):
+    rechnungen_liste = Rechnung.objects.order_by('-rnr')
+    context = {'rechnungen_liste': rechnungen_liste}
+    return render(request, 'rechnung/alle_rechnungen.html', context)
 
 @login_required
 def admin(request):
