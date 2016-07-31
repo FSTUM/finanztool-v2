@@ -69,6 +69,10 @@
                 <th>Kategorie</th>
                 <td><a href="{% url 'rechnung:kategorie_detail' rechnung.kategorie.id %}">{{ rechnung.kategorie }}</td>
             </tr>
+            <tr>
+                <th>Einleitungstext</th>
+                <td>{{ rechnung.einleitung }}</td>
+            </tr>
         </table>
     </div>
 </div>
