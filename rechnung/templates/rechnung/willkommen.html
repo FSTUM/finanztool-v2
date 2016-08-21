@@ -3,8 +3,8 @@
 {% block title %}Finanztool{% endblock %}
 
 {% block content %}
-Willkommen beim Finanztool!
+<h2>Willkommen beim Finanztool!</h2>
 {% if not user.is_authenticated %}
-Melde dich an, um fortzufahren.
+<h4><a href="{% url "rechnung:login" %}">Melde dich an</a>, um fortzufahren.</h4>
 {% endif %}
 {% endblock %}

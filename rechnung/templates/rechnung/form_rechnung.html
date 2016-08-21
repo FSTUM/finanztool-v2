@@ -11,17 +11,35 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Rechnung hinzufügen</h1>
     {% if rechnung.pk %}
-        <a href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}" class="btn btn-default" role="button">{% bootstrap_icon "arrow-left" %} Zurück zur Rechnung</a>
+        <h3>
+            <div class="alert alert-danger">
+                Möchtest du wirklich diese Rechnung bearbeiten?</br>
+                Du kannst lediglich einen neuen Kunden auswählen, hebe in dem Fall
+                das Original auf.</br>
+                Für andere Änderungen erstelle bitte eine neue Rechnung!
+            </div>
+        </h3> 
+        <h1>Rechnung ändern</h1>
+    {% else %}
+        <h1>Rechnung hinzufügen</h1>
+    {% endif %}
+
+    {% if rechnung.pk %}
+        <p><a
+             href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
+            class="btn btn-default" role="button">{% bootstrap_icon "arrow-left" %}
+            Zurück zur Rechnung
+        </a></p>
     {% endif %}
     <div class="row">
         <div class="col-md-6">
-            <h4><b><span style="color : red;">
-                Bitte gültige LaTex-Formatierung verwenden (z.B. \& für &, \\ für Absatz)
-            </b></h4>
-            <h5>Mit * markierte Felder sind verpflichtend</h5>
-            <br></br>
+            <div class="alert alert-warning">
+                Bitte gültige LaTex-Formatierung verwenden (z.B. \& für &, \\ für Absatz)</div>
+            <p><span class="text-muted">
+                    Mit * markierte Felder sind verpflichtend
+            </span></p>
+
             <script type="text/javascript">
                 $(function () {
                     $('.datepicker').datepicker();

@@ -1,9 +1,6 @@
-import datetime
-
 from django.db import models
 from django.db.models import Max
 from django.contrib.auth.models import User
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils import timezone
 from datetime import date, datetime, timedelta
 from decimal import Decimal
@@ -12,6 +9,7 @@ from decimal import Decimal
 def get_faelligkeit_default():
     return date.today() + timedelta(days=15)
 
+
 def get_new_highest_rnr():
     if Rechnung.objects.all().count() == 0:
         new_rnr = 1
@@ -19,12 +17,14 @@ def get_new_highest_rnr():
         new_rnr = (Rechnung.objects.all().aggregate(Max('rnr'))['rnr__max'])+1
     return new_rnr
 
+
 def get_new_highest_knr():
     if Kunde.objects.all().count() == 0:
         new_knr = 1
     else:
         new_knr = Kunde.objects.all().aggregate(Max('knr'))['knr__max']+1
     return new_knr
+
 
 # Create your models here.
 class Rechnung(models.Model):
@@ -36,7 +36,7 @@ class Rechnung(models.Model):
             )
     rnr = models.IntegerField(
             verbose_name='Rechnungsnummer *',
-            default = get_new_highest_rnr,
+            default=get_new_highest_rnr,
             unique=True,
             )
     rdatum = models.DateField(
@@ -87,28 +87,28 @@ class Rechnung(models.Model):
         summe = Decimal(0)
         for posten in self.posten_set.all():
             summe = summe + posten.summenetto
-        return Decimal(round(summe,2))
+        return Decimal(round(summe, 2))
 
     @property
     def summe_mwst_7(self):
         summe = Decimal(0)
         for posten in self.posten_set.filter(mwst=7):
             summe = summe + (posten.summenetto * Decimal(0.07))
-        return Decimal(round(summe,2))
+        return Decimal(round(summe, 2))
 
     @property
     def summe_mwst_19(self):
         summe = Decimal(0)
         for posten in self.posten_set.filter(mwst=19):
             summe = summe + (posten.summenetto * Decimal(0.19))
-        return Decimal(round(summe,2))
+        return Decimal(round(summe, 2))
 
-    #durch addieren mit mwst berechnet
+    # durch addieren mit mwst berechnet
     @property
     def gesamtsumme(self):
-        summe = Decimal(self.zwischensumme + self.summe_mwst_7 + self.summe_mwst_19)
-        return Decimal(round(summe,2))
-
+        summe = Decimal(self.zwischensumme + self.summe_mwst_7 +
+                        self.summe_mwst_19)
+        return Decimal(round(summe, 2))
 
     def wurde_vor_kurzem_gestellt(self):
         return self.rdatum >= timezone.now() - datetime.timedelta(days=16)
@@ -116,10 +116,11 @@ class Rechnung(models.Model):
     def faellig(self):
         return self.fdatum < date.today()
 
+
 class Kunde(models.Model):
     knr = models.IntegerField(
             verbose_name='Kundennummer *',
-            default = get_new_highest_knr,
+            default=get_new_highest_knr,
             unique=True,
             )
     organisation = models.CharField(
@@ -135,8 +136,8 @@ class Kunde(models.Model):
             blank=True,
             )
     GESCHLECHT = (
-            ('w' , 'Frau'),
-            ('m' , 'Herr'),
+            ('w', 'Frau'),
+            ('m', 'Herr'),
     )
     anrede = models.CharField(
             verbose_name='Anrede',
@@ -175,8 +176,10 @@ class Kunde(models.Model):
             null=True,
             blank=True,
             )
+
     def __str__(self):
         return "{}: {} ({})".format(self.knr, self.name, self.organisation)
+
 
 class Kategorie(models.Model):
     name = models.CharField(
@@ -184,8 +187,10 @@ class Kategorie(models.Model):
             max_length=100,
             unique=True,
             )
+
     def __str__(self):
         return self.name
+
 
 class Posten(models.Model):
     rechnung = models.ForeignKey(
@@ -202,18 +207,18 @@ class Posten(models.Model):
             max_digits=15,
             )
     MWSTSATZ = (
-            (0 , '0 %'),
-            (7 , '7 %'),
-            (19 , '19 %'),
+            (0, '0 %'),
+            (7, '7 %'),
+            (19, '19 %'),
             )
     mwst = models.IntegerField(
             verbose_name='Mehrwertsteuersatz',
             choices=MWSTSATZ,
-            default = 7,
+            default=7,
             )
     anzahl = models.IntegerField(
             verbose_name='Anzahl',
-            default = 1,
+            default=1,
             )
 
     @property
@@ -228,13 +233,12 @@ class Posten(models.Model):
     @property
     def summenettogerundet(self):
         summe = self.anzahl * self.einzelpreis
-        return Decimal(round(summe,2))
+        return Decimal(round(summe, 2))
 
     @property
     def summebrutto(self):
-        summe= self.summenetto * (1+self.get_mwst)
+        summe = self.summenetto * (1+self.get_mwst)
         return summe
 
     def __str__(self):
         return self.name
-

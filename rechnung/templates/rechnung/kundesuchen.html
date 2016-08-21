@@ -37,8 +37,10 @@
                         <td>{{ kunde.suborganisation }}</td>
                         {% if kunde.anrede == "w" %}
                             <td>Frau {{ kunde.vorname }} {{ kunde.name }}</td>
-                        {% else %}
+                        {% elif kunde.anrede == "m" %}
                             <td>Herr {{ kunde.vorname }} {{ kunde.name }}</td>
+                        {% else %}
+                            <td>{{ kunde.vorname }} {{ kunde.name }}</td>
                         {% endif %}
                         <td>{{ kunde.strasse }},{{ kunde.plz }} {{ kunde.stadt }}</td>
                         <td>{{ kunde.kommentar }}</td>
