@@ -8,6 +8,7 @@ from .forms import RechnungForm
 from .forms import PostenForm
 from .forms import KundeSuchenForm
 from .forms import RechnungSuchenForm
+from .forms import RechnungBezahltForm
 
 from tempfile import mkdtemp, mkstemp
 import os
@@ -21,7 +22,10 @@ from .models import Posten
 
 
 def willkommen(request):
-    return render(request, 'rechnung/willkommen.html')
+    offene_rechnungen = Rechnung.objects.filter(gestellt=True,
+                                                bezahlt=False).count()
+    context = {'offene_rechnungen': offene_rechnungen}
+    return render(request, 'rechnung/willkommen.html', context)
 
 
 @login_required
@@ -62,7 +66,15 @@ def logout(request):
 @login_required
 def rechnung(request, rechnung_id):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
-    return render(request, 'rechnung/rechnung.html', {'rechnung': rechnung})
+    form = RechnungBezahltForm(request.POST or None)
+    if form.is_valid():
+        rechnung.bezahlt=True
+        rechnung.save()
+
+        return redirect('rechnung:index')
+
+    context = {'form': form, 'rechnung': rechnung}
+    return render(request, 'rechnung/rechnung.html', context)
 
 
 @login_required

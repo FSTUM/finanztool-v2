@@ -52,6 +52,7 @@ class RechnungForm(forms.ModelForm):
         self.fields['kunde'].queryset = kunden
 
         self.fields.pop('rnr')
+        self.fields.pop('bezahlt')
         if self.instance.gestellt:
             self.fields.pop('rdatum')
             self.fields.pop('fdatum')
@@ -60,6 +61,9 @@ class RechnungForm(forms.ModelForm):
             self.fields.pop('einleitung')
             self.fields.pop('gestellt')
 
+
+class RechnungBezahltForm(forms.Form):
+    rechnungbezahlt = forms.BooleanField(label='', required=True)
 
 class PostenForm(forms.ModelForm):
     class Meta:

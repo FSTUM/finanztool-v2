@@ -6,18 +6,33 @@
 {% block content %}
 <h1>RE {{ rechnung.rnr_string }}: {{ rechnung.name }} 
 </h1>
-<h2>
-    <a href="{% url "rechnung:rechnung_aendern" rechnung.id %}" class="btn btn-info" role="button">
-        {% bootstrap_icon "pencil" %} Rechnung bearbeiten
-    </a>
+    {% if rechnung.gestellt %}
+            <form class=form-horizontal method="POST">{% csrf_token %}
+                </br>
+                <p>
+                {{ form }}
+                <button type="submit" class="save btn btn-success">
+                    {% bootstrap_icon "credit-card" %} Bezahlt
+                </button>
+                </p>
+            </form>
+    {% endif %}
+
+    <h2>
+        <a href="{% url "rechnung:rechnung_aendern" rechnung.id %}" class="btn btn-info" role="button">
+            {% bootstrap_icon "pencil" %} Bearbeiten
+        </a>
+
     {% if not rechnung.gestellt %}
         <a href="{% url "rechnung:rechnung_posten_neu" rechnung.id %}" class="btn btn-info" role="button">
             {% bootstrap_icon "plus" %} Neuer Posten
         </a>
     {% endif %}
+
     <a href="{% url "rechnung:rechnungpdf" rechnung.id %}" class="btn btn-info" role="button">
-        {% bootstrap_icon "download-alt" %} Rechnung herunterladen
+        {% bootstrap_icon "download-alt" %} Herunterladen
     </a>
+
 </h2>
 
 <div class="row">
