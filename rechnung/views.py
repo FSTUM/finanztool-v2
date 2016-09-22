@@ -22,10 +22,13 @@ from .models import Posten
 
 
 def willkommen(request):
-    offene_rechnungen = Rechnung.objects.filter(gestellt=True,
-                                                bezahlt=False).count()
-    context = {'offene_rechnungen': offene_rechnungen}
-    return render(request, 'rechnung/willkommen.html', context)
+    if request.user.is_authenticated():
+        offene_rechnungen = Rechnung.objects.filter(gestellt=True,
+                                                    bezahlt=False).count()
+        context = {'offene_rechnungen': offene_rechnungen}
+        return render(request, 'rechnung/willkommen.html', context)
+    else:
+        return render(request, 'rechnung/willkommen.html')
 
 
 @login_required

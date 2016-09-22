@@ -8,7 +8,9 @@
 <h4><a href="{% url "rechnung:login" %}">Melde dich an</a>, um fortzufahren.</h4>
 {% endif %}
 </br>
-<p>
-    Es existieren {{ offene_rechnungen }} offene Rechnungen.
-</p>
+{% if user.is_authenticated %}
+    <p>
+        Es existieren {{ offene_rechnungen }} offene Rechnungen.
+    </p>
+{% endif %}
 {% endblock %}
