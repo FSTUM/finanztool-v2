@@ -10,7 +10,7 @@
 </br>
 {% if user.is_authenticated %}
     <p>
-        Es existieren {{ offene_rechnungen }} offene Rechnungen.
+    Es existieren <a href="{% url "rechnung:index" %}">{{ offene_rechnungen }} offene Rechnungen</a>.
     </p>
 {% endif %}
 {% endblock %}

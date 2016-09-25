@@ -48,7 +48,7 @@ class RechnungForm(forms.ModelForm):
             exclude(name='test')
         self.fields['kategorie'].queryset = kategorien
         kunden = Kunde.objects.exclude(name__contains='Test'). \
-            exclude(organisation__contains='Test')
+            exclude(organisation__contains='Test').order_by('-knr')
         self.fields['kunde'].queryset = kunden
 
         self.fields.pop('rnr')

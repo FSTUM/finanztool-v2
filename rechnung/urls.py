@@ -76,6 +76,8 @@ urlpatterns = [
     # ex: /rechnung/kunde/suchen/
     url(r'^kunde/suchen/$', views.kundesuchen, name='kundesuchen'),
 
+    # ex: /rechnung/kunde/alle/
+    url(r'^kunde/alle/$', views.kunden_alle, name='kunden_alle'),
 
 
     # Posten#############################################################

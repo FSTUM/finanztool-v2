@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load l10n %}
+
+{% block title %}Alle Kunden{% endblock %}
+
+{% block content %}
+    {% if kunden_liste %}
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Alle Kunden</h3>
+                <br/>
+                <table class="table table-hover">
+                    <tr>
+                        <th>Kundennr.</th>
+                        <th>Organisation</th>
+                        <th>Suborganisation</th>
+                        <th>Name</th>
+                        <th>Adresse</th>
+                        <th>Kommentar</th>
+                    </tr>
+                    {% for kunde in kunden_liste %}
+                    <tr>
+                        <td><a href="{% url 'rechnung:kunde' kunde.id %}">{% localize off %} {{ kunde.knr }} {% endlocalize %}</a></td>
+                        <td>{{ kunde.organisation }}</td>
+                        <td>{{ kunde.suborganisation }}</td>
+                        {% if kunde.anrede == "w" %}
+                            <td>Frau {{ kunde.vorname }} {{ kunde.name }}</td>
+                        {% elif kunde.anrede == "m" %}
+                            <td>Herr {{ kunde.vorname }} {{ kunde.name }}</td>
+                        {% else %}
+                            <td>{{ kunde.vorname }} {{ kunde.name }}</td>
+                        {% endif %}
+                        <td>{{ kunde.strasse }},{{ kunde.plz }} {{ kunde.stadt }}</td>
+                        <td>{{ kunde.kommentar }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <p>Es sind keine Kunden verfügbar.</p>
+    {% endif %}
+{% endblock %}
+

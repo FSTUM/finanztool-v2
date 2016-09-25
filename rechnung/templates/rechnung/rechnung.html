@@ -101,8 +101,8 @@
                 <th class="text-right">Anzahl</th>
                 <th>Bezeichnung</th>
                 <th class="text-right">Einzelpreis</th>
-                <th class="text-right">Summe Netto</th>
                 <th class="text-right">Mwst-Satz</th>
+                <th class="text-right">Summe Netto</th>
             </tr>
             {% for posten in rechnung.posten_set.all %}
             <tr>
@@ -113,8 +113,8 @@
                     <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</td>
                 {% endif %}
                 <td align="right">{{ posten.einzelpreis }} €</td>
-                <td align="right">{{ posten.summenettogerundet }} €</td>
                 <td align="right">{{ posten.get_mwst_display }}</td>
+                <td align="right">{{ posten.summenettogerundet }} €</td>
             </tr>
             {% endfor %}
         </table>

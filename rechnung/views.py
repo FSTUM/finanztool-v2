@@ -149,6 +149,13 @@ def form_kunde(request, kunde_id=None):
 
 
 @login_required
+def kunden_alle(request):
+    kunden_liste = Kunde.objects.order_by('-knr')
+    context = {'kunden_liste': kunden_liste}
+    return render(request, 'rechnung/kunden_alle.html', context)
+
+
+@login_required
 def kundesuchen(request):
     form = KundeSuchenForm(request.POST or None)
 
