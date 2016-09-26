@@ -6,13 +6,23 @@
 {% block content %}
 <h1>RE {{ rechnung.rnr_string }}: {{ rechnung.name }} 
 </h1>
-    {% if rechnung.gestellt %}
+    {% if rechnung.gestellt and not rechnung.bezahlt %}
             <form class=form-horizontal method="POST">{% csrf_token %}
                 </br>
                 <p>
                 {{ form }}
-                <button type="submit" class="save btn btn-success">
+                <button type="submit" name="bezahlt" class="save btn btn-success">
                     {% bootstrap_icon "credit-card" %} Bezahlt
+                </button>
+                </p>
+            </form>
+    {% else %}
+            <form class=form-horizontal method="POST">{% csrf_token %}
+                </br>
+                <p>
+                {{ form }}
+                <button type="submit" name="gestellt" class="save btn btn-success">
+                    {% bootstrap_icon "credit-card" %} Gestellt
                 </button>
                 </p>
             </form>

@@ -70,11 +70,19 @@ def logout(request):
 def rechnung(request, rechnung_id):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
     form = RechnungBezahltForm(request.POST or None)
-    if form.is_valid():
-        rechnung.bezahlt=True
-        rechnung.save()
+    if request.method == 'POST':
+        if 'bezahlt' in request.POST:
+            if form.is_valid():
+                rechnung.bezahlt=True
+                rechnung.save()
 
-        return redirect('rechnung:index')
+                return redirect('rechnung:index')
+
+        elif 'gestellt' in request.POST:
+            if form.is_valid():
+                rechnung.gestellt=True
+                rechnung.save()
+                form.clean(False)
 
     context = {'form': form, 'rechnung': rechnung}
     return render(request, 'rechnung/rechnung.html', context)
