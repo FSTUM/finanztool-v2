@@ -81,7 +81,12 @@
     \notblank{ {{ rechnung.kunde.vorname }}{{ rechnung.kunde.name }} }
         {\parbox[c]{8cm}{ {{ rechnung.kunde.vorname }} {{ rechnung.kunde.name }}  }\\}{}
     {\parbox[c]{8cm}{ {{ rechnung.kunde.strasse }} }\\}
-    {\parbox[c]{8cm}{ {{ rechnung.kunde.plz }} {{ rechnung.kunde.stadt }} }\\[3ex]}
+    \ifnum\pdfstrcmp{ {{ rechnung.kunde.land }} }{ Deutschland }=0
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.plz }} {{ rechnung.kunde.stadt }} }\\[3ex]}
+    \else
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.plz }} {{ rechnung.kunde.stadt }} }\\}
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.land }} }\\[3ex]}
+    \fi
 
 
     %Infofeld%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

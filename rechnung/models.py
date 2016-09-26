@@ -170,6 +170,11 @@ class Kunde(models.Model):
             verbose_name='Stadt *',
             max_length=200,
             )
+    land = models.CharField(
+            verbose_name='Land *',
+            max_length=100,
+            default='Deutschland',
+            )
     kommentar = models.TextField(
             verbose_name='Kommentar',
             max_length=1000,

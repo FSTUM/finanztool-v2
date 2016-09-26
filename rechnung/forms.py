@@ -101,6 +101,7 @@ class KundeForm(forms.ModelForm):
                 'strasse',
                 'plz',
                 'stadt',
+                'land',
                 'kommentar',
                 )
 
