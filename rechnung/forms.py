@@ -96,6 +96,7 @@ class KundeForm(forms.ModelForm):
                 'organisation',
                 'suborganisation',
                 'anrede',
+                'titel',
                 'name',
                 'vorname',
                 'strasse',

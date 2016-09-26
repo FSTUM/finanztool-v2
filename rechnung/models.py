@@ -146,6 +146,13 @@ class Kunde(models.Model):
             null=True,
             blank=True,
             )
+    titel = models.CharField(
+            verbose_name='Titel',
+            max_length=50,
+            null=True,
+            blank=True,
+            default='',
+            )
     name = models.CharField(
             verbose_name='Nachname',
             max_length=50,
@@ -183,7 +190,21 @@ class Kunde(models.Model):
             )
 
     def __str__(self):
-        return "{}: {} ({})".format(self.knr, self.name, self.organisation)
+        description = "{}: ".format(self.knr)
+        if self.organisation:
+            if self.name:
+                description += "{} - {}".format(self.organisation, self.name)
+            else:
+                description += "{}".format(self.organisation)
+
+        elif self.name:
+            if self.vorname:
+                description += "{}, {}".format(self.name, self.vorname)
+            else:
+                description += "{}".format(self.name)
+        if self.kommentar:
+            description += " ({})".format(self.kommentar)
+        return description
 
 
 class Kategorie(models.Model):
