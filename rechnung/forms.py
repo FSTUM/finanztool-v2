@@ -10,9 +10,6 @@ from .models import Kategorie
 
 class RechnungForm(forms.ModelForm):
     class Meta:
-        rdatum = forms.DateField(
-                widget=forms.DateInput(attrs={'class': 'datepicker'})
-                )
         model = Rechnung
         help_texts = {
                 'name': 'Nur für uns, wird nicht nach außen gezeigt.',
@@ -23,8 +20,16 @@ class RechnungForm(forms.ModelForm):
                                folgende Posten in Rechnung:',
                 }
         widgets = {
+                'rdatum': forms.DateInput(attrs={
+                                                'id': 'pick_rdatum',
+                                                }),
+                'fdatum': forms.DateInput(attrs={
+                                                'id': 'pick_fdatum',
+                                                }),
+                'ldatum': forms.DateInput(attrs={
+                                                'id': 'pick_ldatum',
+                                                })
                 }
-
         fields = (
                 'rnr',
                 'name',
@@ -41,6 +46,7 @@ class RechnungForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(RechnungForm, self).__init__(*args, **kwargs)
+
         users = User.objects.all()
         self.fields['ersteller'].choices = [(user.pk, user.get_short_name())
                                             for user in users]
@@ -64,6 +70,7 @@ class RechnungForm(forms.ModelForm):
 
 class RechnungBezahltForm(forms.Form):
     rechnungbezahlt = forms.BooleanField(label='', required=True)
+
 
 class PostenForm(forms.ModelForm):
     class Meta:
