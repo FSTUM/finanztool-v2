@@ -73,16 +73,16 @@ def rechnung(request, rechnung_id):
     if request.method == 'POST':
         if 'bezahlt' in request.POST:
             if form.is_valid():
-                rechnung.bezahlt=True
+                rechnung.bezahlt = True
                 rechnung.save()
 
                 return redirect('rechnung:index')
 
         elif 'gestellt' in request.POST:
             if form.is_valid():
-                rechnung.gestellt=True
+                rechnung.gestellt = True
                 rechnung.save()
-                form.clean(False)
+                return redirect('rechnung:rechnung', rechnung_id=rechnung.pk)
 
     context = {'form': form, 'rechnung': rechnung}
     return render(request, 'rechnung/rechnung.html', context)
@@ -142,6 +142,8 @@ def form_kunde(request, kunde_id=None):
     kunde = None
     if kunde_id:
         kunde = get_object_or_404(Kunde, pk=kunde_id)
+        kunde_verwendet = Rechnung.objects.filter(
+                               gestellt=True, kunde=kunde).exists()
 
     if request.method == "POST":
         form = KundeForm(request.POST, instance=kunde)
@@ -152,8 +154,11 @@ def form_kunde(request, kunde_id=None):
     else:
         form = KundeForm(instance=kunde)
 
-    return render(request, 'rechnung/form_kunde.html',
-                  {'form': form, 'kunde': kunde})
+    return render(request, 'rechnung/form_kunde.html', {
+                    'form': form,
+                    'kunde': kunde,
+                    'kunde_verwendet': kunde_verwendet
+                    })
 
 
 @login_required
