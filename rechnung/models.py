@@ -26,7 +26,6 @@ def get_new_highest_knr():
     return new_knr
 
 
-# Create your models here.
 class Rechnung(models.Model):
     name = models.CharField(
             verbose_name='Zweck der Rechnung',
@@ -115,6 +114,58 @@ class Rechnung(models.Model):
 
     def faellig(self):
         return self.fdatum < date.today()
+
+
+class Mahnung(models.Model):
+    rechnung = models.ForeignKey(
+            Rechnung,
+            on_delete=models.CASCADE
+            )
+    wievielte = models.IntegerField(
+            verbose_name='Wievielte Mahnung?',
+            null=True,
+            blank=True,
+            )
+    gebuehr = models.DecimalField(
+            verbose_name='Mahngebühr',
+            decimal_places=2,
+            max_digits=6,
+            )
+    mdatum = models.DateField(
+            verbose_name='Mahndatum',
+            default=date.today,
+            )
+    mfdatum = models.DateField(
+            verbose_name='Neue Fälligkeit',
+            default=get_faelligkeit_default,
+            )
+    geschickt = models.BooleanField(
+            verbose_name='Mahnung geschickt?',
+            default=False,
+            )
+    erledigt = models.BooleanField(
+            verbose_name='Rechnung beglichen',
+            default=False,
+            )
+    ersteller = models.ForeignKey(
+            User,
+            )
+
+    def save(self, *args, **kwargs):
+        if not self.wievielte:
+            mahnungen = Mahnung.objects.filter(rechnung=self.rechnung)
+            if mahnungen.exists():
+                self.wievielte = mahnungen.aggregate(
+                        Max('wievielte'))['wievielte__max']+1
+            else:
+                self.wievielte = 1
+        super(Mahnung, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "RE{}_{}_M{} ({})".format(self.rechnung.rnr_string,
+                                         self.rechnung.kunde.knr,
+                                         self.wievielte,
+                                         self.rechnung.name)
 
 
 class Kunde(models.Model):
