@@ -16,7 +16,7 @@
                 </button>
                 </p>
             </form>
-    {% else %}
+    {% elif not rechnung.gestellt and not rechnung.bezahlt %}
             <form class=form-horizontal method="POST">{% csrf_token %}
                 </br>
                 <p>

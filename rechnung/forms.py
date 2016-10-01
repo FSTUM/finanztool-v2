@@ -67,6 +67,9 @@ class RechnungForm(forms.ModelForm):
             self.fields.pop('einleitung')
             self.fields.pop('gestellt')
 
+            if self.instance.bezahlt:
+                self.fields.pop('kunde')
+
 
 class RechnungBezahltForm(forms.Form):
     rechnungbezahlt = forms.BooleanField(label='', required=True)
