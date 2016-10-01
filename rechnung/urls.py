@@ -61,6 +61,16 @@ urlpatterns = [
 
 
 
+    # Mahnung#############################################################
+
+    # ex: /rechnung/mahnung/5/
+    url(r'^mahnung/(?P<mahnung_id>[0-9]+)/$', views.mahnung, name='mahnung'),
+
+    # ex: /rechnung/mahnung/alle/
+    url(r'^mahnung/alle/$', views.alle_mahnungen, name='alle_mahnungen'),
+
+
+
     # Kunde##############################################################
 
     # ex: /rechnung/kunde/5/

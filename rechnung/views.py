@@ -16,6 +16,7 @@ import subprocess
 import shutil
 
 from .models import Rechnung
+from .models import Mahnung
 from .models import Kunde
 from .models import Kategorie
 from .models import Posten
@@ -34,7 +35,7 @@ def willkommen(request):
 @login_required
 def index(request):
     letzte_rechnungen_liste = Rechnung.objects.filter(bezahlt=False). \
-        order_by('-rnr')
+        exclude(name='test').exclude(name='Test').order_by('-rnr')
 
     context = {
             'letzte_rechnungen_liste': letzte_rechnungen_liste,
@@ -126,6 +127,22 @@ def rechnungsuchen(request):
             }
 
     return render(request, 'rechnung/rechnungsuchen.html', context)
+
+
+# Mahnung#######################################################################
+
+
+@login_required
+def mahnung(request, mahnung_id):
+    mahnung = get_object_or_404(Mahnung, pk=mahnung_id)
+    return render(request, 'rechnung/mahnung.html', {'mahnung': mahnung})
+
+
+@login_required
+def alle_mahnungen(request):
+    mahnungen_liste = Mahnung.objects.all()
+    context = {'mahnungen_liste': mahnungen_liste}
+    return render(request, 'rechnung/alle_mahnungen.html', context)
 
 
 # Kunde#########################################################################

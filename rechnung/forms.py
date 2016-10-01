@@ -127,10 +127,12 @@ class KundeForm(forms.ModelForm):
                 self.fields.pop('suborganisation')
                 self.fields.pop('anrede')
                 self.fields.pop('name')
+                self.fields.pop('titel')
                 self.fields.pop('vorname')
                 self.fields.pop('strasse')
                 self.fields.pop('plz')
                 self.fields.pop('stadt')
+                self.fields.pop('land')
 
         self.fields.pop('knr')
 

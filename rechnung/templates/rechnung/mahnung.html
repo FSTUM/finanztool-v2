@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Mahnung zur RE {{ mahnung.rechnung.rnr_string }}{% endblock %}
+
+{% block content %}
+<h1>{{ mahnung.wievielte }}. Mahnung zur
+    <a href="{% url "rechnung:rechnung" mahnung.rechnung.id %}">
+        RE {{ mahnung.rechnung.rnr_string }} ({{ mahnung.rechnung.name }})
+    </a>
+</h1>
+<br/>
+<div class="row">
+    <div class="col-md-12">
+        <h3>Allgemein</h3>
+        <br/>
+        <table class="table" >
+                <tr>
+                    <th>Kunde</th>
+                    <td>
+                        <a href="{% url 'rechnung:kunde' mahnung.rechnung.kunde.id %}">
+                            {{ mahnung.rechnung.kunde }}
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Geschickt?</th>
+                    <td>
+                        {% if mahnung.geschickt %}
+                            {% bootstrap_icon "ok" %}
+                        {% else %}
+                            {% bootstrap_icon "remove" %}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Erledigt?</th>
+                    <td>
+                        {% if mahnung.erledigt %}
+                            {% bootstrap_icon "ok" %}
+                        {% else %}
+                            {% bootstrap_icon "remove" %}
+                        {% endif %}
+                        TODO für alle vorherigen setzen
+                    </td>
+                </tr>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <h3>Mahnung</h3>
+        <br/>
+        <table class="table table-striped" >
+            <tr>
+                <th>Datum</th>
+                <td>{{ mahnung.mdatum }}</td>
+            </tr>
+            <tr>
+                <th>Fälligkeitsdatum</th>
+                <td>{{ mahnung.mfdatum }}</td>
+            </tr>
+            <tr>
+                <th>Gestellt von</th>
+                <td>{{ mahnung.ersteller.get_full_name }}</td>
+            </tr>
+            <tr>
+                <th>Erhobene Mahngebühr</th>
+                <td>{{ mahnung.gebuehr }} €</td>
+            </tr>
+            <tr>
+                <th>Neue Bruttosumme:</th>
+                <td align="right"><b>{{ mahnung.mahnsumme }} €<b></td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <h3>Original Rechnung</h3>
+        <br/>
+    <table class="table table-striped" >
+            <tr>
+                <th>Datum</th>
+                <td>{{ mahnung.rechnung.rdatum }}</td>
+            </tr>
+            <tr>
+                <th>Fälligkeitsdatum</th>
+                <td>{{ mahnung.rechnung.fdatum }}</td>
+            </tr>
+            <tr>
+                <th>Gestellt von</th>
+                <td>{{ mahnung.rechnung.ersteller.get_full_name }}</td>
+            </tr>
+            <tr>
+                <th>Einleitungstext</th>
+                <td>{{ mahnung.rechnung.einleitung }}</td>
+            </tr>
+            <tr>
+                <th>Gesamtsumme (brutto):</th>
+                <td align="right"><b>{{ mahnung.rechnung.gesamtsumme }} €<b></td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% if mahnung.wievielte > 1 %}
+<div class="row">
+    <div class="col-md-6">
+        <h3>Letzte Mahnungen</h3>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
