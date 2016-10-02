@@ -3,6 +3,7 @@ from django.db.models import Q
 
 from .models import Kunde
 from .models import Rechnung
+from .models import Mahnung
 from .models import Posten
 from .models import User
 from .models import Kategorie
@@ -73,6 +74,67 @@ class RechnungForm(forms.ModelForm):
 
 class RechnungBezahltForm(forms.Form):
     rechnungbezahlt = forms.BooleanField(label='', required=True)
+
+
+class MahnungForm(forms.ModelForm):
+    class Meta:
+        model = Mahnung
+        help_texts = {
+                'gebuehr': 'Bei uns üblich: Bei der 2. Mahnung und allen \
+                        danach 5 € erheben.',
+                'mfdatum': 'default: +15 Tage',
+                'erledigt': 'Markiert alle zugehörigen Mahnungen und die \
+                        Originalrechnung als bezahlt/ erledigt.',
+                }
+        widgets = {
+                'mdatum': forms.DateInput(attrs={
+                                                'id': 'pick_mdatum',
+                                                }),
+                'mfdatum': forms.DateInput(attrs={
+                                                'id': 'pick_mfdatum',
+                                                })
+                }
+        fields = (
+                'wievielte',
+                'gebuehr',
+                'mdatum',
+                'mfdatum',
+                'geschickt',
+                'erledigt',
+                'ersteller',
+                )
+
+    def __init__(self, *args, **kwargs):
+        self.rechnung = kwargs.pop("rechnung")
+        super(MahnungForm, self).__init__(*args, **kwargs)
+
+        users = User.objects.all()
+        self.fields['ersteller'].choices = [(user.pk, user.get_short_name())
+                                            for user in users]
+
+        self.fields.pop('wievielte')
+        self.fields.pop('erledigt')
+        if self.instance.geschickt:
+            self.fields.pop('gebuehr')
+            self.fields.pop('mdatum')
+            self.fields.pop('mfdatum')
+            self.fields.pop('geschickt')
+            self.fields.pop('ersteller')
+
+
+    def save(self, commit=True):
+        instance = super(MahnungForm, self).save(False)
+
+        instance.rechnung = self.rechnung
+
+        if commit:
+            instance.save()
+
+        return instance
+
+
+class MahnungStatusForm(forms.Form):
+    mahnungstatus = forms.BooleanField(label='', required=True)
 
 
 class PostenForm(forms.ModelForm):

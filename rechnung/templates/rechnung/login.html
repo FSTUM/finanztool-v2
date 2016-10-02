@@ -3,8 +3,7 @@
 {% load bootstrap3 %}
 
 {% block content %}
-    <h1>Login</h1>
-
+    <h1>Willkommen beim Finanztool</h1>
     <form action="{% url "rechnung:login" %}" method="post" accept-charset="utf-8" role="form">
         {% csrf_token %}
 

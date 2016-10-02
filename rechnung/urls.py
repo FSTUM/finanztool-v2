@@ -63,12 +63,20 @@ urlpatterns = [
 
     # Mahnung#############################################################
 
-    # ex: /rechnung/mahnung/5/
-    url(r'^mahnung/(?P<mahnung_id>[0-9]+)/$', views.mahnung, name='mahnung'),
+    # ex: /rechnung/5/mahnung/2/
+    url(r'^(?P<rechnung_id>[0-9]+)/mahnung/(?P<mahnung_id>[0-9]+)/$',
+        views.mahnung, name='mahnung'),
 
     # ex: /rechnung/mahnung/alle/
     url(r'^mahnung/alle/$', views.alle_mahnungen, name='alle_mahnungen'),
 
+    # ex: /rechnung/5/mahnung/neu/
+    url(r'^(?P<rechnung_id>[0-9]+)/mahnung/neu/$', views.form_mahnung,
+        name='mahnung_neu'),
+
+    # ex: /rechnung/5/mahnung/2/aendern
+    url(r'^(?P<rechnung_id>[0-9]+)/mahnung/(?P<mahnung_id>[0-9]+)/aendern/$',
+        views.form_mahnung, name='mahnung_aendern'),
 
 
     # Kunde##############################################################

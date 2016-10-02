@@ -154,7 +154,12 @@ class Mahnung(models.Model):
     # durch addieren von gesamtsumme und gebuehr berechnet
     @property
     def mahnsumme(self):
-        mahnsumme = Decimal(self.rechnung.gesamtsumme + self.gebuehr)
+        if self.wievielte == 1:
+            mahnsumme = Decimal(self.rechnung.gesamtsumme + self.gebuehr)
+        else:
+            letzte_mahnung = Mahnung.objects.get(
+                rechnung=self.rechnung, wievielte=self.wievielte - 1)
+            mahnsumme = Decimal(letzte_mahnung.mahnsumme + self.gebuehr)
         return Decimal(round(mahnsumme, 2))
 
     def faellig(self):
@@ -172,8 +177,8 @@ class Mahnung(models.Model):
 
     def __str__(self):
         return "RE{}_{}_M{}".format(self.rechnung.rnr_string,
-                                         self.rechnung.kunde.knr,
-                                         self.wievielte)
+                                    self.rechnung.kunde.knr,
+                                    self.wievielte)
 
 
 class Kunde(models.Model):

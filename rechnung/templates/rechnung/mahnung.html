@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 
-{% block title %}Mahnung zur RE {{ mahnung.rechnung.rnr_string }}{% endblock %}
+{% block title %}{{ mahnung.wievielte }}. Mahnung zur RE {{ mahnung.rechnung.rnr_string }}{% endblock %}
 
 {% block content %}
 <h1>{{ mahnung.wievielte }}. Mahnung zur
@@ -9,6 +9,37 @@
         RE {{ mahnung.rechnung.rnr_string }} ({{ mahnung.rechnung.name }})
     </a>
 </h1>
+        {% if mahnung.geschickt and not mahnung.erledigt %}
+            <form class=form-horizontal method="POST">{% csrf_token %}
+                </br>
+                <p>
+                {{ form }}
+                <button type="submit" name="erledigt" class="save btn btn-success">
+                    {% bootstrap_icon "ok" %} Erledigt
+                </button>
+                </p>
+            </form>
+        {% elif not mahnung.geschickt and not rechnung.erledigt %}
+            <form class=form-horizontal method="POST">{% csrf_token %}
+                </br>
+                <p>
+                {{ form }}
+                <button type="submit" name="geschickt" class="save btn btn-warning">
+                    {% bootstrap_icon "envelope" %} Geschickt
+                </button>
+                </p>
+            </form>
+        {% endif %}
+
+        <a href="{% url "rechnung:mahnung_aendern" rechnung.id mahnung.id %}" class="btn btn-info" role="button">
+            {% bootstrap_icon "pencil" %} Bearbeiten
+        </a>
+
+        <a href="{% url "rechnung:rechnungpdf" rechnung.id %}" class="btn btn-info" role="button">
+            {% bootstrap_icon "download-alt" %} Herunterladen
+        </a>
+
+
 <br/>
 <div class="row">
     <div class="col-md-12">
@@ -18,7 +49,7 @@
                 <tr>
                     <th>Kunde</th>
                     <td>
-                        <a href="{% url 'rechnung:kunde' mahnung.rechnung.kunde.id %}">
+                       <a href="{% url 'rechnung:kunde' mahnung.rechnung.kunde.id %}">
                             {{ mahnung.rechnung.kunde }}
                         </a>
                     </td>
@@ -101,12 +132,65 @@
         </table>
     </div>
 </div>
-{% if mahnung.wievielte > 1 %}
 <div class="row">
     <div class="col-md-6">
-        <h3>Letzte Mahnungen</h3>
+        <br/>
+        <h3>Alle Mahnungen zur RE {{ mahnung.rechnung.rnr_string }}</h3>
+        <br/>
+        {% for andere_mahnung in alle_mahnungen_liste %}
+        <h4>
+            <b>
+                <a href="{% url 'rechnung:mahnung' mahnung.rechnung.id andere_mahnung.id %}">
+                    {{ andere_mahnung.wievielte }}. Mahnung
+                </a>
+            </b>
+        </h4>
+            <table class="table table-striped" >
+                <tr>
+                    <th>Datum</th>
+                    <td>{{ andere_mahnung.mdatum }}</td>
+                </tr>
+                <tr>
+                    <th>Fälligkeitsdatum</th>
+                    <td>{{ andere_mahnung.mfdatum }}</td>
+                </tr>
+                <tr>
+                    <th>Gestellt von</th>
+                    <td>{{ andere_mahnung.ersteller.get_full_name }}</td>
+                </tr>
+                <tr>
+                    <th>Erhobene Mahngebühr</th>
+                    <td>{{ andere_mahnung.gebuehr }} €</td>
+                </tr>
+                <tr>
+                    <th>Neue Bruttosumme:</th>
+                    <td align="right"><b>{{ andere_mahnung.mahnsumme }} €<b></td>
+                </tr>
+                <tr>
+                    <th>Geschickt?</th>
+                    <td>
+                        {% if andere_mahnung.geschickt %}
+                            {% bootstrap_icon "ok" %}
+                        {% else %}
+                            {% bootstrap_icon "remove" %}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Erledigt?</th>
+                    <td>
+                        {% if andere_mahnung.erledigt %}
+                            {% bootstrap_icon "ok" %}
+                        {% else %}
+                            {% bootstrap_icon "remove" %}
+                        {% endif %}
+                        TODO für alle vorherigen setzen
+                    </td>
+                </tr>
+            </table>
+            <br/>
+        {% endfor %}
     </div>
 </div>
-{% endif %}
 
 {% endblock %}

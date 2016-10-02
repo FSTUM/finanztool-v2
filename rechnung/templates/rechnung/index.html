@@ -20,6 +20,7 @@
                         <th>Betrag</th>
                         <th>Fällig</th>
                         <th>Bezahlt?</th>
+                        <th>Mahnungen</th>
                     </tr>
                     {% for rechnung in letzte_rechnungen_liste %}
                     <tr>
@@ -49,9 +50,23 @@
                                     {% bootstrap_icon "remove" %}
                                 {% endif %}
                             </td>
+                            <td>
+                                {% if not rechnung.bezahlt %}
+                                    {% for mahnung in mahnungen %}
+                                        {% if mahnung.rechnung == rechnung %}
+                                        <a href="{% url 'rechnung:mahnung' rechnung.id mahnung.id %}">
+                                            {{ mahnung.wievielte }}. Mahnung
+                                        </a>
+                                        <br>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </td>
                         {% else %}
                             <td>
                             {% bootstrap_icon "remove" %}
+                            </td>
+                            <td>
                             </td>
                             <td>
                             </td>
