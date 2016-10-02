@@ -1,5 +1,5 @@
 {% autoescape off %}
-    {% load l10n %}
+    {% load l10n latex %}
     \documentclass[a4paper,12pt,top=1.5cm,bottom=1.5cm]{article}
     \usepackage[ngerman]{babel}
     \usepackage[utf8]{inputenc}
@@ -74,18 +74,18 @@
         Verein zur Studienförderung der FS MPI e. V.,
         Boltzmannstraße 3, 85748 Garching\\[1ex] \hrule}}\\[2ex]
     \raggedright
-    \notblank{ {{ rechnung.kunde.organisation }} }
-        {\parbox[c]{8cm}{ {{ rechnung.kunde.organisation }} }\\}{}
-    \notblank{ {{ rechnung.kunde.suborganisation }} }
-        {\parbox[c]{8cm}{ {{ rechnung.kunde.suborganisation }} }\\}{}
-    \notblank{ {{ rechnung.kunde.vorname }}{{ rechnung.kunde.name }} }
-        {\parbox[c]{8cm}{ {{ rechnung.kunde.vorname }} {{ rechnung.kunde.name }}  }\\}{}
-    {\parbox[c]{8cm}{ {{ rechnung.kunde.strasse }} }\\}
-    \ifnum\pdfstrcmp{ {{ rechnung.kunde.land }} }{ Deutschland }=0
-        {\parbox[c]{8cm}{ {{ rechnung.kunde.plz }} {{ rechnung.kunde.stadt }} }\\[3ex]}
+    \notblank{ {{ rechnung.kunde.organisation | latexescape }} }
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.organisation | latexescape }} }\\}{}
+    \notblank{ {{ rechnung.kunde.suborganisation | latexescape }} }
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.suborganisation | latexescape }} }\\}{}
+    \notblank{ {{ rechnung.kunde.vorname | latexescape }}{{ rechnung.kunde.name | latexescape }} }
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.vorname | latexescape }} {{ rechnung.kunde.name | latexescape }}  }\\}{}
+    {\parbox[c]{8cm}{ {{ rechnung.kunde.strasse | latexescape }} }\\}
+    \ifnum\pdfstrcmp{ {{ rechnung.kunde.land | latexescape }} }{ Deutschland }=0
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.plz | latexescape }} {{ rechnung.kunde.stadt | latexescape }} }\\[3ex]}
     \else
-        {\parbox[c]{8cm}{ {{ rechnung.kunde.plz }} {{ rechnung.kunde.stadt }} }\\}
-        {\parbox[c]{8cm}{ {{ rechnung.kunde.land }} }\\[3ex]}
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.plz | latexescape }} {{ rechnung.kunde.stadt | latexescape }} }\\}
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.land | latexescape }} }\\[3ex]}
     \fi
 
 
@@ -106,17 +106,17 @@
     %Text%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \large{\bf Rechnung}\\[3ex]
     \normalsize
-    \ifnum\pdfstrcmp{ {{ rechnung.kunde.anrede }} }{ w }=0
-        Sehr geehrte Frau {{ rechnung.kunde.name }},\\[2ex]
+    \ifnum\pdfstrcmp{ {{ rechnung.kunde.anrede | latexescape }} }{ w }=0
+        Sehr geehrte Frau {{ rechnung.kunde.name | latexescape }},\\[2ex]
     \else
-        \ifnum\pdfstrcmp{ {{ rechnung.kunde.anrede }} }{ m }=0
-            Sehr geehrter Herr {{ rechnung.kunde.name }},\\[2ex]
+        \ifnum\pdfstrcmp{ {{ rechnung.kunde.anrede | latexescape }} }{ m }=0
+            Sehr geehrter Herr {{ rechnung.kunde.name | latexescape }},\\[2ex]
         \else
             Sehr geehrte Damen und Herren,\\[2ex]
         \fi
     \fi
 
-    {{ rechnung.einleitung }}\\[3ex]
+    {{ rechnung.einleitung | latexescape }} \\[3ex]
 
     %Posten%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         \setlength\LTleft{0pt}
@@ -129,7 +129,7 @@
             \endhead
             {% for posten in rechnung.posten_set.all %}
                 {{ posten.anzahl }} &
-                {{ posten.name }} &
+                {{ posten.name | latexescape }} &
                 {{ posten.einzelpreis }} \euro &
                 {{ posten.summenettogerundet }} \euro &
                 \ifnum\pdfstrcmp{ {{ posten.mwst }} }{ 7 }=0
