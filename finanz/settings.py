@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'bootstrap3',
     'rechnung.apps.RechnungConfig',
+    'konto',
 ]
 
 MIDDLEWARE_CLASSES = [

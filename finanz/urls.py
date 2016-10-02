@@ -19,6 +19,7 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
         url(r'^rechnung/', include('rechnung.urls')),
+        url(r'^konto/', include('konto.urls')),
         url(r'^admin/', include(admin.site.urls)),
         url(r'^', RedirectView.as_view(pattern_name='rechnung:willkommen')),
 ]

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Finanztool - Konto{% endblock %}
+
+{% block content %}
+    <h2>Erkannte Zahlungen</h2>
+
+    <table class="table">
+        <tr>
+            <th>Buchung</th>
+            <th>Rechnung</th>
+        </tr>
+
+        {% for buchung in results %}
+            {% if buchung.mapped_rechnung %}
+                <tr>
+                    <td>
+                        {{ buchung.datum }} <br>
+                        {{ buchung.verwendungszweck }} <br>
+                        {{ buchung.betrag }} €<br>
+                        {{ buchung.zahlungspflichtiger }} <br>
+                        IBAN: {{ buchung.iban }} <br>
+                        BIC: {{ buchung.bic }} <br>
+                    </td>
+                    <td>
+                        <a href="">RE {{ buchung.mapped_rechnung.rnr_string }}</a>
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+
+    {% if errors %}
+        <h2>Fehler beim Einlesen</h2>
+        <ul>
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
