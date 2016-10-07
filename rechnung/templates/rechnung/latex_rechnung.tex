@@ -62,7 +62,7 @@
             T 089/289 18545\\
             F 089/289 18546\\
             finanz@fs.tum.de\\
-            http://mpi.fs.tum.de}
+            https://mpi.fs.tum.de}
     }
     \rfoot{}
     \footskip = -0.5cm
@@ -94,17 +94,31 @@
         \begin{tabular}{ll}
             Kundennummer: & {% localize off %}{{ rechnung.kunde.knr }}{% endlocalize %} \\[-0.5ex]
             Rechnungsnummer: & {{ rechnung.rnr_string }} \\[-0.5ex]
-            \ifnum\pdfstrcmp{ {{ rechnung.ldatum }} }{ None }=0
-                Rechnungsdatum: & {{ rechnung.rdatum }} \\[7.5ex]
-            \else
-                Lieferdatum: & {{ rechnung.ldatum }} \\[-0.5ex]
-                Rechnungsdatum: & {{ rechnung.rdatum }} \\[2ex]
-            \fi
+            {% if mahnung %}
+                \ifnum\pdfstrcmp{ {{ rechnung.ldatum }} }{ None }=0
+                    Datum: & {{ mahnung.mdatum }} \\[7.5ex]
+                \else
+                    Lieferdatum: & {{ rechnung.ldatum }} \\[-0.5ex]
+                    Datum: & {{ mahnung.mdatum }} \\[2ex]
+                \fi
+            {% else %}
+                \ifnum\pdfstrcmp{ {{ rechnung.ldatum }} }{ None }=0
+                    Rechnungsdatum: & {{ rechnung.rdatum }} \\[7.5ex]
+                \else
+                    Lieferdatum: & {{ rechnung.ldatum }} \\[-0.5ex]
+                    Rechnungsdatum: & {{ rechnung.rdatum }} \\[2ex]
+                \fi
+            {% endif %}
         \end{tabular}
     }}
 
     %Text%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    \large{\bf Rechnung}\\[3ex]
+    {% if mahnung %}
+        \large{\bf {{ mahnung.wievielte }}. Mahnung}\\[3ex]
+    {% else %}
+        \large{\bf Rechnung}\\[3ex]
+    {% endif %}
+
     \normalsize
     \ifnum\pdfstrcmp{ {{ rechnung.kunde.anrede | latexescape }} }{ w }=0
         Sehr geehrte Frau {{ rechnung.kunde.name | latexescape }},\\[2ex]
@@ -116,9 +130,14 @@
         \fi
     \fi
 
-    {{ rechnung.einleitung | latexescape }} \\[3ex]
+    {% if mahnung %}
+        {{ mahnung.einleitung | latexescape }} \ \\[3ex]
+    {% else %}
+        {{ rechnung.einleitung | latexescape }} \ \\[3ex]
+    {% endif %}
 
-    %Posten%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    {% if not mahnung %}
+        %Posten%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         \setlength\LTleft{0pt}
         \setlength\LTright{0pt}
         \begin{longtable}{@{\extracolsep{\fill}}R{2cm}L{7.5cm}R{3cm}R{2.75cm}C{0.85cm}}
@@ -151,10 +170,63 @@
             \bottomrule\\[-1ex]
         \end{longtable}
 
-    %Endtext%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    Bitte überweisen Sie den Rechnungsbetrag von {\bf {{ rechnung.gesamtsumme }}} \euro\ ohne Abzug bis zum
-    {{ rechnung.fdatum }} auf das unten angegebene Konto mit Verwendungszweck
-            {\bf RE {{ rechnung.rnr_string }} \ KD {% localize off %}{{ rechnung.kunde.knr }}{% endlocalize %}}.\\[2ex]
+        %Endtext%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        Bitte überweisen Sie den Rechnungsbetrag von {\bf {{ rechnung.gesamtsumme }}} \euro\ ohne Abzug bis zum
+        {{ rechnung.fdatum }} auf das unten angegebene Konto mit Verwendungszweck
+                {\bf RE {{ rechnung.rnr_string }} \ KD {% localize off %}{{ rechnung.kunde.knr }}{% endlocalize %}}.\\[2ex]
+
+    {% else %}
+        %Mahnungen%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        \setlength\LTleft{0pt}
+        \setlength\LTright{0pt}
+        \begin{longtable}{@{\extracolsep{\fill}}L{2.5cm}L{3cm}L{3cm}R{7cm}}
+            \toprule
+            Posten & Datum & Fälligkeit am & Betrag\\
+            \bottomrule\\[-1ex]
+            \endhead
+            RE {{ rechnung.rnr_string }} &
+            {{ rechnung.rdatum }} &
+            {{ rechnung.fdatum }} &
+            {{ rechnung.gesamtsumme }} \euro\\
+            \midrule
+            {% if vorherige_mahnungen %}
+                {% for vorherige in vorherige_mahnungen %}
+                    {{ vorherige.wievielte }}. Mahnung &
+                    {{ vorherige.mdatum }} &
+                    {{ vorherige.mfdatum }} &
+                    {{ vorherige.gebuehr }} \euro\\
+                    \midrule
+                {% endfor %}
+            {% endif %}
+            {{ mahnung.wievielte }}. Mahnung &
+            {{ mahnung.mdatum }} &
+            {{ mahnung.mfdatum }} &
+            {{ mahnung.gebuehr }} \euro\\
+            \bottomrule
+            \bottomrule\\[-0.5ex]
+            {\bf Summe} & & & {\bf {{ mahnung.mahnsumme }} \euro}\\
+        \end{longtable}
+
+        %Endtext%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        Bitte beachten Sie, dass das Zahlungsziel bereits überschritten ist.
+        {% if mahnung.gerichtlich %}
+            % Ja, hier ist leider Text doppelt, sieht aber sonst komisch im LaTex aus
+            Wir bitten Sie, zur {\bf Vermeidung gerichtlicher Schritte}, die wir
+            hiermit widrigenfalls bereits ankündigen, um Anweisung der im Verzug
+            befindlichen Positionen bis zum
+        {% else %}%
+            Wir bitten Sie um Prüfung und Anweisung der im Verzug befindlichen
+            Positionen bis zum
+        {% endif %}%
+            {\bf {{ mahnung.mfdatum }}} auf das unten angegebene Konto mit Verwendungszweck
+            {\bf RE {{ rechnung.rnr_string }}
+            \ KD {% localize off %}{{ rechnung.kunde.knr }}{% endlocalize %}}.\\
+            Sollte die Zahlung zwischenzeitlich erfolgt sein, betrachten Sie bitte
+            dieses Schreiben als gegenstandslos. Sollte es Einwände gegen die
+            Regulierung geben, bitten wir um kurze Information.\\[2ex]
+
+    {% endif %}
+
     Bei Rückfragen stehen wir Ihnen gerne zur Verfügung!
 
 

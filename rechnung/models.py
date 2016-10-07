@@ -144,11 +144,24 @@ class Mahnung(models.Model):
             default=False,
             )
     erledigt = models.BooleanField(
-            verbose_name='Rechnung beglichen',
+            verbose_name='Mahnung beglichen',
+            default=False,
+            )
+    ungueltig = models.BooleanField(
+            verbose_name='Vorherige Mahnungen beglichen',
             default=False,
             )
     ersteller = models.ForeignKey(
             User,
+            )
+    einleitung = models.TextField(
+            verbose_name='Einleitender Text nach "Sehr geehrte..." *',
+            max_length=3000,
+            default='',
+            )
+    gerichtlich = models.BooleanField(
+            verbose_name='Gerichtliche Schritte androhen?',
+            default=False,
             )
 
     # durch addieren von gesamtsumme und gebuehr berechnet

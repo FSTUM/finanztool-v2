@@ -78,6 +78,10 @@ urlpatterns = [
     url(r'^(?P<rechnung_id>[0-9]+)/mahnung/(?P<mahnung_id>[0-9]+)/aendern/$',
         views.form_mahnung, name='mahnung_aendern'),
 
+    # ex: /rechnung/5/mahnung/2/pdf
+    url(r'^(?P<rechnung_id>[0-9]+)/mahnung/(?P<mahnung_id>[0-9]+)/pdf/$',
+        views.rechnungpdf, name='mahnungpdf'),
+
 
     # Kunde##############################################################
 

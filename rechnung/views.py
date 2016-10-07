@@ -342,17 +342,31 @@ def kategorie_detail(request, kategorie_id):
 
 
 @login_required
-def rechnungpdf(request, rechnung_id):
+def rechnungpdf(request, rechnung_id, mahnung_id=None):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
+    mahnung = None
+    if mahnung_id:
+        mahnung = get_object_or_404(Mahnung, pk=mahnung_id)
+        vorherige_mahnungen = Mahnung.objects.filter(
+                rechnung=mahnung.rechnung, wievielte__lt=mahnung.wievielte). \
+            order_by('wievielte').all()
 
     # create temporary files
     tmplatex = mkdtemp()
     latex_file, latex_filename = mkstemp(suffix='.tex', dir=tmplatex)
 
     # Pass TeX template through Django templating engine and into the temp file
+    if mahnung_id:
+        context = {
+                'mahnung': mahnung,
+                'rechnung': rechnung,
+                'vorherige_mahnungen': vorherige_mahnungen,
+                }
+    else:
+        context = {'rechnung': rechnung}
+
     os.write(latex_file, render_to_string('rechnung/latex_rechnung.tex',
-                                          {'rechnung': rechnung}).
-             encode('utf8'))
+                                          context).encode('utf8'))
     os.close(latex_file)
 
     # Compile the TeX file with PDFLaTeX
@@ -365,8 +379,12 @@ def rechnungpdf(request, rechnung_id):
                       {'erroroutput': e.output})
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="RE%s_%s.pdf"' % \
-        (rechnung.rnr_string, rechnung.kunde.knr)
+    if mahnung_id:
+        response['Content-Disposition'] = 'attachment; filename="RE%s_%s_M%s.pdf"' % \
+            (rechnung.rnr_string, rechnung.kunde.knr, mahnung.wievielte)
+    else:
+        response['Content-Disposition'] = 'attachment; filename="RE%s_%s.pdf"' % \
+            (rechnung.rnr_string, rechnung.kunde.knr)
 
     # return path to pdf
     pdf_filename = "%s.pdf" % os.path.splitext(latex_filename)[0]
@@ -374,6 +392,6 @@ def rechnungpdf(request, rechnung_id):
     with open(pdf_filename, 'rb') as f:
         response.write(f.read())
 
-    shutil.rmtree(tmplatex)
+#    shutil.rmtree(tmplatex)
 
     return response

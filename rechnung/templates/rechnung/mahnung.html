@@ -35,7 +35,7 @@
             {% bootstrap_icon "pencil" %} Bearbeiten
         </a>
 
-        <a href="{% url "rechnung:rechnungpdf" rechnung.id %}" class="btn btn-info" role="button">
+        <a href="{% url "rechnung:mahnungpdf" rechnung.id mahnung.id %}" class="btn btn-info" role="button">
             {% bootstrap_icon "download-alt" %} Herunterladen
         </a>
 

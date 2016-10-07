@@ -85,6 +85,14 @@ class MahnungForm(forms.ModelForm):
                 'mfdatum': 'default: +15 Tage',
                 'erledigt': 'Markiert alle zugehörigen Mahnungen und die \
                         Originalrechnung als bezahlt/ erledigt.',
+                'einleitung': 'Beispiel 1. Mahnung: nachstehend aufgeführte \
+                        Positionen führen wir noch ohne Ausgleich. \
+                        Beispiel 2. Mahnung: nachstehend aufgeführte \
+                        Positionen führen wir trotz bereits durch unsere \
+                        Schreiben vom 2. und 17. Januar 2016 erfolgter \
+                        Mahnungen noch ohne Ausgleich.',
+                'gerichtlich': 'Wird bei uns in der Regel in der 3. Mahnung \
+                        angedroht.',
                 }
         widgets = {
                 'mdatum': forms.DateInput(attrs={
@@ -102,6 +110,8 @@ class MahnungForm(forms.ModelForm):
                 'geschickt',
                 'erledigt',
                 'ersteller',
+                'einleitung',
+                'gerichtlich',
                 )
 
     def __init__(self, *args, **kwargs):
@@ -120,6 +130,8 @@ class MahnungForm(forms.ModelForm):
             self.fields.pop('mfdatum')
             self.fields.pop('geschickt')
             self.fields.pop('ersteller')
+            self.fields.pop('einleitung')
+            self.fields.pop('gerichtlich')
 
 
     def save(self, commit=True):
