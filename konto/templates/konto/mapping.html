@@ -18,13 +18,21 @@
                     <td>
                         {{ buchung.datum }} <br>
                         {{ buchung.verwendungszweck }} <br>
-                        {{ buchung.betrag }} €<br>
+                        {{ buchung.betrag }} €
+
+                        {% if buchung.betrag == buchung.mapped_rechnung.gesamtsumme_mit_mahnungen %}
+                            <span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green;"></span>
+                        {% else %}
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true" style="color:red;"></span>
+                            <span style="color:red;">Rechnung beträgt {{ buchung.mapped_rechnung.gesamtsumme_mit_mahnungen }} €</span>
+                        {% endif %}
+                        <br><br>
                         {{ buchung.zahlungspflichtiger }} <br>
                         IBAN: {{ buchung.iban }} <br>
                         BIC: {{ buchung.bic }} <br>
                     </td>
                     <td>
-                        <a href="">RE {{ buchung.mapped_rechnung.rnr_string }}</a>
+                        <a href="{% url "rechnung:rechnung" buchung.mapped_rechnung.pk %}">RE {{ buchung.mapped_rechnung.rnr_string }}</a>
                     </td>
                 </tr>
             {% endif %}
