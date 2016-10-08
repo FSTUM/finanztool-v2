@@ -15,7 +15,6 @@ from .forms import RechnungBezahltForm
 from tempfile import mkdtemp, mkstemp
 import os
 import subprocess
-import shutil
 
 from .models import Rechnung
 from .models import Mahnung
@@ -144,6 +143,9 @@ def mahnung(request, rechnung_id, mahnung_id):
         raise Http404
 
     alle_mahnungen_liste = Mahnung.objects.filter(rechnung=rechnung)
+    vorherige_mahnungen = Mahnung.objects.filter(
+                                            rechnung=rechnung,
+                                            wievielte__lt=mahnung.wievielte)
 
     form = MahnungStatusForm(request.POST or None)
     if request.method == 'POST':

@@ -75,6 +75,30 @@
                         TODO für alle vorherigen setzen
                     </td>
                 </tr>
+                    <th>Ungültig?</th>
+                    <td>
+                        {% if mahnung.ungueltig %}
+                            {% bootstrap_icon "ok" %}
+                        {% else %}
+                            {% bootstrap_icon "remove" %}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Gerichtliche Androhung?</th>
+                    <td>
+                        {% if mahnung.gerichtlich %}
+                            {% bootstrap_icon "ok" %}
+                        {% else %}
+                            {% bootstrap_icon "remove" %}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                <tr>
+                    <th>Einleitungstext</th>
+                    <td>{{ mahnung.einleitung }}</td>
+                </tr>
         </table>
     </div>
 </div>
@@ -185,6 +209,26 @@
                             {% bootstrap_icon "remove" %}
                         {% endif %}
                         TODO für alle vorherigen setzen
+                    </td>
+                </tr>
+                <tr>
+                    <th>Ungültig?</th>
+                    <td>
+                        {% if mahnung.ungueltig %}
+                            {% bootstrap_icon "ok" %}
+                        {% else %}
+                            {% bootstrap_icon "remove" %}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Gerichtliche Androhung?</th>
+                    <td>
+                        {% if mahnung.gerichtlich %}
+                            {% bootstrap_icon "ok" %}
+                        {% else %}
+                            {% bootstrap_icon "remove" %}
+                        {% endif %}
                     </td>
                 </tr>
             </table>

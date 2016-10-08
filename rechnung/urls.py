@@ -8,7 +8,7 @@ app_name = 'rechnung'
 
 urlpatterns = [
 
-    # Index########################################################################
+    # Index####################################################################
 
     # ex: /rechnung/
     url(r'^$', views.willkommen, name='willkommen'),
