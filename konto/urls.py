@@ -12,4 +12,5 @@ urlpatterns = [
 
     # ex: /konto/
     url(r'^$', views.einlesen, name='einlesen'),
+    url(r'^mapping/$', views.mapping, name='mapping'),
 ]

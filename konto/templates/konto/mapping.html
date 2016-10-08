@@ -1,15 +1,20 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap3 mapping %}
 
 {% block title %}Finanztool - Konto{% endblock %}
 
 {% block content %}
     <h2>Erkannte Zahlungen</h2>
 
+    <form action="" method="post">
+
+    {% csrf_token %}
+
     <table class="table">
         <tr>
             <th>Buchung</th>
             <th>Rechnung</th>
+            <th>Bestätigen</th>
         </tr>
 
         {% for buchung in results %}
@@ -20,11 +25,11 @@
                         {{ buchung.verwendungszweck }} <br>
                         {{ buchung.betrag }} €
 
-                        {% if buchung.betrag == buchung.mapped_rechnung.gesamtsumme_mit_mahnungen %}
+                        {% if buchung.betrag_passt %}
                             <span class="glyphicon glyphicon-ok" aria-hidden="true" style="color:green;"></span>
                         {% else %}
                             <span class="glyphicon glyphicon-remove" aria-hidden="true" style="color:red;"></span>
-                            <span style="color:red;">Rechnung beträgt {{ buchung.mapped_rechnung.gesamtsumme_mit_mahnungen }} €</span>
+                            <span style="color:red;">Rechnung beträgt {{ buchung.erwarteter_betrag }} €</span>
                         {% endif %}
                         <br><br>
                         {{ buchung.zahlungspflichtiger }} <br>
@@ -32,12 +37,27 @@
                         BIC: {{ buchung.bic }} <br>
                     </td>
                     <td>
-                        <a href="{% url "rechnung:rechnung" buchung.mapped_rechnung.pk %}">RE {{ buchung.mapped_rechnung.rnr_string }}</a>
+                        {% if buchung.mapped_mahnung %}
+                            <a href="{% url "rechnung:mahnung" buchung.mapped_rechnung.pk buchung.mapped_mahnung.pk %}">
+                                RE {{ buchung.mapped_rechnung.rnr_string }} ({{ buchung.mapped_mahnung.wievielte }}. Mahnung)
+                            </a>
+                        {% else %}
+                            <a href="{% url "rechnung:rechnung" buchung.mapped_rechnung.pk %}">
+                                RE {{ buchung.mapped_rechnung.rnr_string }}
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% checkbox form buchung %}
                     </td>
                 </tr>
             {% endif %}
         {% endfor %}
     </table>
+
+    <input type="submit" value="Speichern" class="btn btn-default" />
+
+    </form>
 
     {% if errors %}
         <h2>Fehler beim Einlesen</h2>

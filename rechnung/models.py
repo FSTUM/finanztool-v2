@@ -110,14 +110,8 @@ class Rechnung(models.Model):
         return Decimal(round(summe, 2))
 
     @property
-    def gesamtsumme_mit_mahnungen(self):
-        tmp = self.gesamtsumme
-
-        mahnungen = Mahnung.objects.filter(rechnung=self)
-        for mahnung in mahnungen:
-            tmp += mahnung.gebuehr
-
-        return tmp
+    def mahnungen(self):
+        return self.mahnung_set.order_by('wievielte')
 
     def wurde_vor_kurzem_gestellt(self):
         return self.rdatum >= timezone.now() - datetime.timedelta(days=16)

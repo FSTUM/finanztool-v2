@@ -16,6 +16,9 @@ class Entry:
     betrag = None
 
     mapped_rechnung = None
+    mapped_mahnung = None
+    erwarteter_betrag = None
+    betrag_passt = False
 
     def __repr__(self):
         if self.mapped_rechnung:
@@ -77,8 +80,7 @@ def parse_camt_csv(csvfile):
                               "Euro".format(counter))
                 continue
 
-            entry.mapped_rechnung = suche_rechnung(entry, offene_rechnungen,
-                                                   regex_cache)
+            suche_rechnung(entry, offene_rechnungen, regex_cache)
 
             results.append(entry)
 
@@ -89,6 +91,20 @@ def suche_rechnung(entry, offene_rechnungen, regex_cache):
     for rechnung in offene_rechnungen:
         tmp = regex_cache[rechnung].match(entry.verwendungszweck)
         if tmp:
-            return rechnung
+            # rechnung gefunden -> setzen
+            entry.mapped_rechnung = rechnung
 
-    return None
+            entry.betrag_passt = entry.betrag == rechnung.gesamtsumme
+
+            # nach mahnungen suchen?
+            for mahnung in rechnung.mahnungen:
+                entry.betrag_passt = mahnung.mahnsumme == entry.betrag
+                if entry.betrag_passt:
+                    entry.mapped_mahnung = mahnung
+
+            # erwarteter betrag
+            if rechnung.mahnungen:
+                entry.erwarteter_betrag = rechnung.mahnungen. \
+                    latest('wievielte').mahnsumme
+            else:
+                entry.erwarteter_betrag = rechnung.gesamtsumme

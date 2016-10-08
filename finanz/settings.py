@@ -108,6 +108,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # default, but important due to pickle
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
