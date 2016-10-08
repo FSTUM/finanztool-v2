@@ -75,12 +75,12 @@
         Boltzmannstraße 3, 85748 Garching\\[1ex] \hrule}}\\[2ex]
     \raggedright
     \notblank{ {{ rechnung.kunde.organisation | latexescape }} }
-        {\parbox[c]{8cm}{ {{ rechnung.kunde.organisation | latexescape }} }\\}{}
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.organisation | latexescape }} }\\[1ex]}{}
     \notblank{ {{ rechnung.kunde.suborganisation | latexescape }} }
-        {\parbox[c]{8cm}{ {{ rechnung.kunde.suborganisation | latexescape }} }\\}{}
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.suborganisation | latexescape }} }\\[1ex]}{}
     \notblank{ {{ rechnung.kunde.vorname | latexescape }}{{ rechnung.kunde.name | latexescape }} }
-        {\parbox[c]{8cm}{ {{ rechnung.kunde.vorname | latexescape }} {{ rechnung.kunde.name | latexescape }}  }\\}{}
-    {\parbox[c]{8cm}{ {{ rechnung.kunde.strasse | latexescape }} }\\}
+        {\parbox[c]{8cm}{ {{ rechnung.kunde.vorname | latexescape }} {{ rechnung.kunde.name | latexescape }}  }\\[1ex]}{}
+    {\parbox[c]{8cm}{ {{ rechnung.kunde.strasse | latexescape }} }\\[1ex]}
     \ifnum\pdfstrcmp{ {{ rechnung.kunde.land | latexescape }} }{ Deutschland }=0
         {\parbox[c]{8cm}{ {{ rechnung.kunde.plz | latexescape }} {{ rechnung.kunde.stadt | latexescape }} }\\[3ex]}
     \else
@@ -173,7 +173,7 @@
         %Endtext%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         Bitte überweisen Sie den Rechnungsbetrag von {\bf {{ rechnung.gesamtsumme }}} \euro\ ohne Abzug bis zum
         {{ rechnung.fdatum }} auf das unten angegebene Konto mit Verwendungszweck
-                {\bf RE {{ rechnung.rnr_string }} \ KD {% localize off %}{{ rechnung.kunde.knr }}{% endlocalize %}}.\\[2ex]
+                {\bf RE {{ rechnung.rnr_string }}}.\\[2ex]
 
     {% else %}
         %Mahnungen%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
