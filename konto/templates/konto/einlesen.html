@@ -5,16 +5,19 @@
 
 {% block content %}
     <h2>Kontoauszug einlesen</h2>
+    <br>
     <p>
-        <div class="alert alert-info">
-            Es funktionieren nur CSV Dateien vom <b>CSV-CAMT</b>-Format.
-        </div>
+        Umsätze vom Konto einlesen und mit offenen Rechnungen vergleichen.
     </p>
+    <br>
         <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         {% bootstrap_form form %}
 
+        <div class="alert alert-info">
+            Es funktionieren nur CSV Dateien vom <b>CSV-CAMT</b>-Format.
+        </div>
         <input type="submit" value="Upload" class="btn btn-default" />
     </form>
 {% endblock %}

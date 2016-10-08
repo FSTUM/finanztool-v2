@@ -57,7 +57,10 @@
                                     Hallo {{ username }}!
                                 {% endblocktrans %}
                              </p>
-                            <li><a href="{% url "rechnung:index" %}">Unbezahlt</a></li>
+                            <li><a href="{% url "rechnung:willkommen" %}">
+                                    {% bootstrap_icon "home" %}
+                                </a></li>
+                            <li><a href="{% url "rechnung:index" %}">Unerledigt</a></li>
                             {#{% if user.is_superuser or user|has_perm_group %}#}
                             <li>
                                 <div class="dropdown">
@@ -90,6 +93,7 @@
                                   </ul>
                                 </div>
                             </li>
+                            <li><a href="{% url "konto:einlesen" %}">{% bootstrap_icon "credit-card" %} Konto</a></li>
                             <li><a href="{% url "rechnung:logout" %}">Logout</a></li> 
                         {% else %}
                             <li><a href="{% url "rechnung:index" %}">Index</a></li>
