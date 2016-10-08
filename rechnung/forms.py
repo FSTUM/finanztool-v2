@@ -83,8 +83,8 @@ class MahnungForm(forms.ModelForm):
                 'gebuehr': 'Bei uns üblich: Bei der 2. Mahnung und allen \
                         danach 5 € erheben.',
                 'mfdatum': 'default: +15 Tage',
-                'erledigt': 'Markiert alle zugehörigen Mahnungen und die \
-                        Originalrechnung als bezahlt/ erledigt.',
+                'bezahlt': 'Markiert diese Mahnungen und die \
+                        Originalrechnung als bezahlt/erledigt.',
                 'einleitung': 'Beispiel 1. Mahnung: nachstehend aufgeführte \
                         Positionen führen wir noch ohne Ausgleich. \
                         Beispiel 2. Mahnung: nachstehend aufgeführte \
@@ -108,7 +108,7 @@ class MahnungForm(forms.ModelForm):
                 'mdatum',
                 'mfdatum',
                 'geschickt',
-                'erledigt',
+                'bezahlt',
                 'ersteller',
                 'einleitung',
                 'gerichtlich',
@@ -123,7 +123,7 @@ class MahnungForm(forms.ModelForm):
                                             for user in users]
 
         self.fields.pop('wievielte')
-        self.fields.pop('erledigt')
+        self.fields.pop('bezahlt')
         if self.instance.geschickt:
             self.fields.pop('gebuehr')
             self.fields.pop('mdatum')

@@ -60,6 +60,10 @@ class Rechnung(models.Model):
             verbose_name='Rechnung beglichen?',
             default=False,
             )
+    erledigt = models.BooleanField(
+            verbose_name='Rechnung erledigt, eventuell durch Mahnung',
+            default=False,
+            )
     ersteller = models.ForeignKey(
             User,
             )
@@ -109,11 +113,20 @@ class Rechnung(models.Model):
                         self.summe_mwst_19)
         return Decimal(round(summe, 2))
 
+    @property
+    def mahnungen(self):
+        return self.mahnung_set.order_by('wievielte')
+
     def wurde_vor_kurzem_gestellt(self):
         return self.rdatum >= timezone.now() - datetime.timedelta(days=16)
 
     def faellig(self):
         return self.fdatum < date.today()
+
+    def bezahlen(self):
+        self.bezahlt = True
+        self.erledigt = True
+        self.save()
 
 
 class Mahnung(models.Model):
@@ -143,12 +156,8 @@ class Mahnung(models.Model):
             verbose_name='Mahnung geschickt?',
             default=False,
             )
-    erledigt = models.BooleanField(
-            verbose_name='Mahnung beglichen',
-            default=False,
-            )
-    ungueltig = models.BooleanField(
-            verbose_name='Vorherige Mahnungen beglichen',
+    bezahlt = models.BooleanField(
+            verbose_name='Rechnung beglichen',
             default=False,
             )
     ersteller = models.ForeignKey(
@@ -187,6 +196,13 @@ class Mahnung(models.Model):
             else:
                 self.wievielte = 1
         super(Mahnung, self).save(*args, **kwargs)
+
+    def bezahlen(self):
+        self.bezahlt = True
+        self.save()
+
+        self.rechnung.erledigt = True
+        self.rechnung.save()
 
     def __str__(self):
         return "RE{}_{}_M{}".format(self.rechnung.rnr_string,

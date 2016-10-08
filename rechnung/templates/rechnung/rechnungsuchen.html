@@ -42,7 +42,7 @@
                                     {% if rechnung.gestellt %}
                                         <td>{% bootstrap_icon "ok" %}</td>
                                         <td align="right">{{ rechnung.gesamtsumme }} €</td>
-                                        {% if rechnung.bezahlt %}
+                                        {% if rechnung.erledigt %}
                                             <td>{% bootstrap_icon "ok" %}</td>
                                         {% else %}
                                             <td>{% bootstrap_icon "remove" %}</td>

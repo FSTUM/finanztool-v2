@@ -27,16 +27,16 @@ from .models import Posten
 @login_required
 def willkommen(request):
     offene_rechnungen = Rechnung.objects.filter(gestellt=True,
-                                                bezahlt=False).count()
+                                                erledigt=False).count()
     context = {'offene_rechnungen': offene_rechnungen}
     return render(request, 'rechnung/willkommen.html', context)
 
 
 @login_required
 def index(request):
-    letzte_rechnungen_liste = Rechnung.objects.filter(bezahlt=False). \
+    letzte_rechnungen_liste = Rechnung.objects.filter(erledigt=False). \
         exclude(name='test').exclude(name='Test').order_by('-rnr')
-    mahnungen = Mahnung.objects.filter(rechnung__bezahlt=False)
+    mahnungen = Mahnung.objects.filter(rechnung__erledigt=False)
 
     context = {
             'letzte_rechnungen_liste': letzte_rechnungen_liste,
@@ -78,8 +78,7 @@ def rechnung(request, rechnung_id):
     if request.method == 'POST':
         if 'bezahlt' in request.POST:
             if form.is_valid():
-                rechnung.bezahlt = True
-                rechnung.save()
+                rechnung.bezahlen()
 
                 return redirect('rechnung:index')
 
@@ -148,10 +147,9 @@ def mahnung(request, rechnung_id, mahnung_id):
 
     form = MahnungStatusForm(request.POST or None)
     if request.method == 'POST':
-        if 'erledigt' in request.POST:
+        if 'bezahlt' in request.POST:
             if form.is_valid():
-                mahnung.erledigt = True
-                mahnung.save()
+                mahnung.bezahlen()
                 return redirect('rechnung:mahnung', rechnung_id=rechnung.pk,
                                 mahnung_id=mahnung.pk)
 

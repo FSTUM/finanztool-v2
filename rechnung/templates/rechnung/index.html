@@ -35,7 +35,7 @@
                             <td align="right">{{ rechnung.gesamtsumme }} €</td>
                             <td>
                                 {% if rechnung.faellig %}
-                                    {% if rechnung.bezahlt %}
+                                    {% if rechnung.erledigt %}
                                         <span style="color : green;">
                                     {% else %}
                                         <span style="color : red;">
@@ -44,23 +44,21 @@
                                 {{ rechnung.fdatum|date:"SHORT_DATE_FORMAT" }}
                             </td>
                             <td>
-                                {% if rechnung.bezahlt %}
+                                {% if rechnung.erledigt %}
                                     {% bootstrap_icon "ok" %}
                                 {% else %}
                                     {% bootstrap_icon "remove" %}
                                 {% endif %}
                             </td>
                             <td>
-                                {% if not rechnung.bezahlt %}
-                                    {% for mahnung in mahnungen %}
-                                        {% if mahnung.rechnung == rechnung %}
-                                        <a href="{% url 'rechnung:mahnung' rechnung.id mahnung.id %}">
-                                            {{ mahnung.wievielte }}. Mahnung
-                                        </a>
-                                        <br>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endif %}
+                                {% for mahnung in mahnungen %}
+                                    {% if mahnung.rechnung == rechnung %}
+                                    <a href="{% url 'rechnung:mahnung' rechnung.id mahnung.id %}">
+                                        {{ mahnung.wievielte }}. Mahnung
+                                    </a>
+                                    <br>
+                                    {% endif %}
+                                {% endfor %}
                             </td>
                         {% else %}
                             <td>

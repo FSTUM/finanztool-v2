@@ -5,7 +5,7 @@
 
 {% block content %}
     <h1>RE {{ rechnung.rnr_string }}: {{ rechnung.name }}</h1>
-        {% if rechnung.gestellt and not rechnung.bezahlt %}
+        {% if rechnung.gestellt and not rechnung.erledigt %}
             <form class=form-horizontal method="POST">{% csrf_token %}
                 </br>
                 <p>
@@ -15,7 +15,7 @@
                 </button>
                 </p>
             </form>
-        {% elif not rechnung.gestellt and not rechnung.bezahlt %}
+        {% elif not rechnung.gestellt and not rechnung.erledigt %}
             <form class=form-horizontal method="POST">{% csrf_token %}
                 </br>
                 <p>
@@ -28,7 +28,7 @@
         {% endif %}
 
         <h2>
-        {% if rechnung.gestellt and not rechnung.bezahlt and rechnung.faellig %}
+        {% if rechnung.gestellt and not rechnung.erledigt and rechnung.faellig %}
             <a href="{% url "rechnung:mahnung_neu" rechnung.id %}" class="btn btn-danger" role="button">
                 {% bootstrap_icon "hourglass" %} Mahnung stellen
             </a>
@@ -83,7 +83,7 @@
                             <td>{{ mahnung.gebuehr }} € -> {{ mahnung.mahnsumme }} €</td>
                         </tr>
                         <tr>
-                            <th>Geschickt? / Erledigt?</th>
+                            <th>Geschickt? / Bezahlt?</th>
                             <td>
                                 {% if mahnung.geschickt %}
                                     {% bootstrap_icon "ok" %}
@@ -91,7 +91,7 @@
                                     {% bootstrap_icon "remove" %}
                                 {% endif %}
                                 /
-                                {% if mahnung.erledigt %}
+                                {% if mahnung.bezahlt %}
                                     {% bootstrap_icon "ok" %}
                                 {% else %}
                                     {% bootstrap_icon "remove" %}
@@ -119,7 +119,7 @@
                     <th>Fälligkeitsdatum</th>
                     <td>
                         {% if rechnung.faellig %}
-                            {% if rechnung.bezahlt %}
+                            {% if rechnung.erledigt %}
                                 <span style="color : green;">
                             {% else %}
                                 <span style="color : red;">

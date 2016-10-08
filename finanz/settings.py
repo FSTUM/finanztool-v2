@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'bootstrap3',
     'rechnung.apps.RechnungConfig',
+    'konto',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -106,6 +107,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # default, but important due to pickle
 
 
 # Internationalization
