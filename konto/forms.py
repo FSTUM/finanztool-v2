@@ -24,8 +24,6 @@ class MappingConfirmationForm(forms.Form):
             key = self._get_key(entry)
             if self.cleaned_data[key]:
                 if entry.mapped_mahnung:
-                    entry.mapped_mahnung.erledigt = True
-                    entry.mapped_mahnung.save()
+                    entry.mapped_mahnung.bezahlen()
                 elif entry.mapped_rechnung:
-                    entry.mapped_rechnung.bezahlt = True
-                    entry.mapped_rechnung.save()
+                    entry.mapped_rechnung.bezahlen()

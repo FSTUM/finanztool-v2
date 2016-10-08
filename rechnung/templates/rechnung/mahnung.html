@@ -9,17 +9,17 @@
         RE {{ mahnung.rechnung.rnr_string }} ({{ mahnung.rechnung.name }})
     </a>
 </h1>
-        {% if mahnung.geschickt and not mahnung.erledigt %}
+        {% if mahnung.geschickt and not mahnung.bezahlt %}
             <form class=form-horizontal method="POST">{% csrf_token %}
                 </br>
                 <p>
                 {{ form }}
-                <button type="submit" name="erledigt" class="save btn btn-success">
-                    {% bootstrap_icon "ok" %} Erledigt
+                <button type="submit" name="bezahlt" class="save btn btn-success">
+                    {% bootstrap_icon "ok" %} Bezahlt
                 </button>
                 </p>
             </form>
-        {% elif not mahnung.geschickt and not rechnung.erledigt %}
+        {% elif not mahnung.geschickt and not mahnung.bezahlt %}
             <form class=form-horizontal method="POST">{% csrf_token %}
                 </br>
                 <p>
@@ -67,7 +67,7 @@
                 <tr>
                     <th>Erledigt?</th>
                     <td>
-                        {% if mahnung.erledigt %}
+                        {% if mahnung.bezahlt %}
                             {% bootstrap_icon "ok" %}
                         {% else %}
                             {% bootstrap_icon "remove" %}
@@ -179,7 +179,7 @@
                 <tr>
                     <th>Erledigt?</th>
                     <td>
-                        {% if andere_mahnung.erledigt %}
+                        {% if andere_mahnung.bezahlt %}
                             {% bootstrap_icon "ok" %}
                         {% else %}
                             {% bootstrap_icon "remove" %}

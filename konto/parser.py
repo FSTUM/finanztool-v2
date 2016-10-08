@@ -40,7 +40,7 @@ def parse_camt_csv(csvfile):
 
     # hole alle offenen rechnungen
     offene_rechnungen = Rechnung.objects.filter(gestellt=True,
-                                                bezahlt=False).all()
+                                                erledigt=False).all()
     regex_cache = {}
     for rechnung in offene_rechnungen:
         regex_cache[rechnung] = re.compile('(.*[^0-9])?{}([^0-9].*)?'
