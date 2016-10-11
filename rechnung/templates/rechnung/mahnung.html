@@ -52,13 +52,19 @@
                     <th>Erledigt?</th>
                     <td>
                         {% if mahnung.bezahlt %}
-                            {% bootstrap_icon "ok" %} Diese Mahnung wurde bezahlt.
+                            <span style="color : green;">
+                                {% bootstrap_icon "ok" %} Diese Mahnung wurde bezahlt.
+                            </span>
                         {% else %}
                             {% if rechnung.erledigt %}
                                 {% if rechnung.bezahlt %}
-                                    {% bootstrap_icon "ok" %} Die Originalrechnung wurde bezahlt.
+                                    <span style="color : green;">
+                                        {% bootstrap_icon "ok" %} Die Originalrechnung wurde bezahlt.
+                                    </span>
                                 {% else %}
-                                    {% bootstrap_icon "ok" %} Eine andere Mahnung wurde bezahlt.
+                                    <span style="color : green;">
+                                        {% bootstrap_icon "ok" %} Eine andere Mahnung wurde bezahlt.
+                                    </span>
                                 {% endif %}
                             {% else %}
                                 {% bootstrap_icon "remove" %} Es wurde noch keine zugehörige Mahnung bezahlt.

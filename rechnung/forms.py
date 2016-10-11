@@ -124,7 +124,7 @@ class MahnungForm(forms.ModelForm):
 
         self.fields.pop('wievielte')
         self.fields.pop('bezahlt')
-        if self.instance.geschickt:
+        if self.rechnung.erledigt or self.instance.geschickt:
             self.fields.pop('gebuehr')
             self.fields.pop('mdatum')
             self.fields.pop('mfdatum')

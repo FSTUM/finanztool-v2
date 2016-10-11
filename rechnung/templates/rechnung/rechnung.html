@@ -140,10 +140,14 @@
                     <th>Rechnung erledigt?</th>
                     <td>
                         {% if rechnung.bezahlt %}
-                            {% bootstrap_icon "ok" %} Die Rechnung wurde bezahlt.
+                            <span style="color : green;">
+                                {% bootstrap_icon "ok" %} Die Rechnung wurde bezahlt.
+                            </span>
                         {% else %}
                             {% if rechnung.erledigt %}
-                                {% bootstrap_icon "ok" %} Eine zugehörige Mahnung wurde bezahlt.
+                                <span style="color : green;">
+                                    {% bootstrap_icon "ok" %} Eine zugehörige Mahnung wurde bezahlt.
+                                </span>
                             {% else %}
                                 {% bootstrap_icon "remove" %} Der Betrag ist noch offen
                             {% endif %}
