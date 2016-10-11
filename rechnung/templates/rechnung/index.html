@@ -5,7 +5,7 @@
 {% block title %}Unerledigt{% endblock %}
 
 {% block content %}
-    {% if letzte_rechnungen_liste %}
+    {% if unerledigte_rechnungen %}
         <div class="row">
             <div class="col-md-10">
                 <h3>Unerledigt</h3>
@@ -22,7 +22,7 @@
                         <th>Bezahlt?</th>
                         <th>Mahnungen</th>
                     </tr>
-                    {% for rechnung in letzte_rechnungen_liste %}
+                    {% for rechnung in unerledigte_rechnungen %}
                     <tr>
                         <td><a href="{% url 'rechnung:rechnung' rechnung.id %}">RE {{ rechnung.rnr_string }}</a></td>
                         <td>{{ rechnung.name }}</td>
@@ -51,13 +51,11 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% for mahnung in mahnungen %}
-                                    {% if mahnung.rechnung == rechnung %}
+                                {% for mahnung in rechnung.mahnungen %}
                                     <a href="{% url 'rechnung:mahnung' rechnung.id mahnung.id %}">
                                         {{ mahnung.wievielte }}. Mahnung
                                     </a>
                                     <br>
-                                    {% endif %}
                                 {% endfor %}
                             </td>
                         {% else %}

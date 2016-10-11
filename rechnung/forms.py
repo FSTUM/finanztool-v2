@@ -15,10 +15,10 @@ class RechnungForm(forms.ModelForm):
         help_texts = {
                 'name': 'Nur für uns, wird nicht nach außen gezeigt.',
                 'fdatum': 'default: +15 Tage',
-                'kunde': 'Falls noch nicht angelegt, in neuem Tab anlegen und \
-                          dieses Formular neu laden, Daten bleiben erhalten.',
-                'einleitung': 'Beispiel: für X stellen wir Ihnen hiermit \
-                               folgende Posten in Rechnung:',
+                'kunde': 'Falls noch nicht angelegt, in neuem Tab anlegen und'
+                          'dieses Formular neu laden, Daten bleiben erhalten.',
+                'einleitung': 'Beispiel: für X stellen wir Ihnen hiermit '
+                              'folgende Posten in Rechnung:',
                 }
         widgets = {
                 'rdatum': forms.DateInput(attrs={
@@ -68,7 +68,7 @@ class RechnungForm(forms.ModelForm):
             self.fields.pop('einleitung')
             self.fields.pop('gestellt')
 
-            if self.instance.bezahlt:
+            if self.instance.erledigt:
                 self.fields.pop('kunde')
 
 
@@ -80,19 +80,19 @@ class MahnungForm(forms.ModelForm):
     class Meta:
         model = Mahnung
         help_texts = {
-                'gebuehr': 'Bei uns üblich: Bei der 2. Mahnung und allen \
-                        danach 5 € erheben.',
+                'gebuehr': 'Bei uns üblich: Bei der 2. Mahnung und allen '
+                           'danach 5 € erheben.',
                 'mfdatum': 'default: +15 Tage',
-                'bezahlt': 'Markiert diese Mahnungen und die \
-                        Originalrechnung als bezahlt/erledigt.',
-                'einleitung': 'Beispiel 1. Mahnung: nachstehend aufgeführte \
-                        Positionen führen wir noch ohne Ausgleich. \
-                        Beispiel 2. Mahnung: nachstehend aufgeführte \
-                        Positionen führen wir trotz bereits durch unsere \
-                        Schreiben vom 2. und 17. Januar 2016 erfolgter \
-                        Mahnungen noch ohne Ausgleich.',
-                'gerichtlich': 'Wird bei uns in der Regel in der 3. Mahnung \
-                        angedroht.',
+                'bezahlt': 'Markiert diese Mahnungen und die '
+                           'Originalrechnung als bezahlt/erledigt.',
+                'einleitung': 'Beispiel 1. Mahnung: nachstehend aufgeführte '
+                              'Positionen führen wir noch ohne Ausgleich. '
+                              'Beispiel 2. Mahnung: nachstehend aufgeführte '
+                              'Positionen führen wir trotz bereits durch '
+                              'unsere Schreiben vom 2. und 17. Januar 2016 '
+                              'erfolgter Mahnungen noch ohne Ausgleich.',
+                'gerichtlich': 'Wird bei uns in der Regel in der 3. Mahnung '
+                               'angedroht.',
                 }
         widgets = {
                 'mdatum': forms.DateInput(attrs={
@@ -132,7 +132,6 @@ class MahnungForm(forms.ModelForm):
             self.fields.pop('ersteller')
             self.fields.pop('einleitung')
             self.fields.pop('gerichtlich')
-
 
     def save(self, commit=True):
         instance = super(MahnungForm, self).save(False)

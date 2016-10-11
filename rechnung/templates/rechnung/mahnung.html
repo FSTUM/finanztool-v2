@@ -9,7 +9,7 @@
         RE {{ mahnung.rechnung.rnr_string }} ({{ mahnung.rechnung.name }})
     </a>
 </h1>
-        {% if mahnung.geschickt and not mahnung.bezahlt %}
+        {% if mahnung.geschickt and not mahnung.bezahlt and not rechnung.erledigt %}
             <form class=form-horizontal method="POST">{% csrf_token %}
                 </br>
                 <p>
@@ -19,7 +19,7 @@
                 </button>
                 </p>
             </form>
-        {% elif not mahnung.geschickt and not mahnung.bezahlt %}
+        {% elif not mahnung.geschickt and not mahnung.bezahlt and not rechnung.erledigt %}
             <form class=form-horizontal method="POST">{% csrf_token %}
                 </br>
                 <p>
@@ -31,9 +31,11 @@
             </form>
         {% endif %}
 
+        {% if not rechnung.erledigt %}
         <a href="{% url "rechnung:mahnung_aendern" rechnung.id mahnung.id %}" class="btn btn-info" role="button">
             {% bootstrap_icon "pencil" %} Bearbeiten
         </a>
+        {% endif %}
 
         <a href="{% url "rechnung:mahnungpdf" rechnung.id mahnung.id %}" class="btn btn-info" role="button">
             {% bootstrap_icon "download-alt" %} Herunterladen
@@ -47,57 +49,30 @@
         <br/>
         <table class="table" >
                 <tr>
+                    <th>Erledigt?</th>
+                    <td>
+                        {% if mahnung.bezahlt %}
+                            {% bootstrap_icon "ok" %} Diese Mahnung wurde bezahlt.
+                        {% else %}
+                            {% if rechnung.erledigt %}
+                                {% if rechnung.bezahlt %}
+                                    {% bootstrap_icon "ok" %} Die Originalrechnung wurde bezahlt.
+                                {% else %}
+                                    {% bootstrap_icon "ok" %} Eine andere Mahnung wurde bezahlt.
+                                {% endif %}
+                            {% else %}
+                                {% bootstrap_icon "remove" %} Es wurde noch keine zugehörige Mahnung bezahlt.
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
                     <th>Kunde</th>
                     <td>
                        <a href="{% url 'rechnung:kunde' mahnung.rechnung.kunde.id %}">
                             {{ mahnung.rechnung.kunde }}
                         </a>
                     </td>
-                </tr>
-                <tr>
-                    <th>Geschickt?</th>
-                    <td>
-                        {% if mahnung.geschickt %}
-                            {% bootstrap_icon "ok" %}
-                        {% else %}
-                            {% bootstrap_icon "remove" %}
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th>Erledigt?</th>
-                    <td>
-                        {% if mahnung.bezahlt %}
-                            {% bootstrap_icon "ok" %}
-                        {% else %}
-                            {% bootstrap_icon "remove" %}
-                        {% endif %}
-                        TODO für alle vorherigen setzen
-                    </td>
-                </tr>
-                    <th>Ungültig?</th>
-                    <td>
-                        {% if mahnung.ungueltig %}
-                            {% bootstrap_icon "ok" %}
-                        {% else %}
-                            {% bootstrap_icon "remove" %}
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th>Gerichtliche Androhung?</th>
-                    <td>
-                        {% if mahnung.gerichtlich %}
-                            {% bootstrap_icon "ok" %}
-                        {% else %}
-                            {% bootstrap_icon "remove" %}
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                <tr>
-                    <th>Einleitungstext</th>
-                    <td>{{ mahnung.einleitung }}</td>
                 </tr>
         </table>
     </div>
@@ -107,6 +82,34 @@
         <h3>Mahnung</h3>
         <br/>
         <table class="table table-striped" >
+            <tr>
+                <th>Erhobene Mahngebühr</th>
+                <td align="right">{{ mahnung.gebuehr }} €</td>
+            </tr>
+            <tr>
+                <th>Neue Bruttosumme:</th>
+                <td align="right"><b>{{ mahnung.mahnsumme }} €<b></td>
+            </tr>
+            <tr>
+                <th>Gerichtliche Schritte</th>
+                <td>
+                    {% if mahnung.gerichtlich %}
+                        <span style="color : red;">wurden angedroht.</span>
+                    {% else %}
+                        {% bootstrap_icon "minus" %}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Geschickt?</th>
+                <td>
+                    {% if mahnung.geschickt %}
+                        {% bootstrap_icon "ok" %}
+                    {% else %}
+                        {% bootstrap_icon "remove" %}
+                    {% endif %}
+                </td>
+            </tr>
             <tr>
                 <th>Datum</th>
                 <td>{{ mahnung.mdatum }}</td>
@@ -120,17 +123,14 @@
                 <td>{{ mahnung.ersteller.get_full_name }}</td>
             </tr>
             <tr>
-                <th>Erhobene Mahngebühr</th>
-                <td>{{ mahnung.gebuehr }} €</td>
-            </tr>
             <tr>
-                <th>Neue Bruttosumme:</th>
-                <td align="right"><b>{{ mahnung.mahnsumme }} €<b></td>
+                <th>Einleitungstext</th>
+                <td>{{ mahnung.einleitung }}</td>
             </tr>
         </table>
     </div>
     <div class="col-md-6">
-        <h3>Original Rechnung</h3>
+        <h3><a href="{% url 'rechnung:rechnung' rechnung.id %}">Original Rechnung</a></h3>
         <br/>
     <table class="table table-striped" >
             <tr>
@@ -161,39 +161,42 @@
         <br/>
         <h3>Alle Mahnungen zur RE {{ mahnung.rechnung.rnr_string }}</h3>
         <br/>
-        {% for andere_mahnung in alle_mahnungen_liste %}
+        {% for m in rechnung.mahnungen %}
         <h4>
             <b>
-                <a href="{% url 'rechnung:mahnung' mahnung.rechnung.id andere_mahnung.id %}">
-                    {{ andere_mahnung.wievielte }}. Mahnung
+                <a href="{% url 'rechnung:mahnung' m.rechnung.id m.id %}">
+                    {{ m.wievielte }}. Mahnung
                 </a>
             </b>
         </h4>
             <table class="table table-striped" >
                 <tr>
-                    <th>Datum</th>
-                    <td>{{ andere_mahnung.mdatum }}</td>
+                    <th>Mahngebühr {% bootstrap_icon "arrow-right" %} Neue Summe</th>
+                    <td>{{ m.gebuehr }} € {% bootstrap_icon "arrow-right" %} <b> {{ m.mahnsumme }} €</b></td>
                 </tr>
                 <tr>
-                    <th>Fälligkeitsdatum</th>
-                    <td>{{ andere_mahnung.mfdatum }}</td>
-                </tr>
-                <tr>
-                    <th>Gestellt von</th>
-                    <td>{{ andere_mahnung.ersteller.get_full_name }}</td>
-                </tr>
-                <tr>
-                    <th>Erhobene Mahngebühr</th>
-                    <td>{{ andere_mahnung.gebuehr }} €</td>
-                </tr>
-                <tr>
-                    <th>Neue Bruttosumme:</th>
-                    <td align="right"><b>{{ andere_mahnung.mahnsumme }} €<b></td>
+                    <th>Gerichtliche Schritte</th>
+                    <td>
+                    {% if m.gerichtlich %}
+                        <span style="color : red;">wurden angedroht.</span>
+                    {% else %}
+                        {% bootstrap_icon "minus" %}
+                    {% endif %}
+                    </td>
                 </tr>
                 <tr>
                     <th>Geschickt?</th>
                     <td>
-                        {% if andere_mahnung.geschickt %}
+                        {% if m.geschickt %}
+                            {% bootstrap_icon "ok" %}
+                        {% else %}
+                            {% bootstrap_icon "remove" %}
+                        {% endif %}
+                        </td>
+                <tr>
+                    <th>Bezahlt?</th>
+                    <td>
+                        {% if m.bezahlt %}
                             {% bootstrap_icon "ok" %}
                         {% else %}
                             {% bootstrap_icon "remove" %}
@@ -201,34 +204,25 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Erledigt?</th>
+                    <th>Datum, Fällig</th>
                     <td>
-                        {% if andere_mahnung.bezahlt %}
-                            {% bootstrap_icon "ok" %}
+                        {{ m.mdatum }}, 
+                        {% if m.faellig and m.geschickt %}
+                            <span style="color : red;">
                         {% else %}
-                            {% bootstrap_icon "remove" %}
+                            <span>
                         {% endif %}
-                        TODO für alle vorherigen setzen
+                        {{ m.mfdatum }}</span>
                     </td>
                 </tr>
                 <tr>
-                    <th>Ungültig?</th>
-                    <td>
-                        {% if mahnung.ungueltig %}
-                            {% bootstrap_icon "ok" %}
-                        {% else %}
-                            {% bootstrap_icon "remove" %}
-                        {% endif %}
-                    </td>
+                    <th>Gestellt von</th>
+                    <td>{{ m.ersteller.get_full_name }}</td>
                 </tr>
                 <tr>
-                    <th>Gerichtliche Androhung?</th>
+                    <th>Einleitung</th>
                     <td>
-                        {% if mahnung.gerichtlich %}
-                            {% bootstrap_icon "ok" %}
-                        {% else %}
-                            {% bootstrap_icon "remove" %}
-                        {% endif %}
+                        {{ m.einleitung }}
                     </td>
                 </tr>
             </table>

@@ -33,13 +33,11 @@ def willkommen(request):
 
 @login_required
 def index(request):
-    letzte_rechnungen_liste = Rechnung.objects.filter(erledigt=False). \
+    unerledigte_rechnungen = Rechnung.objects.filter(erledigt=False). \
         exclude(name='test').exclude(name='Test').order_by('-rnr')
-    mahnungen = Mahnung.objects.filter(rechnung__erledigt=False)
 
     context = {
-            'letzte_rechnungen_liste': letzte_rechnungen_liste,
-            'mahnungen': mahnungen,
+            'unerledigte_rechnungen': unerledigte_rechnungen,
             }
     return render(request, 'rechnung/index.html', context)
 
@@ -142,11 +140,6 @@ def mahnung(request, rechnung_id, mahnung_id):
     if mahnung.rechnung != rechnung:
         raise Http404
 
-    alle_mahnungen_liste = Mahnung.objects.filter(rechnung=rechnung)
-    vorherige_mahnungen = Mahnung.objects.filter(
-                                            rechnung=rechnung,
-                                            wievielte__lt=mahnung.wievielte)
-
     form = MahnungStatusForm(request.POST or None)
     if request.method == 'POST':
         if 'bezahlt' in request.POST:
@@ -166,7 +159,6 @@ def mahnung(request, rechnung_id, mahnung_id):
             'form': form,
             'rechnung': rechnung,
             'mahnung': mahnung,
-            'alle_mahnungen_liste': alle_mahnungen_liste
             }
     return render(request, 'rechnung/mahnung.html', context)
 
@@ -199,8 +191,8 @@ def form_mahnung(request, rechnung_id, mahnung_id=None):
 
 @login_required
 def alle_mahnungen(request):
-    mahnungen_liste = Mahnung.objects.all().order_by('-rechnung__rnr')
-    context = {'mahnungen_liste': mahnungen_liste}
+    rechnungen = Rechnung.objects.all().order_by('-rnr')
+    context = {'rechnungen': rechnungen}
     return render(request, 'rechnung/alle_mahnungen.html', context)
 
 
@@ -380,10 +372,12 @@ def rechnungpdf(request, rechnung_id, mahnung_id=None):
 
     response = HttpResponse(content_type='application/pdf')
     if mahnung_id:
-        response['Content-Disposition'] = 'attachment; filename="RE%s_%s_M%s.pdf"' % \
+        response['Content-Disposition'] = 'attachment;'\
+            ' filename="RE%s_%s_M%s.pdf"' % \
             (rechnung.rnr_string, rechnung.kunde.knr, mahnung.wievielte)
     else:
-        response['Content-Disposition'] = 'attachment; filename="RE%s_%s.pdf"' % \
+        response['Content-Disposition'] = 'attachment;'\
+            'filename="RE%s_%s.pdf"' % \
             (rechnung.rnr_string, rechnung.kunde.knr)
 
     # return path to pdf

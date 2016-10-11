@@ -63,10 +63,43 @@
                 </h4>
                 <table class="table table-striped" >
                     <tr>
+                        <th>Mahngebühr {% bootstrap_icon "arrow-right" %} Neue Summe</th>
+                        <td>{{ mahnung.gebuehr }} € {% bootstrap_icon "arrow-right" %} <b> {{ mahnung.mahnsumme }} €</b></td>
+                    </tr>
+                    <tr>
+                        <th>Gerichtliche Schritte</th>
+                        <td>
+                        {% if mahnung.gerichtlich %}
+                            <span style="color : red;">wurden angedroht.</span>
+                        {% else %}
+                            {% bootstrap_icon "minus" %}
+                        {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Geschickt?</th>
+                        <td>
+                            {% if mahnung.geschickt %}
+                                {% bootstrap_icon "ok" %}
+                            {% else %}
+                                {% bootstrap_icon "remove" %}
+                            {% endif %}
+                            </td>
+                    <tr>
+                        <th>Bezahlt?</th>
+                        <td>
+                            {% if mahnung.bezahlt %}
+                                {% bootstrap_icon "ok" %}
+                            {% else %}
+                                {% bootstrap_icon "remove" %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
                         <th>Datum, Fällig</th>
                         <td>
                             {{ mahnung.mdatum }}, 
-                            {% if mahnung.faellig %}
+                            {% if mahnung.faellig and mahnung.geschickt %}
                                 <span style="color : red;">
                             {% else %}
                                 <span>
@@ -79,28 +112,9 @@
                         <td>{{ mahnung.ersteller.get_full_name }}</td>
                     </tr>
                     <tr>
-                        <th>Mahngebühr -> Neue Summe</th>
-                        <td>{{ mahnung.gebuehr }} € -> {{ mahnung.mahnsumme }} €</td>
-                    </tr>
-                    <tr>
-                        <th>Geschickt? / Bezahlt?</th>
+                        <th>Einleitung</th>
                         <td>
-                            {% if mahnung.geschickt %}
-                                {% bootstrap_icon "ok" %}
-                            {% else %}
-                                {% bootstrap_icon "remove" %}
-                            {% endif %}
-                            /
-                            {% if mahnung.bezahlt %}
-                                {% bootstrap_icon "ok" %}
-                            {% else %}
-                                {% bootstrap_icon "remove" %}
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            ToDo Rest Model Mahnung
+                            {{ mahnung.einleitung }}
                         </td>
                     </tr>
                 </table>
@@ -113,31 +127,6 @@
             <br/>
             <table class="table table-striped" >
                 <tr>
-                    <th>Rechnungsdatum</th>
-                    <td>{{ rechnung.rdatum }}</td>
-                </tr>
-                <tr>
-                    <th>Lieferdatum</th>
-                    <td>{{ rechnung.ldatum }}</td>
-                </tr>
-                <tr>
-                    <th>Fälligkeitsdatum</th>
-                    <td>
-                        {% if rechnung.faellig %}
-                            {% if rechnung.erledigt %}
-                                <span style="color : green;">
-                            {% else %}
-                                <span style="color : red;">
-                            {% endif %}
-                        {% endif %}
-                        {{ rechnung.fdatum }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Gestellt von</th>
-                    <td>{{ rechnung.ersteller.get_full_name }}</td>
-                </tr>
-                <tr>
                     <th>Rechnung gestellt?</th>
                     <td>
                         {% if rechnung.gestellt %}
@@ -148,18 +137,45 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>Rechnung bezahlt?</th>
+                    <th>Rechnung erledigt?</th>
                     <td>
                         {% if rechnung.bezahlt %}
-                            {% bootstrap_icon "ok" %}
+                            {% bootstrap_icon "ok" %} Die Rechnung wurde bezahlt.
                         {% else %}
-                            {% bootstrap_icon "remove" %}
+                            {% if rechnung.erledigt %}
+                                {% bootstrap_icon "ok" %} Eine zugehörige Mahnung wurde bezahlt.
+                            {% else %}
+                                {% bootstrap_icon "remove" %} Der Betrag ist noch offen
+                            {% endif %}
                         {% endif %}
                     </td>
                 </tr>
                 <tr>
                     <th>Kunde</th>
                     <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde }}</td>
+                </tr>
+                <tr>
+                    <th>Rechnungsdatum</th>
+                    <td>{{ rechnung.rdatum }}</td>
+                </tr>
+                <tr>
+                    <th>Lieferdatum</th>
+                    <td>{{ rechnung.ldatum }}</td>
+                </tr>
+                <tr>
+                    <th>Fälligkeitsdatum</th>
+                    <td>
+                        {% if rechnung.faellig and rechnung.gestellt %}
+                            {% if not rechnung.erledigt %}
+                                <span style="color : red;">
+                            {% endif %}
+                        {% endif %}
+                        {{ rechnung.fdatum }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Gestellt von</th>
+                    <td>{{ rechnung.ersteller.get_full_name }}</td>
                 </tr>
                 <tr>
                     <th>Kategorie</th>
