@@ -88,13 +88,17 @@
                                     {% endif %}
                                 </tr>
                             {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan=7>
+                                Es existieren keine Mahnungen.
+                                </td>
+                            </tr>
                         {% endif %}
                     {% endfor %}
                 </table>
             </div>
         </div>
-    {% else %}
-        <p>Es sind keine Mahnungen verfügbar.</p>
     {% endif %}
 {% endblock %}
 

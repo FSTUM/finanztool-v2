@@ -22,6 +22,7 @@
                         <th>Betrag</th>
                         <th>Fällig</th>
                         <th>Bezahlt?</th>
+                        <th>Erledigt?</th>
                     </tr>
                     {% for rechnung in rechnungen_liste %}
                     <tr>
@@ -47,6 +48,13 @@
                                 {{ rechnung.fdatum|date:"SHORT_DATE_FORMAT" }}
                             </td>
                             <td>
+                                {% if rechnung.bezahlt %}
+                                    {% bootstrap_icon "ok" %}
+                                {% else %}
+                                    {% bootstrap_icon "remove" %}
+                                {% endif %}
+                            </td>
+                            <td>
                                 {% if rechnung.erledigt %}
                                     {% bootstrap_icon "ok" %}
                                 {% else %}
@@ -57,12 +65,10 @@
                             <td>
                             {% bootstrap_icon "remove" %}
                             </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
+                            <td/>
+                            <td/>
+                            <td/>
+                            <td/>
                         {% endif %}
                     </tr>
                     {% endfor %}

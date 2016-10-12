@@ -5,7 +5,8 @@
 {% block content %}
 <h2>Willkommen beim Finanztool!</h2>
     <p>
-    Es existieren <a href="{% url "rechnung:index" %}">{{ offene_rechnungen }} offene Rechnungen</a>.
+    Es existieren <a href="{% url "rechnung:index" %}">{{ offene_rechnungen }} offene Rechnungen,
+     von denen {{ faellige_rechnungen }} fällig sind</a>.
     </p>
     <br>
 <h3>Neuerungen</h3>
