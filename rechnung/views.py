@@ -212,6 +212,7 @@ def kunde(request, kunde_id):
 @login_required
 def form_kunde(request, kunde_id=None):
     kunde = None
+    kunde_verwendet = None
     if kunde_id:
         kunde = get_object_or_404(Kunde, pk=kunde_id)
         kunde_verwendet = Rechnung.objects.filter(
