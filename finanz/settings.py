@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'rechnung.apps.RechnungConfig',
     'konto',
+    'aufgaben',
 ]
 
 MIDDLEWARE_CLASSES = [
