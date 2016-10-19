@@ -96,6 +96,7 @@
                                 </div>
                             </li>
                             <li><a href="{% url "konto:einlesen" %}">{% bootstrap_icon "credit-card" %} Konto</a></li>
+                            <li><a href="{% url "aufgaben:unerledigt" %}">{% bootstrap_icon "th-list" %} Aufgaben</a></li>
                             <li><a href="{% url "rechnung:logout" %}">Logout</a></li> 
                         {% else %}
                             <li><a href="{% url "rechnung:index" %}">Index</a></li>

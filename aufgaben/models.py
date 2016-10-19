@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
+from datetime import date
 
 
 class Aufgabenart(models.Model):
@@ -8,6 +9,9 @@ class Aufgabenart(models.Model):
             verbose_name='Bezeichnung',
             max_length=50,
             )
+
+    def __str__(self):
+        return "{}".format(self.name)
 
 
 class Aufgabe(models.Model):
@@ -29,19 +33,25 @@ class Aufgabe(models.Model):
     bearbeiter = models.ForeignKey(
             User,
             related_name='aufgabe_bearbeiter',
-            verbose_name='Wer hat sie erledigt? *',
+            verbose_name='Wer hat sie erledigt?',
+            null=True,
+            blank=True,
             )
     jahr = models.IntegerField(
            validators=[MaxValueValidator(9999), MinValueValidator(1000)],
+           null=True,
+           blank=True,
            )
     SEMESTER = (
             ('ws', 'Wintersemester'),
             ('ss', 'Sommersemester'),
             )
     semester = models.CharField(
-            verbose_name='Zugehöriges Semester *',
+            verbose_name='Zugehöriges Semester',
             choices=SEMESTER,
             max_length=2,
+            null=True,
+            blank=True,
             )
     zusatz = models.CharField(
             verbose_name='Zusatzinformation',
@@ -51,4 +61,12 @@ class Aufgabe(models.Model):
             )
     text = models.TextField(
             verbose_name='Text',
+            null=True,
+            blank=True,
             )
+
+    def __str__(self):
+        return "{} - {} ({})".format(self.art.name, self.zusatz, self.jahr)
+
+    def faellig(self):
+        return self.frist < date.today()

@@ -28,7 +28,7 @@
             </tr>
             <tr>
                 <th>Person</th>
-                <td>{{ kunde.andrede }} {{ kunde.titel }} {{ kunde.vorname }} {{ kunde.name }}</td>
+                <td>{{ kunde.get_anrede_display|default_if_none:"" }} {{ kunde.titel }} {{ kunde.vorname }} {{ kunde.name }}</td>
             </tr>
             <tr>
                 <th>Adresse</th>

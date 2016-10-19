@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load l10n %}
+
+{% block title %}Finanztool - Unerledigte Aufgaben{% endblock %}
+
+{% block content %}
+    <a href="{% url "aufgaben:alle" %}">
+        <button type="link" class="btn btn-info">
+        {% bootstrap_icon "eye-open" %} Alle Aufgaben
+        </button>
+    </a>
+    <h3>Meine Aufgaben</h3>
+    <br>
+    <div class="row">
+        {% if meine_aufgaben %}
+        <div class="col-md-6">
+            <table class="table table-hover">
+                <tr>
+                    <th>Bezeichnung</th>
+                    <th>Zusatz</th>
+                    <th>Frist</th>
+                    <th>Jahr</th>
+                    <th>Semester</th>
+                </tr>
+                {% for aufgabe in meine_aufgaben %}
+                <tr>
+                    <td>
+                        <a href="{% url "aufgaben:aufgabe" aufgabe.id %}">
+                            {{ aufgabe.art.name }}
+                        </a>
+                    </td>
+                    <td>{{ aufgabe.zusatz|default_if_none:"" }}</td>
+                    <td>
+                        {% if aufgabe.faellig %}
+                            <span style="color : red;">
+                            {{ aufgabe.frist }}
+                            </span>
+                        {% else %}
+                            {{ aufgabe.frist }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% localize off %}
+                        {{ aufgabe.jahr|default_if_none:"" }}
+                        {% endlocalize %}
+                    </td>
+                    <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% else %}
+        <p>Es gibt keine Aufgaben, die ich erledigen muss!</p>
+        {% endif %}
+    </div>
+    <h3>Unerledigte Aufgaben</h3>
+    <br>
+    <div class="row">
+        {% if aufgaben %}
+        <div class="col-md-6">
+            <table class="table table-hover">
+                <tr>
+                    <th>Bezeichnung</th>
+                    <th>Zusatz</th>
+                    <th>Frist</th>
+                    <th>Zuständiger</th>
+                    <th>Jahr</th>
+                    <th>Semester</th>
+                </tr>
+                {% for aufgabe in aufgaben %}
+                <tr>
+                    <td>
+                        <a href="{% url "aufgaben:aufgabe" aufgabe.id %}">
+                            {{ aufgabe.art.name }}
+                        </a>
+                    </td>
+                    <td>{{ aufgabe.zusatz|default_if_none:"" }}</td>
+                    <td>
+                        {% if aufgabe.faellig %}
+                            <span style="color : red;">
+                            {{ aufgabe.frist }}
+                            </span>
+                        {% else %}
+                            {{ aufgabe.frist }}
+                        {% endif %}
+                    </td>
+                    <td>{{ aufgabe.zustaendig.get_short_name }}</td>
+                    <td>
+                        {% localize off %}
+                        {{ aufgabe.jahr|default_if_none:"" }}
+                        {% endlocalize %}
+                    </td>
+                    <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% else %}
+        <p>Es gibt keine Aufgaben, die zu erledigen sind!</p>
+        {% endif %}
+    </div>
+
+{% endblock %}
