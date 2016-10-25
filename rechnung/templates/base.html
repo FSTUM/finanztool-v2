@@ -95,8 +95,18 @@
                                   </ul>
                                 </div>
                             </li>
+                            <li>
+                                <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "th-list" %} Aufgaben
+                                  <span class="caret"></span></button>
+                                  <ul class="dropdown-menu">
+                                      <li><a  href="{% url "aufgaben:unerledigt" %}">{% bootstrap_icon "th-list" %} Unerledigt</a></li>
+                                      <li><a  href="{% url "aufgaben:neu" %}">{% bootstrap_icon "plus" %} Hinzufügen</a></li>
+                                      <li><a  href="{% url "aufgaben:neu_aufgabenart" %}">{% bootstrap_icon "plus" %} Aufgabenart hinzufügen</a></li>
+                                      <li><a  href="{% url "aufgaben:alle" %}">{% bootstrap_icon "eye-open" %} Alle</a></li>
+                                  </ul>
+                                </div>
                             <li><a href="{% url "konto:einlesen" %}">{% bootstrap_icon "credit-card" %} Konto</a></li>
-                            <li><a href="{% url "aufgaben:unerledigt" %}">{% bootstrap_icon "th-list" %} Aufgaben</a></li>
                             <li><a href="{% url "rechnung:logout" %}">Logout</a></li> 
                         {% else %}
                             <li><a href="{% url "rechnung:index" %}">Index</a></li>
