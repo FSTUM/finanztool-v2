@@ -21,6 +21,7 @@ from .models import Mahnung
 from .models import Kunde
 from .models import Kategorie
 from .models import Posten
+from aufgaben.models import Aufgabe
 
 
 @login_required
@@ -39,9 +40,11 @@ def willkommen(request):
 def index(request):
     unerledigte_rechnungen = Rechnung.objects.filter(erledigt=False). \
         exclude(name='test').exclude(name='Test').order_by('-rnr')
+    aufgaben = Aufgabe.objects.filter(erledigt=False).order_by('-frist')
 
     context = {
             'unerledigte_rechnungen': unerledigte_rechnungen,
+            'aufgaben': aufgaben,
             }
     return render(request, 'rechnung/index.html', context)
 

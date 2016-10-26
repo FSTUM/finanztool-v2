@@ -5,10 +5,11 @@
 {% block title %}Unerledigt{% endblock %}
 
 {% block content %}
+    <h2>Unerledigt</h2>
+    <h3>Rechnung</h3>
     {% if unerledigte_rechnungen %}
         <div class="row">
             <div class="col-md-10">
-                <h3>Unerledigt</h3>
                 <br/>
                 <table class="table table-hover">
                     <tr>
@@ -78,6 +79,52 @@
         </div>
     {% else %}
         <p>Es sind keine Rechnungen verfügbar.</p>
+    {% endif %}
+
+    <h3>Aufgaben</h3>
+    {% if aufgaben %}
+        <div class="row">
+            <div class="col-md-10">
+                <table class="table table-hover">
+                    <tr>
+                        <th>Bezeichnung</th>
+                        <th>Zusatz</th>
+                        <th>Frist</th>
+                        <th>Zuständiger</th>
+                        <th>Jahr</th>
+                        <th>Semester</th>
+                    </tr>
+                    {% for aufgabe in aufgaben %}
+                    <tr>
+                        <td>
+                            <a href="{% url "aufgaben:aufgabe" aufgabe.id %}">
+                                {{ aufgabe.art.name }}
+                            </a>
+                        </td>
+                        <td>{{ aufgabe.zusatz|default_if_none:"" }}</td>
+                        <td>
+                            {% if aufgabe.faellig %}
+                                <span style="color : red;">
+                                {{ aufgabe.frist|date:"SHORT_DATE_FORMAT" }}
+                                </span>
+                            {% else %}
+                                {{ aufgabe.frist }}
+                            {% endif %}
+                        </td>
+                        <td>{{ aufgabe.zustaendig.get_short_name }}</td>
+                        <td>
+                            {% localize off %}
+                            {{ aufgabe.jahr|default_if_none:"" }}
+                            {% endlocalize %}
+                        </td>
+                        <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <p>Es sind keine Aufgaben zu erledigen.</p>
     {% endif %}
 {% endblock %}
 
