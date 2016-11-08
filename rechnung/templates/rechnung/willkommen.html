@@ -8,9 +8,16 @@
     Es existieren <a href="{% url "rechnung:index" %}">{{ offene_rechnungen }} offene Rechnungen,
      von denen {{ faellige_rechnungen }} fällig sind</a>.
     </p>
+    <p>
+    Dir wurden <a href="{% url "aufgaben:unerledigt" %}">{{ eigene_aufgaben }} Aufgaben</a> zugeteilt.
+    </p>
     <br>
 <h3>Neuerungen</h3>
     <ul>
+        <li>2016/11:</li>
+        <ul>
+            <li>Es können nun <b>Aufgaben</b> angelegt werden, siehe dazu das Dropdown Aufgaben</li>
+        </ul>
         <li>2016/10:</li>
         <ul>
             <li>Es ist nun möglich, mithilfe eines <b>CSV Exports</b> aller Überweisungen unsere offenen Rechnungen
@@ -21,5 +28,8 @@
     </ul>
         <i>Und wie immer: Falls dir etwas auffällt oder unverständlich ist, melde dich bitte!</i>
     </p>
+    <br>
+
+<h6>Version 1.2.6</h6>
 
 {% endblock %}

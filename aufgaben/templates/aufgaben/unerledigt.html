@@ -14,7 +14,7 @@
     <br>
     <div class="row">
         {% if meine_aufgaben %}
-        <div class="col-md-6">
+        <div class="col-md-10">
             <table class="table table-hover">
                 <tr>
                     <th>Bezeichnung</th>
@@ -51,22 +51,24 @@
             </table>
         </div>
         {% else %}
-        <p>Es gibt keine Aufgaben, die ich erledigen muss!</p>
+        <div class="col-md-10">
+            <p>Es gibt keine Aufgaben, die ich erledigen muss!</p>
+        </div>
         {% endif %}
     </div>
     <h3>Unerledigte Aufgaben</h3>
     <br>
     <div class="row">
         {% if aufgaben %}
-        <div class="col-md-6">
+        <div class="col-md-10">
             <table class="table table-hover">
                 <tr>
                     <th>Bezeichnung</th>
                     <th>Zusatz</th>
                     <th>Frist</th>
-                    <th>Zuständiger</th>
                     <th>Jahr</th>
                     <th>Semester</th>
+                    <th>Zuständiger</th>
                 </tr>
                 {% for aufgabe in aufgaben %}
                 <tr>
@@ -85,19 +87,21 @@
                             {{ aufgabe.frist }}
                         {% endif %}
                     </td>
-                    <td>{{ aufgabe.zustaendig.get_short_name }}</td>
                     <td>
                         {% localize off %}
                         {{ aufgabe.jahr|default_if_none:"" }}
                         {% endlocalize %}
                     </td>
                     <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
+                    <td>{{ aufgabe.zustaendig.get_short_name }}</td>
                 </tr>
                 {% endfor %}
             </table>
         </div>
         {% else %}
-        <p>Es gibt keine Aufgaben, die zu erledigen sind!</p>
+        <div class="col-md-10">
+            <p>Es gibt keine Aufgaben, die zu erledigen sind!</p>
+        </div>
         {% endif %}
     </div>
 

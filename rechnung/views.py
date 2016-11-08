@@ -29,9 +29,12 @@ def willkommen(request):
     rechnungen = Rechnung.objects.filter(gestellt=True, erledigt=False).all()
     offene_rechnungen = rechnungen.count()
     faellige_rechnungen = len(list(filter(lambda r: r.faellig, rechnungen)))
+    eigene_aufgaben = Aufgabe.objects.filter(
+                        erledigt=False, zustaendig=request.user).count()
     context = {
             'offene_rechnungen': offene_rechnungen,
             'faellige_rechnungen': faellige_rechnungen,
+            'eigene_aufgaben': eigene_aufgaben,
             }
     return render(request, 'rechnung/willkommen.html', context)
 
