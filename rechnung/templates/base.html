@@ -66,7 +66,7 @@
                             {#{% if user.is_superuser or user|has_perm_group %}#}
                             <li>
                                 <div class="dropdown">
-                                  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px;">Rechnung
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px;">{% bootstrap_icon "list-alt" %} Rechnung
                                   <span class="caret"></span></button>
                                   <ul class="dropdown-menu">
                                       <li><a  href="{% url "rechnung:rechnung_neu" %}">
@@ -86,7 +86,7 @@
                             </li>
                             <li>
                                 <div class="dropdown">
-                                  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px; margin-left: 5px;">Kunde
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "briefcase" %} Kunde
                                   <span class="caret"></span></button>
                                   <ul class="dropdown-menu">
                                       <li><a  href="{% url "rechnung:kunde_neu" %}">{% bootstrap_icon "plus" %} Hinzufügen</a></li>
@@ -97,7 +97,7 @@
                             </li>
                             <li>
                                 <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "th-list" %} Aufgaben
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "tasks" %} Aufgaben
                                   <span class="caret"></span></button>
                                   <ul class="dropdown-menu">
                                       <li><a  href="{% url "aufgaben:unerledigt" %}">{% bootstrap_icon "th-list" %} Unerledigt</a></li>
