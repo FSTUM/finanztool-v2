@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^art/neu/$', views.form_aufgabenart, name='neu_aufgabenart'),
 
     # ex: /aufgaben/art/4/aendern/
-    url(r'^/art/(?P<aufgabenart_id>[0-9]+)/aendern/$',
+    url(r'^art/(?P<aufgabenart_id>[0-9]+)/aendern/$',
         views.form_aufgabenart, name='aendern_aufgabenart'),
 
     # ex: /aufgaben/4/
