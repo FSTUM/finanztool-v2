@@ -43,7 +43,7 @@ def willkommen(request):
 def index(request):
     unerledigte_rechnungen = Rechnung.objects.filter(erledigt=False). \
         exclude(name='test').exclude(name='Test').order_by('-rnr')
-    aufgaben = Aufgabe.objects.filter(erledigt=False).order_by('-frist')
+    aufgaben = Aufgabe.objects.filter(erledigt=False).order_by('frist')
 
     context = {
             'unerledigte_rechnungen': unerledigte_rechnungen,

@@ -7,7 +7,7 @@ from .forms import AufgabeForm, AufgabenartForm, AufgabeErledigtForm
 
 @login_required
 def unerledigt(request):
-    aufgaben = Aufgabe.objects.filter(erledigt=False).order_by('-frist')
+    aufgaben = Aufgabe.objects.filter(erledigt=False).order_by('frist')
     meine_aufgaben = Aufgabe.objects.filter(erledigt=False,
                                             zustaendig=request.user).order_by('-frist')
     context = {
