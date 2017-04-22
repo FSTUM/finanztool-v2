@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}Finanztool - Fehler!{% endblock %}
+
+{% block content %}
+<p>Es ist ein Fehler aufgetreten bei der Erstellung der {{ doc }} mittels pdflatex:</p>
+<pre>{{ erroroutput }}</pre>
+{% endblock %}
+

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Finanztool - {{ key.typename }} {{ key }} zurücknehmen{% endblock %}
+
+{% block content %}
+    <h1>{{ key.typename }} {{ key }} zurücknehmen</h1>
+    
+    <p>
+        Soll
+        {% if key.keytype.keycard %}
+        die Schließkarte
+        {% else %}
+        der Schlüssel
+        {% endif %}
+        <a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a>, momentan ausgegeben an <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>, wirklich zurückgenommen werden?
+    </p>
+
+    <form method="post" action="">
+        {% csrf_token %}
+    
+        <table class="table">
+            <tr>
+                <td><button type="submit" class="btn btn-default btn-warning">Zurücknehmen</button></td>
+                <td><a href="{% url "schluessel:view_key" key.id %}" class="btn btn-info">Abbrechen</a></td>
+            </tr>
+        <table>
+    </form>
+    
+{% endblock %}

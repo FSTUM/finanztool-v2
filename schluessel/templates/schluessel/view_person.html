@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Finanztool - Entleiher {{ person }}{% endblock %}
+
+{% block content %}
+<h1>Entleiher {{ person}}</h1>
+
+<div class="col-md-6">
+    <p>
+    <a href="{% url "schluessel:edit_person" person.id %}" class="btn btn-info"
+            role="button">
+        {% bootstrap_icon "pencil" %} Bearbeiten
+    </a>
+    </p>
+
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Nachname</th>
+            <td>{{ person.name }}</td>
+        </tr>
+        <tr>
+            <th>Vorname</th>
+            <td>{{ person.firstname }}</td>
+        </tr>
+        <tr>
+            <th>E-Mail</th>
+            <td>{{ person.email }}</td>
+        </tr>
+        <tr>
+            <th>Adresse</th>
+            <td>{{ person.address }}<br>{{ person.plz }} {{ person.city }}</td>
+        </tr>
+        <tr>
+            <th>Mobil</th>
+            <td>{{ person.mobile }}</td>
+        </tr>
+        <tr>
+            <th>Telefon</th>
+            <td>{{ person.phone }}</td>
+        </tr>
+    </table>
+    
+    <h2>Ausgeliehene Schlüssel/Schließkarten</h2>
+    <table class="table table-striped table-hover">
+        {% for key in keys %}
+            <tr>
+                <th>{{ key.keytype }}</td>
+                <td><a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Log</h2>
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Datum</th>
+            <th>Vorgang</th>
+            <th>Schlüssel/Schließkarte</th>
+            <th>Finanzer</th>
+        </tr>
+        {% for entry in logentries %}
+            <tr>
+                <td>{{ entry.date | date:"SHORT_DATETIME_FORMAT" }}</td>
+                <td>
+                    {{ entry.get_operation_display }}
+                    {% if entry.operation == "G" %}
+                        {% bootstrap_icon "arrow-right" %}
+                    {% elif entry.operation == "R" %}
+                        {% bootstrap_icon "arrow-left" %}
+                    {% endif %}
+                </td>
+                <td><a href="{% url "schluessel:view_key" entry.key.id %}">{{ entry.key }}</a></td>
+                <td>
+                    {% if entry.user.get_full_name %}
+                        {{ entry.user.get_full_name }}
+                    {% else %}
+                        {{ entry.user.username }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+{% endblock %}

@@ -2,6 +2,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
 from .forms import KundeForm
 from .forms import RechnungForm
@@ -22,6 +23,10 @@ from .models import Kunde
 from .models import Kategorie
 from .models import Posten
 from aufgaben.models import Aufgabe
+from schluessel.models import Key
+
+
+staff_member_required = staff_member_required(login_url='rechnung:login')
 
 
 @login_required
@@ -31,15 +36,19 @@ def willkommen(request):
     faellige_rechnungen = len(list(filter(lambda r: r.faellig, rechnungen)))
     eigene_aufgaben = Aufgabe.objects.filter(
                         erledigt=False, zustaendig=request.user).count()
+    schluessel = Key.objects.all().count()
+    verfuegbare_schluessel = Key.objects.filter(person=None).count()
     context = {
             'offene_rechnungen': offene_rechnungen,
             'faellige_rechnungen': faellige_rechnungen,
             'eigene_aufgaben': eigene_aufgaben,
+            'schluessel': schluessel,
+            'verfuegbare_schluessel': verfuegbare_schluessel,
             }
     return render(request, 'rechnung/willkommen.html', context)
 
 
-@login_required
+@staff_member_required
 def index(request):
     unerledigte_rechnungen = Rechnung.objects.filter(erledigt=False). \
         exclude(name='test').exclude(name='Test').order_by('-rnr')
@@ -52,14 +61,14 @@ def index(request):
     return render(request, 'rechnung/index.html', context)
 
 
-@login_required
+@staff_member_required
 def alle(request):
     rechnungen_liste = Rechnung.objects.order_by('-rnr')
     context = {'rechnungen_liste': rechnungen_liste}
     return render(request, 'rechnung/alle_rechnungen.html', context)
 
 
-@login_required
+@staff_member_required
 def admin(request):
     return render(request, 'rechnung/admin.html')
 
@@ -68,7 +77,7 @@ def login(request):
     return render(request, 'rechnung/login.html')
 
 
-@login_required
+@staff_member_required
 def logout(request):
     return render(request, 'rechnung/logout.html')
 
@@ -76,7 +85,7 @@ def logout(request):
 # Rechnung#####################################################################
 
 
-@login_required
+@staff_member_required
 def rechnung(request, rechnung_id):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
@@ -99,7 +108,7 @@ def rechnung(request, rechnung_id):
     return render(request, 'rechnung/rechnung.html', context)
 
 
-@login_required
+@staff_member_required
 def form_rechnung(request, rechnung_id=None):
     rechnung = None
     if rechnung_id:
@@ -119,7 +128,7 @@ def form_rechnung(request, rechnung_id=None):
                   {'form': form, 'rechnung': rechnung})
 
 
-@login_required
+@staff_member_required
 def rechnungsuchen(request):
     form = RechnungSuchenForm(request.POST or None)
 
@@ -142,7 +151,7 @@ def rechnungsuchen(request):
 # Mahnung#######################################################################
 
 
-@login_required
+@staff_member_required
 def mahnung(request, rechnung_id, mahnung_id):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
@@ -173,7 +182,7 @@ def mahnung(request, rechnung_id, mahnung_id):
     return render(request, 'rechnung/mahnung.html', context)
 
 
-@login_required
+@staff_member_required
 def form_mahnung(request, rechnung_id, mahnung_id=None):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
@@ -199,7 +208,7 @@ def form_mahnung(request, rechnung_id, mahnung_id=None):
                   {'form': form, 'rechnung': rechnung, 'mahnung': mahnung})
 
 
-@login_required
+@staff_member_required
 def alle_mahnungen(request):
     rechnungen = Rechnung.objects.all().order_by('-rnr')
     context = {'rechnungen': rechnungen}
@@ -209,13 +218,13 @@ def alle_mahnungen(request):
 # Kunde#########################################################################
 
 
-@login_required
+@staff_member_required
 def kunde(request, kunde_id):
     kunde = get_object_or_404(Kunde, pk=kunde_id)
     return render(request, 'rechnung/kunde.html', {'kunde': kunde})
 
 
-@login_required
+@staff_member_required
 def form_kunde(request, kunde_id=None):
     kunde = None
     kunde_verwendet = None
@@ -240,14 +249,14 @@ def form_kunde(request, kunde_id=None):
                     })
 
 
-@login_required
+@staff_member_required
 def kunden_alle(request):
     kunden_liste = Kunde.objects.order_by('-knr')
     context = {'kunden_liste': kunden_liste}
     return render(request, 'rechnung/kunden_alle.html', context)
 
 
-@login_required
+@staff_member_required
 def kundesuchen(request):
     form = KundeSuchenForm(request.POST or None)
 
@@ -269,14 +278,14 @@ def kundesuchen(request):
 
 # Posten#######################################################################
 
-@login_required
+@staff_member_required
 def posten(request, posten_id):
     posten = get_object_or_404(Posten, pk=posten_id)
     return render(request, 'rechnung/posten.html', {'posten': posten})
 
 
 # Vorhandenen Posten bearbeiten
-@login_required
+@staff_member_required
 def form_exist_posten(request, posten_id):
     posten = get_object_or_404(Posten, pk=posten_id)
 
@@ -301,7 +310,7 @@ def form_exist_posten(request, posten_id):
 
 
 # Neuen Posten zu vorhandener Rechnung hinzufügen
-@login_required
+@staff_member_required
 def form_rechnung_posten(request, rechnung_id):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
@@ -330,21 +339,21 @@ def form_rechnung_posten(request, rechnung_id):
 
 # Kategorie####################################################################
 
-@login_required
+@staff_member_required
 def kategorie(request):
     kategorien_liste = Kategorie.objects.order_by('name')
     context = {'kategorien_liste': kategorien_liste}
     return render(request, 'rechnung/kategorie.html', context)
 
 
-@login_required
+@staff_member_required
 def kategorie_detail(request, kategorie_id):
     kategorie = get_object_or_404(Kategorie, pk=kategorie_id)
     return render(request, 'rechnung/kategorie_detail.html',
                   {'kategorie': kategorie})
 
 
-@login_required
+@staff_member_required
 def rechnungpdf(request, rechnung_id, mahnung_id=None):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
     mahnung = None

@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Finanztool - {{ key.typename }} {{ key }}{% endblock %}
+
+{% block content %}
+<h1>{{ key.typename }} {{ key }}</h1>
+
+<div class="col-md-6">
+    <p>
+    <div class="row">
+        {% if key.person %}
+            <div class="col-md-3">
+                <a href="{% url "schluessel:return_key" key.id %}" class="btn btn-warning"
+                        role="button">
+                    {% bootstrap_icon "arrow-left" %} Zurücknehmen
+                </a>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-2">
+                <a href="{% url "schluessel:get_kaution" key.id %}" class="btn btn-primary"
+                        role="button">
+                    Kaution
+                </a>
+            </div>
+            <div class="col-md-2">
+                <a href="{% url "schluessel:get_quittung" key.id %}"
+                    class="btn btn-primary" role="button">
+                    Quittung
+                </a>
+            </div>
+        {% else %}
+            <div class="col-md-2">
+                <a href="{% url "schluessel:give_key" key.id %}" class="btn btn-success"
+                        role="button">
+                    {% bootstrap_icon "arrow-right" %} Ausgeben
+                </a>
+            </div>
+        {% endif %}
+        <div class="col-md-1"></div>
+        {% if user.is_staff %}
+            <div class="col-md-2">
+                <a href="{% url "schluessel:edit_key" key.id %}" class="btn btn-info"
+                        role="button">
+                    {% bootstrap_icon "pencil" %} Bearbeiten
+                </a>
+            </div>
+        {% endif %}
+    </div></p>
+
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Typ</th>
+            <td>{{ key.keytype }}</td>
+        </tr>
+        <tr>
+            <th>Nummer</th>
+            <td>{{ key.number }}</td>
+        </tr>
+        <tr>
+            <th>Entleiher</th>
+            <td>
+                {% if key.person %}
+                    <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
+                {% else %}
+                    {% bootstrap_icon "remove" %}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Kommentar</th>
+            <td>{{ key.comment }}</td>
+        </tr>
+    </table>
+    
+    <h2>Log</h2>
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Datum</th>
+            <th>Vorgang</th>
+            <th>Entleiher</th>
+            <th>Finanzer</th>
+        </tr>
+        {% for entry in logentries %}
+            <tr>
+                <td>{{ entry.date | date:"SHORT_DATETIME_FORMAT" }}</td>
+                <td>
+                    {{ entry.get_operation_display }}
+                    {% if entry.operation == "G" %}
+                        {% bootstrap_icon "arrow-right" %}
+                    {% elif entry.operation == "R" %}
+                        {% bootstrap_icon "arrow-left" %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entry.person %}
+                        <a href="{% url "schluessel:view_person" entry.person.id %}">{{ entry.person }}</a>
+                    {% else %}
+                        {% bootstrap_icon "remove" %}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entry.user.get_full_name %}
+                        {{ entry.user.get_full_name }}
+                    {% else %}
+                        {{ entry.user.username }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+
+{% endblock %}

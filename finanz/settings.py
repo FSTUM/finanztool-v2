@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rechnung.apps.RechnungConfig',
     'konto',
     'aufgaben',
+    'schluessel',
 ]
 
 MIDDLEWARE_CLASSES = [

@@ -1,12 +1,16 @@
 from io import TextIOWrapper
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect
 
 from .forms import UploadForm, MappingConfirmationForm
 from .parser import parse_camt_csv
 
-@login_required
+
+staff_member_required = staff_member_required(login_url='rechnung:login')
+
+
+@staff_member_required
 def einlesen(request):
     form = UploadForm(request.POST or None, request.FILES or None)
 
@@ -22,7 +26,7 @@ def einlesen(request):
     context = {'form': form}
     return render(request, 'konto/einlesen.html', context)
 
-@login_required
+@staff_member_required
 def mapping(request):
     try:
         results = request.session['results']

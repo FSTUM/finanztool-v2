@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Finanztool - {{ key.typename }} {{ key }} ausgeben{% endblock %}
+
+{% block content %}
+    <script>
+        $(function() {
+            var persons = [];
+            {% for person in persons %}
+                var obj = new Object();
+                obj.id = '{{ person.id }}';
+                obj.label = '{{ person }}';
+                persons.push(obj);
+            {% endfor %}
+
+            
+            $( "#id_person_label" ).autocomplete({
+                minLength: 0,
+                source: persons,
+                focus: function(event, ui) {
+                    $("#id_person_label").val(ui.item.label);
+                    return false;
+                },
+                select: function(event, ui) {
+                    $("#id_person_label").val(ui.item.label);
+                    $("#id_person").val(ui.item.id);
+                    document.addform.submit();
+                }
+            });
+        });
+    </script>
+
+    <h1>{{ key.typename }} {{ key }} ausgeben</h1>
+    
+    <div class="col-md-6">
+        <p>
+            <a href="{% url "schluessel:give_add_person" key.id %}" class="btn btn-info">Neue Person hinzufügen</a>
+        </p>
+
+        <div id="scriptform" style='display:none'>
+            <form name='addform' method='post' action=''>
+                {% csrf_token %}
+
+                {% bootstrap_form form %}
+            </form>
+        </div>
+        <script>
+            document.getElementById('scriptform').style.display = 'block';
+        </script>
+        <noscript>
+            <form method="post" action="">
+                {% csrf_token %}
+
+                {% bootstrap_form formns %}
+                <button type="submit" class="btn btn-default btn-info">Ausgeben</button>
+            </form>
+        </noscript>
+    </div>
+
+
+{% endblock %}

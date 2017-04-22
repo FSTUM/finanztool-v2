@@ -1,0 +1,103 @@
+{% autoescape off %}
+{% load l10n latex %}
+
+\documentclass[12pt,ngerman]{letter}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage[ngerman]{babel}
+\usepackage{graphicx}
+\usepackage[rflt]{floatflt}
+\usepackage[a4paper]{geometry}
+\thispagestyle{empty}
+\setlength{\topmargin}{-0.0cm}
+\setlength{\oddsidemargin}{-0.0cm}
+\setlength{\evensidemargin}{-0.0cm}
+\setlength{\textheight}{26.7cm}
+\setlength{\textwidth}{16.0cm}
+\setlength{\headsep}{0.0cm}
+\setlength{\headheight}{0.0cm}
+\setlength{\topskip}{0.0cm}
+\begin{document}
+%\begin{floatingfigure}{5cm}
+%\includegraphics[width=5cm,keepaspectratio=true]{fsmpi-logo-printable}
+%\end{floatingfigure}
+Fachschaft Mathematik/Physik/Informatik\\
+Boltzmannstr. 3\\
+85747 Garching bei München\\
+E-Mail: finanz@fs.tum.de
+
+\vspace{2cm}
+
+{\huge Schlüsselquittung}
+
+\vspace{2cm}
+
+\noindent
+\begin{tabular}{p{4cm}p{7cm}}
+{% if key.keytype.keycard %}%
+Schließkarten-Nr.:
+{% else %}%
+Schlüssel-Nr.:
+{% endif %}%
+& {\bf {{ key }}}\\
+ & \\
+Name: & {{ key.person.firstname }} {{ key.person.name }}\\
+ & \\
+Straße: & {{ key.person.address }}\\
+ & \\
+Ort: & {{ key.person.plz }} {{ key.person.city }}\\
+ & \\
+Mobil: & {{ key.person.mobile }}\\
+ & \\
+E-Mail-Adresse: & {{ key.person.email }}\\
+\end{tabular}
+
+\vspace{1.5cm}
+
+{% if key.keytype.keycard %}%
+Die ausgehändigte Schließkarte
+{% else %}%
+Der ausgehändigte Schlüssel
+{% endif %}%
+bleibt Eigentum der Fachschaft MPI bzw.
+{% if key.keytype.keycard %}%
+der Rechnerbetriebsgruppe.
+{% else %}%
+der Firma Hochtief.
+{% endif %}%
+
+
+Ein etwaiger Verlust muss unverzüglich einem der Fachschaftsfinanzer gemeldet
+werden.
+
+
+Die Rückzahlung der Kaution in Höhe von {{ key.keytype.deposit|floatformat:2 }}
+Euro erfolgt nur bei Rückgabe
+{% if key.keytype.keycard %}%
+der ausgehändigten Schließkarte
+{% else %}%
+des ausgehändigten Schlüssels
+{% endif %}%
+und dieser Schlüsselquittung.
+
+
+Bis zur Rückgabe
+{% if key.keytype.keycard %}%
+der Schließkarte
+{% else %}%
+des Schlüssels
+{% endif %}%
+verbleibt ein Durchschlag dieser Quittung bei der Fachschaft MPI.
+
+\vspace{1.5cm}
+
+\begin{tabular}{p{5cm}p{5cm}}
+Ort, Datum: & Garching, den {% now "DATE_FORMAT" %}\\
+ & \\
+{{ key.typename }} erhalten: & \hrulefill \\
+ & \\
+Kaution erhalten: & \hrulefill \\
+\end{tabular}
+\end{document}
+
+{% endautoescape %}

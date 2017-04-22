@@ -1,11 +1,14 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import get_object_or_404, render, redirect
 
 from .models import Aufgabe, Aufgabenart
 from .forms import AufgabeForm, AufgabenartForm, AufgabeErledigtForm
 
 
-@login_required
+staff_member_required = staff_member_required(login_url='rechnung:login')
+
+
+@staff_member_required
 def unerledigt(request):
     aufgaben = Aufgabe.objects.filter(erledigt=False).order_by('frist')
     meine_aufgaben = Aufgabe.objects.filter(erledigt=False,
@@ -17,7 +20,7 @@ def unerledigt(request):
     return render(request, 'aufgaben/unerledigt.html', context)
 
 
-@login_required
+@staff_member_required
 def form_aufgabe(request, aufgabe_id=None):
     aufgabe = None
     if aufgabe_id:
@@ -41,7 +44,7 @@ def form_aufgabe(request, aufgabe_id=None):
     return render(request, 'aufgaben/form_aufgabe.html', context)
 
 
-@login_required
+@staff_member_required
 def form_aufgabenart(request, aufgabenart_id=None):
     aufgabenart = None
     if aufgabenart_id:
@@ -64,7 +67,7 @@ def form_aufgabenart(request, aufgabenart_id=None):
     return render(request, 'aufgaben/form_aufgabenart.html', context)
 
 
-@login_required
+@staff_member_required
 def alle(request):
     alle = Aufgabe.objects.all().order_by('-frist')
     context = {
@@ -73,7 +76,7 @@ def alle(request):
     return render(request, 'aufgaben/alle.html', context)
 
 
-@login_required
+@staff_member_required
 def aufgabe(request, aufgabe_id):
     aufgabe = get_object_or_404(Aufgabe, pk=aufgabe_id)
 

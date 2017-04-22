@@ -1,0 +1,125 @@
+{% autoescape off %}
+{% load l10n latex %}
+\documentclass[12pt,ngerman]{letter}
+\usepackage[utf8]{inputenc}
+\usepackage{a4wide}
+\usepackage[ngerman]{babel}
+\usepackage{graphicx}
+\thispagestyle{empty}
+\usepackage[a4paper]{geometry}
+\setlength{\topmargin}{-1.0cm}
+\setlength{\oddsidemargin}{-0.5cm}
+\setlength{\evensidemargin}{-0.5cm}
+\setlength{\textheight}{26.7cm}
+\setlength{\textwidth}{18.0cm}
+\setlength{\headsep}{0.0cm}
+\setlength{\headheight}{0.0cm}
+\setlength{\topskip}{0.0cm}
+\begin{document}
+\begin{tabular}{p{2.5cm}p{7.5cm}p{5cm}}
+\multicolumn{3}{c}{\huge Quittung / Rechnung}\\
+\multicolumn{2}{l}{Buchungsnummer} & \multicolumn{1}{r}{Datum} \\
+&&\\
+  \hrulefill  /  \hrulefill  & & \multicolumn{1}{r}{{% now "d" %}  /
+    {% now "m" %}  /  {% now "Y" %}} \\
+&&\\
+&&\\
+\multicolumn{3}{l}{Den Betrag von Euro \hfill
+  {{ key.keytype.deposit|floatformat:2 }}
+(enthält \hrulefill \% MWSt. = Euro \hrulefill \hrulefill , \hrulefill) } \\
+&&\\
+&&\\
+\multicolumn{3}{l}{für Kaution für {{ key.typename }} {{ key }} } \hfill Einzahlung \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\hspace{-0.3cm} 
+\begin{tabular}{p{7.5cm}p{7.5cm}}
+
+	\begin{tabular}{p{7cm}}
+          von {{ key.person.firstname }} {{ key.person.name }}\\
+	\\
+	Dankend erhalten zu haben, bestätigt\\
+	\\
+        \multicolumn{1}{c}{ {{ user.get_full_name }} }\\
+	\hrulefill\\
+	\multicolumn{1}{c}{(Name in Druckbuchstaben)}\\
+	\\
+	\\
+	\hrulefill\\
+	\multicolumn{1}{c}{Unterschrift}\\
+	\end{tabular}
+&
+	\multicolumn{1}{r}{
+		\begin{tabular}{|p{7.7cm}|}
+			\hline
+			\multicolumn{1}{|c|}{Nebenrechnung}\\
+			\\
+			\\
+			\\
+			\\
+			\\
+			\\
+			\\
+			\\
+			\hline
+		\end{tabular}
+	}
+\end{tabular}
+
+\vspace{2.0cm}
+
+\begin{tabular}{p{2.5cm}p{7.5cm}p{5cm}}
+\multicolumn{3}{c}{\huge Quittung / Rechnung}\\
+\multicolumn{2}{l}{Buchungsnummer} & \multicolumn{1}{c}{Datum} \\
+&&\\
+\hrulefill  /  \hrulefill  & & \hrulefill  /  \hrulefill / \hrulefill \hrulefill \\
+&&\\
+&&\\
+\multicolumn{3}{l}{Den Betrag von Euro \hfill
+  {{ key.keytype.deposit|floatformat:2 }}
+(enthält \hrulefill \% MWSt. = Euro \hrulefill \hrulefill , \hrulefill) } \\
+&&\\
+&&\\
+\multicolumn{3}{l}{für Rückzahlung der Kaution für {{ key.typename }} {{ key }} } \hfill Auszahlung \\
+\end{tabular}
+
+\vspace{0.8cm}
+
+\hspace{-0.3cm} 
+\begin{tabular}{p{7.5cm}p{7.5cm}}
+
+	\begin{tabular}{p{7cm}}
+	von \hrulefill\\
+	\\
+	Dankend erhalten zu haben, bestätigt\\
+	\\
+        \multicolumn{1}{c}{ {{ key.person.firstname }} {{ key.person.name }} }\\
+	\hrulefill\\
+	\multicolumn{1}{c}{(Name in Druckbuchstaben)}\\
+	\\
+	\\
+	\hrulefill\\
+	\multicolumn{1}{c}{Unterschrift}\\
+	\end{tabular}
+&
+	\multicolumn{1}{r}{
+		\begin{tabular}{|p{7.7cm}|}
+			\hline
+			\multicolumn{1}{|c|}{Nebenrechnung}\\
+			\\
+			\\
+			\\
+			\\
+			\\
+			\\
+			\\
+			\\
+			\hline
+		\end{tabular}
+	}
+\end{tabular}
+
+\end{document}
+{% endautoescape %}

@@ -14,6 +14,12 @@
         {# jquery #}
         <script src="{% static "rechnung/extern/jquery-2.2.4.min.js" %}"></script>
 
+        {# jquery-ui #}
+        <script src="{% static "rechnung/extern/jquery-ui/jquery-ui.min.js" %}"></script>
+        <link rel="stylesheet" href="{% static "rechnung/extern/jquery-ui/jquery-ui.min.css"%}">
+        <link rel="stylesheet" href="{% static "rechnung/extern/jquery-ui/jquery-ui.structue.min.css"%}">
+        <link rel="stylesheet" href="{% static "rechnung/extern/jquery-ui/jquery-ui.theme.min.css"%}">
+
         {# bootstrap3 #}
         <link rel="stylesheet" href="{% static "rechnung/extern/bootstrap/css/bootstrap.min.css"%}">
         <link rel="stylesheet" href="{% static "rechnung/extern/bootstrap/css/bootstrap-theme.min.css"%}">
@@ -58,55 +64,73 @@
                                 {% blocktrans trimmed with username=user.first_name %}
                                     Hallo {{ username }}!
                                 {% endblocktrans %}
-                             </p>
+                            </p>
                             <li><a href="{% url "rechnung:willkommen" %}">
                                     {% bootstrap_icon "home" %}
                                 </a></li>
-                            <li><a href="{% url "rechnung:index" %}">Unerledigt</a></li>
-                            {#{% if user.is_superuser or user|has_perm_group %}#}
+                            {% if user.is_superuser %}
+                                <li><a href="{% url "rechnung:index" %}">Unerledigt</a></li>
+                                <li>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px;">{% bootstrap_icon "list-alt" %} Rechnung
+                                      <span class="caret"></span></button>
+                                      <ul class="dropdown-menu">
+                                          <li><a  href="{% url "rechnung:rechnung_neu" %}">
+                                                  {% bootstrap_icon "plus" %} Hinzufügen
+                                              </a></li>
+                                          <li><a  href="{% url "rechnung:rechnungsuchen" %}">
+                                                  {% bootstrap_icon "search" %} Suchen
+                                              </a></li>
+                                          <li><a  href="{% url "rechnung:alle" %}">
+                                                  {% bootstrap_icon "eye-open" %} Alle
+                                              </a></li>
+                                          <li><a  href="{% url "rechnung:alle_mahnungen" %}">
+                                                  {% bootstrap_icon "hourglass" %} Alle Mahnungen
+                                              </a></li>
+                                      </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "briefcase" %} Kunde
+                                      <span class="caret"></span></button>
+                                      <ul class="dropdown-menu">
+                                          <li><a  href="{% url "rechnung:kunde_neu" %}">{% bootstrap_icon "plus" %} Hinzufügen</a></li>
+                                          <li><a  href="{% url "rechnung:kundesuchen" %}">{% bootstrap_icon "search" %} Suchen</a></li>
+                                          <li><a  href="{% url "rechnung:kunden_alle" %}">{% bootstrap_icon "eye-open" %} Alle</a></li>
+                                      </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "tasks" %} Aufgaben
+                                      <span class="caret"></span></button>
+                                      <ul class="dropdown-menu">
+                                          <li><a  href="{% url "aufgaben:unerledigt" %}">{% bootstrap_icon "th-list" %} Unerledigt</a></li>
+                                          <li><a  href="{% url "aufgaben:neu" %}">{% bootstrap_icon "plus" %} Hinzufügen</a></li>
+                                          <li><a  href="{% url "aufgaben:neu_aufgabenart" %}">{% bootstrap_icon "plus" %} Aufgabenart hinzufügen</a></li>
+                                          <li><a  href="{% url "aufgaben:alle" %}">{% bootstrap_icon "eye-open" %} Alle</a></li>
+                                      </ul>
+                                    </div>
+                                </li>
+                            {% endif %}
                             <li>
                                 <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px;">{% bootstrap_icon "list-alt" %} Rechnung
+                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "lock" %} Schlüssel
                                   <span class="caret"></span></button>
                                   <ul class="dropdown-menu">
-                                      <li><a  href="{% url "rechnung:rechnung_neu" %}">
-                                              {% bootstrap_icon "plus" %} Hinzufügen
-                                          </a></li>
-                                      <li><a  href="{% url "rechnung:rechnungsuchen" %}">
-                                              {% bootstrap_icon "search" %} Suchen
-                                          </a></li>
-                                      <li><a  href="{% url "rechnung:alle" %}">
-                                              {% bootstrap_icon "eye-open" %} Alle
-                                          </a></li>
-                                      <li><a  href="{% url "rechnung:alle_mahnungen" %}">
-                                              {% bootstrap_icon "hourglass" %} Alle Mahnungen
-                                          </a></li>
+                                      <li><a  href="{% url "schluessel:list_keys" %}">{% bootstrap_icon "search" %} Suchen</a></li>
+                                      {% if user.is_superuser %}
+                                          <li><a  href="{% url "schluessel:add_key" %}">{% bootstrap_icon "plus" %} Hinzufügen</a></li>
+                                      {% endif %}
+                                      <li><a  href="{% url "schluessel:list_persons" %}">{% bootstrap_icon "search" %} Person suchen</a></li>
+                                      <li><a  href="{% url "schluessel:add_person" %}">{% bootstrap_icon "plus" %} Person hinzufügen</a></li>
                                   </ul>
                                 </div>
                             </li>
-                            <li>
-                                <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "briefcase" %} Kunde
-                                  <span class="caret"></span></button>
-                                  <ul class="dropdown-menu">
-                                      <li><a  href="{% url "rechnung:kunde_neu" %}">{% bootstrap_icon "plus" %} Hinzufügen</a></li>
-                                      <li><a  href="{% url "rechnung:kundesuchen" %}">{% bootstrap_icon "search" %} Suchen</a></li>
-                                      <li><a  href="{% url "rechnung:kunden_alle" %}">{% bootstrap_icon "eye-open" %} Alle</a></li>
-                                  </ul>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "tasks" %} Aufgaben
-                                  <span class="caret"></span></button>
-                                  <ul class="dropdown-menu">
-                                      <li><a  href="{% url "aufgaben:unerledigt" %}">{% bootstrap_icon "th-list" %} Unerledigt</a></li>
-                                      <li><a  href="{% url "aufgaben:neu" %}">{% bootstrap_icon "plus" %} Hinzufügen</a></li>
-                                      <li><a  href="{% url "aufgaben:neu_aufgabenart" %}">{% bootstrap_icon "plus" %} Aufgabenart hinzufügen</a></li>
-                                      <li><a  href="{% url "aufgaben:alle" %}">{% bootstrap_icon "eye-open" %} Alle</a></li>
-                                  </ul>
-                                </div>
-                            <li><a href="{% url "konto:einlesen" %}">{% bootstrap_icon "credit-card" %} Konto</a></li>
+                            {% if user.is_superuser %}
+                                <li><a href="{% url "konto:einlesen" %}">{% bootstrap_icon "credit-card" %} Konto</a></li>
+                            {% endif %}
                             <li><a href="{% url "rechnung:logout" %}">Logout</a></li> 
                         {% else %}
                             <li><a href="{% url "rechnung:index" %}">Index</a></li>
