@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Person(models.Model):
     name = models.CharField(
         verbose_name="Nachname",
@@ -73,6 +72,9 @@ class KeyType(models.Model):
 
 
 class Key(models.Model):
+    class Meta:
+        unique_together = (("keytype", "number"),)
+
     keytype = models.ForeignKey(
         KeyType,
         verbose_name="Schlüssel-Typ",
@@ -112,16 +114,101 @@ class KeyLogEntry(models.Model):
     GIVE="G"
     RETURN="R"
     CREATE="C"
+    EDIT="E"
 
     key = models.ForeignKey(
         Key,
         verbose_name="Schlüssel",
         on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+
+    key_deposit = models.FloatField(
+        verbose_name="Kaution",
+        blank=True,
+        null=True,
+    )
+
+    key_keytype = models.ForeignKey(
+        KeyType,
+        verbose_name="Schlüssel-Typ",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+    )
+
+    key_number = models.IntegerField(
+        verbose_name="Nummer",
+        blank=True,
+        null=True,
+    )
+
+    key_comment = models.CharField(
+        verbose_name="Kommentar",
+        max_length=500,
+        blank=True,
+        null=True,
     )
 
     person = models.ForeignKey(
         Person,
         verbose_name="Entleiher",
+        blank=True,
+        null=True,
+    )
+
+    person_name = models.CharField(
+        verbose_name="Nachname",
+        max_length=200,
+        blank=True,
+        null=True,
+    )
+
+    person_firstname = models.CharField(
+        verbose_name="Vorname",
+        max_length=200,
+        blank=True,
+        null=True,
+    )
+
+    person_email = models.EmailField(
+        "E-Mail",
+        blank=True,
+        null=True,
+    )
+
+    person_address = models.CharField(
+        verbose_name="Straße + Hausnummer",
+        max_length=200,
+        blank=True,
+        null=True,
+    )
+
+    person_plz = models.CharField(
+        verbose_name="PLZ",
+        max_length=20,
+        blank=True,
+        null=True,
+    )
+
+    person_city = models.CharField(
+        verbose_name="Ort",
+        max_length=200,
+        blank=True,
+        null=True,
+    )
+
+    person_mobile = models.CharField(
+        verbose_name="Mobil",
+        max_length=200,
+        blank=True,
+        null=True,
+    )
+
+    person_phone = models.CharField(
+        verbose_name="Telefon",
+        max_length=200,
         blank=True,
         null=True,
     )
@@ -133,6 +220,7 @@ class KeyLogEntry(models.Model):
             (GIVE, "Ausgabe"),
             (RETURN, "Rückgabe"),
             (CREATE, "Erstellung"),
+            (EDIT, "Bearbeitung"),
         ),
     )
 
@@ -153,9 +241,17 @@ class KeyLogEntry(models.Model):
         elif self.operation == KeyLogEntry.RETURN:
             return "Rückgabe von {} von {} an {} am {}".format(self.key,
                     self.person, self.user.get_full_name(), self.date)
-        elif self.operation == KeyLogEntry.CREATE:
+        elif self.operation == KeyLogEntry.CREATE and self.key:
             return "Erstellung von {} durch {} am {}".format(self.key,
+                    self.user.get_full_name(), self.date)
+        elif self.operation == KeyLogEntry.CREATE and self.person:
+            return "Erstellung von {} durch {} am {}".format(self.person,
+                    self.user.get_full_name(), self.date)
+        elif self.operation == KeyLogEntry.EDIT and self.key:
+            return "Bearbeitung von {} durch {} am {}".format(self.key,
+                    self.user.get_full_name(), self.date)
+        elif self.operation == KeyLogEntry.EDIT and self.person:
+            return "Bearbeitung von {} durch {} am {}".format(self.person,
                     self.user.get_full_name(), self.date)
         else:
             return "Unvalid Operation"
-

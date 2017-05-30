@@ -4,9 +4,44 @@
 
 {% block content %}
     <h1>{{ key.typename}} {{ key }} ausgeben</h1>
-    
+   
     <p>
-        Soll
+        Sind die Kontaktdaten von <a href="{% url "schluessel:view_person" person.id %}">{{ person }}</a> noch aktuell?
+    </p>
+    
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Nachname</th>
+            <td>{{ person.name }}</td>
+        </tr>
+        <tr>
+            <th>Vorname</th>
+            <td>{{ person.firstname }}</td>
+        </tr>
+        <tr>
+            <th>E-Mail</th>
+            <td>{{ person.email }}</td>
+        </tr>
+        <tr>
+            <th>Adresse</th>
+            <td>{{ person.address }}<br>{{ person.plz }} {{ person.city }}</td>
+        </tr>
+        <tr>
+            <th>Mobil</th>
+            <td>{{ person.mobile }}</td>
+        </tr>
+        <tr>
+            <th>Telefon</th>
+            <td>{{ person.phone }}</td>
+        </tr>
+    </table>
+
+    <p>
+        <a href="{% url "schluessel:give_edit_person" key.id person.id %}" class="btn btn-info">Nein, Kontaktdaten ändern</a>
+    </p>
+
+    <p>
+        <strong>Wenn ja:</strong> Soll
         {% if key.keytype.keycard %}
         die Schließkarte
         {% else %}
@@ -25,5 +60,4 @@
             </tr>
         <table>
     </form>
-    
 {% endblock %}

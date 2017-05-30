@@ -13,7 +13,7 @@ class SelectPersonForm(forms.Form):
 class SelectPersonFormNoscript(forms.Form):
     person = forms.ModelChoiceField(
         label="Entleiher",
-        queryset=Person.objects.all(),
+        queryset=Person.objects.all().order_by('name', 'firstname'),
     )
 
 
@@ -50,7 +50,7 @@ class FilterKeysForm(forms.Form):
 
     keytype = forms.ModelChoiceField(
         label="Art",
-        queryset=KeyType.objects.all(),
+        queryset=KeyType.objects.all().order_by('name'),
         required=False,
     )
     keytype.widget.attrs["onchange"]="document.getElementById('filterform').submit()"

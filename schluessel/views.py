@@ -1,11 +1,13 @@
 import os
+import shutil
 import subprocess
 from tempfile import mkdtemp, mkstemp
 
 from django import forms
-from django.db.models import Q
 from django.http import HttpResponse
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, render, redirect
+from django.conf import settings
 from django.core.exceptions import SuspiciousOperation
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
@@ -61,7 +63,14 @@ def edit_key(request, key_pk):
 
     form = KeyForm(request.POST or None, instance=key)
     if form.is_valid():
-        form.save()
+        key = form.save()
+
+        KeyLogEntry.objects.create(
+            key=key,
+            person=None,
+            user=request.user,
+            operation=KeyLogEntry.EDIT,
+        )
 
         return redirect('schluessel:view_key', key.id)
 
@@ -198,6 +207,13 @@ def add_person(request):
     if form.is_valid():
         person = form.save()
 
+        KeyLogEntry.objects.create(
+            key=None,
+            person=person,
+            user=request.user,
+            operation=KeyLogEntry.CREATE,
+        )
+
         return redirect('schluessel:view_person', person.id)
 
     context = {
@@ -212,6 +228,13 @@ def give_add_person(request, key_pk):
     form = PersonForm(request.POST or None)
     if form.is_valid():
         person = form.save()
+
+        KeyLogEntry.objects.create(
+            key=None,
+            person=person,
+            user=request.user,
+            operation=KeyLogEntry.CREATE,
+        )
 
         return redirect('schluessel:give_key_confirm', key_pk, person.id)
 
@@ -228,9 +251,41 @@ def edit_person(request, person_pk):
 
     form = PersonForm(request.POST or None, instance=person)
     if form.is_valid():
-        form.save()
+        person = form.save()
+
+        KeyLogEntry.objects.create(
+            key=None,
+            person=person,
+            user=request.user,
+            operation=KeyLogEntry.EDIT,
+        )
 
         return redirect('schluessel:view_person', person.id)
+
+    context = {
+        'person': person,
+        'form': form,
+    }
+
+    return render(request, 'schluessel/edit_person.html', context)
+
+
+@login_required
+def give_edit_person(request, key_pk, person_pk):
+    person = get_object_or_404(Person, pk=person_pk)
+
+    form = PersonForm(request.POST or None, instance=person)
+    if form.is_valid():
+        person = form.save()
+
+        KeyLogEntry.objects.create(
+            key=None,
+            person=person,
+            user=request.user,
+            operation=KeyLogEntry.EDIT,
+        )
+
+        return redirect('schluessel:give_key_confirm', key_pk, person.id)
 
     context = {
         'person': person,
@@ -261,8 +316,10 @@ def create_pdf(request, key_pk, doc):
     tmplatex = mkdtemp()
     latex_file, latex_filename = mkstemp(suffix='.tex', dir=tmplatex)
 
+    logo_path = os.path.join(settings.BASE_DIR, 'schluessel/media/logo')
+
     # Pass TeX template through Django templating engine and into the temp file
-    context = {'key': key, 'user': request.user}
+    context = {'key': key, 'user': request.user, 'logo_path': logo_path}
 
     os.write(latex_file, render_to_string(
         'schluessel/latex_{}.tex'.format(doc), context).encode('utf8'))

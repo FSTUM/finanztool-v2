@@ -55,7 +55,11 @@
         </tr>
         <tr>
             <th>Nummer</th>
-            <td>{{ key.number }}</td>
+            <td>{{ key }}</td>
+        </tr>
+        <tr>
+            <th>Kaution</th>
+            <td>{{ key.keytype.deposit|floatformat:2 }} €</td>
         </tr>
         <tr>
             <th>Entleiher</th>
@@ -72,13 +76,18 @@
             <td>{{ key.comment }}</td>
         </tr>
     </table>
+</div>
     
+<div class="col-md-8">
     <h2>Log</h2>
     <table class="table table-striped table-hover">
         <tr>
             <th>Datum</th>
             <th>Vorgang</th>
             <th>Entleiher</th>
+            <th>Schlüsse-Nr</th>
+            <th>Kaution</th>
+            <th>Kommentar</th>
             <th>Finanzer</th>
         </tr>
         {% for entry in logentries %}
@@ -95,9 +104,34 @@
                 <td>
                     {% if entry.person %}
                         <a href="{% url "schluessel:view_person" entry.person.id %}">{{ entry.person }}</a>
-                    {% else %}
-                        {% bootstrap_icon "remove" %}
                     {% endif %}
+                </td>
+                <td>
+                    {% ifchanged entry.key_keytype entry.key_number %}
+                        {{ entry.key_keytype.shortname }} {{ entry.key_number }}
+                    {% else %}
+                        <div style="color:lightgrey;">
+                            {{ entry.key_keytype.shortname }} {{ entry.key_number }}
+                        </div>
+                    {% endifchanged %}
+                </td>
+                <td>
+                    {% ifchanged entry.key_deposit %}
+                        {{ entry.key_deposit|floatformat:2 }} €
+                    {% else %}
+                        <div style="color:lightgrey;">
+                            {{ entry.key_deposit|floatformat:2 }} €
+                        </div>
+                    {% endifchanged %}
+                </td>
+                <td>
+                    {% ifchanged entry.key_comment %}
+                        {{ entry.key_comment }}
+                    {% else %}
+                        <div style="color:lightgrey;">
+                            {{ entry.key_comment }}
+                        </div>
+                    {% endifchanged %}
                 </td>
                 <td>
                     {% if entry.user.get_full_name %}
