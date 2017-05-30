@@ -255,3 +255,27 @@ class KeyLogEntry(models.Model):
                     self.user.get_full_name(), self.date)
         else:
             return "Unvalid Operation"
+
+
+class SavedKeyChange(models.Model):
+    key = models.OneToOneField(
+        Key,
+        verbose_name="Schlüssel",
+        on_delete=models.CASCADE,
+    )
+
+    new_keytype = models.ForeignKey(
+        KeyType,
+        verbose_name="Schlüssel-Typ",
+        on_delete=models.CASCADE,
+    )
+
+    user = models.ForeignKey(
+        User,
+        verbose_name="Finanzer",
+    )
+
+    date = models.DateTimeField(
+        verbose_name="Datum",
+        auto_now=True,
+    )

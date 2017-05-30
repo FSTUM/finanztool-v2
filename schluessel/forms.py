@@ -17,6 +17,19 @@ class SelectPersonFormNoscript(forms.Form):
     )
 
 
+class SaveKeyChangeForm(forms.Form):
+    keytype = forms.ModelChoiceField(
+        label="Neuer Schlüssel-Typ",
+        queryset=KeyType.objects.filter(keycard=True).order_by('name'),
+    )
+
+    def __init__(self, *args, **kwargs):
+        keytype = kwargs.pop('keytype')
+        super(SaveKeyChangeForm, self).__init__(*args, **kwargs)
+        self.fields['keytype'].queryset = KeyType.objects.filter(
+            keycard=True).exclude(pk=keytype.pk).order_by('name')
+
+
 class KeyForm(forms.ModelForm):
     class Meta:
         model = Key

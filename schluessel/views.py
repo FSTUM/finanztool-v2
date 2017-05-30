@@ -8,14 +8,14 @@ from django.http import HttpResponse
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render, redirect
 from django.conf import settings
-from django.core.exceptions import SuspiciousOperation
+from django.core.exceptions import SuspiciousOperation, ObjectDoesNotExist
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
-from .models import Key, Person, KeyLogEntry
+from .models import Key, Person, KeyLogEntry, SavedKeyChange
 from .forms import SelectPersonForm, KeyForm, PersonForm, FilterKeysForm, \
-        FilterPersonsForm, SelectPersonFormNoscript
+        FilterPersonsForm, SelectPersonFormNoscript, SaveKeyChangeForm
 
 
 staff_member_required = staff_member_required(login_url='rechnung:login')
@@ -80,6 +80,64 @@ def edit_key(request, key_pk):
     }
 
     return render(request, 'schluessel/edit_key.html', context)
+
+
+@staff_member_required
+def save_key_change(request, key_pk):
+    key = get_object_or_404(Key, pk=key_pk)
+
+    try:
+        initial = {'keytype': key.savedkeychange.new_keytype}
+    except ObjectDoesNotExist:
+        initial = {}
+    form = SaveKeyChangeForm(request.POST or None, initial=initial,
+            keytype=key.keytype)
+
+    if form.is_valid():
+        keytype = form.cleaned_data['keytype']
+
+        if hasattr(key, 'savedkeychange'):
+            key.savedkeychange.user = request.user
+            key.savedkeychange.new_keytype = keytype
+            key.savedkeychange.save()
+        else:
+            SavedKeyChange.objects.create(
+                key=key,
+                new_keytype=keytype,
+                user=request.user,
+            )
+
+        return redirect('schluessel:view_key', key.id)
+
+    context = {
+        'key': key,
+        'form': form,
+    }
+
+    return render(request, 'schluessel/save_key_change.html', context)
+
+
+@staff_member_required
+def delete_key_change(request, key_pk):
+    key = get_object_or_404(Key, pk=key_pk)
+
+    try:
+        keychange = key.savedkeychange
+    except ObjectDoesNotExist:
+        raise SuspiciousOperation("Key change does not exist")
+
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        SavedKeyChange.objects.filter(pk=keychange.pk).delete()
+
+        return redirect('schluessel:view_key', key.id)
+
+    context = {
+        'key': key,
+        'form': form,
+    }
+
+    return render(request, 'schluessel/delete_key_change.html', context)
 
 
 @login_required
