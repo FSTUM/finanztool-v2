@@ -78,53 +78,56 @@
     </table>
 </div>
 
-{% if key.keytype.keycard %}
-    <div class="col-md-8">
-        <h2>Vorgemerkte Änderung</h2>
-        {% if key.savedkeychange %}
-            <table class="table table-striped table-hover">
-                <tr>
-                    <th>Datum</th>
-                    <th>Alter Typ</th>
-                    <th>Neuer Typ</th>
-                    <th>Finanzer</th>
-                    <th>Bearbeiten</th>
-                    <th>Löschen</th>
-                </tr>
-                <tr>
-                    <td>{{ key.savedkeychange.date | date:"SHORT_DATETIME_FORMAT" }}</td>
-                    <td>{{ key.keytype }}</td>
-                    <td>{{ key.savedkeychange.new_keytype }}</td>
-                    <td>
-                        {% if key.savedkeychange.user.get_full_name %}
-                            {{ key.savedkeychange.user.get_full_name }}
-                        {% else %}
-                            {{ key.savedkeychange.user.username }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{% url "schluessel:save_key_change" key.id %}"
-                                class="btn btn-warning" role="button">
-                            {% bootstrap_icon "pencil" %} Ändern
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{% url "schluessel:delete_key_change" key.id %}"
-                                class="btn btn-danger" role="button">
-                            {% bootstrap_icon "remove" %} Löschen
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        {% else %}
-            <div class="col-md-2">
-                <a href="{% url "schluessel:save_key_change" key.id %}"
-                        class="btn btn-info" role="button">
-                    {% bootstrap_icon "pencil" %} Typ-Änderung vormerken
-                </a>
-            </div>
-        {% endif %}
-    </div>
+{% if user.is_staff %}
+    {% if key.keytype.keycard %}
+        <div class="col-md-8">
+            <h2>Vorgemerkte Änderung</h2>
+            {% if key.savedkeychange %}
+                <table class="table table-striped table-hover">
+                    <tr>
+                        <th>Alter Typ</th>
+                        <th>Neuer Typ</th>
+                        <th>Datum</th>
+                        <th>Finanzer</th>
+                        <th>Bearbeiten</th>
+                        <th>Löschen</th>
+                    </tr>
+                    <tr>
+                        <td>{{ key.keytype }}</td>
+                        <td>{{ key.savedkeychange.new_keytype }}</td>
+                        <td>{{ key.savedkeychange.date | date:"SHORT_DATETIME_FORMAT" }}
+                            </td>
+                        <td>
+                            {% if key.savedkeychange.user.get_full_name %}
+                                {{ key.savedkeychange.user.get_full_name }}
+                            {% else %}
+                                {{ key.savedkeychange.user.username }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url "schluessel:save_key_change" key.id %}"
+                                    class="btn btn-warning" role="button">
+                                {% bootstrap_icon "pencil" %} Ändern
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url "schluessel:delete_key_change" key.id %}"
+                                    class="btn btn-danger" role="button">
+                                {% bootstrap_icon "remove" %} Löschen
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            {% else %}
+                <div class="col-md-2">
+                    <a href="{% url "schluessel:save_key_change" key.id %}"
+                            class="btn btn-info" role="button">
+                        {% bootstrap_icon "pencil" %} Typ-Änderung vormerken
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endif %}
 
 <div class="col-md-8">

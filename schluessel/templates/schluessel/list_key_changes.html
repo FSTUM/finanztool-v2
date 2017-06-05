@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}Finanztool - Vorgemerkte Schlüsseltyp-Änderungen{% endblock %}
+
+{% block content %}
+<h1>Vorgemerkte Schlüsseltyp-Änderungen</h1>
+
+<div class="col-md-6">
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Schlüssel</th>
+            <th>Alter Typ</th>
+            <th>Neuer Typ</th>
+            <th>Datum</th>
+            <th>Finanzer</th>
+            <th>Bearbeiten</th>
+            <th>Löschen</th>
+        </tr>
+        {% for key in keys %}
+            <tr>
+                <td><a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a></td>
+                <td>{{ key.keytype }}</td>
+                <td>{{ key.savedkeychange.new_keytype }}</td>
+                <td>{{ key.savedkeychange.date | date:"SHORT_DATETIME_FORMAT" }}</td>
+                <td>
+                    {% if key.savedkeychange.user.get_full_name %}
+                        {{ key.savedkeychange.user.get_full_name }}
+                    {% else %}
+                        {{ key.savedkeychange.user.username }}
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url "schluessel:save_key_change" key.id %}"
+                            class="btn btn-warning" role="button">
+                        {% bootstrap_icon "pencil" %} Ändern
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url "schluessel:delete_key_change" key.id %}"
+                            class="btn btn-danger" role="button">
+                        {% bootstrap_icon "remove" %} Löschen
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <p>
+        {% if keys %}
+            <form id="filterform" method="post" action="">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-default btn-info">Änderungen anwenden</button>
+            </form>
+        {% else %}
+            Es sind keine Änderungen vorgemerkt.
+        {% endif %}
+    </p>
+</div>
+
+
+{% endblock %}

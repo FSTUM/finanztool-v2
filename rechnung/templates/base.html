@@ -125,6 +125,9 @@
                                       {% endif %}
                                       <li><a  href="{% url "schluessel:list_persons" %}">{% bootstrap_icon "search" %} Person suchen</a></li>
                                       <li><a  href="{% url "schluessel:add_person" %}">{% bootstrap_icon "plus" %} Person hinzufügen</a></li>
+                                      {% if user.is_superuser %}
+                                          <li><a  href="{% url "schluessel:list_key_changes" %}">{% bootstrap_icon "tasks" %} Vorgemerkte Typ-Änderungen</a></li>
+                                      {% endif %}
                                   </ul>
                                 </div>
                             </li>

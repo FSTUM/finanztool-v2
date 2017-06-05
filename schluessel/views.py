@@ -140,6 +140,37 @@ def delete_key_change(request, key_pk):
     return render(request, 'schluessel/delete_key_change.html', context)
 
 
+@staff_member_required
+def list_key_changes(request):
+    keys = Key.objects.exclude(savedkeychange=None).order_by(
+        "keytype__shortname", "number")
+        # TODO filter savedkeychange exists!!!
+
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        for k in keys:
+            try:
+                k.keytype = k.savedkeychange.new_keytype
+            except ObjectDoesNotExist:
+                continue
+            k.save()
+            SavedKeyChange.objects.filter(pk=k.savedkeychange.pk).delete()
+            KeyLogEntry.objects.create(
+                key=k,
+                person=None,
+                user=request.user,
+                operation=KeyLogEntry.EDIT,
+            )
+        return redirect('schluessel:list_key_changes')
+
+    context = {
+        'keys': keys,
+        'form': form,
+    }
+
+    return render(request, 'schluessel/list_key_changes.html', context)
+
+
 @login_required
 def return_key(request, key_pk):
     key = get_object_or_404(Key, pk=key_pk)
