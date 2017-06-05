@@ -50,16 +50,23 @@ class FilterKeysForm(forms.Form):
     search.widget.attrs["onchange"]="document.getElementById('filterform').submit()"
 
     given = forms.BooleanField(
-        label="Ausgegeben",
+        label="ausgegeben",
         required=False,
     )
     given.widget.attrs["onchange"]="document.getElementById('filterform').submit()"
 
     free = forms.BooleanField(
-        label="Verfügbar",
+        label="verfügbar",
         required=False,
     )
     free.widget.attrs["onchange"]="document.getElementById('filterform').submit()"
+
+    active = forms.BooleanField(
+        label="aktiv",
+        required=False,
+        initial=True,
+    )
+    active.widget.attrs["onchange"]="document.getElementById('filterform').submit()"
 
     keytype = forms.ModelChoiceField(
         label="Art",

@@ -86,6 +86,9 @@ def edit_key(request, key_pk):
 def save_key_change(request, key_pk):
     key = get_object_or_404(Key, pk=key_pk)
 
+    if not key.active:
+        raise SuspiciousOperation("Key is inactive")
+
     try:
         initial = {'keytype': key.savedkeychange.new_keytype}
     except ObjectDoesNotExist:
@@ -121,6 +124,9 @@ def save_key_change(request, key_pk):
 def delete_key_change(request, key_pk):
     key = get_object_or_404(Key, pk=key_pk)
 
+    if not key.active:
+        raise SuspiciousOperation("Key is inactive")
+
     try:
         keychange = key.savedkeychange
     except ObjectDoesNotExist:
@@ -142,9 +148,8 @@ def delete_key_change(request, key_pk):
 
 @staff_member_required
 def list_key_changes(request):
-    keys = Key.objects.exclude(savedkeychange=None).order_by(
-        "keytype__shortname", "number")
-        # TODO filter savedkeychange exists!!!
+    keys = Key.objects.filter(active=True).exclude(savedkeychange=None
+        ).order_by("keytype__shortname", "number")
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -174,6 +179,9 @@ def list_key_changes(request):
 @login_required
 def return_key(request, key_pk):
     key = get_object_or_404(Key, pk=key_pk)
+
+    if not key.active:
+        raise SuspiciousOperation("Key is inactive")
 
     if not key.person:
         raise SuspiciousOperation("Key not given out")
@@ -206,6 +214,9 @@ def return_key(request, key_pk):
 @login_required
 def give_key(request, key_pk):
     key = get_object_or_404(Key, pk=key_pk)
+
+    if not key.active:
+        raise SuspiciousOperation("Key is inactive")
 
     if key.person:
         raise SuspiciousOperation("Key already given out")
@@ -243,6 +254,9 @@ def give_key(request, key_pk):
 @login_required
 def give_key_confirm(request, key_pk, person_pk):
     key = get_object_or_404(Key, pk=key_pk)
+
+    if not key.active:
+        raise SuspiciousOperation("Key is inactive")
 
     if key.person:
         raise SuspiciousOperation("Key already given out")
@@ -398,6 +412,9 @@ def get_quittung(request, key_pk):
 def create_pdf(request, key_pk, doc):
     key = get_object_or_404(Key, pk=key_pk)
 
+    if not key.active:
+        raise SuspiciousOperation("Key is inactive")
+
     if not key.person:
         raise SuspiciousOperation("Key not given out")
 
@@ -446,6 +463,7 @@ def list_keys(request):
         search = form.cleaned_data['search']
         given = form.cleaned_data['given']
         free = form.cleaned_data['free']
+        active = form.cleaned_data['active']
         keytype = form.cleaned_data['keytype']
 
         for s in search.split():
@@ -468,6 +486,8 @@ def list_keys(request):
             keys = keys.exclude(person=None)
         if free and not given:
             keys = keys.filter(person=None)
+        if active:
+            keys = keys.filter(active=True)
         if keytype:
             keys = keys.filter(keytype=keytype)
 

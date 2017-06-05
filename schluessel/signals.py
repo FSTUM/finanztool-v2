@@ -12,6 +12,7 @@ def finish_logentry_creation(sender, instance, **keywords):
             key_keytype=instance.key.keytype,
             key_number=instance.key.number,
             key_comment=instance.key.comment,
+            key_active=instance.key.active,
         )
     if instance.person and not instance.person_name:
         KeyLogEntry.objects.filter(pk=instance.pk).update(

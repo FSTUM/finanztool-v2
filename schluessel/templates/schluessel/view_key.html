@@ -4,12 +4,12 @@
 {% block title %}Finanztool - {{ key.typename }} {{ key }}{% endblock %}
 
 {% block content %}
-<h1>{{ key.typename }} {{ key }}</h1>
+<h1>{{ key.typename }} {{ key }}{% if not key.active %} (inaktiv){% endif %}</h1>
 
 <div class="col-md-6">
     <p>
     <div class="row">
-        {% if key.person %}
+        {% if key.active and key.person %}
             <div class="col-md-3">
                 <a href="{% url "schluessel:return_key" key.id %}" class="btn btn-warning"
                         role="button">
@@ -29,7 +29,7 @@
                     Quittung
                 </a>
             </div>
-        {% else %}
+        {% elif key.active %}
             <div class="col-md-2">
                 <a href="{% url "schluessel:give_key" key.id %}" class="btn btn-success"
                         role="button">
@@ -78,7 +78,7 @@
     </table>
 </div>
 
-{% if user.is_staff %}
+{% if user.is_staff and key.active %}
     {% if key.keytype.keycard %}
         <div class="col-md-8">
             <h2>Vorgemerkte Änderung</h2>
@@ -136,6 +136,7 @@
         <tr>
             <th>Datum</th>
             <th>Vorgang</th>
+            <th>Aktiv</th>
             <th>Entleiher</th>
             <th>Schlüsse-Nr</th>
             <th>Kaution</th>
@@ -152,6 +153,23 @@
                     {% elif entry.operation == "R" %}
                         {% bootstrap_icon "arrow-left" %}
                     {% endif %}
+                </td>
+                <td>
+                    {% ifchanged entry.key_active %}
+                        {% if entry.key_active %}
+                            {% bootstrap_icon "ok" %}
+                        {% elif entry.key_active == False %}
+                            {% bootstrap_icon "remove" %}
+                        {% endif %}
+                    {% else %}
+                        <div style="color:lightgrey;">
+                            {% if entry.key_active %}
+                                {% bootstrap_icon "ok" %}
+                            {% elif entry.key_active == False %}
+                                {% bootstrap_icon "remove" %}
+                            {% endif %}
+                        </div>
+                    {% endifchanged %}
                 </td>
                 <td>
                     {% if entry.person %}

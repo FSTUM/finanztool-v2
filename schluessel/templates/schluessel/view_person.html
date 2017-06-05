@@ -47,7 +47,11 @@
         {% for key in keys %}
             <tr>
                 <th>{{ key.keytype }}</td>
-                <td><a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a></td>
+                <td><a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a>
+                    {% if not key.active %}
+                        (inaktiv)
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
     </table>

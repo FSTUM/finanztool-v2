@@ -99,6 +99,11 @@ class Key(models.Model):
         blank=True,
     )
 
+    active = models.BooleanField(
+        verbose_name="Aktiv",
+        default=True,
+    )
+
     @property
     def typename(self):
         if self.keytype.keycard:
@@ -147,6 +152,13 @@ class KeyLogEntry(models.Model):
     key_comment = models.CharField(
         verbose_name="Kommentar",
         max_length=500,
+        blank=True,
+        null=True,
+    )
+
+    key_active = models.NullBooleanField(
+        verbose_name="Aktiv",
+        default=True,
         blank=True,
         null=True,
     )
