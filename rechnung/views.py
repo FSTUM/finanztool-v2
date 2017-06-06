@@ -36,8 +36,9 @@ def willkommen(request):
     faellige_rechnungen = len(list(filter(lambda r: r.faellig, rechnungen)))
     eigene_aufgaben = Aufgabe.objects.filter(
                         erledigt=False, zustaendig=request.user).count()
-    schluessel = Key.objects.all().count()
-    verfuegbare_schluessel = Key.objects.filter(person=None).count()
+    schluessel = Key.objects.filter(active=True).count()
+    verfuegbare_schluessel = Key.objects.filter(active=True,
+            person=None).count()
     context = {
             'offene_rechnungen': offene_rechnungen,
             'faellige_rechnungen': faellige_rechnungen,
