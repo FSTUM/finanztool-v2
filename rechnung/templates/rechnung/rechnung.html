@@ -37,6 +37,10 @@
                 {% bootstrap_icon "pencil" %} Bearbeiten
             </a>
 
+            <a href="{% url "rechnung:rechnung_duplizieren" rechnung.id %}" class="btn btn-info" role="button">
+                {% bootstrap_icon "duplicate" %} Duplizieren
+            </a>
+
         {% if not rechnung.gestellt %}
             <a href="{% url "rechnung:rechnung_posten_neu" rechnung.id %}" class="btn btn-info" role="button">
                 {% bootstrap_icon "plus" %} Neuer Posten

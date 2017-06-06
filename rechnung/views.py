@@ -129,6 +129,37 @@ def form_rechnung(request, rechnung_id=None):
 
 
 @staff_member_required
+def duplicate_rechnung(request, rechnung_id):
+    rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
+
+    initial = {
+            'name': rechnung.name,
+            'kunde': rechnung.kunde,
+            'einleitung': rechnung.einleitung,
+            'kategorie': rechnung.kategorie,
+        }
+
+    form = RechnungForm(request.POST or None, initial=initial)
+    if form.is_valid():
+        rechnung_neu = form.save()
+
+        posten = rechnung.posten_set.all()
+        for p in posten:
+            Posten.objects.create(
+                rechnung=rechnung_neu,
+                name=p.name,
+                einzelpreis=p.einzelpreis,
+                mwst=p.mwst,
+                anzahl=p.anzahl,
+            )
+
+        return redirect('rechnung:rechnung', rechnung_id=rechnung_neu.pk)
+
+    return render(request, 'rechnung/rechnung_duplizieren.html',
+                  {'form': form, 'rechnung': rechnung})
+
+
+@staff_member_required
 def rechnungsuchen(request):
     form = RechnungSuchenForm(request.POST or None)
 

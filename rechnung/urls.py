@@ -48,6 +48,10 @@ urlpatterns = [
     url(r'^(?P<rechnung_id>[0-9]+)/aendern/$', views.form_rechnung,
         name='rechnung_aendern'),
 
+    # ex: /rechnung/5/duplizieren
+    url(r'^(?P<rechnung_id>[0-9]+)/duplizieren/$', views.duplicate_rechnung,
+        name='rechnung_duplizieren'),
+
     # ex: /rechnung/5/posten/neu
     url(r'^(?P<rechnung_id>[0-9]+)/posten/neu/$', views.form_rechnung_posten,
         name='rechnung_posten_neu'),
