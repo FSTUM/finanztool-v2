@@ -7,6 +7,7 @@ app_name = 'schluessel'
 
 urlpatterns = [
     url(r'^$', views.list_keys, name='list_keys'),
+    url(r'^log/$', views.show_log, name='show_log'),
     url(r'^add/$', views.add_key, name='add_key'),
     url(r'^(?P<key_pk>[0-9]+)/$', views.view_key, name='view_key'),
     url(r'^(?P<key_pk>[0-9]+)/edit/$', views.edit_key, name='edit_key'),

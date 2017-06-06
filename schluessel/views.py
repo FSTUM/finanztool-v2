@@ -525,3 +525,13 @@ def list_persons(request):
     }
 
     return render(request, 'schluessel/list_persons.html', context)
+
+@staff_member_required
+def show_log(request):
+    logentries = KeyLogEntry.objects.order_by("-date")[:20]
+
+    context = {
+        'logentries': logentries,
+    }
+
+    return render(request, 'schluessel/show_log.html', context)
