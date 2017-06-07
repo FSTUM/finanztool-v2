@@ -456,7 +456,8 @@ def create_pdf(request, key_pk, doc):
 
 @login_required
 def list_keys(request):
-    keys = Key.objects.order_by("keytype__shortname", "number")
+    keys = Key.objects.filter(active=True).order_by("keytype__shortname",
+        "number")
 
     form = FilterKeysForm(request.POST or None)
     if form.is_valid():
@@ -466,6 +467,7 @@ def list_keys(request):
         active = form.cleaned_data['active']
         keytype = form.cleaned_data['keytype']
 
+        keys = Key.objects.all()
         for s in search.split():
             keys = keys.filter(
                 Q(keytype__shortname__icontains=s) |
