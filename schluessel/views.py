@@ -4,6 +4,7 @@ import subprocess
 from tempfile import mkdtemp, mkstemp
 
 from django import forms
+from django.contrib import messages
 from django.http import HttpResponse
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render, redirect
@@ -90,7 +91,10 @@ def save_key_change(request, key_pk):
         raise SuspiciousOperation("Key is inactive")
 
     try:
-        initial = {'keytype': key.savedkeychange.new_keytype}
+        initial = {
+            'keytype': key.savedkeychange.new_keytype,
+            'comment': key.savedkeychange.comment,
+        }
     except ObjectDoesNotExist:
         initial = {}
     form = SaveKeyChangeForm(request.POST or None, initial=initial,
@@ -98,15 +102,18 @@ def save_key_change(request, key_pk):
 
     if form.is_valid():
         keytype = form.cleaned_data['keytype']
+        comment = form.cleaned_data['comment']
 
         if hasattr(key, 'savedkeychange'):
             key.savedkeychange.user = request.user
             key.savedkeychange.new_keytype = keytype
+            key.savedkeychange.comment = comment
             key.savedkeychange.save()
         else:
             SavedKeyChange.objects.create(
                 key=key,
                 new_keytype=keytype,
+                comment=comment,
                 user=request.user,
             )
 
@@ -144,6 +151,77 @@ def delete_key_change(request, key_pk):
     }
 
     return render(request, 'schluessel/delete_key_change.html', context)
+
+
+@staff_member_required
+def apply_key_change(request, key_pk=None):
+    key = None
+    keys = Key.objects.filter(active=True).exclude(savedkeychange=None
+        ).order_by("keytype__shortname", "number")
+    if key_pk:
+        key = get_object_or_404(Key, pk=key_pk)
+        if not key.active:
+            raise SuspiciousOperation("Key is inactive")
+        try:
+            keychange = key.savedkeychange
+        except ObjectDoesNotExist:
+            raise SuspiciousOperation("Key change does not exist")
+        if key.savedkeychange.violated_key:
+            raise SuspiciousOperation("Key change is violating another key")
+        keys = keys.filter(pk=key_pk)
+
+    if not keys.exists():
+        raise SuspiciousOperation("There are no key changes")
+
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        not_applied_keys = []
+        applied_keys = []
+        for k in keys:
+            try:
+                kc = k.savedkeychange
+            except ObjectDoesNotExist:
+                continue
+            if kc.violated_key:
+                not_applied_keys.append(k)
+            else:
+                old_keytype = k.keytype
+                k.keytype = kc.new_keytype
+                k.save()
+                applied_keys.append((old_keytype, k))
+                SavedKeyChange.objects.filter(pk=k.savedkeychange.pk).delete()
+                KeyLogEntry.objects.create(
+                    key=k,
+                    person=None,
+                    user=request.user,
+                    operation=KeyLogEntry.EDIT,
+                )
+        if not_applied_keys:
+            messages.error(request, "Die folgenden Änderungen konnten nicht \
+                    angewendet werden, weil eine solche Schließkarte bereits \
+                    existiert: " +
+                    ", ".join(["{} -> {} {}".format(k,
+                            k.savedkeychange.new_keytype.shortname, k.number)
+                        for k in not_applied_keys]))
+        if applied_keys:
+            messages.success(request, "Folgende Änderungen wurden erfolgreich \
+            angewendet. Bitte informiere ggf. die momentanen Entleiher*innen \
+            (in Klammern): " +
+                    ", ".join(["{} {} -> {}".format(okt.shortname, k.number,
+                        k) + (" ({})".format(k.person) if k.person else "")
+                        for okt, k in applied_keys]))
+        if key:
+            return redirect("schluessel:view_key", key.id)
+        else:
+            return redirect("schluessel:list_key_changes")
+
+    context = {
+        'cur_key': key,
+        'keys': keys,
+        'form': form,
+    }
+
+    return render(request, 'schluessel/apply_key_change.html', context)
 
 
 @staff_member_required

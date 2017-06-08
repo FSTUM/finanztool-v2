@@ -87,7 +87,7 @@ class Key(models.Model):
 
     person = models.ForeignKey(
         Person,
-        verbose_name="Entleiher",
+        verbose_name="Entleiher*in",
         default=None,
         blank=True,
         null=True,
@@ -165,7 +165,7 @@ class KeyLogEntry(models.Model):
 
     person = models.ForeignKey(
         Person,
-        verbose_name="Entleiher",
+        verbose_name="Entleiher*in",
         blank=True,
         null=True,
     )
@@ -238,7 +238,7 @@ class KeyLogEntry(models.Model):
 
     user = models.ForeignKey(
         User,
-        verbose_name="Finanzer",
+        verbose_name="Finanzer*in",
     )
 
     date = models.DateTimeField(
@@ -278,16 +278,29 @@ class SavedKeyChange(models.Model):
 
     new_keytype = models.ForeignKey(
         KeyType,
-        verbose_name="Schlüssel-Typ",
+        verbose_name="Neuer Schlüssel-Typ",
         on_delete=models.CASCADE,
+    )
+
+    comment = models.CharField(
+        verbose_name="Kommentar",
+        max_length=500,
+        blank=True,
     )
 
     user = models.ForeignKey(
         User,
-        verbose_name="Finanzer",
+        verbose_name="Finanzer*in",
     )
 
     date = models.DateTimeField(
         verbose_name="Datum",
         auto_now=True,
     )
+
+    @property
+    def violated_key(self):
+        violated_key = Key.objects.filter(keytype=self.new_keytype,
+                number=self.key.number)
+        if violated_key.exists():
+            return violated_key.get()

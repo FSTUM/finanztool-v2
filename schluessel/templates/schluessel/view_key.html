@@ -62,7 +62,7 @@
             <td>{{ key.keytype.deposit|floatformat:2 }} €</td>
         </tr>
         <tr>
-            <th>Entleiher</th>
+            <th>Entleiher*in</th>
             <td>
                 {% if key.person %}
                     <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
@@ -87,14 +87,17 @@
                     <tr>
                         <th>Alter Typ</th>
                         <th>Neuer Typ</th>
+                        <th>Kommentar</th>
                         <th>Datum</th>
-                        <th>Finanzer</th>
+                        <th>Finanzer*in</th>
+                        <th>Anwenden</th>
                         <th>Bearbeiten</th>
                         <th>Löschen</th>
                     </tr>
                     <tr>
                         <td>{{ key.keytype }}</td>
                         <td>{{ key.savedkeychange.new_keytype }}</td>
+                        <td>{{ key.savedkeychange.comment }}</td>
                         <td>{{ key.savedkeychange.date | date:"SHORT_DATETIME_FORMAT" }}
                             </td>
                         <td>
@@ -102,6 +105,18 @@
                                 {{ key.savedkeychange.user.get_full_name }}
                             {% else %}
                                 {{ key.savedkeychange.user.username }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if key.savedkeychange.violated_key %}
+                                <p class="text-danger">
+                                    nicht möglich, <a href="{% url "schluessel:view_key" key.savedkeychange.violated_key.id %}">{{ key.savedkeychange.violated_key }}</a> gibt es bereits
+                                </p>
+                            {% else %}
+                                <a href="{% url "schluessel:apply_key_change" key.id %}"
+                                        class="btn btn-info" role="button">
+                                    Anwenden
+                                </a>
                             {% endif %}
                         </td>
                         <td>
@@ -137,11 +152,11 @@
             <th>Datum</th>
             <th>Vorgang</th>
             <th>Aktiv</th>
-            <th>Entleiher</th>
+            <th>Entleiher*in</th>
             <th>Schlüsse-Nr</th>
             <th>Kaution</th>
             <th>Kommentar</th>
-            <th>Finanzer</th>
+            <th>Finanzer*in</th>
         </tr>
         {% for entry in logentries %}
             <tr>

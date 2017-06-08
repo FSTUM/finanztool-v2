@@ -71,7 +71,7 @@ der Firma Hochtief.
 {% endif %}%
 
 
-Ein etwaiger Verlust muss unverzüglich einem der Fachschaftsfinanzer gemeldet
+Ein etwaiger Verlust muss unverzüglich dem Finanzreferat gemeldet
 werden.
 
 
@@ -99,8 +99,10 @@ verbleibt ein Durchschlag dieser Quittung bei der Fachschaft MPI.
 Ort, Datum: & Garching, den {% now "DATE_FORMAT" %}\\
  & \\
 {{ key.typename }} erhalten: & \hrulefill \\
+  & \multicolumn{1}{c}{ {{ key.person }} }\\
  & \\
 Kaution erhalten: & \hrulefill \\
+  & \multicolumn{1}{c}{ {{ user.get_full_name }} }\\
 \end{tabular}
 \end{document}
 

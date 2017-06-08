@@ -5,14 +5,14 @@ from .models import Key, KeyType, Person
 
 class SelectPersonForm(forms.Form):
     person_label = forms.CharField(
-            label="Entleiher",
+            label="Entleiher*in",
             widget=forms.TextInput(attrs={'size': 80}))
     person = forms.CharField(widget=forms.HiddenInput(), required=False)
 
 
 class SelectPersonFormNoscript(forms.Form):
     person = forms.ModelChoiceField(
-        label="Entleiher",
+        label="Entleiher*in",
         queryset=Person.objects.all().order_by('name', 'firstname'),
     )
 
@@ -21,6 +21,11 @@ class SaveKeyChangeForm(forms.Form):
     keytype = forms.ModelChoiceField(
         label="Neuer Schlüssel-Typ",
         queryset=KeyType.objects.filter(keycard=True).order_by('name'),
+    )
+
+    comment = forms.CharField(
+        label="Kommentar",
+        required=False,
     )
 
     def __init__(self, *args, **kwargs):

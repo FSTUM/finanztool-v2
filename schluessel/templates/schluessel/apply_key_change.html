@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 {% load bootstrap3 %}
 
-{% block title %}Finanztool - Vorgemerkte Schlüsseltyp-Änderungen{% endblock %}
+{% block title %}Finanztool - Vorgemerkte Schlüsseltyp-Änderungen anwenden{% endblock %}
 
 {% block content %}
-<h1>Vorgemerkte Schlüsseltyp-Änderungen</h1>
+<h1>Vorgemerkte Schlüsseltyp-Änderungen anwenden</h1>
 
 <div class="col-md-6">
+    <p>Sollen folgende Änderungen wirklich angewendet werden?</p>
     <table class="table table-striped table-hover">
         <tr>
             <th>Schlüssel</th>
@@ -16,9 +17,7 @@
             <th>Kommentar</th>
             <th>Datum</th>
             <th>Finanzer*in</th>
-            <th>Anwenden</th>
-            <th>Bearbeiten</th>
-            <th>Löschen</th>
+            <th>Anwenden möglich</th>
         </tr>
         {% for key in keys %}
             <tr>
@@ -47,38 +46,27 @@
                             nicht möglich, <a href="{% url "schluessel:view_key" key.savedkeychange.violated_key.id %}">{{ key.savedkeychange.violated_key }}</a> gibt es bereits
                         </p>
                     {% else %}
-                        <a href="{% url "schluessel:apply_key_change" key.id %}"
-                                class="btn btn-info" role="button">
-                            Anwenden
-                        </a>
+                        {% bootstrap_icon "ok" %}
                     {% endif %}
-                </td>
-                <td>
-                    <a href="{% url "schluessel:save_key_change" key.id %}"
-                            class="btn btn-warning" role="button">
-                        {% bootstrap_icon "pencil" %} Ändern
-                    </a>
-                </td>
-                <td>
-                    <a href="{% url "schluessel:delete_key_change" key.id %}"
-                            class="btn btn-danger" role="button">
-                        {% bootstrap_icon "remove" %} Löschen
-                    </a>
                 </td>
             </tr>
         {% endfor %}
     </table>
-    <p>
-        {% if keys %}
-            <a href="{% url "schluessel:apply_key_change" %}"
-                    class="btn btn-info" role="button">
-                Alle Änderungen anwenden
-            </a>
-        {% else %}
-            Es sind keine Änderungen vorgemerkt.
-        {% endif %}
-    </p>
 </div>
+<form method="post" action="">
+    {% csrf_token %}
+
+    <table class="table">
+        <tr>
+            <td><button type="submit" class="btn btn-default btn-warning">Änderungen anwenden</button></td>
+            {% if cur_key %}
+                <td><a href="{% url "schluessel:view_key" cur_key.id %}" class="btn btn-info">Abbrechen</a></td>
+            {% else %}
+                <td><a href="{% url "schluessel:list_key_changes" %}" class="btn btn-info">Abbrechen</a></td>
+            {% endif %}
+        </tr>
+    <table>
+</form>
 
 
 {% endblock %}
