@@ -90,6 +90,9 @@ def save_key_change(request, key_pk):
     if not key.active:
         raise SuspiciousOperation("Key is inactive")
 
+    if not key.keytype.keycard:
+        raise SuspiciousOperation("Key is not a keycard")
+
     try:
         initial = {
             'keytype': key.savedkeychange.new_keytype,
@@ -134,6 +137,9 @@ def delete_key_change(request, key_pk):
     if not key.active:
         raise SuspiciousOperation("Key is inactive")
 
+    if not key.keytype.keycard:
+        raise SuspiciousOperation("Key is not a keycard")
+
     try:
         keychange = key.savedkeychange
     except ObjectDoesNotExist:
@@ -156,12 +162,14 @@ def delete_key_change(request, key_pk):
 @staff_member_required
 def apply_key_change(request, key_pk=None):
     key = None
-    keys = Key.objects.filter(active=True).exclude(savedkeychange=None
-        ).order_by("keytype__shortname", "number")
+    keys = Key.objects.filter(keytype__keycard=True, active=True
+        ).exclude(savedkeychange=None).order_by("keytype__shortname", "number")
     if key_pk:
         key = get_object_or_404(Key, pk=key_pk)
         if not key.active:
             raise SuspiciousOperation("Key is inactive")
+        if not key.keytype.keycard:
+            raise SuspiciousOperation("Key is not a keycard")
         try:
             keychange = key.savedkeychange
         except ObjectDoesNotExist:
@@ -226,8 +234,8 @@ def apply_key_change(request, key_pk=None):
 
 @staff_member_required
 def list_key_changes(request):
-    keys = Key.objects.filter(active=True).exclude(savedkeychange=None
-        ).order_by("keytype__shortname", "number")
+    keys = Key.objects.filter(keytype__keycard=True, active=True
+        ).exclude(savedkeychange=None).order_by("keytype__shortname", "number")
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
