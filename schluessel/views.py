@@ -5,11 +5,11 @@ from tempfile import mkdtemp, mkstemp
 
 from django import forms
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render, redirect
 from django.conf import settings
-from django.core.exceptions import SuspiciousOperation, ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -88,10 +88,10 @@ def save_key_change(request, key_pk):
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
-        raise SuspiciousOperation("Key is inactive")
+        raise Http404("Key is inactive")
 
     if not key.keytype.keycard:
-        raise SuspiciousOperation("Key is not a keycard")
+        raise Http404("Key is not a keycard")
 
     try:
         initial = {
@@ -135,15 +135,15 @@ def delete_key_change(request, key_pk):
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
-        raise SuspiciousOperation("Key is inactive")
+        raise Http404("Key is inactive")
 
     if not key.keytype.keycard:
-        raise SuspiciousOperation("Key is not a keycard")
+        raise Http404("Key is not a keycard")
 
     try:
         keychange = key.savedkeychange
     except ObjectDoesNotExist:
-        raise SuspiciousOperation("Key change does not exist")
+        raise Http404("Key change does not exist")
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -167,19 +167,19 @@ def apply_key_change(request, key_pk=None):
     if key_pk:
         key = get_object_or_404(Key, pk=key_pk)
         if not key.active:
-            raise SuspiciousOperation("Key is inactive")
+            raise Http404("Key is inactive")
         if not key.keytype.keycard:
-            raise SuspiciousOperation("Key is not a keycard")
+            raise Http404("Key is not a keycard")
         try:
             keychange = key.savedkeychange
         except ObjectDoesNotExist:
-            raise SuspiciousOperation("Key change does not exist")
+            raise Http404("Key change does not exist")
         if key.savedkeychange.violated_key:
-            raise SuspiciousOperation("Key change is violating another key")
+            raise Http404("Key change is violating another key")
         keys = keys.filter(pk=key_pk)
 
     if not keys.exists():
-        raise SuspiciousOperation("There are no key changes")
+        raise Http404("There are no key changes")
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -267,10 +267,10 @@ def return_key(request, key_pk):
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
-        raise SuspiciousOperation("Key is inactive")
+        raise Http404("Key is inactive")
 
     if not key.person:
-        raise SuspiciousOperation("Key not given out")
+        raise Http404("Key not given out")
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -302,10 +302,10 @@ def give_key(request, key_pk):
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
-        raise SuspiciousOperation("Key is inactive")
+        raise Http404("Key is inactive")
 
     if key.person:
-        raise SuspiciousOperation("Key already given out")
+        raise Http404("Key already given out")
 
     persons = Person.objects.order_by("name", "firstname")
 
@@ -342,10 +342,10 @@ def give_key_confirm(request, key_pk, person_pk):
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
-        raise SuspiciousOperation("Key is inactive")
+        raise Http404("Key is inactive")
 
     if key.person:
-        raise SuspiciousOperation("Key already given out")
+        raise Http404("Key already given out")
 
     person = get_object_or_404(Person, pk=person_pk)
 
@@ -499,10 +499,10 @@ def create_pdf(request, key_pk, doc):
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
-        raise SuspiciousOperation("Key is inactive")
+        raise Http404("Key is inactive")
 
     if not key.person:
-        raise SuspiciousOperation("Key not given out")
+        raise Http404("Key not given out")
 
     # create temporary files
     tmplatex = mkdtemp()
