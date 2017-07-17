@@ -120,6 +120,7 @@ class Rechnung(models.Model):
     def wurde_vor_kurzem_gestellt(self):
         return self.rdatum >= timezone.now() - datetime.timedelta(days=16)
 
+    @property
     def faellig(self):
         return self.fdatum < date.today()
 
