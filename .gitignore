@@ -19,5 +19,5 @@ Session.vim
 /media/
 
 # sqlite database
-/db.sqlite3*
+*.sqlite3
 

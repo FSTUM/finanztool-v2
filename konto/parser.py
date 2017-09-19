@@ -1,10 +1,13 @@
 import csv
 import datetime
 import re
-
 from decimal import Decimal, InvalidOperation
 
+from django.contrib.auth.models import User
+
 from rechnung.models import Rechnung
+from getraenke.models import Schulden
+from .models import EinzahlungsLog
 
 
 class Entry:
@@ -20,6 +23,8 @@ class Entry:
     erwarteter_betrag = None
     betrag_passt = False
 
+    mapped_user = None
+
     def __repr__(self):
         if self.mapped_rechnung:
             rnr = self.mapped_rechnung.rnr_string
@@ -28,7 +33,7 @@ class Entry:
 
         return "Entry <datum={}, verwendungszweck=\"{}\", " \
                "zahlungspflichtiger=\"{}\", iban={}, bic={}, betrag={}, " \
-               "mapped_rechnung={}" \
+               "mapped_rechnung={}>" \
                .format(self.datum, self.verwendungszweck,
                        self.zahlungspflichtiger, self.iban, self.bic,
                        self.betrag, rnr)
@@ -45,6 +50,17 @@ def parse_camt_csv(csvfile):
     for rechnung in offene_rechnungen:
         regex_cache[rechnung] = re.compile('(.*[^0-9])?{}([^0-9].*)?'
                                            .format(rechnung.rnr_string))
+
+    users = Schulden.objects.all()
+    regex_usernames = {}
+    for u in users:
+        regex_usernames[u] = re.compile('(.*[^a-zA-Z])?{}([^a-zA-Z].*)?'
+                                           .format(u.user))
+
+    try:
+        zuletzt_eingetragen = EinzahlungsLog.objects.latest('timestamp').timestamp
+    except EinzahlungsLog.DoesNotExist:
+        zuletzt_eingetragen = None
 
     # read CSV file
     csvreader = csv.reader(csvfile, delimiter=';')
@@ -81,6 +97,8 @@ def parse_camt_csv(csvfile):
                 continue
 
             suche_rechnung(entry, offene_rechnungen, regex_cache)
+            if not entry.mapped_rechnung:
+                suche_user(entry, users, regex_usernames, zuletzt_eingetragen)
 
             results.append(entry)
 
@@ -108,3 +126,10 @@ def suche_rechnung(entry, offene_rechnungen, regex_cache):
                     latest('wievielte').mahnsumme
             else:
                 entry.erwarteter_betrag = rechnung.gesamtsumme
+
+
+def suche_user(entry, users, regex_usernames, zuletzt_eingetragen):
+    for user in users:
+        tmp = regex_usernames[user].match(entry.verwendungszweck)
+        if tmp and zuletzt_eingetragen and zuletzt_eingetragen < entry.datum:
+                entry.mapped_user = user

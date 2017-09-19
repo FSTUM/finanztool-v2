@@ -35,7 +35,7 @@ def mapping(request):
         return redirect('konto:einlesen')
 
     mapping_form = MappingConfirmationForm(request.POST or None,
-                                           mappings=results)
+        mappings=results, user=request.user)
 
     if mapping_form.is_valid():
         mapping_form.save()

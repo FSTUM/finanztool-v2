@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'konto',
     'aufgaben',
     'schluessel',
+    'getraenke',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -88,6 +89,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'getraenke': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'getraenke.sqlite3'),
     }
 }
 
@@ -140,3 +145,7 @@ de_formats.SHORT_DATE_FORMAT = "d.m."
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Database routing
+DATABASE_ROUTERS = ['finanz.routers.DatabaseAppsRouter']
+DATABASE_APPS_MAPPING = {'getraenke': 'getraenke'}

@@ -10,6 +10,7 @@
 
     {% csrf_token %}
 
+    <h3>Bezahlte Rechnungen</h3>
     <table class="table">
         <tr>
             <th>Buchung</th>
@@ -54,10 +55,71 @@
             {% endif %}
         {% endfor %}
     </table>
+    <h3>Einzahlungen Getränkeguthaben</h3>
+    <table class="table">
+        <tr>
+            <th>Buchung</th>
+            <th>Schuldenstand</th>
+            <th>Letzte Einzahlungen</th>
+            <th>Bestätigen</th>
+        </tr>
+
+        {% for buchung in results %}
+            {% if buchung.mapped_user %}
+                <tr>
+                    <td>
+                        {{ buchung.datum }} <br>
+                        {{ buchung.verwendungszweck }} <br>
+                        {{ buchung.betrag }} €
+                        <br><br>
+                        {{ buchung.zahlungspflichtiger }} <br>
+                        IBAN: {{ buchung.iban }} <br>
+                        BIC: {{ buchung.bic }} <br>
+                    </td>
+                    <td>
+                        {{ buchung.mapped_user.user }} {{ buchung.mapped_user.betrag|floatformat:2 }} €
+                    </td>
+                    <td>
+                        <ul>
+                            {% for einzahlung in buchung.mapped_user.get_einzahlungen|slice:":5" %}
+                                <li>{{ einzahlung.datum }}: {{ einzahlung.betrag|floatformat:2 }} €</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        {% checkbox form buchung %}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
 
     <input type="submit" value="Speichern" class="btn btn-default" />
 
     </form>
+
+    <h2>Nicht erkannte Einzahlungen</h2>
+    <table class="table">
+        <tr>
+            <th>Buchung</th>
+        </tr>
+
+        {% for buchung in results %}
+            {% if not buchung.mapped_rechnung and not buchung.mapped_user %}
+                <tr>
+                    <td>
+                        {{ buchung.datum }} <br>
+                        {{ buchung.verwendungszweck }} <br>
+                        {{ buchung.betrag }} €
+                        <br><br>
+                        {{ buchung.zahlungspflichtiger }} <br>
+                        IBAN: {{ buchung.iban }} <br>
+                        BIC: {{ buchung.bic }} <br>
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
 
     {% if errors %}
         <h2>Fehler beim Einlesen</h2>
