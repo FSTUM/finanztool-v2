@@ -78,7 +78,7 @@
         { {{ rechnung.kunde.organisation | latexescape }}\\[0.5ex]}{}
     \notblank{ {{ rechnung.kunde.suborganisation | latexescape }} }
         { {{ rechnung.kunde.suborganisation | latexescape }} \\[0.2ex]}{}
-    \notblank{ {{ rechnung.kunde.name | latexescape }} }
+    \notblank{ {{ rechnung.kunde.name|default_if_none:"" | latexescape }} }
         { {{ rechnung.kunde.titel|default_if_none:"" | latexescape }} {{ rechnung.kunde.vorname|default_if_none:"" | latexescape }} {{ rechnung.kunde.name | latexescape }}  \\[0.2ex]}{}
     {{ rechnung.kunde.strasse | latexescape }} \\[0.2ex]
     \ifnum\pdfstrcmp{ {{ rechnung.kunde.land | latexescape }} }{ Deutschland }=0
