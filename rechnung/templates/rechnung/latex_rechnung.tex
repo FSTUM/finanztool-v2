@@ -74,9 +74,9 @@
         Verein zur Studienförderung der FS MPI e. V.,
         Boltzmannstraße 3, 85748 Garching\\[1ex] \hrule}}\\[2ex]
     \raggedright{\parbox[c]{8cm}{\footnotesize
-    \notblank{ {{ rechnung.kunde.organisation | latexescape }} }
+    \notblank{ {{ rechnung.kunde.organisation|default_if_none:"" | latexescape }} }
         { {{ rechnung.kunde.organisation | latexescape }}\\[0.5ex]}{}
-    \notblank{ {{ rechnung.kunde.suborganisation | latexescape }} }
+    \notblank{ {{ rechnung.kunde.suborganisation|default_if_none:"" | latexescape }} }
         { {{ rechnung.kunde.suborganisation | latexescape }} \\[0.2ex]}{}
     \notblank{ {{ rechnung.kunde.name|default_if_none:"" | latexescape }} }
         { {{ rechnung.kunde.titel|default_if_none:"" | latexescape }} {{ rechnung.kunde.vorname|default_if_none:"" | latexescape }} {{ rechnung.kunde.name | latexescape }}  \\[0.2ex]}{}
