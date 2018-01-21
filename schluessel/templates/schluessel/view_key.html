@@ -23,12 +23,14 @@
                     Kaution
                 </a>
             </div>
-            <div class="col-md-2">
-                <a href="{% url "schluessel:get_quittung" key.id %}"
-                    class="btn btn-primary" role="button">
-                    Quittung
-                </a>
-            </div>
+            {% if not key.keytype.deposit == 0 %}
+                <div class="col-md-2">
+                    <a href="{% url "schluessel:get_quittung" key.id %}"
+                        class="btn btn-primary" role="button">
+                        Quittung
+                    </a>
+                </div>
+            {% endif %}
         {% elif key.active %}
             <div class="col-md-2">
                 <a href="{% url "schluessel:give_key" key.id %}" class="btn btn-success"

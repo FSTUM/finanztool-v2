@@ -504,6 +504,9 @@ def create_pdf(request, key_pk, doc):
     if not key.person:
         raise Http404("Key not given out")
 
+    if doc == "Quittung" and key.keytype.deposit == 0:
+        raise Http404("Key has no deposit")
+
     # create temporary files
     tmplatex = mkdtemp()
     latex_file, latex_filename = mkstemp(suffix='.tex', dir=tmplatex)
