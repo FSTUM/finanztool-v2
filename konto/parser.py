@@ -68,7 +68,7 @@ def parse_camt_csv(csvfile):
     for row in csvreader:
         counter += 1
 
-        if row[3] == "GUTSCHRIFT":
+        if row[3] == "GUTSCHR. UEBERWEISUNG":
             entry = Entry()
 
             try:
