@@ -21,3 +21,5 @@ Session.vim
 # sqlite database
 *.sqlite3
 
+# idea
+.idea
