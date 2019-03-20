@@ -34,9 +34,9 @@ class Entry:
         return "Entry <datum={}, verwendungszweck=\"{}\", " \
                "zahlungspflichtiger=\"{}\", iban={}, bic={}, betrag={}, " \
                "mapped_rechnung={}>" \
-               .format(self.datum, self.verwendungszweck,
-                       self.zahlungspflichtiger, self.iban, self.bic,
-                       self.betrag, rnr)
+            .format(self.datum, self.verwendungszweck,
+                    self.zahlungspflichtiger, self.iban, self.bic,
+                    self.betrag, rnr)
 
 
 def parse_camt_csv(csvfile):
@@ -54,8 +54,8 @@ def parse_camt_csv(csvfile):
     users = Schulden.objects.all()
     regex_usernames = {}
     for u in users:
-        regex_usernames[u] = re.compile('(.*[^a-zA-Z])?{}([^a-zA-Z].*)?'
-                                           .format(u.user))
+        regex_usernames[u] = re.compile('(.*\s+)?{}(\s+.*)?'
+                                        .format(u.user))
 
     try:
         zuletzt_eingetragen = EinzahlungsLog.objects.latest('timestamp').timestamp
@@ -76,7 +76,7 @@ def parse_camt_csv(csvfile):
                 entry.datum = entry.datum.date()
             except ValueError:
                 errors.append("Zeile {}: Ungültiges Datum: {}".format(counter,
-                              row[1]))
+                                                                      row[1]))
                 continue
 
             entry.verwendungszweck = row[4]
@@ -88,7 +88,7 @@ def parse_camt_csv(csvfile):
                 entry.betrag = Decimal(row[14].replace(',', '.'))
             except InvalidOperation:
                 errors.append("Zeile {}: Ungültiger Betrag: {}".format(counter,
-                              row[14]))
+                                                                       row[14]))
                 continue
 
             if row[15] != "EUR":
@@ -98,7 +98,7 @@ def parse_camt_csv(csvfile):
 
             suche_rechnung(entry, offene_rechnungen, regex_cache)
             if not entry.mapped_rechnung:
-                suche_user(entry, users, regex_usernames, zuletzt_eingetragen)
+                suche_user(entry, users, regex_usernames, zuletzt_eingetragen, errors)
 
             results.append(entry)
 
@@ -128,8 +128,33 @@ def suche_rechnung(entry, offene_rechnungen, regex_cache):
                 entry.erwarteter_betrag = rechnung.gesamtsumme
 
 
-def suche_user(entry, users, regex_usernames, zuletzt_eingetragen):
+def suche_user(entry, users, regex_usernames, zuletzt_eingetragen, errors):
     for user in users:
-        tmp = regex_usernames[user].match(entry.verwendungszweck)
+        tmp = regex_usernames[user].fullmatch(entry.verwendungszweck)
         if tmp and zuletzt_eingetragen and zuletzt_eingetragen < entry.datum:
+            if entry.mapped_user is not None:
+                # If there is a user that was already previously matched,
+                # print a duplicate match error and abort the search.
+                errors.append('Einzahlung "{}" vom {} hat mehrere Benutzer gematcht: {}, {}.'.format(
+                    entry.verwendungszweck,
+                    entry.datum,
+                    entry.mapped_user,
+                    user
+                ))
+                entry.mapped_user = None
+                return
+            else:
+                # Enter the new user
                 entry.mapped_user = user
+        elif zuletzt_eingetragen and zuletzt_eingetragen >= entry.datum:
+            # Print an error that this transaction lies beyond the date of the last transaction.
+            errors.append('Letzte Einzahlung von {} am {} liegt nach der Einzahlung vom {}.'.format(
+                user.user,
+                zuletzt_eingetragen,
+                entry.datum
+            ))
+        elif tmp and zuletzt_eingetragen is None:
+            errors.append('Nutzer {} hat kein "zuletzt eingetragen" Datum für die Einzahlung vom {}.'.format(
+                user.user,
+                entry.datum
+            ))
