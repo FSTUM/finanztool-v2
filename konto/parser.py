@@ -146,12 +146,12 @@ def suche_user(entry, users, regex_usernames, zuletzt_eingetragen, errors):
             else:
                 # Enter the new user
                 entry.mapped_user = user
-        elif zuletzt_eingetragen and zuletzt_eingetragen >= entry.datum:
+        elif tmp and zuletzt_eingetragen and zuletzt_eingetragen >= entry.datum:
             # Print an error that this transaction lies beyond the date of the last transaction.
             errors.append('Letzte Einzahlung von {} am {} liegt nach der Einzahlung vom {}.'.format(
                 user.user,
-                zuletzt_eingetragen,
-                entry.datum
+                entry.datum,
+                zuletzt_eingetragen
             ))
         elif tmp and zuletzt_eingetragen is None:
             errors.append('Nutzer {} hat kein "zuletzt eingetragen" Datum für die Einzahlung vom {}.'.format(
