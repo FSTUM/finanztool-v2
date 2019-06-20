@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 
 from .forms import UploadForm, MappingConfirmationForm
 from .parser import parse_camt_csv
+from .models import EinzahlungsLog
 
 
 staff_member_required = staff_member_required(login_url='rechnung:login')
@@ -23,7 +24,14 @@ def einlesen(request):
         request.session['errors'] = errors
         return redirect('konto:mapping')
 
-    context = {'form': form}
+
+    try:
+        zuletzt_eingetragen = EinzahlungsLog.objects.latest('timestamp').timestamp
+    except EinzahlungsLog.DoesNotExist:
+        zuletzt_eingetragen = None
+
+    context = {'form': form,
+               'zuletzt_eingetragen': zuletzt_eingetragen}
     return render(request, 'konto/einlesen.html', context)
 
 @staff_member_required
