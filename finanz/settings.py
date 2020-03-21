@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'bootstrap3',
-    'rechnung.apps.RechnungConfig',
+    'rechnung',
     'konto',
     'aufgaben',
     'schluessel',

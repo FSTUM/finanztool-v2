@@ -25,7 +25,6 @@ urlpatterns = [
     # ex: /rechnung/login/
     url(r'^login/$',
         LoginView.as_view(),
-        {'template_name': 'rechnung/login.html'},
         name='login'),
 
     # ex: /rechnung/logout/

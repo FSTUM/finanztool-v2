@@ -75,12 +75,12 @@ def admin(request):
 
 
 def login(request):
-    return render(request, 'rechnung/login.html')
+    return render(request, 'rechnung/templates/registration/login.html')
 
 
 @staff_member_required
 def logout(request):
-    return render(request, 'rechnung/logout.html')
+    return render(request, 'rechnung/templates/registration/logout.html')
 
 
 # Rechnung#####################################################################
