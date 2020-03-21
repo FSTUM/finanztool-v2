@@ -9,12 +9,12 @@
         <div class="alert alert-danger">
             Möchtest du wirklich diese Rechnung duplizieren?
         </div>
-    </h3> 
+    </h3>
     <h1>Rechnung duplizieren</h1>
 
     <p><a
-        href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
-        class="btn btn-default" role="button">{% bootstrap_icon "arrow-left" %}
+            href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
+            class="btn btn-default" role="button">{% bootstrap_icon "arrow-left" %}
         Zurück zur Rechnung
     </a></p>
 
@@ -40,7 +40,7 @@
             </span></p>
 
             <br/>
-            <table class="table" >
+            <table class="table">
                 <tr>
                     <th class="text-right">Anzahl</th>
                     <th>Bezeichnung</th>
@@ -49,13 +49,13 @@
                     <th class="text-right">Summe Netto</th>
                 </tr>
                 {% for posten in rechnung.posten_set.all %}
-                <tr>
-                    <td align="right">{{ posten.anzahl }} </td>
-                    <td>{{ posten.name }}</td>
-                    <td align="right">{{ posten.einzelpreis }} €</td>
-                    <td align="right">{{ posten.get_mwst_display }}</td>
-                    <td align="right">{{ posten.summenettogerundet }} €</td>
-                </tr>
+                    <tr>
+                        <td align="right">{{ posten.anzahl }} </td>
+                        <td>{{ posten.name }}</td>
+                        <td align="right">{{ posten.einzelpreis }} €</td>
+                        <td align="right">{{ posten.get_mwst_display }}</td>
+                        <td align="right">{{ posten.summenettogerundet }} €</td>
+                    </tr>
                 {% endfor %}
             </table>
         </div>

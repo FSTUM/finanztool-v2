@@ -5,8 +5,8 @@ from .models import Key, KeyType, Person
 
 class SelectPersonForm(forms.Form):
     person_label = forms.CharField(
-            label="Entleiher*in",
-            widget=forms.TextInput(attrs={'size': 80}))
+        label="Entleiher*in",
+        widget=forms.TextInput(attrs={'size': 80}))
     person = forms.CharField(widget=forms.HiddenInput(), required=False)
 
 
@@ -52,33 +52,33 @@ class FilterKeysForm(forms.Form):
         label="Suchbegriff",
         required=False,
     )
-    search.widget.attrs["onchange"]="document.getElementById('filterform').submit()"
+    search.widget.attrs["onchange"] = "document.getElementById('filterform').submit()"
 
     given = forms.BooleanField(
         label="ausgegeben",
         required=False,
     )
-    given.widget.attrs["onchange"]="document.getElementById('filterform').submit()"
+    given.widget.attrs["onchange"] = "document.getElementById('filterform').submit()"
 
     free = forms.BooleanField(
         label="verfügbar",
         required=False,
     )
-    free.widget.attrs["onchange"]="document.getElementById('filterform').submit()"
+    free.widget.attrs["onchange"] = "document.getElementById('filterform').submit()"
 
     active = forms.BooleanField(
         label="aktiv",
         required=False,
         initial=True,
     )
-    active.widget.attrs["onchange"]="document.getElementById('filterform').submit()"
+    active.widget.attrs["onchange"] = "document.getElementById('filterform').submit()"
 
     keytype = forms.ModelChoiceField(
         label="Art",
         queryset=KeyType.objects.all().order_by('name'),
         required=False,
     )
-    keytype.widget.attrs["onchange"]="document.getElementById('filterform').submit()"
+    keytype.widget.attrs["onchange"] = "document.getElementById('filterform').submit()"
 
 
 class FilterPersonsForm(forms.Form):
@@ -86,4 +86,4 @@ class FilterPersonsForm(forms.Form):
         label="Suchbegriff",
         required=False,
     )
-    search.widget.attrs["onchange"]="document.getElementById('filterform').submit()"
+    search.widget.attrs["onchange"] = "document.getElementById('filterform').submit()"

@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('rechnung', '0010_auto_20161001_1551'),
     ]
@@ -20,7 +19,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='mahnung',
             name='einleitung',
-            field=models.TextField(default='', max_length=3000, verbose_name='Einleitender Text nach "Sehr geehrte..." *'),
+            field=models.TextField(default='', max_length=3000,
+                                   verbose_name='Einleitender Text nach "Sehr geehrte..." *'),
         ),
         migrations.AddField(
             model_name='mahnung',

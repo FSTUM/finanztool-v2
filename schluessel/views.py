@@ -1,23 +1,21 @@
 import os
-import shutil
 import subprocess
 from tempfile import mkdtemp, mkstemp
 
 from django import forms
-from django.contrib import messages
-from django.http import HttpResponse, Http404
-from django.db.models import Q
-from django.shortcuts import get_object_or_404, render, redirect
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
-from django.template.loader import render_to_string
-from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
+from django.http import HttpResponse, Http404
+from django.shortcuts import get_object_or_404, render, redirect
+from django.template.loader import render_to_string
 
-from .models import Key, Person, KeyLogEntry, SavedKeyChange
 from .forms import SelectPersonForm, KeyForm, PersonForm, FilterKeysForm, \
-        FilterPersonsForm, SelectPersonFormNoscript, SaveKeyChangeForm
-
+    FilterPersonsForm, SelectPersonFormNoscript, SaveKeyChangeForm
+from .models import Key, Person, KeyLogEntry, SavedKeyChange
 
 staff_member_required = staff_member_required(login_url='rechnung:login')
 
@@ -101,7 +99,7 @@ def save_key_change(request, key_pk):
     except ObjectDoesNotExist:
         initial = {}
     form = SaveKeyChangeForm(request.POST or None, initial=initial,
-            keytype=key.keytype)
+                             keytype=key.keytype)
 
     if form.is_valid():
         keytype = form.cleaned_data['keytype']
@@ -163,7 +161,7 @@ def delete_key_change(request, key_pk):
 def apply_key_change(request, key_pk=None):
     key = None
     keys = Key.objects.filter(keytype__keycard=True, active=True
-        ).exclude(savedkeychange=None).order_by("keytype__shortname", "number")
+                              ).exclude(savedkeychange=None).order_by("keytype__shortname", "number")
     if key_pk:
         key = get_object_or_404(Key, pk=key_pk)
         if not key.active:
@@ -208,16 +206,16 @@ def apply_key_change(request, key_pk=None):
             messages.error(request, "Die folgenden Änderungen konnten nicht \
                     angewendet werden, weil eine solche Schließkarte bereits \
                     existiert: " +
-                    ", ".join(["{} -> {} {}".format(k,
-                            k.savedkeychange.new_keytype.shortname, k.number)
-                        for k in not_applied_keys]))
+                           ", ".join(["{} -> {} {}".format(k,
+                                                           k.savedkeychange.new_keytype.shortname, k.number)
+                                      for k in not_applied_keys]))
         if applied_keys:
             messages.success(request, "Folgende Änderungen wurden erfolgreich \
             angewendet. Bitte informiere ggf. die momentanen Entleiher*innen \
             (in Klammern): " +
-                    ", ".join(["{} {} -> {}".format(okt.shortname, k.number,
-                        k) + (" ({})".format(k.person) if k.person else "")
-                        for okt, k in applied_keys]))
+                             ", ".join(["{} {} -> {}".format(okt.shortname, k.number,
+                                                             k) + (" ({})".format(k.person) if k.person else "")
+                                        for okt, k in applied_keys]))
         if key:
             return redirect("schluessel:view_key", key.id)
         else:
@@ -235,7 +233,7 @@ def apply_key_change(request, key_pk=None):
 @staff_member_required
 def list_key_changes(request):
     keys = Key.objects.filter(keytype__keycard=True, active=True
-        ).exclude(savedkeychange=None).order_by("keytype__shortname", "number")
+                              ).exclude(savedkeychange=None).order_by("keytype__shortname", "number")
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -527,12 +525,13 @@ def create_pdf(request, key_pk, doc):
                                  latex_filename])
     except subprocess.CalledProcessError as e:
         return render(request, 'schluessel/pdflatex_error.html',
-                {'erroroutput': e.output, 'doc': doc})
+                      {'erroroutput': e.output, 'doc': doc})
 
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment;' \
-            'filename="{}_{}_{}_{}_{}.pdf"'.format(doc, key.keytype.shortname,
-                    key.number, key.person.name, key.person.firstname)
+                                      'filename="{}_{}_{}_{}_{}.pdf"'.format(doc, key.keytype.shortname,
+                                                                             key.number, key.person.name,
+                                                                             key.person.firstname)
 
     # return path to pdf
     pdf_filename = "{}.pdf".format(os.path.splitext(latex_filename)[0])
@@ -546,7 +545,7 @@ def create_pdf(request, key_pk, doc):
 @login_required
 def list_keys(request):
     keys = Key.objects.filter(active=True).order_by("keytype__shortname",
-        "number")
+                                                    "number")
 
     form = FilterKeysForm(request.POST or None)
     if form.is_valid():
@@ -616,6 +615,7 @@ def list_persons(request):
     }
 
     return render(request, 'schluessel/list_persons.html', context)
+
 
 @staff_member_required
 def show_log(request):

@@ -20,20 +20,21 @@
                         <th>Kommentar</th>
                     </tr>
                     {% for kunde in kunden_liste %}
-                    <tr>
-                        <td><a href="{% url 'rechnung:kunde' kunde.id %}">{% localize off %} {{ kunde.knr }} {% endlocalize %}</a></td>
-                        <td>{{ kunde.organisation }}</td>
-                        <td>{{ kunde.suborganisation }}</td>
-                        {% if kunde.anrede == "w" %}
-                            <td>Frau {{ kunde.vorname }} {{ kunde.name }}</td>
-                        {% elif kunde.anrede == "m" %}
-                            <td>Herr {{ kunde.vorname }} {{ kunde.name }}</td>
-                        {% else %}
-                            <td>{{ kunde.vorname }} {{ kunde.name }}</td>
-                        {% endif %}
-                        <td>{{ kunde.strasse }}<br>{{ kunde.plz }} {{ kunde.stadt }}</td>
-                        <td>{{ kunde.kommentar }}</td>
-                    </tr>
+                        <tr>
+                            <td><a href="{% url 'rechnung:kunde' kunde.id %}">{% localize off %}
+                                {{ kunde.knr }} {% endlocalize %}</a></td>
+                            <td>{{ kunde.organisation }}</td>
+                            <td>{{ kunde.suborganisation }}</td>
+                            {% if kunde.anrede == "w" %}
+                                <td>Frau {{ kunde.vorname }} {{ kunde.name }}</td>
+                            {% elif kunde.anrede == "m" %}
+                                <td>Herr {{ kunde.vorname }} {{ kunde.name }}</td>
+                            {% else %}
+                                <td>{{ kunde.vorname }} {{ kunde.name }}</td>
+                            {% endif %}
+                            <td>{{ kunde.strasse }}<br>{{ kunde.plz }} {{ kunde.stadt }}</td>
+                            <td>{{ kunde.kommentar }}</td>
+                        </tr>
                     {% endfor %}
                 </table>
             </div>

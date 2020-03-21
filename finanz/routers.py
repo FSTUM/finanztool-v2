@@ -1,5 +1,6 @@
 from django.conf import settings
 
+
 class DatabaseAppsRouter:
     """
     A router to control all database operations on models for different

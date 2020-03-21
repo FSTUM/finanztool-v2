@@ -57,9 +57,10 @@
                                             {% bootstrap_icon "remove" %}
                                         {% endif %}
                                     </td>
-                                    <td style="padding-left:2em"><a href="{% url 'rechnung:mahnung' mahnung.rechnung.id mahnung.id %}">
-                                            {{ mahnung.wievielte }}. Mahnung
-                                        </a>
+                                    <td style="padding-left:2em"><a
+                                            href="{% url 'rechnung:mahnung' mahnung.rechnung.id mahnung.id %}">
+                                        {{ mahnung.wievielte }}. Mahnung
+                                    </a>
                                     </td>
                                     {% if mahnung.geschickt %}
                                         <td/>
@@ -91,7 +92,7 @@
                         {% else %}
                             <tr>
                                 <td colspan=7>
-                                Es existieren keine Mahnungen.
+                                    Es existieren keine Mahnungen.
                                 </td>
                             </tr>
                         {% endif %}

@@ -5,65 +5,65 @@
 {% block title %}Finanztool - Aufgabe {{ aufgabe.art.name }}{% endblock %}
 
 {% block content %}
-<h1>Aufgabe</h1>
-<h2>{{ aufgabe.art.name }} {{ aufgabe.zusatz }} {% localize off %} {{ aufgabe.jahr }} {% endlocalize %}</h2>
-<br>
+    <h1>Aufgabe</h1>
+    <h2>{{ aufgabe.art.name }} {{ aufgabe.zusatz }} {% localize off %} {{ aufgabe.jahr }} {% endlocalize %}</h2>
+    <br>
 
-<div class="col-md-6">
-    {% if not aufgabe.erledigt %}
-        <form class=form-horizontal method="POST">{% csrf_token %}
-            <p>
-            {{ form }}
-            <button type="submit" name="erledigt" class="save btn btn-success">
-                 {% bootstrap_icon "ok" %} Erledigt
-            </button>
-            </p>
-        </form>
-    {% endif %}
-
-    <p>
-    <a href="{% url "aufgaben:aendern" aufgabe.id %}" class="btn btn-info" role="button">
-        {% bootstrap_icon "pencil" %} Bearbeiten
-    </a>
-    </p>
-
-    <table class="table table-striped table-hover">
-        <tr>
-            <th>Frist</th>
-            <td>{{ aufgabe.frist }}</td>
-        </tr>
-        <tr>
-            <th>Erledigt?</th>
-            <td>
-                {% if aufgabe.erledigt %}
-                    {% bootstrap_icon "ok" %}
-                {% else %}
-                    {% bootstrap_icon "remove" %}
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <th>Zuständig</th>
-            <td>{{ aufgabe.zustaendig.get_full_name }}</td>
-        </tr>
-        <tr>
-            <th>Bearbeiter</th>
-            <td>{{ aufgabe.bearbeiter.get_full_name|default_if_none:"" }}</td>
-        </tr>
-        {% if aufgabe.semester or aufgabe.jahr %}
-        <tr>
-            <th>Betrifft</th>
-            {% localize off %}
-            <td>{{ aufgabe.get_semester_display|default_if_none:"" }} {{aufgabe.jahr|default_if_none:"" }}</td>
-            {% endlocalize %}
-        </tr>
+    <div class="col-md-6">
+        {% if not aufgabe.erledigt %}
+            <form class=form-horizontal method="POST">{% csrf_token %}
+                <p>
+                    {{ form }}
+                    <button type="submit" name="erledigt" class="save btn btn-success">
+                        {% bootstrap_icon "ok" %} Erledigt
+                    </button>
+                </p>
+            </form>
         {% endif %}
-        <tr>
-            <th>Weitere Informationen</th>
-            <td>{{ aufgabe.text }}</td>
-        </tr>
-    </table>
-</div>
+
+        <p>
+            <a href="{% url "aufgaben:aendern" aufgabe.id %}" class="btn btn-info" role="button">
+                {% bootstrap_icon "pencil" %} Bearbeiten
+            </a>
+        </p>
+
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>Frist</th>
+                <td>{{ aufgabe.frist }}</td>
+            </tr>
+            <tr>
+                <th>Erledigt?</th>
+                <td>
+                    {% if aufgabe.erledigt %}
+                        {% bootstrap_icon "ok" %}
+                    {% else %}
+                        {% bootstrap_icon "remove" %}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Zuständig</th>
+                <td>{{ aufgabe.zustaendig.get_full_name }}</td>
+            </tr>
+            <tr>
+                <th>Bearbeiter</th>
+                <td>{{ aufgabe.bearbeiter.get_full_name|default_if_none:"" }}</td>
+            </tr>
+            {% if aufgabe.semester or aufgabe.jahr %}
+                <tr>
+                    <th>Betrifft</th>
+                    {% localize off %}
+                        <td>{{ aufgabe.get_semester_display|default_if_none:"" }} {{ aufgabe.jahr|default_if_none:"" }}</td>
+                    {% endlocalize %}
+                </tr>
+            {% endif %}
+            <tr>
+                <th>Weitere Informationen</th>
+                <td>{{ aufgabe.text }}</td>
+            </tr>
+        </table>
+    </div>
 
 
 {% endblock %}

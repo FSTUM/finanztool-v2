@@ -4,9 +4,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, redirect
 
 from .forms import UploadForm, MappingConfirmationForm
-from .parser import parse_camt_csv
 from .models import EinzahlungsLog
-
+from .parser import parse_camt_csv
 
 staff_member_required = staff_member_required(login_url='rechnung:login')
 
@@ -24,7 +23,6 @@ def einlesen(request):
         request.session['errors'] = errors
         return redirect('konto:mapping')
 
-
     try:
         zuletzt_eingetragen = EinzahlungsLog.objects.latest('timestamp').timestamp
     except EinzahlungsLog.DoesNotExist:
@@ -33,6 +31,7 @@ def einlesen(request):
     context = {'form': form,
                'zuletzt_eingetragen': zuletzt_eingetragen}
     return render(request, 'konto/einlesen.html', context)
+
 
 @staff_member_required
 def mapping(request):
@@ -43,7 +42,7 @@ def mapping(request):
         return redirect('konto:einlesen')
 
     mapping_form = MappingConfirmationForm(request.POST or None,
-        mappings=results, user=request.user)
+                                           mappings=results, user=request.user)
 
     if mapping_form.is_valid():
         mapping_form.save()

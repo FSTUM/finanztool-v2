@@ -3,10 +3,8 @@ import datetime
 import re
 from decimal import Decimal, InvalidOperation
 
-from django.contrib.auth.models import User
-
-from rechnung.models import Rechnung
 from getraenke.models import Schulden
+from rechnung.models import Rechnung
 from .models import EinzahlungsLog
 
 

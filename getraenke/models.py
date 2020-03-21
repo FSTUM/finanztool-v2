@@ -41,8 +41,8 @@ class Log(models.Model):
 
     def __str__(self):
         return "{} | {} | {} | {} | {} | {} | {} | {}".format(
-                self.konto, self.gruppe, self.aktion, self.typ, self.betrag,
-                self.gesamt_jetzt, self.user, self.datum)
+            self.konto, self.gruppe, self.aktion, self.typ, self.betrag,
+            self.gesamt_jetzt, self.user, self.datum)
 
 
 class Schulden(models.Model):
@@ -55,7 +55,7 @@ class Schulden(models.Model):
 
     def get_einzahlungen(self):
         return Log.objects.filter(konto=self.user, aktion="Einzahlung"
-            ).order_by('-datum')
+                                  ).order_by('-datum')
 
     def einzahlen(self, betrag, user):
         self.betrag -= float(betrag)

@@ -5,7 +5,7 @@
 
 {% block content %}
     <script>
-        $(function() {
+        $(function () {
             var persons = [];
             {% for person in persons %}
                 var obj = new Object();
@@ -14,15 +14,15 @@
                 persons.push(obj);
             {% endfor %}
 
-            
-            $( "#id_person_label" ).autocomplete({
+
+            $("#id_person_label").autocomplete({
                 minLength: 0,
                 source: persons,
-                focus: function(event, ui) {
+                focus: function (event, ui) {
                     $("#id_person_label").val(ui.item.label);
                     return false;
                 },
-                select: function(event, ui) {
+                select: function (event, ui) {
                     $("#id_person_label").val(ui.item.label);
                     $("#id_person").val(ui.item.id);
                     document.addform.submit();
@@ -32,7 +32,7 @@
     </script>
 
     <h1>{{ key.typename }} {{ key }} ausgeben</h1>
-    
+
     <div class="col-md-6">
         <p>
             <a href="{% url "schluessel:give_add_person" key.id %}" class="btn btn-info">Neue Person hinzufügen</a>

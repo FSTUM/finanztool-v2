@@ -1,49 +1,49 @@
 from django import forms
 from django.db.models import Q
 
+from .models import Kategorie
 from .models import Kunde
-from .models import Rechnung
 from .models import Mahnung
 from .models import Posten
+from .models import Rechnung
 from .models import User
-from .models import Kategorie
 
 
 class RechnungForm(forms.ModelForm):
     class Meta:
         model = Rechnung
         help_texts = {
-                'name': 'Nur für uns, wird nicht nach außen gezeigt.',
-                'fdatum': 'default: +15 Tage',
-                'kunde': 'Falls noch nicht angelegt, in neuem Tab anlegen und'
-                          'dieses Formular neu laden, Daten bleiben erhalten.',
-                'einleitung': 'Beispiel: für X stellen wir Ihnen hiermit '
-                              'folgende Posten in Rechnung:',
-                }
+            'name': 'Nur für uns, wird nicht nach außen gezeigt.',
+            'fdatum': 'default: +15 Tage',
+            'kunde': 'Falls noch nicht angelegt, in neuem Tab anlegen und'
+                     'dieses Formular neu laden, Daten bleiben erhalten.',
+            'einleitung': 'Beispiel: für X stellen wir Ihnen hiermit '
+                          'folgende Posten in Rechnung:',
+        }
         widgets = {
-                'rdatum': forms.DateInput(attrs={
-                                                'id': 'pick_rdatum',
-                                                }),
-                'fdatum': forms.DateInput(attrs={
-                                                'id': 'pick_fdatum',
-                                                }),
-                'ldatum': forms.DateInput(attrs={
-                                                'id': 'pick_ldatum',
-                                                })
-                }
+            'rdatum': forms.DateInput(attrs={
+                'id': 'pick_rdatum',
+            }),
+            'fdatum': forms.DateInput(attrs={
+                'id': 'pick_fdatum',
+            }),
+            'ldatum': forms.DateInput(attrs={
+                'id': 'pick_ldatum',
+            })
+        }
         fields = (
-                'rnr',
-                'name',
-                'rdatum',
-                'fdatum',
-                'ldatum',
-                'ersteller',
-                'kunde',
-                'einleitung',
-                'kategorie',
-                'gestellt',
-                'bezahlt',
-                )
+            'rnr',
+            'name',
+            'rdatum',
+            'fdatum',
+            'ldatum',
+            'ersteller',
+            'kunde',
+            'einleitung',
+            'kategorie',
+            'gestellt',
+            'bezahlt',
+        )
 
     def __init__(self, *args, **kwargs):
         super(RechnungForm, self).__init__(*args, **kwargs)
@@ -80,39 +80,39 @@ class MahnungForm(forms.ModelForm):
     class Meta:
         model = Mahnung
         help_texts = {
-                'gebuehr': 'Bei uns üblich: Bei der 2. Mahnung und allen '
-                           'danach 5 € erheben.',
-                'mfdatum': 'default: +15 Tage',
-                'bezahlt': 'Markiert diese Mahnungen und die '
-                           'Originalrechnung als bezahlt/erledigt.',
-                'einleitung': 'Beispiel 1. Mahnung: nachstehend aufgeführte '
-                              'Positionen führen wir noch ohne Ausgleich. '
-                              'Beispiel 2. Mahnung: nachstehend aufgeführte '
-                              'Positionen führen wir trotz bereits durch '
-                              'unsere Schreiben vom 2. und 17. Januar 2016 '
-                              'erfolgter Mahnungen noch ohne Ausgleich.',
-                'gerichtlich': 'Wird bei uns in der Regel in der 3. Mahnung '
-                               'angedroht.',
-                }
+            'gebuehr': 'Bei uns üblich: Bei der 2. Mahnung und allen '
+                       'danach 5 € erheben.',
+            'mfdatum': 'default: +15 Tage',
+            'bezahlt': 'Markiert diese Mahnungen und die '
+                       'Originalrechnung als bezahlt/erledigt.',
+            'einleitung': 'Beispiel 1. Mahnung: nachstehend aufgeführte '
+                          'Positionen führen wir noch ohne Ausgleich. '
+                          'Beispiel 2. Mahnung: nachstehend aufgeführte '
+                          'Positionen führen wir trotz bereits durch '
+                          'unsere Schreiben vom 2. und 17. Januar 2016 '
+                          'erfolgter Mahnungen noch ohne Ausgleich.',
+            'gerichtlich': 'Wird bei uns in der Regel in der 3. Mahnung '
+                           'angedroht.',
+        }
         widgets = {
-                'mdatum': forms.DateInput(attrs={
-                                                'id': 'pick_mdatum',
-                                                }),
-                'mfdatum': forms.DateInput(attrs={
-                                                'id': 'pick_mfdatum',
-                                                })
-                }
+            'mdatum': forms.DateInput(attrs={
+                'id': 'pick_mdatum',
+            }),
+            'mfdatum': forms.DateInput(attrs={
+                'id': 'pick_mfdatum',
+            })
+        }
         fields = (
-                'wievielte',
-                'gebuehr',
-                'mdatum',
-                'mfdatum',
-                'geschickt',
-                'bezahlt',
-                'ersteller',
-                'einleitung',
-                'gerichtlich',
-                )
+            'wievielte',
+            'gebuehr',
+            'mdatum',
+            'mfdatum',
+            'geschickt',
+            'bezahlt',
+            'ersteller',
+            'einleitung',
+            'gerichtlich',
+        )
 
     def __init__(self, *args, **kwargs):
         self.rechnung = kwargs.pop("rechnung")
@@ -152,17 +152,19 @@ class PostenForm(forms.ModelForm):
     class Meta:
         model = Posten
         help_texts = {
-                'mwst': 'Druck, Vereinszweck: 7%',
-                }
+            'mwst': 'Druck, Vereinszweck: 7%',
+        }
         fields = (
-                'name',
-                'einzelpreis',
-                'mwst',
-                'anzahl',
-                )
+            'name',
+            'einzelpreis',
+            'mwst',
+            'anzahl',
+        )
 
     def __init__(self, *args, **kwargs):
         super(PostenForm, self).__init__(*args, **kwargs)
+
+
 #        self._meta.get_fields['name'].widget.attrs.update({'autofocus': ''})
 #        if self.instance.rechnung.gestellt:
 #            self.fields.pop('einzelpreis')
@@ -172,29 +174,29 @@ class KundeForm(forms.ModelForm):
     class Meta:
         model = Kunde
         help_texts = {
-                'kommentar': 'Nur für uns, wird nicht nach außen gezeigt.',
-                }
+            'kommentar': 'Nur für uns, wird nicht nach außen gezeigt.',
+        }
         fields = (
-                'knr',
-                'organisation',
-                'suborganisation',
-                'anrede',
-                'titel',
-                'name',
-                'vorname',
-                'strasse',
-                'plz',
-                'stadt',
-                'land',
-                'kommentar',
-                )
+            'knr',
+            'organisation',
+            'suborganisation',
+            'anrede',
+            'titel',
+            'name',
+            'vorname',
+            'strasse',
+            'plz',
+            'stadt',
+            'land',
+            'kommentar',
+        )
 
     def __init__(self, *args, **kwargs):
         super(KundeForm, self).__init__(*args, **kwargs)
         self.kunde_verwendet = False
         if self.instance.knr:
             self.kunde_verwendet = Rechnung.objects.filter(
-                                   gestellt=True, kunde=self.instance).exists()
+                gestellt=True, kunde=self.instance).exists()
             if self.kunde_verwendet:
                 self.fields.pop('organisation')
                 self.fields.pop('suborganisation')

@@ -4,56 +4,56 @@
 {% block title %}Finanztool - Schlüssel/Schließkarten{% endblock %}
 
 {% block content %}
-<h1>Schlüssel/Schließkarten</h1>
+    <h1>Schlüssel/Schließkarten</h1>
 
-<div class="col-md-6">
-    {% if user.is_staff %}
-    <p>
-        <a href="{% url "schluessel:add_key" %}" class="btn btn-info"
-                role="button">
-            {% bootstrap_icon "plus" %} Schlüssel/Schließkarte hinzufügen
-        </a>
-    </p>
-    {% endif %}
+    <div class="col-md-6">
+        {% if user.is_staff %}
+            <p>
+                <a href="{% url "schluessel:add_key" %}" class="btn btn-info"
+                   role="button">
+                    {% bootstrap_icon "plus" %} Schlüssel/Schließkarte hinzufügen
+                </a>
+            </p>
+        {% endif %}
 
-    <p>
-    <form id="filterform" method="post" action="">
-        {% csrf_token %}
-            
-        {% bootstrap_form form %}
-        <noscript> 
-            <button type="submit" class="btn btn-default btn-info">Suchen</button>
-        </noscript>
-    </form>
-    </p>
+        <p>
+        <form id="filterform" method="post" action="">
+            {% csrf_token %}
 
-    <table class="table table-striped table-hover">
-        <tr>
-            <th>Typ</th>
-            <th>Nummer</th>
-            <th>Entleiher*in</th>
-            <th>Kommentar</th>
-        </tr>
-        {% for key in keys %}
+            {% bootstrap_form form %}
+            <noscript>
+                <button type="submit" class="btn btn-default btn-info">Suchen</button>
+            </noscript>
+        </form>
+        </p>
+
+        <table class="table table-striped table-hover">
             <tr>
-                <td>{{ key.keytype }}</td>
-                <td><a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a>
-                    {% if not key.active %}
-                        (inaktiv)
-                    {% endif %}
-                </td>
-                <td>
-                    {% if key.person %}
-                        <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
-                    {% else %}
-                        {% bootstrap_icon "remove" %}
-                    {% endif %}
-                </td>
-                <td>{{ key.comment }}</td>
+                <th>Typ</th>
+                <th>Nummer</th>
+                <th>Entleiher*in</th>
+                <th>Kommentar</th>
             </tr>
-        {% endfor %}
-    </table>
-</div>
+            {% for key in keys %}
+                <tr>
+                    <td>{{ key.keytype }}</td>
+                    <td><a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a>
+                        {% if not key.active %}
+                            (inaktiv)
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if key.person %}
+                            <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
+                        {% else %}
+                            {% bootstrap_icon "remove" %}
+                        {% endif %}
+                    </td>
+                    <td>{{ key.comment }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 
 
 {% endblock %}

@@ -2,6 +2,7 @@ from django import forms
 
 from .models import EinzahlungsLog
 
+
 class UploadForm(forms.Form):
     csv_file = forms.FileField(label='CSV Datei')
 

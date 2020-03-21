@@ -43,7 +43,7 @@
                             <td>{{ aufgabe.bearbeiter.get_short_name }}</td>
                             <td>
                                 {% localize off %}
-                                {{ aufgabe.jahr|default_if_none:"" }}
+                                    {{ aufgabe.jahr|default_if_none:"" }}
                                 {% endlocalize %}
                             </td>
                             <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>

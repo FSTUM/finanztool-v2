@@ -3,11 +3,11 @@
 {% load bootstrap3 %}
 
 {% block title %}
-{% if aufgabe.pk %}
-    Aufgabe ändern
-{% else %}
-    Aufgabe hinzufügen
-{% endif %}
+    {% if aufgabe.pk %}
+        Aufgabe ändern
+    {% else %}
+        Aufgabe hinzufügen
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -19,8 +19,8 @@
 
     {% if aufgabe.pk %}
         <p><a
-             href="{% url "aufgaben:aufgabe" aufgabe_id=aufgabe.pk %}"
-            class="btn btn-default" role="button">{% bootstrap_icon "arrow-left" %}
+                href="{% url "aufgaben:aufgabe" aufgabe_id=aufgabe.pk %}"
+                class="btn btn-default" role="button">{% bootstrap_icon "arrow-left" %}
             Zurück zur Aufgabe
         </a></p>
     {% endif %}

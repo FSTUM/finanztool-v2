@@ -24,55 +24,57 @@
                         <th>Mahnungen</th>
                     </tr>
                     {% for rechnung in unerledigte_rechnungen %}
-                    <tr>
-                        <td><a href="{% url 'rechnung:rechnung' rechnung.id %}">RE {{ rechnung.rnr_string }}</a></td>
-                        <td>{{ rechnung.name }}</td>
-                        <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}"> {% localize off %} {{ rechnung.kunde.knr }} {% endlocalize %} </td>
-                        <td>{{ rechnung.rdatum }}</td>
-                        {% if rechnung.gestellt %}
-                            <td>
-                            {% bootstrap_icon "ok" %}
+                        <tr>
+                            <td><a href="{% url 'rechnung:rechnung' rechnung.id %}">RE {{ rechnung.rnr_string }}</a>
                             </td>
-                            <td align="right">{{ rechnung.gesamtsumme }} €</td>
-                            <td>
-                                {% if rechnung.faellig %}
-                                    {% if rechnung.erledigt %}
-                                        <span style="color : green;">
-                                    {% else %}
-                                        <span style="color : red;">
-                                    {% endif %}
-                                {% endif %}
-                                {{ rechnung.fdatum|date:"SHORT_DATE_FORMAT" }}
-                            </td>
-                            <td>
-                                {% if rechnung.erledigt %}
+                            <td>{{ rechnung.name }}</td>
+                            <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}"> {% localize off %}
+                                {{ rechnung.kunde.knr }} {% endlocalize %}</td>
+                            <td>{{ rechnung.rdatum }}</td>
+                            {% if rechnung.gestellt %}
+                                <td>
                                     {% bootstrap_icon "ok" %}
-                                {% else %}
+                                </td>
+                                <td align="right">{{ rechnung.gesamtsumme }} €</td>
+                                <td>
+                                    {% if rechnung.faellig %}
+                                        {% if rechnung.erledigt %}
+                                            <span style="color : green;">
+                                        {% else %}
+                                            <span style="color : red;">
+                                        {% endif %}
+                                    {% endif %}
+                                    {{ rechnung.fdatum|date:"SHORT_DATE_FORMAT" }}
+                                </td>
+                                <td>
+                                    {% if rechnung.erledigt %}
+                                        {% bootstrap_icon "ok" %}
+                                    {% else %}
+                                        {% bootstrap_icon "remove" %}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% for mahnung in rechnung.mahnungen %}
+                                        <a href="{% url 'rechnung:mahnung' rechnung.id mahnung.id %}">
+                                            {{ mahnung.wievielte }}. Mahnung
+                                        </a>
+                                        <br>
+                                    {% endfor %}
+                                </td>
+                            {% else %}
+                                <td>
                                     {% bootstrap_icon "remove" %}
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% for mahnung in rechnung.mahnungen %}
-                                    <a href="{% url 'rechnung:mahnung' rechnung.id mahnung.id %}">
-                                        {{ mahnung.wievielte }}. Mahnung
-                                    </a>
-                                    <br>
-                                {% endfor %}
-                            </td>
-                        {% else %}
-                            <td>
-                            {% bootstrap_icon "remove" %}
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                        {% endif %}
-                    </tr>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                                <td>
+                                </td>
+                            {% endif %}
+                        </tr>
                     {% endfor %}
                 </table>
             </div>
@@ -95,30 +97,30 @@
                         <th>Semester</th>
                     </tr>
                     {% for aufgabe in aufgaben %}
-                    <tr>
-                        <td>
-                            <a href="{% url "aufgaben:aufgabe" aufgabe.id %}">
-                                {{ aufgabe.art.name }}
-                            </a>
-                        </td>
-                        <td>{{ aufgabe.zusatz|default_if_none:"" }}</td>
-                        <td>
-                            {% if aufgabe.faellig %}
-                                <span style="color : red;">
+                        <tr>
+                            <td>
+                                <a href="{% url "aufgaben:aufgabe" aufgabe.id %}">
+                                    {{ aufgabe.art.name }}
+                                </a>
+                            </td>
+                            <td>{{ aufgabe.zusatz|default_if_none:"" }}</td>
+                            <td>
+                                {% if aufgabe.faellig %}
+                                    <span style="color : red;">
                                 {{ aufgabe.frist|date:"SHORT_DATE_FORMAT" }}
                                 </span>
-                            {% else %}
-                                {{ aufgabe.frist }}
-                            {% endif %}
-                        </td>
-                        <td>{{ aufgabe.zustaendig.get_short_name }}</td>
-                        <td>
-                            {% localize off %}
-                            {{ aufgabe.jahr|default_if_none:"" }}
-                            {% endlocalize %}
-                        </td>
-                        <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
-                    </tr>
+                                {% else %}
+                                    {{ aufgabe.frist }}
+                                {% endif %}
+                            </td>
+                            <td>{{ aufgabe.zustaendig.get_short_name }}</td>
+                            <td>
+                                {% localize off %}
+                                    {{ aufgabe.jahr|default_if_none:"" }}
+                                {% endlocalize %}
+                            </td>
+                            <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
+                        </tr>
                     {% endfor %}
                 </table>
             </div>
