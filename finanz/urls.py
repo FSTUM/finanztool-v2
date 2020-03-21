@@ -22,6 +22,6 @@ urlpatterns = [
         url(r'^konto/', include('konto.urls')),
         url(r'^aufgaben/', include('aufgaben.urls')),
         url(r'^schluessel/', include('schluessel.urls')),
-        url(r'^admin/', include(admin.site.urls)),
+        url(r'^admin/', admin.site.urls),
         url(r'^$', RedirectView.as_view(pattern_name='rechnung:willkommen')),
 ]

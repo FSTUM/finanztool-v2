@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import LoginView, LogoutView
 
 from . import views
 
@@ -24,13 +24,13 @@ urlpatterns = [
 
     # ex: /rechnung/login/
     url(r'^login/$',
-        auth_views.login,
+        LoginView.as_view(),
         {'template_name': 'rechnung/login.html'},
         name='login'),
 
     # ex: /rechnung/logout/
     url(r'^logout/$',
-        auth_views.logout,
+        LogoutView.as_view(),
         {'next_page': '/rechnung/'},
         name='logout'),
 
