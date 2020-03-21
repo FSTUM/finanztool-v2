@@ -17,6 +17,7 @@ class Aufgabenart(models.Model):
 class Aufgabe(models.Model):
     art = models.ForeignKey(
             Aufgabenart,
+        models.CASCADE
             )
     frist = models.DateField(
             verbose_name='Sollte erledigt sein bis *',
@@ -27,11 +28,13 @@ class Aufgabe(models.Model):
             )
     zustaendig = models.ForeignKey(
             User,
+        models.CASCADE,
             related_name='aufgabe_zustaendig',
             verbose_name='Wer soll sie erledigen? *',
             )
     bearbeiter = models.ForeignKey(
             User,
+        models.CASCADE,
             related_name='aufgabe_bearbeiter',
             verbose_name='Wer hat sie erledigt?',
             null=True,

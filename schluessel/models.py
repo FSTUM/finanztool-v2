@@ -87,6 +87,7 @@ class Key(models.Model):
 
     person = models.ForeignKey(
         Person,
+        models.CASCADE,
         verbose_name="Entleiher*in",
         default=None,
         blank=True,
@@ -165,6 +166,7 @@ class KeyLogEntry(models.Model):
 
     person = models.ForeignKey(
         Person,
+        models.CASCADE,
         verbose_name="Entleiher*in",
         blank=True,
         null=True,
@@ -238,6 +240,7 @@ class KeyLogEntry(models.Model):
 
     user = models.ForeignKey(
         User,
+        models.CASCADE,
         verbose_name="Finanzer*in",
     )
 
@@ -278,8 +281,8 @@ class SavedKeyChange(models.Model):
 
     new_keytype = models.ForeignKey(
         KeyType,
+        models.CASCADE,
         verbose_name="Neuer Schlüssel-Typ",
-        on_delete=models.CASCADE,
     )
 
     comment = models.CharField(
@@ -290,6 +293,7 @@ class SavedKeyChange(models.Model):
 
     user = models.ForeignKey(
         User,
+        models.CASCADE,
         verbose_name="Finanzer*in",
     )
 

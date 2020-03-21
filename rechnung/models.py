@@ -66,9 +66,11 @@ class Rechnung(models.Model):
             )
     ersteller = models.ForeignKey(
             User,
+        models.CASCADE
             )
     kunde = models.ForeignKey(
             'Kunde',
+        models.CASCADE
             )
     einleitung = models.TextField(
             verbose_name='Einleitender Text nach "Sehr geehrte..." *',
@@ -76,6 +78,7 @@ class Rechnung(models.Model):
             )
     kategorie = models.ForeignKey(
             'Kategorie',
+        models.CASCADE
             )
 
     def __str__(self):
@@ -163,6 +166,7 @@ class Mahnung(models.Model):
             )
     ersteller = models.ForeignKey(
             User,
+        models.CASCADE
             )
     einleitung = models.TextField(
             verbose_name='Einleitender Text nach "Sehr geehrte..." *',
