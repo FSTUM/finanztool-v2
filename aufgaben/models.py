@@ -1,14 +1,15 @@
-from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.auth.models import User
 from datetime import date
+
+from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.db import models
 
 
 class Aufgabenart(models.Model):
     name = models.CharField(
-            verbose_name='Bezeichnung',
-            max_length=50,
-            )
+        verbose_name='Bezeichnung',
+        max_length=50,
+    )
 
     def __str__(self):
         return "{}".format(self.name)
@@ -16,54 +17,57 @@ class Aufgabenart(models.Model):
 
 class Aufgabe(models.Model):
     art = models.ForeignKey(
-            Aufgabenart,
-            )
+        Aufgabenart,
+        models.CASCADE
+    )
     frist = models.DateField(
-            verbose_name='Sollte erledigt sein bis *',
-            )
+        verbose_name='Sollte erledigt sein bis *',
+    )
     erledigt = models.BooleanField(
-            verbose_name='Erledigt? *',
-            default=False,
-            )
+        verbose_name='Erledigt? *',
+        default=False,
+    )
     zustaendig = models.ForeignKey(
-            User,
-            related_name='aufgabe_zustaendig',
-            verbose_name='Wer soll sie erledigen? *',
-            )
+        User,
+        models.CASCADE,
+        related_name='aufgabe_zustaendig',
+        verbose_name='Wer soll sie erledigen? *',
+    )
     bearbeiter = models.ForeignKey(
-            User,
-            related_name='aufgabe_bearbeiter',
-            verbose_name='Wer hat sie erledigt?',
-            null=True,
-            blank=True,
-            )
+        User,
+        models.CASCADE,
+        related_name='aufgabe_bearbeiter',
+        verbose_name='Wer hat sie erledigt?',
+        null=True,
+        blank=True,
+    )
     jahr = models.IntegerField(
-           validators=[MaxValueValidator(9999), MinValueValidator(1000)],
-           null=True,
-           blank=True,
-           )
+        validators=[MaxValueValidator(9999), MinValueValidator(1000)],
+        null=True,
+        blank=True,
+    )
     SEMESTER = (
-            ('ws', 'Wintersemester'),
-            ('ss', 'Sommersemester'),
-            )
+        ('ws', 'Wintersemester'),
+        ('ss', 'Sommersemester'),
+    )
     semester = models.CharField(
-            verbose_name='Zugehöriges Semester',
-            choices=SEMESTER,
-            max_length=2,
-            null=True,
-            blank=True,
-            )
+        verbose_name='Zugehöriges Semester',
+        choices=SEMESTER,
+        max_length=2,
+        null=True,
+        blank=True,
+    )
     zusatz = models.CharField(
-            verbose_name='Zusatzinformation',
-            max_length=50,
-            null=True,
-            blank=True,
-            )
+        verbose_name='Zusatzinformation',
+        max_length=50,
+        null=True,
+        blank=True,
+    )
     text = models.TextField(
-            verbose_name='Text',
-            null=True,
-            blank=True,
-            )
+        verbose_name='Text',
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return "{} - {} ({})".format(self.art.name, self.zusatz, self.jahr)

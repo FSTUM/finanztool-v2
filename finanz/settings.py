@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = '!yz#260hqbx*yum@&70z+dpf4ryuyb!ibohfg-vy2*&6y*@-h('
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -39,20 +37,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'bootstrap3',
-    'rechnung.apps.RechnungConfig',
+    'rechnung',
     'konto',
     'aufgaben',
     'schluessel',
     'getraenke',
 ]
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -81,7 +78,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'finanz.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
@@ -95,7 +91,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'getraenke.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
@@ -118,7 +113,6 @@ AUTH_PASSWORD_VALIDATORS = [
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # default, but important due to pickle
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
@@ -137,6 +131,7 @@ USE_TZ = True
 USE_THOUSAND_SEPARATOR = True
 
 from django.conf.locale.de import formats as de_formats
+
 de_formats.DATETIME_FORMAT = "d.m.Y H:i:s"
 de_formats.DATE_FORMAT = "d.m.Y"
 de_formats.SHORT_DATE_FORMAT = "d.m."

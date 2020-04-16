@@ -14,10 +14,10 @@
                         <th>Kategorie</th>
                     </tr>
                     {% for kategorie in kategorien_liste %}
-                    <tr>
-                        <td><a href="{% url 'rechnung:kategorie_detail' kategorie.id %}">{{ kategorie.name }}</td>
-                        <td>
-                    </tr>
+                        <tr>
+                            <td><a href="{% url 'rechnung:kategorie_detail' kategorie.id %}">{{ kategorie.name }}</td>
+                            <td>
+                        </tr>
                     {% endfor %}
                 </table>
             </div>

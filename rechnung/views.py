@@ -1,30 +1,28 @@
+import os
+import subprocess
+from tempfile import mkdtemp, mkstemp
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, render, redirect
 from django.template.loader import render_to_string
-from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
 
+from aufgaben.models import Aufgabe
+from schluessel.models import Key
 from .forms import KundeForm
-from .forms import RechnungForm
+from .forms import KundeSuchenForm
 from .forms import MahnungForm
 from .forms import MahnungStatusForm
 from .forms import PostenForm
-from .forms import KundeSuchenForm
-from .forms import RechnungSuchenForm
 from .forms import RechnungBezahltForm
-
-from tempfile import mkdtemp, mkstemp
-import os
-import subprocess
-
-from .models import Rechnung
-from .models import Mahnung
-from .models import Kunde
+from .forms import RechnungForm
+from .forms import RechnungSuchenForm
 from .models import Kategorie
+from .models import Kunde
+from .models import Mahnung
 from .models import Posten
-from aufgaben.models import Aufgabe
-from schluessel.models import Key
-
+from .models import Rechnung
 
 staff_member_required = staff_member_required(login_url='rechnung:login')
 
@@ -35,17 +33,17 @@ def willkommen(request):
     offene_rechnungen = rechnungen.count()
     faellige_rechnungen = len(list(filter(lambda r: r.faellig, rechnungen)))
     eigene_aufgaben = Aufgabe.objects.filter(
-                        erledigt=False, zustaendig=request.user).count()
+        erledigt=False, zustaendig=request.user).count()
     schluessel = Key.objects.filter(active=True).count()
     verfuegbare_schluessel = Key.objects.filter(active=True,
-            person=None).count()
+                                                person=None).count()
     context = {
-            'offene_rechnungen': offene_rechnungen,
-            'faellige_rechnungen': faellige_rechnungen,
-            'eigene_aufgaben': eigene_aufgaben,
-            'schluessel': schluessel,
-            'verfuegbare_schluessel': verfuegbare_schluessel,
-            }
+        'offene_rechnungen': offene_rechnungen,
+        'faellige_rechnungen': faellige_rechnungen,
+        'eigene_aufgaben': eigene_aufgaben,
+        'schluessel': schluessel,
+        'verfuegbare_schluessel': verfuegbare_schluessel,
+    }
     return render(request, 'rechnung/willkommen.html', context)
 
 
@@ -56,9 +54,9 @@ def index(request):
     aufgaben = Aufgabe.objects.filter(erledigt=False).order_by('frist')
 
     context = {
-            'unerledigte_rechnungen': unerledigte_rechnungen,
-            'aufgaben': aufgaben,
-            }
+        'unerledigte_rechnungen': unerledigte_rechnungen,
+        'aufgaben': aufgaben,
+    }
     return render(request, 'rechnung/index.html', context)
 
 
@@ -75,12 +73,12 @@ def admin(request):
 
 
 def login(request):
-    return render(request, 'rechnung/login.html')
+    return render(request, 'rechnung/templates/registration/login.html')
 
 
 @staff_member_required
 def logout(request):
-    return render(request, 'rechnung/logout.html')
+    return render(request, 'rechnung/templates/registration/logout.html')
 
 
 # Rechnung#####################################################################
@@ -134,11 +132,11 @@ def duplicate_rechnung(request, rechnung_id):
     rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
     initial = {
-            'name': rechnung.name,
-            'kunde': rechnung.kunde,
-            'einleitung': rechnung.einleitung,
-            'kategorie': rechnung.kategorie,
-        }
+        'name': rechnung.name,
+        'kunde': rechnung.kunde,
+        'einleitung': rechnung.einleitung,
+        'kategorie': rechnung.kategorie,
+    }
 
     form = RechnungForm(request.POST or None, initial=initial)
     if form.is_valid():
@@ -172,10 +170,10 @@ def rechnungsuchen(request):
         new_search = False
 
     context = {
-            'form': form,
-            'result': result,
-            'new_search': new_search
-            }
+        'form': form,
+        'result': result,
+        'new_search': new_search
+    }
 
     return render(request, 'rechnung/rechnungsuchen.html', context)
 
@@ -207,10 +205,10 @@ def mahnung(request, rechnung_id, mahnung_id):
                                 mahnung_id=mahnung.pk)
 
     context = {
-            'form': form,
-            'rechnung': rechnung,
-            'mahnung': mahnung,
-            }
+        'form': form,
+        'rechnung': rechnung,
+        'mahnung': mahnung,
+    }
     return render(request, 'rechnung/mahnung.html', context)
 
 
@@ -225,7 +223,7 @@ def form_mahnung(request, rechnung_id, mahnung_id=None):
             raise Http404
 
     if request.method == "POST":
-        form = MahnungForm(request.POST, rechnung=rechnung,  instance=mahnung)
+        form = MahnungForm(request.POST, rechnung=rechnung, instance=mahnung)
 
         if form.is_valid():
             mahnung = form.save()
@@ -263,7 +261,7 @@ def form_kunde(request, kunde_id=None):
     if kunde_id:
         kunde = get_object_or_404(Kunde, pk=kunde_id)
         kunde_verwendet = Rechnung.objects.filter(
-                               gestellt=True, kunde=kunde).exists()
+            gestellt=True, kunde=kunde).exists()
 
     if request.method == "POST":
         form = KundeForm(request.POST, instance=kunde)
@@ -275,10 +273,10 @@ def form_kunde(request, kunde_id=None):
         form = KundeForm(instance=kunde)
 
     return render(request, 'rechnung/form_kunde.html', {
-                    'form': form,
-                    'kunde': kunde,
-                    'kunde_verwendet': kunde_verwendet
-                    })
+        'form': form,
+        'kunde': kunde,
+        'kunde_verwendet': kunde_verwendet
+    })
 
 
 @staff_member_required
@@ -300,10 +298,10 @@ def kundesuchen(request):
         new_search = False
 
     context = {
-            'form': form,
-            'result': result,
-            'new_search': new_search
-            }
+        'form': form,
+        'result': result,
+        'new_search': new_search
+    }
 
     return render(request, 'rechnung/kundesuchen.html', context)
 
@@ -392,7 +390,7 @@ def rechnungpdf(request, rechnung_id, mahnung_id=None):
     if mahnung_id:
         mahnung = get_object_or_404(Mahnung, pk=mahnung_id)
         vorherige_mahnungen = Mahnung.objects.filter(
-                rechnung=mahnung.rechnung, wievielte__lt=mahnung.wievielte). \
+            rechnung=mahnung.rechnung, wievielte__lt=mahnung.wievielte). \
             order_by('wievielte').all()
 
     # create temporary files
@@ -402,10 +400,10 @@ def rechnungpdf(request, rechnung_id, mahnung_id=None):
     # Pass TeX template through Django templating engine and into the temp file
     if mahnung_id:
         context = {
-                'mahnung': mahnung,
-                'rechnung': rechnung,
-                'vorherige_mahnungen': vorherige_mahnungen,
-                }
+            'mahnung': mahnung,
+            'rechnung': rechnung,
+            'vorherige_mahnungen': vorherige_mahnungen,
+        }
     else:
         context = {'rechnung': rechnung}
 
@@ -424,13 +422,13 @@ def rechnungpdf(request, rechnung_id, mahnung_id=None):
 
     response = HttpResponse(content_type='application/pdf')
     if mahnung_id:
-        response['Content-Disposition'] = 'attachment;'\
-            ' filename="RE%s_%s_M%s.pdf"' % \
-            (rechnung.rnr_string, rechnung.kunde.knr, mahnung.wievielte)
+        response['Content-Disposition'] = 'attachment;' \
+                                          ' filename="RE%s_%s_M%s.pdf"' % \
+                                          (rechnung.rnr_string, rechnung.kunde.knr, mahnung.wievielte)
     else:
-        response['Content-Disposition'] = 'attachment;'\
-            'filename="RE%s_%s.pdf"' % \
-            (rechnung.rnr_string, rechnung.kunde.knr)
+        response['Content-Disposition'] = 'attachment;' \
+                                          'filename="RE%s_%s.pdf"' % \
+                                          (rechnung.rnr_string, rechnung.kunde.knr)
 
     # return path to pdf
     pdf_filename = "%s.pdf" % os.path.splitext(latex_filename)[0]
@@ -438,6 +436,6 @@ def rechnungpdf(request, rechnung_id, mahnung_id=None):
     with open(pdf_filename, 'rb') as f:
         response.write(f.read())
 
-#    shutil.rmtree(tmplatex)
+    #    shutil.rmtree(tmplatex)
 
     return response

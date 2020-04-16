@@ -1,10 +1,9 @@
 from django.conf.urls import url
-from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import LoginView, LogoutView
 
 from . import views
 
 app_name = 'rechnung'
-
 
 urlpatterns = [
 
@@ -24,17 +23,14 @@ urlpatterns = [
 
     # ex: /rechnung/login/
     url(r'^login/$',
-        auth_views.login,
-        {'template_name': 'rechnung/login.html'},
+        LoginView.as_view(),
         name='login'),
 
     # ex: /rechnung/logout/
     url(r'^logout/$',
-        auth_views.logout,
+        LogoutView.as_view(),
         {'next_page': '/rechnung/'},
         name='logout'),
-
-
 
     # Rechnung###########################################################
 
@@ -63,8 +59,6 @@ urlpatterns = [
     # ex: /rechnung/suchen
     url(r'^suchen/$', views.rechnungsuchen, name='rechnungsuchen'),
 
-
-
     # Mahnung#############################################################
 
     # ex: /rechnung/5/mahnung/2/
@@ -86,7 +80,6 @@ urlpatterns = [
     url(r'^(?P<rechnung_id>[0-9]+)/mahnung/(?P<mahnung_id>[0-9]+)/pdf/$',
         views.rechnungpdf, name='mahnungpdf'),
 
-
     # Kunde##############################################################
 
     # ex: /rechnung/kunde/5/
@@ -105,7 +98,6 @@ urlpatterns = [
     # ex: /rechnung/kunde/alle/
     url(r'^kunde/alle/$', views.kunden_alle, name='kunden_alle'),
 
-
     # Posten#############################################################
 
     # ex: /rechnung/posten/5/
@@ -114,8 +106,6 @@ urlpatterns = [
     # ex: /rechnung/posten/5/aendern
     url(r'^posten/(?P<posten_id>[0-9]+)/aendern/$', views.form_exist_posten,
         name='posten_aendern'),
-
-
 
     # Kategorie##########################################################
 

@@ -3,14 +3,15 @@
 from __future__ import unicode_literals
 
 import datetime
+
+import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
-import django.db.models.deletion
+
 import rechnung.models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -29,10 +30,13 @@ class Migration(migrations.Migration):
             name='Kunde',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('knr', models.IntegerField(default=rechnung.models.get_new_highest_knr, unique=True, verbose_name='Kundennummer *')),
+                ('knr', models.IntegerField(default=rechnung.models.get_new_highest_knr, unique=True,
+                                            verbose_name='Kundennummer *')),
                 ('organisation', models.CharField(blank=True, max_length=100, null=True, verbose_name='Organisation')),
-                ('suborganisation', models.TextField(blank=True, max_length=500, null=True, verbose_name='SubOrganisation')),
-                ('anrede', models.CharField(blank=True, choices=[('w', 'Frau'), ('m', 'Herr')], max_length=5, null=True, verbose_name='Anrede')),
+                ('suborganisation',
+                 models.TextField(blank=True, max_length=500, null=True, verbose_name='SubOrganisation')),
+                ('anrede', models.CharField(blank=True, choices=[('w', 'Frau'), ('m', 'Herr')], max_length=5, null=True,
+                                            verbose_name='Anrede')),
                 ('name', models.CharField(blank=True, max_length=50, null=True, verbose_name='Nachname')),
                 ('vorname', models.CharField(blank=True, max_length=50, null=True, verbose_name='Vorname')),
                 ('strasse', models.CharField(max_length=100, verbose_name='Straße *')),
@@ -47,7 +51,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, verbose_name='Bezeichnung')),
                 ('einzelpreis', models.DecimalField(decimal_places=6, max_digits=20, verbose_name='Einzelpreis')),
-                ('mwst', models.IntegerField(choices=[(0, '0 %'), (7, '7 %'), (19, '19 %')], default=7, verbose_name='Mehrwertsteuersatz')),
+                ('mwst', models.IntegerField(choices=[(0, '0 %'), (7, '7 %'), (19, '19 %')], default=7,
+                                             verbose_name='Mehrwertsteuersatz')),
                 ('anzahl', models.IntegerField(default=1, verbose_name='Anzahl')),
             ],
         ),
@@ -56,14 +61,19 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(blank=True, max_length=50, null=True, verbose_name='Zweck der Rechnung')),
-                ('rnr', models.IntegerField(default=rechnung.models.get_new_highest_rnr, unique=True, verbose_name='Rechnungsnummer *')),
+                ('rnr', models.IntegerField(default=rechnung.models.get_new_highest_rnr, unique=True,
+                                            verbose_name='Rechnungsnummer *')),
                 ('rdatum', models.DateField(default=datetime.date.today, verbose_name='Rechnungsdatum *')),
-                ('ldatum', models.DateField(blank=True, default=datetime.date.today, null=True, verbose_name='Lieferdatum')),
-                ('fdatum', models.DateField(default=rechnung.models.get_faelligkeit_default, verbose_name='Fälligkeitsdatum *')),
+                ('ldatum',
+                 models.DateField(blank=True, default=datetime.date.today, null=True, verbose_name='Lieferdatum')),
+                ('fdatum',
+                 models.DateField(default=rechnung.models.get_faelligkeit_default, verbose_name='Fälligkeitsdatum *')),
                 ('gestellt', models.BooleanField(default=False, verbose_name='Rechnung gestellt?')),
                 ('bezahlt', models.BooleanField(default=False, verbose_name='Rechnung beglichen?')),
-                ('einleitung', models.TextField(max_length=1000, verbose_name='Einleitender Text nach "Sehr geehrte..." *')),
-                ('ersteller', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('einleitung',
+                 models.TextField(max_length=1000, verbose_name='Einleitender Text nach "Sehr geehrte..." *')),
+                ('ersteller',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
                 ('kategorie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='rechnung.Kategorie')),
                 ('kunde', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='rechnung.Kunde')),
             ],

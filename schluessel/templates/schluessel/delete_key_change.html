@@ -6,21 +6,23 @@
     <h1>Typ-Änderung für {{ key.typename }} {{ key }} löschen</h1>
 
     <p>
-    Soll die vorgemerkte Änderung (<strong>{{ key.keytype.shortname }}</strong> zu
-    <strong>{{ key.savedkeychange.new_keytype.shortname }}</strong>) für 
+        Soll die vorgemerkte Änderung (<strong>{{ key.keytype.shortname }}</strong> zu
+        <strong>{{ key.savedkeychange.new_keytype.shortname }}</strong>) für
         <a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a>
         wirklich wieder gelöscht werden?
     </p>
 
     <form method="post" action="">
         {% csrf_token %}
-    
+
         <table class="table">
             <tr>
-                <td><button type="submit" class="btn btn-default btn-warning">Löschen</button></td>
+                <td>
+                    <button type="submit" class="btn btn-default btn-warning">Löschen</button>
+                </td>
                 <td><a href="{% url "schluessel:view_key" key.id %}" class="btn btn-info">Abbrechen</a></td>
             </tr>
-        <table>
+            <table>
     </form>
-    
+
 {% endblock %}

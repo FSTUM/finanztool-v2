@@ -4,48 +4,48 @@
 {% block title %}Finanztool - Letzte Schlüsseländerungen{% endblock %}
 
 {% block content %}
-<h1>Letzte Schlüsseländerungen</h1>
-<div class="col-md-8">
-    <table class="table table-striped table-hover">
-        <tr>
-            <th>Datum</th>
-            <th>Vorgang</th>
-            <th>Schlüssel</th>
-            <th>Person</th>
-            <th>Finanzer*in</th>
-        </tr>
-        {% for entry in logentries %}
+    <h1>Letzte Schlüsseländerungen</h1>
+    <div class="col-md-8">
+        <table class="table table-striped table-hover">
             <tr>
-                <td>{{ entry.date | date:"SHORT_DATETIME_FORMAT" }}</td>
-                <td>
-                    {{ entry.get_operation_display }}
-                    {% if entry.operation == "G" %}
-                        {% bootstrap_icon "arrow-right" %}
-                    {% elif entry.operation == "R" %}
-                        {% bootstrap_icon "arrow-left" %}
-                    {% endif %}
-                </td>
-                <td>
-                    {% if entry.key %}
-                        <a href="{% url "schluessel:view_key" entry.key.id %}">{{ entry.key }}</a>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if entry.person %}
-                        <a href="{% url "schluessel:view_person" entry.person.id %}">{{ entry.person }}</a>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if entry.user.get_full_name %}
-                        {{ entry.user.get_full_name }}
-                    {% else %}
-                        {{ entry.user.username }}
-                    {% endif %}
-                </td>
+                <th>Datum</th>
+                <th>Vorgang</th>
+                <th>Schlüssel</th>
+                <th>Person</th>
+                <th>Finanzer*in</th>
             </tr>
-        {% endfor %}
-    </table>
-</div>
+            {% for entry in logentries %}
+                <tr>
+                    <td>{{ entry.date | date:"SHORT_DATETIME_FORMAT" }}</td>
+                    <td>
+                        {{ entry.get_operation_display }}
+                        {% if entry.operation == "G" %}
+                            {% bootstrap_icon "arrow-right" %}
+                        {% elif entry.operation == "R" %}
+                            {% bootstrap_icon "arrow-left" %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if entry.key %}
+                            <a href="{% url "schluessel:view_key" entry.key.id %}">{{ entry.key }}</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if entry.person %}
+                            <a href="{% url "schluessel:view_person" entry.person.id %}">{{ entry.person }}</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if entry.user.get_full_name %}
+                            {{ entry.user.get_full_name }}
+                        {% else %}
+                            {{ entry.user.username }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 
 
 {% endblock %}

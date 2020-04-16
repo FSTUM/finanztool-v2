@@ -9,8 +9,11 @@
     <p>
         Umsätze vom Konto einlesen und mit offenen Rechnungen vergleichen.
     </p>
+    <p>
+        Die letzte Einzahlung war am {{ zuletzt_eingetragen }}.
+    </p>
     <br>
-        <form action="" method="post" enctype="multipart/form-data">
+    <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         {% bootstrap_form form %}
@@ -18,6 +21,6 @@
         <div class="alert alert-info">
             Es funktionieren nur CSV Dateien vom <b>CSV-CAMT</b>-Format.
         </div>
-        <input type="submit" value="Upload" class="btn btn-default" />
+        <input type="submit" value="Upload" class="btn btn-default"/>
     </form>
 {% endblock %}

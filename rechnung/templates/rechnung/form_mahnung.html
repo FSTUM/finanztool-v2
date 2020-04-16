@@ -3,11 +3,11 @@
 {% load bootstrap3 %}
 
 {% block title %}
-{% if mahnung.pk %}
-    Mahnung ändern
-{% else %}
-    Mahnung hinzufügen
-{% endif %}
+    {% if mahnung.pk %}
+        Mahnung ändern
+    {% else %}
+        Mahnung hinzufügen
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -18,7 +18,8 @@
     {% endif %}
 
     {% if mahnung.pk %}
-        <p><a href="{% url "rechnung:mahnung" rechnung_id=rechnung.pk mahnung_id=mahnung.pk %}" class="btn btn-default" role="button">
+        <p><a href="{% url "rechnung:mahnung" rechnung_id=rechnung.pk mahnung_id=mahnung.pk %}" class="btn btn-default"
+              role="button">
             {% bootstrap_icon "arrow-left" %} Zurück zur Mahnung
         </a></p>
     {% endif %}

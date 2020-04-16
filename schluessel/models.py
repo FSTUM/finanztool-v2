@@ -1,5 +1,6 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+
 
 class Person(models.Model):
     name = models.CharField(
@@ -87,6 +88,7 @@ class Key(models.Model):
 
     person = models.ForeignKey(
         Person,
+        models.CASCADE,
         verbose_name="Entleiher*in",
         default=None,
         blank=True,
@@ -116,10 +118,10 @@ class Key(models.Model):
 
 
 class KeyLogEntry(models.Model):
-    GIVE="G"
-    RETURN="R"
-    CREATE="C"
-    EDIT="E"
+    GIVE = "G"
+    RETURN = "R"
+    CREATE = "C"
+    EDIT = "E"
 
     key = models.ForeignKey(
         Key,
@@ -165,6 +167,7 @@ class KeyLogEntry(models.Model):
 
     person = models.ForeignKey(
         Person,
+        models.CASCADE,
         verbose_name="Entleiher*in",
         blank=True,
         null=True,
@@ -238,6 +241,7 @@ class KeyLogEntry(models.Model):
 
     user = models.ForeignKey(
         User,
+        models.CASCADE,
         verbose_name="Finanzer*in",
     )
 
@@ -249,22 +253,22 @@ class KeyLogEntry(models.Model):
     def __str__(self):
         if self.operation == KeyLogEntry.GIVE:
             return "Ausgabe von {} an {} durch {} am {}".format(self.key,
-                    self.person, self.user.get_full_name(), self.date)
+                                                                self.person, self.user.get_full_name(), self.date)
         elif self.operation == KeyLogEntry.RETURN:
             return "Rückgabe von {} von {} an {} am {}".format(self.key,
-                    self.person, self.user.get_full_name(), self.date)
+                                                               self.person, self.user.get_full_name(), self.date)
         elif self.operation == KeyLogEntry.CREATE and self.key:
             return "Erstellung von {} durch {} am {}".format(self.key,
-                    self.user.get_full_name(), self.date)
+                                                             self.user.get_full_name(), self.date)
         elif self.operation == KeyLogEntry.CREATE and self.person:
             return "Erstellung von {} durch {} am {}".format(self.person,
-                    self.user.get_full_name(), self.date)
+                                                             self.user.get_full_name(), self.date)
         elif self.operation == KeyLogEntry.EDIT and self.key:
             return "Bearbeitung von {} durch {} am {}".format(self.key,
-                    self.user.get_full_name(), self.date)
+                                                              self.user.get_full_name(), self.date)
         elif self.operation == KeyLogEntry.EDIT and self.person:
             return "Bearbeitung von {} durch {} am {}".format(self.person,
-                    self.user.get_full_name(), self.date)
+                                                              self.user.get_full_name(), self.date)
         else:
             return "Unvalid Operation"
 
@@ -278,8 +282,8 @@ class SavedKeyChange(models.Model):
 
     new_keytype = models.ForeignKey(
         KeyType,
+        models.CASCADE,
         verbose_name="Neuer Schlüssel-Typ",
-        on_delete=models.CASCADE,
     )
 
     comment = models.CharField(
@@ -290,6 +294,7 @@ class SavedKeyChange(models.Model):
 
     user = models.ForeignKey(
         User,
+        models.CASCADE,
         verbose_name="Finanzer*in",
     )
 
@@ -301,6 +306,6 @@ class SavedKeyChange(models.Model):
     @property
     def violated_key(self):
         violated_key = Key.objects.filter(keytype=self.new_keytype,
-                number=self.key.number)
+                                          number=self.key.number)
         if violated_key.exists():
             return violated_key.get()

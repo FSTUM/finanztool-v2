@@ -3,12 +3,12 @@
 {% block title %}Finanztool - {{ key.typename }} {{ key }} ausgeben{% endblock %}
 
 {% block content %}
-    <h1>{{ key.typename}} {{ key }} ausgeben</h1>
-   
+    <h1>{{ key.typename }} {{ key }} ausgeben</h1>
+
     <p>
         Sind die Kontaktdaten von <a href="{% url "schluessel:view_person" person.id %}">{{ person }}</a> noch aktuell?
     </p>
-    
+
     <table class="table table-striped table-hover">
         <tr>
             <th>Nachname</th>
@@ -37,27 +37,31 @@
     </table>
 
     <p>
-        <a href="{% url "schluessel:give_edit_person" key.id person.id %}" class="btn btn-info">Nein, Kontaktdaten ändern</a>
+        <a href="{% url "schluessel:give_edit_person" key.id person.id %}" class="btn btn-info">Nein, Kontaktdaten
+            ändern</a>
     </p>
 
     <p>
         <strong>Wenn ja:</strong> Soll
         {% if key.keytype.keycard %}
-        die Schließkarte
+            die Schließkarte
         {% else %}
-        der Schlüssel
+            der Schlüssel
         {% endif %}
-        <a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a> wirklich an <a href="{% url "schluessel:view_person" person.id %}">{{ person }}</a> ausgegeben werden?
+        <a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a> wirklich an <a
+            href="{% url "schluessel:view_person" person.id %}">{{ person }}</a> ausgegeben werden?
     </p>
 
     <form method="post" action="">
         {% csrf_token %}
-    
+
         <table class="table">
             <tr>
-                <td><button type="submit" class="btn btn-default btn-success">Ausgeben</button></td>
+                <td>
+                    <button type="submit" class="btn btn-default btn-success">Ausgeben</button>
+                </td>
                 <td><a href="{% url "schluessel:view_key" key.id %}" class="btn btn-info">Abbrechen</a></td>
             </tr>
-        <table>
+            <table>
     </form>
 {% endblock %}

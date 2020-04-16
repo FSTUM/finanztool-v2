@@ -1,9 +1,8 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import Aufgabe, Aufgabenart
 from .forms import AufgabeForm, AufgabenartForm, AufgabeErledigtForm
-
+from .models import Aufgabe, Aufgabenart
 
 staff_member_required = staff_member_required(login_url='rechnung:login')
 
@@ -14,9 +13,9 @@ def unerledigt(request):
     meine_aufgaben = Aufgabe.objects.filter(erledigt=False,
                                             zustaendig=request.user).order_by('-frist')
     context = {
-            'aufgaben': aufgaben,
-            'meine_aufgaben': meine_aufgaben,
-            }
+        'aufgaben': aufgaben,
+        'meine_aufgaben': meine_aufgaben,
+    }
     return render(request, 'aufgaben/unerledigt.html', context)
 
 
@@ -37,9 +36,9 @@ def form_aufgabe(request, aufgabe_id=None):
                            instance=aufgabe)
 
     context = {
-            'form': form,
-            'aufgabe': aufgabe
-            }
+        'form': form,
+        'aufgabe': aufgabe
+    }
 
     return render(request, 'aufgaben/form_aufgabe.html', context)
 
@@ -60,9 +59,9 @@ def form_aufgabenart(request, aufgabenart_id=None):
         form = AufgabenartForm()
 
     context = {
-            'form': form,
-            'aufgabenart': aufgabenart
-            }
+        'form': form,
+        'aufgabenart': aufgabenart
+    }
 
     return render(request, 'aufgaben/form_aufgabenart.html', context)
 
@@ -71,8 +70,8 @@ def form_aufgabenart(request, aufgabenart_id=None):
 def alle(request):
     alle = Aufgabe.objects.all().order_by('-frist')
     context = {
-            'alle': alle,
-            }
+        'alle': alle,
+    }
     return render(request, 'aufgaben/alle.html', context)
 
 
@@ -89,7 +88,7 @@ def aufgabe(request, aufgabe_id):
                 return redirect('aufgaben:aufgabe', aufgabe_id=aufgabe.pk)
 
     context = {
-            'aufgabe': aufgabe,
-            'form': form,
-            }
+        'aufgabe': aufgabe,
+        'form': form,
+    }
     return render(request, 'aufgaben/aufgabe.html', context)

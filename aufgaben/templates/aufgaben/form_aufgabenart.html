@@ -3,11 +3,11 @@
 {% load bootstrap3 %}
 
 {% block title %}
-{% if aufgabenart.pk %}
-    Aufgabenart ändern
-{% else %}
-    Aufgabenart hinzufügen
-{% endif %}
+    {% if aufgabenart.pk %}
+        Aufgabenart ändern
+    {% else %}
+        Aufgabenart hinzufügen
+    {% endif %}
 {% endblock %}
 
 {% block content %}

@@ -1,174 +1,195 @@
-{% load staticfiles %}
+{% load static %}
 {% load i18n %}
 {% load bootstrap3 %}
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="shortcut icon" type="image/png" href="/static/rechnung/favicon.ico"/>
+    <link rel="shortcut icon" type="image/png" href="/static/rechnung/favicon.ico"/>
 
-        {# jquery #}
-        <script src="{% static "rechnung/extern/jquery-2.2.4.min.js" %}"></script>
+    {# jquery #}
+    <script src="{% static "rechnung/extern/jquery-2.2.4.min.js" %}"></script>
 
-        {# jquery-ui #}
-        <script src="{% static "rechnung/extern/jquery-ui/jquery-ui.min.js" %}"></script>
-        <link rel="stylesheet" href="{% static "rechnung/extern/jquery-ui/jquery-ui.min.css"%}">
-        <link rel="stylesheet" href="{% static "rechnung/extern/jquery-ui/jquery-ui.structue.min.css"%}">
-        <link rel="stylesheet" href="{% static "rechnung/extern/jquery-ui/jquery-ui.theme.min.css"%}">
+    {# jquery-ui #}
+    <script src="{% static "rechnung/extern/jquery-ui/jquery-ui.min.js" %}"></script>
+    <link rel="stylesheet" href="{% static "rechnung/extern/jquery-ui/jquery-ui.min.css" %}">
+    <link rel="stylesheet" href="{% static "rechnung/extern/jquery-ui/jquery-ui.structue.min.css" %}">
+    <link rel="stylesheet" href="{% static "rechnung/extern/jquery-ui/jquery-ui.theme.min.css" %}">
 
-        {# bootstrap3 #}
-        <link rel="stylesheet" href="{% static "rechnung/extern/bootstrap/css/bootstrap.min.css"%}">
-        <link rel="stylesheet" href="{% static "rechnung/extern/bootstrap/css/bootstrap-theme.min.css"%}">
-        <script src="{% static "rechnung/extern/bootstrap/js/bootstrap.min.js" %}"></script>
+    {# bootstrap3 #}
+    <link rel="stylesheet" href="{% static "rechnung/extern/bootstrap/css/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "rechnung/extern/bootstrap/css/bootstrap-theme.min.css" %}">
+    <script src="{% static "rechnung/extern/bootstrap/js/bootstrap.min.js" %}"></script>
 
-        <link href="{% static "rechnung/style.css" %}" media="all" rel="stylesheet">
+    <link href="{% static "rechnung/style.css" %}" media="all" rel="stylesheet">
 
-        {# moment js #}
-        <script src="{% static "rechnung/extern/momentjs/scripts/moment-with-locales.js"%}"></script>
-
-
-        {# bootstrap-datetimepicker #}
-        <link href="{% static "rechnung/extern/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" %}" media="all" rel="stylesheet">
-        <script src="{% static "rechnung/extern/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" %}"></script>
-
-            <title>{% block title %}Finanz - Rechnungen{% endblock %}</title>
-    </head>
-
-    <body>
-        <nav class="navbar navbar-default">
-            <div class="container">
-                {# button to show menu on small devices#}
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed"
-                            data-toggle="collapse"
-                            data-target="#bs-example-navbar-collapse-1">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                </div>
+    {# moment js #}
+    <script src="{% static "rechnung/extern/momentjs/scripts/moment-with-locales.js" %}"></script>
 
 
-                {# menu content #}
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    {# on the right #}
-                    <ul class="nav navbar-nav navbar-left">
-                        {# login #}
-                        {% if user.is_authenticated %}
-                            <p class="navbar-text">
-                                {% blocktrans trimmed with username=user.first_name %}
-                                    Hallo {{ username }}!
-                                {% endblocktrans %}
-                            </p>
-                            <li><a href="{% url "rechnung:willkommen" %}">
-                                    {% bootstrap_icon "home" %}
-                                </a></li>
-                            {% if user.is_superuser %}
-                                <li><a href="{% url "rechnung:index" %}">Unerledigt</a></li>
-                                <li>
-                                    <div class="dropdown">
-                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px;">{% bootstrap_icon "list-alt" %} Rechnung
-                                      <span class="caret"></span></button>
-                                      <ul class="dropdown-menu">
-                                          <li><a  href="{% url "rechnung:rechnung_neu" %}">
-                                                  {% bootstrap_icon "plus" %} Hinzufügen
-                                              </a></li>
-                                          <li><a  href="{% url "rechnung:rechnungsuchen" %}">
-                                                  {% bootstrap_icon "search" %} Suchen
-                                              </a></li>
-                                          <li><a  href="{% url "rechnung:alle" %}">
-                                                  {% bootstrap_icon "eye-open" %} Alle
-                                              </a></li>
-                                          <li><a  href="{% url "rechnung:alle_mahnungen" %}">
-                                                  {% bootstrap_icon "hourglass" %} Alle Mahnungen
-                                              </a></li>
-                                      </ul>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="dropdown">
-                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "briefcase" %} Kunde
-                                      <span class="caret"></span></button>
-                                      <ul class="dropdown-menu">
-                                          <li><a  href="{% url "rechnung:kunde_neu" %}">{% bootstrap_icon "plus" %} Hinzufügen</a></li>
-                                          <li><a  href="{% url "rechnung:kundesuchen" %}">{% bootstrap_icon "search" %} Suchen</a></li>
-                                          <li><a  href="{% url "rechnung:kunden_alle" %}">{% bootstrap_icon "eye-open" %} Alle</a></li>
-                                      </ul>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="dropdown">
-                                        <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "tasks" %} Aufgaben
-                                      <span class="caret"></span></button>
-                                      <ul class="dropdown-menu">
-                                          <li><a  href="{% url "aufgaben:unerledigt" %}">{% bootstrap_icon "th-list" %} Unerledigt</a></li>
-                                          <li><a  href="{% url "aufgaben:neu" %}">{% bootstrap_icon "plus" %} Hinzufügen</a></li>
-                                          <li><a  href="{% url "aufgaben:neu_aufgabenart" %}">{% bootstrap_icon "plus" %} Aufgabenart hinzufügen</a></li>
-                                          <li><a  href="{% url "aufgaben:alle" %}">{% bootstrap_icon "eye-open" %} Alle</a></li>
-                                      </ul>
-                                    </div>
-                                </li>
-                            {% endif %}
-                            <li>
-                                <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "lock" %} Schlüssel
-                                  <span class="caret"></span></button>
-                                  <ul class="dropdown-menu">
-                                      <li><a  href="{% url "schluessel:list_keys" %}">{% bootstrap_icon "search" %} Suchen</a></li>
-                                      {% if user.is_superuser %}
-                                          <li><a  href="{% url "schluessel:add_key" %}">{% bootstrap_icon "plus" %} Hinzufügen</a></li>
-                                      {% endif %}
-                                      <li><a  href="{% url "schluessel:list_persons" %}">{% bootstrap_icon "search" %} Person suchen</a></li>
-                                      <li><a  href="{% url "schluessel:add_person" %}">{% bootstrap_icon "plus" %} Person hinzufügen</a></li>
-                                      {% if user.is_superuser %}
-                                          <li><a  href="{% url "schluessel:list_key_changes" %}">{% bootstrap_icon "th-list" %} Vorgemerkte Typ-Änderungen</a></li>
-                                          <li><a  href="{% url "schluessel:show_log" %}">{% bootstrap_icon "tasks" %} Letzte Änderungen</a></li>
-                                      {% endif %}
-                                  </ul>
-                                </div>
-                            </li>
-                            {% if user.is_superuser %}
-                                <li><a href="{% url "konto:einlesen" %}">{% bootstrap_icon "credit-card" %} Konto</a></li>
-                            {% endif %}
-                            <li><a href="{% url "rechnung:logout" %}">Logout</a></li> 
-                        {% else %}
-                            <li><a href="{% url "rechnung:index" %}">Index</a></li>
-                            <li><a href="{% url "rechnung:login" %}">Login</a></li>
-                        {% endif %}
-                        {# end login #}
-                    </ul>
-                </div>
-            </div>
-        </nav>
+    {# bootstrap-datetimepicker #}
+    <link href="{% static "rechnung/extern/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" %}"
+          media="all" rel="stylesheet">
+    <script src="{% static "rechnung/extern/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" %}"></script>
 
-        <div class="container">
-            {# messages #}
-            {% if messages %}
-                {% bootstrap_messages messages %}
-            {% endif %}
+    <title>{% block title %}Finanz - Rechnungen{% endblock %}</title>
+</head>
 
-                {# content #}
-                {% block content %}
-                {% endblock %}
+<body>
+<nav class="navbar navbar-default">
+    <div class="container">
+        {# button to show menu on small devices#}
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
         </div>
 
-        <footer class="footer">
-            <div class="container">
-                <p class="text-muted">
-                    <a href="https://fs.tum.de/datenschutz/" target="_blank">
-                       Datenschutz 
-                    </a> | 
-                    <a href="https://fs.tum.de/impressum/" target="_blank">
-                        Impressum
-                    <a>
-                </p>
-            </div>
-        </footer>
-    </body>
+
+        {# menu content #}
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            {# on the right #}
+            <ul class="nav navbar-nav navbar-left">
+                {# login #}
+                {% if user.is_authenticated %}
+                    <p class="navbar-text">
+                        {% blocktrans trimmed with username=user.first_name %}
+                            Hallo {{ username }}!
+                        {% endblocktrans %}
+                    </p>
+                    <li><a href="{% url "rechnung:willkommen" %}">
+                        {% bootstrap_icon "home" %}
+                    </a></li>
+                    {% if user.is_superuser %}
+                        <li><a href="{% url "rechnung:index" %}">Unerledigt</a></li>
+                        <li>
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+                                        style="position: relative; top: 7px;">{% bootstrap_icon "list-alt" %} Rechnung
+                                    <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url "rechnung:rechnung_neu" %}">
+                                        {% bootstrap_icon "plus" %} Hinzufügen
+                                    </a></li>
+                                    <li><a href="{% url "rechnung:rechnungsuchen" %}">
+                                        {% bootstrap_icon "search" %} Suchen
+                                    </a></li>
+                                    <li><a href="{% url "rechnung:alle" %}">
+                                        {% bootstrap_icon "eye-open" %} Alle
+                                    </a></li>
+                                    <li><a href="{% url "rechnung:alle_mahnungen" %}">
+                                        {% bootstrap_icon "hourglass" %} Alle Mahnungen
+                                    </a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+                                        style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "briefcase" %}
+                                    Kunde
+                                    <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url "rechnung:kunde_neu" %}">{% bootstrap_icon "plus" %}
+                                        Hinzufügen</a></li>
+                                    <li><a href="{% url "rechnung:kundesuchen" %}">{% bootstrap_icon "search" %}
+                                        Suchen</a></li>
+                                    <li><a href="{% url "rechnung:kunden_alle" %}">{% bootstrap_icon "eye-open" %}
+                                        Alle</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+                                        style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "tasks" %}
+                                    Aufgaben
+                                    <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{% url "aufgaben:unerledigt" %}">{% bootstrap_icon "th-list" %}
+                                        Unerledigt</a></li>
+                                    <li><a href="{% url "aufgaben:neu" %}">{% bootstrap_icon "plus" %} Hinzufügen</a>
+                                    </li>
+                                    <li><a href="{% url "aufgaben:neu_aufgabenart" %}">{% bootstrap_icon "plus" %}
+                                        Aufgabenart hinzufügen</a></li>
+                                    <li><a href="{% url "aufgaben:alle" %}">{% bootstrap_icon "eye-open" %} Alle</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+                                    style="position: relative; top: 7px; margin-left: 5px;">{% bootstrap_icon "lock" %}
+                                Schlüssel
+                                <span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="{% url "schluessel:list_keys" %}">{% bootstrap_icon "search" %} Suchen</a>
+                                </li>
+                                {% if user.is_superuser %}
+                                    <li><a href="{% url "schluessel:add_key" %}">{% bootstrap_icon "plus" %}
+                                        Hinzufügen</a></li>
+                                {% endif %}
+                                <li><a href="{% url "schluessel:list_persons" %}">{% bootstrap_icon "search" %} Person
+                                    suchen</a></li>
+                                <li><a href="{% url "schluessel:add_person" %}">{% bootstrap_icon "plus" %} Person
+                                    hinzufügen</a></li>
+                                {% if user.is_superuser %}
+                                    <li><a href="{% url "schluessel:list_key_changes" %}">{% bootstrap_icon "th-list" %}
+                                        Vorgemerkte Typ-Änderungen</a></li>
+                                    <li><a href="{% url "schluessel:show_log" %}">{% bootstrap_icon "tasks" %} Letzte
+                                        Änderungen</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </li>
+                    {% if user.is_superuser %}
+                        <li><a href="{% url "konto:einlesen" %}">{% bootstrap_icon "credit-card" %} Konto</a></li>
+                    {% endif %}
+                    <li><a href="{% url "rechnung:logout" %}">Logout</a></li>
+                {% else %}
+                    <li><a href="{% url "rechnung:index" %}">Index</a></li>
+                    <li><a href="{% url "rechnung:login" %}">Login</a></li>
+                {% endif %}
+                {# end login #}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    {# messages #}
+    {% if messages %}
+        {% bootstrap_messages messages %}
+    {% endif %}
+
+    {# content #}
+    {% block content %}
+    {% endblock %}
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p class="text-muted">
+            <a href="https://fs.tum.de/datenschutz/" target="_blank">
+                Datenschutz
+            </a> |
+            <a href="https://fs.tum.de/impressum/" target="_blank">
+                Impressum
+                <a>
+        </p>
+    </div>
+</footer>
+</body>
 
 </html> 

@@ -1,12 +1,10 @@
-import csv
 import datetime
 import re
+from csv import DictReader
 from decimal import Decimal, InvalidOperation
 
-from django.contrib.auth.models import User
-
-from rechnung.models import Rechnung
 from getraenke.models import Schulden
+from rechnung.models import Rechnung
 from .models import EinzahlungsLog
 
 
@@ -63,35 +61,39 @@ def parse_camt_csv(csvfile):
         zuletzt_eingetragen = None
 
     # read CSV file
-    csvreader = csv.reader(csvfile, delimiter=';')
+    csvcontents = DictReader(csvfile, delimiter=';')
     counter = 0
-    for row in csvreader:
+    for row in csvcontents:
         counter += 1
 
-        if row[3] == "GUTSCHR. UEBERWEISUNG":
+        buchungstext = row['Buchungstext']
+        if buchungstext == "GUTSCHR. UEBERWEISUNG" \
+                or buchungstext == "ECHTZEIT-GUTSCHRIFT":
             entry = Entry()
 
             try:
-                entry.datum = datetime.datetime.strptime(row[1], "%d.%m.%y")
+                entry.datum = datetime.datetime.strptime(row['Buchungstag'], "%d.%m.%y")
                 entry.datum = entry.datum.date()
             except ValueError:
                 errors.append("Zeile {}: Ungültiges Datum: {}".format(counter,
                                                                       row[1]))
                 continue
 
-            entry.verwendungszweck = row[4]
-            entry.zahlungspflichtiger = row[11]
-            entry.iban = row[12]
-            entry.bic = row[13]
+            entry.verwendungszweck = row['Verwendungszweck']
+            entry.zahlungspflichtiger = row['Beguenstigter/Zahlungspflichtiger']
+            entry.iban = row['Kontonummer/IBAN']
+            entry.bic = row['BIC (SWIFT-Code)']
 
+            betrag = row['Betrag']
             try:
-                entry.betrag = Decimal(row[14].replace(',', '.'))
+                entry.betrag = Decimal(betrag.replace(',', '.'))
             except InvalidOperation:
                 errors.append("Zeile {}: Ungültiger Betrag: {}".format(counter,
-                                                                       row[14]))
+                                                                       betrag))
                 continue
 
-            if row[15] != "EUR":
+            waehrung = row['Waehrung']
+            if waehrung != "EUR":
                 errors.append("Zeile {}: Eintrag in anderer Währung als "
                               "Euro".format(counter))
                 continue
@@ -101,7 +103,14 @@ def parse_camt_csv(csvfile):
                 suche_user(entry, users, regex_usernames, zuletzt_eingetragen, errors)
 
             results.append(entry)
-
+        elif buchungstext == "ENTGELTABSCHLUSS" \
+            or buchungstext == "ONLINE-UEBERWEISUNG" \
+            or buchungstext == "RECHNUNG" \
+            or buchungstext == "FOLGELASTSCHRIFT" \
+            or buchungstext == "BARGELDAUSZAHLUNG KASSE":
+            pass
+        else:
+            errors.append("Transaktion in Zeile {} mit Typ {} nicht erkannt".format(counter, buchungstext))
     return results, errors
 
 
@@ -146,12 +155,12 @@ def suche_user(entry, users, regex_usernames, zuletzt_eingetragen, errors):
             else:
                 # Enter the new user
                 entry.mapped_user = user
-        elif zuletzt_eingetragen and zuletzt_eingetragen >= entry.datum:
+        elif tmp and zuletzt_eingetragen and zuletzt_eingetragen >= entry.datum:
             # Print an error that this transaction lies beyond the date of the last transaction.
             errors.append('Letzte Einzahlung von {} am {} liegt nach der Einzahlung vom {}.'.format(
                 user.user,
-                zuletzt_eingetragen,
-                entry.datum
+                entry.datum,
+                zuletzt_eingetragen
             ))
         elif tmp and zuletzt_eingetragen is None:
             errors.append('Nutzer {} hat kein "zuletzt eingetragen" Datum für die Einzahlung vom {}.'.format(

@@ -6,43 +6,44 @@
 {% block title %}Kunde suchen{% endblock %}
 
 {% block content %}
-<h1>Kunde suchen</h1>
+    <h1>Kunde suchen</h1>
     <form action="" method="post">
         {% csrf_token %}
 
         {% bootstrap_form form %}
 
-        <input type="submit" value="Suchen" class="btn btn-default" />
+        <input type="submit" value="Suchen" class="btn btn-default"/>
     </form>
 
     {% if not new_search %}
         {% if result %}
-        <div class="row">
-            <div class="col-md-10">
-                <h3>Ergebnisse</h3>
-                <br/>
-                <table class="table borderless">
-                    <tr>
-                        <th>Kundennr.</th>
-                        <th>Organisation</th>
-                        <th>Suborganisation</th>
-                        <th>Name</th>
-                        <th>Adresse</th>
-                        <th>Kommentar</th>
-                    </tr>
-                    {% for kunde in result %}
-                    <tr>
-                        <td><a href="{% url 'rechnung:kunde' kunde.id %}">{% localize off %} {{ kunde.knr }} {% endlocalize %}</a></td>
-                        <td>{{ kunde.organisation }}</td>
-                        <td>{{ kunde.suborganisation }}</td>
-                        <td>{{ kunde.get_anrede_display }} {{ kunde.vorname }} {{ kunde.name }}</td>
-                        <td>{{ kunde.strasse }}<br>{{ kunde.plz }} {{ kunde.stadt }}</td>
-                        <td>{{ kunde.kommentar }}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
+            <div class="row">
+                <div class="col-md-10">
+                    <h3>Ergebnisse</h3>
+                    <br/>
+                    <table class="table borderless">
+                        <tr>
+                            <th>Kundennr.</th>
+                            <th>Organisation</th>
+                            <th>Suborganisation</th>
+                            <th>Name</th>
+                            <th>Adresse</th>
+                            <th>Kommentar</th>
+                        </tr>
+                        {% for kunde in result %}
+                            <tr>
+                                <td><a href="{% url 'rechnung:kunde' kunde.id %}">{% localize off %}
+                                    {{ kunde.knr }} {% endlocalize %}</a></td>
+                                <td>{{ kunde.organisation }}</td>
+                                <td>{{ kunde.suborganisation }}</td>
+                                <td>{{ kunde.get_anrede_display }} {{ kunde.vorname }} {{ kunde.name }}</td>
+                                <td>{{ kunde.strasse }}<br>{{ kunde.plz }} {{ kunde.stadt }}</td>
+                                <td>{{ kunde.kommentar }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
-        </div>
         {% else %}
         {% endif %}
     {% endif %}

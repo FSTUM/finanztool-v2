@@ -20,8 +20,8 @@ def finish_logentry_creation(sender, instance, **keywords):
             person_firstname=instance.person.firstname,
             person_email=instance.person.email,
             person_address=instance.person.address,
-            person_plz = instance.person.plz,
-            person_city = instance.person.city,
-            person_mobile = instance.person.mobile,
-            person_phone = instance.person.phone,
+            person_plz=instance.person.plz,
+            person_city=instance.person.city,
+            person_mobile=instance.person.mobile,
+            person_phone=instance.person.phone,
         )
