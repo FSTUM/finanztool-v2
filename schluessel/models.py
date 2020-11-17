@@ -250,6 +250,27 @@ class KeyLogEntry(models.Model):
         auto_now_add=True,
     )
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        # Fill some duplicating fields in case original model is deleted:
+        if self.key and not self.key_number:
+            self.key_deposit=self.key.keytype.deposit
+            self.key_keytype=self.key.keytype
+            self.key_number=self.key.number
+            self.key_comment=self.key.comment
+            self.key_active=self.key.active
+
+        if self.person and not self.person_name:
+            self.person_name=self.person.name
+            self.person_firstname=self.person.firstname
+            self.person_email=self.person.email
+            self.person_address=self.person.address
+            self.person_plz=self.person.plz
+            self.person_city=self.person.city
+            self.person_mobile=self.person.mobile
+            self.person_phone=self.person.phone
+
+        super().save(force_insert, force_update, using, update_fields)
+
     def __str__(self):
         if self.operation == KeyLogEntry.GIVE:
             return "Ausgabe von {} an {} durch {} am {}".format(self.key,
