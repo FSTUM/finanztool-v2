@@ -4,15 +4,22 @@
 {% block title %}Finanztool - Schlüssel/Schließkarte erstellen{% endblock %}
 
 {% block content %}
-    <h1>Schlüssel/Schließkarte erstellen</h1>
+<h1>Schlüssel/Schließkarte erstellen</h1>
 
-    <div class="col-md-4">
-        <form name="addform" method="post" action="">
-            {% csrf_token %}
+<div class="col-md-4">
+    <form
+        name="addform"
+        method="post"
+        action=""
+    >
+        {% csrf_token %}
 
-            {% bootstrap_form form %}
+        {% bootstrap_form form %}
 
-            <button type="submit" class="btn btn-default btn-info">Erstellen</button>
-        </form>
-    </div>
+        <button
+            type="submit"
+            class="btn btn-default btn-info"
+        >Erstellen</button>
+    </form>
+</div>
 {% endblock %}

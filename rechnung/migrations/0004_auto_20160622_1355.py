@@ -7,18 +7,18 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('rechnung', '0003_auto_20160622_1341'),
+        ("rechnung", "0003_auto_20160622_1341"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='posten',
-            name='einzelpreis',
-            field=models.DecimalField(decimal_places=5, max_digits=15, verbose_name='Einzelpreis'),
+            model_name="posten",
+            name="einzelpreis",
+            field=models.DecimalField(decimal_places=5, max_digits=15, verbose_name="Einzelpreis"),
         ),
         migrations.AlterField(
-            model_name='posten',
-            name='name',
-            field=models.CharField(max_length=100, verbose_name='Bezeichnung'),
+            model_name="posten",
+            name="name",
+            field=models.CharField(max_length=100, verbose_name="Bezeichnung"),
         ),
     ]

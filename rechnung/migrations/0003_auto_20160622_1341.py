@@ -7,13 +7,13 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('rechnung', '0002_auto_20160622_1332'),
+        ("rechnung", "0002_auto_20160622_1332"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='posten',
-            name='name',
-            field=models.CharField(max_length=70, verbose_name='Bezeichnung'),
+            model_name="posten",
+            name="name",
+            field=models.CharField(max_length=70, verbose_name="Bezeichnung"),
         ),
     ]

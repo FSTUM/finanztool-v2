@@ -22,4 +22,6 @@ Session.vim
 *.sqlite3
 
 # idea
-.idea
+/.idea/
+/venv/
+/.mypy_cache/

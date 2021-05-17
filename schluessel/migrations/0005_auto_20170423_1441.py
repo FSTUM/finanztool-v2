@@ -7,12 +7,12 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('schluessel', '0004_keytype_keycard'),
+        ("schluessel", "0004_keytype_keycard"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='key',
-            unique_together=set([('keytype', 'number')]),
+            name="key",
+            unique_together=set([("keytype", "number")]),
         ),
     ]

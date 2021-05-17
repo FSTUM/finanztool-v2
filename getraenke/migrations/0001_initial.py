@@ -8,65 +8,64 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Blacklist',
+            name="Blacklist",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('user', models.TextField(blank=True, null=True)),
-                ('grund', models.TextField(blank=True, null=True)),
-                ('datum', models.CharField(blank=True, max_length=32, null=True)),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("user", models.TextField(blank=True, null=True)),
+                ("grund", models.TextField(blank=True, null=True)),
+                ("datum", models.CharField(blank=True, max_length=32, null=True)),
             ],
             options={
-                'db_table': 'blacklist',
-                'managed': False,
+                "db_table": "blacklist",
+                "managed": False,
             },
         ),
         migrations.CreateModel(
-            name='Getraenke',
+            name="Getraenke",
             fields=[
-                ('nummer', models.IntegerField(primary_key=True, serialize=False)),
-                ('name', models.CharField(blank=True, max_length=32, null=True)),
-                ('barcode', models.TextField(blank=True, null=True)),
-                ('preis', models.FloatField(blank=True, null=True)),
-                ('shortname', models.CharField(blank=True, max_length=16, null=True)),
+                ("nummer", models.IntegerField(primary_key=True, serialize=False)),
+                ("name", models.CharField(blank=True, max_length=32, null=True)),
+                ("barcode", models.TextField(blank=True, null=True)),
+                ("preis", models.FloatField(blank=True, null=True)),
+                ("shortname", models.CharField(blank=True, max_length=16, null=True)),
             ],
             options={
-                'db_table': 'getraenke',
-                'managed': False,
+                "db_table": "getraenke",
+                "managed": False,
             },
         ),
         migrations.CreateModel(
-            name='Log',
+            name="Log",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('konto', models.CharField(blank=True, max_length=32, null=True)),
-                ('gruppe', models.CharField(blank=True, max_length=32, null=True)),
-                ('aktion', models.CharField(blank=True, max_length=32, null=True)),
-                ('typ', models.CharField(blank=True, max_length=32, null=True)),
-                ('betrag', models.FloatField(blank=True, null=True)),
-                ('gesamt_jetzt', models.FloatField(blank=True, null=True)),
-                ('user', models.CharField(blank=True, max_length=32, null=True)),
-                ('datum', models.CharField(blank=True, max_length=32, null=True)),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("konto", models.CharField(blank=True, max_length=32, null=True)),
+                ("gruppe", models.CharField(blank=True, max_length=32, null=True)),
+                ("aktion", models.CharField(blank=True, max_length=32, null=True)),
+                ("typ", models.CharField(blank=True, max_length=32, null=True)),
+                ("betrag", models.FloatField(blank=True, null=True)),
+                ("gesamt_jetzt", models.FloatField(blank=True, null=True)),
+                ("user", models.CharField(blank=True, max_length=32, null=True)),
+                ("datum", models.CharField(blank=True, max_length=32, null=True)),
             ],
             options={
-                'db_table': 'log',
-                'managed': False,
+                "db_table": "log",
+                "managed": False,
             },
         ),
         migrations.CreateModel(
-            name='Schulden',
+            name="Schulden",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('user', models.CharField(max_length=32, unique=True)),
-                ('betrag', models.FloatField()),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("user", models.CharField(max_length=32, unique=True)),
+                ("betrag", models.FloatField()),
             ],
             options={
-                'db_table': 'schulden',
-                'managed': False,
+                "db_table": "schulden",
+                "managed": False,
             },
         ),
     ]

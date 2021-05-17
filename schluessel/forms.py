@@ -6,21 +6,22 @@ from .models import Key, KeyType, Person
 class SelectPersonForm(forms.Form):
     person_label = forms.CharField(
         label="Entleiher*in",
-        widget=forms.TextInput(attrs={'size': 80}))
+        widget=forms.TextInput(attrs={"size": 80}),
+    )
     person = forms.CharField(widget=forms.HiddenInput(), required=False)
 
 
 class SelectPersonFormNoscript(forms.Form):
     person = forms.ModelChoiceField(
         label="Entleiher*in",
-        queryset=Person.objects.all().order_by('name', 'firstname'),
+        queryset=Person.objects.all().order_by("name", "firstname"),
     )
 
 
 class SaveKeyChangeForm(forms.Form):
     keytype = forms.ModelChoiceField(
         label="Neuer Schlüssel-Typ",
-        queryset=KeyType.objects.filter(keycard=True).order_by('name'),
+        queryset=KeyType.objects.filter(keycard=True).order_by("name"),
     )
 
     comment = forms.CharField(
@@ -29,22 +30,27 @@ class SaveKeyChangeForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        keytype = kwargs.pop('keytype')
-        super(SaveKeyChangeForm, self).__init__(*args, **kwargs)
-        self.fields['keytype'].queryset = KeyType.objects.filter(
-            keycard=True).exclude(pk=keytype.pk).order_by('name')
+        keytype = kwargs.pop("keytype")
+        super().__init__(*args, **kwargs)
+        self.fields["keytype"].queryset = (
+            KeyType.objects.filter(
+                keycard=True,
+            )
+            .exclude(pk=keytype.pk)
+            .order_by("name")
+        )
 
 
 class KeyForm(forms.ModelForm):
     class Meta:
         model = Key
-        exclude = ('person',)
+        exclude = ("person",)
 
 
 class PersonForm(forms.ModelForm):
     class Meta:
         model = Person
-        fields = '__all__'
+        fields = "__all__"
 
 
 class FilterKeysForm(forms.Form):
@@ -75,7 +81,7 @@ class FilterKeysForm(forms.Form):
 
     keytype = forms.ModelChoiceField(
         label="Art",
-        queryset=KeyType.objects.all().order_by('name'),
+        queryset=KeyType.objects.all().order_by("name"),
         required=False,
     )
     keytype.widget.attrs["onchange"] = "document.getElementById('filterform').submit()"

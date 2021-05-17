@@ -4,18 +4,25 @@
 {% block title %}Posten hinzufügen{% endblock %}
 
 {% block content %}
-    <h1>Posten hinzufügen</h1>
-    <div class="row">
-        <div class="col-md-5">
-            <form method="POST">{% csrf_token %}
-                {% bootstrap_form form %}
-                <button type="submit" class="save btn btn-default">
-                    {% bootstrap_icon "floppy-disk" %} Sichern
-                </button>
-                <button type="submit" name="loeschen" class="save btn btn-default">
-                    {% bootstrap_icon "remove" %} Löschen
-                </button>
-            </form>
-        </div>
+<h1>Posten hinzufügen</h1>
+<div class="row">
+    <div class="col-md-5">
+        <form method="POST">{% csrf_token %}
+            {% bootstrap_form form %}
+            <button
+                type="submit"
+                class="save btn btn-default"
+            >
+                {% bootstrap_icon "floppy-disk" %} Sichern
+            </button>
+            <button
+                type="submit"
+                name="loeschen"
+                class="save btn btn-default"
+            >
+                {% bootstrap_icon "remove" %} Löschen
+            </button>
+        </form>
     </div>
+</div>
 {% endblock %}

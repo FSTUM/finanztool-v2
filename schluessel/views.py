@@ -8,34 +8,42 @@ from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q
-from django.http import HttpResponse, Http404
-from django.shortcuts import get_object_or_404, render, redirect
+from django.http import Http404, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 
-from .forms import SelectPersonForm, KeyForm, PersonForm, FilterKeysForm, \
-    FilterPersonsForm, SelectPersonFormNoscript, SaveKeyChangeForm
-from .models import Key, Person, KeyLogEntry, SavedKeyChange
+from .forms import (
+    FilterKeysForm,
+    FilterPersonsForm,
+    KeyForm,
+    PersonForm,
+    SaveKeyChangeForm,
+    SelectPersonForm,
+    SelectPersonFormNoscript,
+)
+from .models import Key, KeyLogEntry, Person, SavedKeyChange
 
-staff_member_required = staff_member_required(login_url='rechnung:login')
+staff_member_required = staff_member_required(login_url="rechnung:login")
 
 
 @login_required
-def view_key(request, key_pk):
+def view_key(request: WSGIRequest, key_pk) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     logentries = key.keylogentry_set.order_by("date")
 
     context = {
-        'key': key,
-        'logentries': logentries,
+        "key": key,
+        "logentries": logentries,
     }
 
-    return render(request, 'schluessel/view_key.html', context)
+    return render(request, "schluessel/view_key.html", context)
 
 
 @staff_member_required
-def add_key(request):
+def add_key(request: WSGIRequest) -> HttpResponse:
     form = KeyForm(request.POST or None)
     if form.is_valid():
         key = form.save()
@@ -47,17 +55,17 @@ def add_key(request):
             operation=KeyLogEntry.CREATE,
         )
 
-        return redirect('schluessel:view_key', key.id)
+        return redirect("schluessel:view_key", key.id)
 
     context = {
-        'form': form,
+        "form": form,
     }
 
-    return render(request, 'schluessel/add_key.html', context)
+    return render(request, "schluessel/add_key.html", context)
 
 
 @staff_member_required
-def edit_key(request, key_pk):
+def edit_key(request: WSGIRequest, key_pk) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     form = KeyForm(request.POST or None, instance=key)
@@ -71,18 +79,18 @@ def edit_key(request, key_pk):
             operation=KeyLogEntry.EDIT,
         )
 
-        return redirect('schluessel:view_key', key.id)
+        return redirect("schluessel:view_key", key.id)
 
     context = {
-        'key': key,
-        'form': form,
+        "key": key,
+        "form": form,
     }
 
-    return render(request, 'schluessel/edit_key.html', context)
+    return render(request, "schluessel/edit_key.html", context)
 
 
 @staff_member_required
-def save_key_change(request, key_pk):
+def save_key_change(request: WSGIRequest, key_pk) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
@@ -93,19 +101,22 @@ def save_key_change(request, key_pk):
 
     try:
         initial = {
-            'keytype': key.savedkeychange.new_keytype,
-            'comment': key.savedkeychange.comment,
+            "keytype": key.savedkeychange.new_keytype,
+            "comment": key.savedkeychange.comment,
         }
     except ObjectDoesNotExist:
         initial = {}
-    form = SaveKeyChangeForm(request.POST or None, initial=initial,
-                             keytype=key.keytype)
+    form = SaveKeyChangeForm(
+        request.POST or None,
+        initial=initial,
+        keytype=key.keytype,
+    )
 
     if form.is_valid():
-        keytype = form.cleaned_data['keytype']
-        comment = form.cleaned_data['comment']
+        keytype = form.cleaned_data["keytype"]
+        comment = form.cleaned_data["comment"]
 
-        if hasattr(key, 'savedkeychange'):
+        if hasattr(key, "savedkeychange"):
             key.savedkeychange.user = request.user
             key.savedkeychange.new_keytype = keytype
             key.savedkeychange.comment = comment
@@ -118,18 +129,18 @@ def save_key_change(request, key_pk):
                 user=request.user,
             )
 
-        return redirect('schluessel:view_key', key.id)
+        return redirect("schluessel:view_key", key.id)
 
     context = {
-        'key': key,
-        'form': form,
+        "key": key,
+        "form": form,
     }
 
-    return render(request, 'schluessel/save_key_change.html', context)
+    return render(request, "schluessel/save_key_change.html", context)
 
 
 @staff_member_required
-def delete_key_change(request, key_pk):
+def delete_key_change(request: WSGIRequest, key_pk) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
@@ -147,21 +158,27 @@ def delete_key_change(request, key_pk):
     if form.is_valid():
         SavedKeyChange.objects.filter(pk=keychange.pk).delete()
 
-        return redirect('schluessel:view_key', key.id)
+        return redirect("schluessel:view_key", key.id)
 
     context = {
-        'key': key,
-        'form': form,
+        "key": key,
+        "form": form,
     }
 
-    return render(request, 'schluessel/delete_key_change.html', context)
+    return render(request, "schluessel/delete_key_change.html", context)
 
 
 @staff_member_required
-def apply_key_change(request, key_pk=None):
+def apply_key_change(request: WSGIRequest, key_pk=None) -> HttpResponse:
     key = None
-    keys = Key.objects.filter(keytype__keycard=True, active=True
-                              ).exclude(savedkeychange=None).order_by("keytype__shortname", "number")
+    keys = (
+        Key.objects.filter(
+            keytype__keycard=True,
+            active=True,
+        )
+        .exclude(savedkeychange=None)
+        .order_by("keytype__shortname", "number")
+    )
     if key_pk:
         key = get_object_or_404(Key, pk=key_pk)
         if not key.active:
@@ -183,57 +200,69 @@ def apply_key_change(request, key_pk=None):
     if form.is_valid():
         not_applied_keys = []
         applied_keys = []
-        for k in keys:
+        for key in keys:
             try:
-                kc = k.savedkeychange
+                saved_key_change = key.savedkeychange
             except ObjectDoesNotExist:
                 continue
-            if kc.violated_key:
-                not_applied_keys.append(k)
+            if saved_key_change.violated_key:
+                not_applied_keys.append(key)
             else:
-                old_keytype = k.keytype
-                k.keytype = kc.new_keytype
-                k.save()
-                applied_keys.append((old_keytype, k))
-                SavedKeyChange.objects.filter(pk=k.savedkeychange.pk).delete()
+                old_keytype = key.keytype
+                key.keytype = saved_key_change.new_keytype
+                key.save()
+                applied_keys.append((old_keytype, key))
+                SavedKeyChange.objects.filter(pk=key.savedkeychange.pk).delete()
                 KeyLogEntry.objects.create(
-                    key=k,
+                    key=key,
                     person=None,
                     user=request.user,
                     operation=KeyLogEntry.EDIT,
                 )
         if not_applied_keys:
-            messages.error(request, "Die folgenden Änderungen konnten nicht \
-                    angewendet werden, weil eine solche Schließkarte bereits \
-                    existiert: " +
-                           ", ".join(["{} -> {} {}".format(k,
-                                                           k.savedkeychange.new_keytype.shortname, k.number)
-                                      for k in not_applied_keys]))
+            concatinated_unaplied_keys = ", ".join(
+                [f"{k} -> {k.savedkeychange.new_keytype.shortname} {k.number}" for k in not_applied_keys],
+            )
+            messages.error(
+                request,
+                f"Die folgenden Änderungen konnten nicht angewendet werden, weil eine solche Schließkarte bereits "
+                f"existiert: {concatinated_unaplied_keys}",
+            )
         if applied_keys:
-            messages.success(request, "Folgende Änderungen wurden erfolgreich \
-            angewendet. Bitte informiere ggf. die momentanen Entleiher*innen \
-            (in Klammern): " +
-                             ", ".join(["{} {} -> {}".format(okt.shortname, k.number,
-                                                             k) + (" ({})".format(k.person) if k.person else "")
-                                        for okt, k in applied_keys]))
+            concatinated_aplied_keys = ", ".join(
+                [
+                    f"{okt.shortname} {k.number} -> {k}" + (f" ({k.person})" if k.person else "")
+                    for okt, k in applied_keys
+                ],
+            )
+            messages.success(
+                request,
+                f"Folgende Änderungen wurden erfolgreich angewendet. Bitte informiere ggf. die momentanen "
+                f"Entleiher*innen (in Klammern): {concatinated_aplied_keys}",
+            )
         if key:
             return redirect("schluessel:view_key", key.id)
-        else:
-            return redirect("schluessel:list_key_changes")
+        return redirect("schluessel:list_key_changes")
 
     context = {
-        'cur_key': key,
-        'keys': keys,
-        'form': form,
+        "cur_key": key,
+        "keys": keys,
+        "form": form,
     }
 
-    return render(request, 'schluessel/apply_key_change.html', context)
+    return render(request, "schluessel/apply_key_change.html", context)
 
 
 @staff_member_required
-def list_key_changes(request):
-    keys = Key.objects.filter(keytype__keycard=True, active=True
-                              ).exclude(savedkeychange=None).order_by("keytype__shortname", "number")
+def list_key_changes(request: WSGIRequest) -> HttpResponse:
+    keys = (
+        Key.objects.filter(
+            keytype__keycard=True,
+            active=True,
+        )
+        .exclude(savedkeychange=None)
+        .order_by("keytype__shortname", "number")
+    )
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -250,18 +279,18 @@ def list_key_changes(request):
                 user=request.user,
                 operation=KeyLogEntry.EDIT,
             )
-        return redirect('schluessel:list_key_changes')
+        return redirect("schluessel:list_key_changes")
 
     context = {
-        'keys': keys,
-        'form': form,
+        "keys": keys,
+        "form": form,
     }
 
-    return render(request, 'schluessel/list_key_changes.html', context)
+    return render(request, "schluessel/list_key_changes.html", context)
 
 
 @login_required
-def return_key(request, key_pk):
+def return_key(request: WSGIRequest, key_pk) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
@@ -285,18 +314,18 @@ def return_key(request, key_pk):
             operation=KeyLogEntry.RETURN,
         )
 
-        return redirect('schluessel:view_key', key.id)
+        return redirect("schluessel:view_key", key.id)
 
     context = {
-        'key': key,
-        'form': form,
+        "key": key,
+        "form": form,
     }
 
-    return render(request, 'schluessel/return_key.html', context)
+    return render(request, "schluessel/return_key.html", context)
 
 
 @login_required
-def give_key(request, key_pk):
+def give_key(request: WSGIRequest, key_pk) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
@@ -309,34 +338,33 @@ def give_key(request, key_pk):
 
     form = SelectPersonForm(request.POST or None)
     if form.is_valid():
-        person_id = form.cleaned_data['person']
+        person_id = form.cleaned_data["person"]
         if person_id:
             try:
                 person = persons.get(id=person_id)
             except Person.DoesNotExist:
-                return redirect('schluessel:give_key', key.id)
+                return redirect("schluessel:give_key", key.id)
 
-            return redirect('schluessel:give_key_confirm', key.id, person.id)
-        else:
-            return redirect('schluessel:give_key', key.id)
+            return redirect("schluessel:give_key_confirm", key.id, person.id)
+        return redirect("schluessel:give_key", key.id)
 
     formns = SelectPersonFormNoscript(request.POST or None)
     if formns.is_valid():
-        person = formns.cleaned_data['person']
-        return redirect('schluessel:give_key_confirm', key.id, person.id)
+        person = formns.cleaned_data["person"]
+        return redirect("schluessel:give_key_confirm", key.id, person.id)
 
     context = {
-        'key': key,
-        'persons': persons,
-        'form': form,
-        'formns': formns,
+        "key": key,
+        "persons": persons,
+        "form": form,
+        "formns": formns,
     }
 
-    return render(request, 'schluessel/give_key.html', context)
+    return render(request, "schluessel/give_key.html", context)
 
 
 @login_required
-def give_key_confirm(request, key_pk, person_pk):
+def give_key_confirm(request: WSGIRequest, key_pk, person_pk) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
@@ -360,19 +388,19 @@ def give_key_confirm(request, key_pk, person_pk):
             operation=KeyLogEntry.GIVE,
         )
 
-        return redirect('schluessel:view_key', key.id)
+        return redirect("schluessel:view_key", key.id)
 
     context = {
-        'key': key,
-        'person': person,
-        'form': form,
+        "key": key,
+        "person": person,
+        "form": form,
     }
 
-    return render(request, 'schluessel/give_key_confirm.html', context)
+    return render(request, "schluessel/give_key_confirm.html", context)
 
 
 @login_required
-def view_person(request, person_pk):
+def view_person(request: WSGIRequest, person_pk) -> HttpResponse:
     person = get_object_or_404(Person, pk=person_pk)
 
     keys = person.key_set.order_by("keytype__shortname", "number")
@@ -380,16 +408,16 @@ def view_person(request, person_pk):
     logentries = person.keylogentry_set.order_by("date")
 
     context = {
-        'person': person,
-        'keys': keys,
-        'logentries': logentries,
+        "person": person,
+        "keys": keys,
+        "logentries": logentries,
     }
 
-    return render(request, 'schluessel/view_person.html', context)
+    return render(request, "schluessel/view_person.html", context)
 
 
 @login_required
-def add_person(request):
+def add_person(request: WSGIRequest) -> HttpResponse:
     form = PersonForm(request.POST or None)
     if form.is_valid():
         person = form.save()
@@ -401,17 +429,17 @@ def add_person(request):
             operation=KeyLogEntry.CREATE,
         )
 
-        return redirect('schluessel:view_person', person.id)
+        return redirect("schluessel:view_person", person.id)
 
     context = {
-        'form': form,
+        "form": form,
     }
 
-    return render(request, 'schluessel/add_person.html', context)
+    return render(request, "schluessel/add_person.html", context)
 
 
 @login_required
-def give_add_person(request, key_pk):
+def give_add_person(request: WSGIRequest, key_pk) -> HttpResponse:
     form = PersonForm(request.POST or None)
     if form.is_valid():
         person = form.save()
@@ -423,17 +451,17 @@ def give_add_person(request, key_pk):
             operation=KeyLogEntry.CREATE,
         )
 
-        return redirect('schluessel:give_key_confirm', key_pk, person.id)
+        return redirect("schluessel:give_key_confirm", key_pk, person.id)
 
     context = {
-        'form': form,
+        "form": form,
     }
 
-    return render(request, 'schluessel/add_person.html', context)
+    return render(request, "schluessel/add_person.html", context)
 
 
 @login_required
-def edit_person(request, person_pk):
+def edit_person(request: WSGIRequest, person_pk) -> HttpResponse:
     person = get_object_or_404(Person, pk=person_pk)
 
     form = PersonForm(request.POST or None, instance=person)
@@ -447,18 +475,18 @@ def edit_person(request, person_pk):
             operation=KeyLogEntry.EDIT,
         )
 
-        return redirect('schluessel:view_person', person.id)
+        return redirect("schluessel:view_person", person.id)
 
     context = {
-        'person': person,
-        'form': form,
+        "person": person,
+        "form": form,
     }
 
-    return render(request, 'schluessel/edit_person.html', context)
+    return render(request, "schluessel/edit_person.html", context)
 
 
 @login_required
-def give_edit_person(request, key_pk, person_pk):
+def give_edit_person(request: WSGIRequest, key_pk, person_pk) -> HttpResponse:
     person = get_object_or_404(Person, pk=person_pk)
 
     form = PersonForm(request.POST or None, instance=person)
@@ -472,28 +500,28 @@ def give_edit_person(request, key_pk, person_pk):
             operation=KeyLogEntry.EDIT,
         )
 
-        return redirect('schluessel:give_key_confirm', key_pk, person.id)
+        return redirect("schluessel:give_key_confirm", key_pk, person.id)
 
     context = {
-        'person': person,
-        'form': form,
+        "person": person,
+        "form": form,
     }
 
-    return render(request, 'schluessel/edit_person.html', context)
+    return render(request, "schluessel/edit_person.html", context)
 
 
 @login_required
-def get_kaution(request, key_pk):
+def get_kaution(request: WSGIRequest, key_pk) -> HttpResponse:
     return create_pdf(request, key_pk, doc="Kaution")
 
 
 @login_required
-def get_quittung(request, key_pk):
+def get_quittung(request: WSGIRequest, key_pk) -> HttpResponse:
     return create_pdf(request, key_pk, doc="Quittung")
 
 
 @login_required
-def create_pdf(request, key_pk, doc):
+def create_pdf(request: WSGIRequest, key_pk, doc) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
@@ -507,69 +535,88 @@ def create_pdf(request, key_pk, doc):
 
     # create temporary files
     tmplatex = mkdtemp()
-    latex_file, latex_filename = mkstemp(suffix='.tex', dir=tmplatex)
+    latex_file, latex_filename = mkstemp(suffix=".tex", dir=tmplatex)
 
-    logo_path = os.path.join(settings.BASE_DIR, 'schluessel/media/logo')
+    logo_path = os.path.join(settings.BASE_DIR, "schluessel/media/logo")
 
     # Pass TeX template through Django templating engine and into the temp file
-    context = {'key': key, 'user': request.user, 'logo_path': logo_path}
+    context = {"key": key, "user": request.user, "logo_path": logo_path}
 
-    os.write(latex_file, render_to_string(
-        'schluessel/latex_{}.tex'.format(doc), context).encode('utf8'))
+    os.write(
+        latex_file,
+        render_to_string(
+            f"schluessel/latex_{doc}.tex",
+            context,
+        ).encode("utf8"),
+    )
     os.close(latex_file)
 
     # Compile the TeX file with PDFLaTeX
     try:
-        subprocess.check_output(["pdflatex", "-halt-on-error",
-                                 "-output-directory", tmplatex,
-                                 latex_filename])
-    except subprocess.CalledProcessError as e:
-        return render(request, 'schluessel/pdflatex_error.html',
-                      {'erroroutput': e.output, 'doc': doc})
+        subprocess.check_output(
+            [
+                "pdflatex",
+                "-halt-on-error",
+                "-output-directory",
+                tmplatex,
+                latex_filename,
+            ],
+        )
+    except subprocess.CalledProcessError as error:
+        return render(
+            request,
+            "schluessel/pdflatex_error.html",
+            {"erroroutput": error.output, "doc": doc},
+        )
 
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment;' \
-                                      'filename="{}_{}_{}_{}_{}.pdf"'.format(doc, key.keytype.shortname,
-                                                                             key.number, key.person.name,
-                                                                             key.person.firstname)
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = "attachment;" 'filename="{}_{}_{}_{}_{}.pdf"'.format(
+        doc,
+        key.keytype.shortname,
+        key.number,
+        key.person.name,
+        key.person.firstname,
+    )
 
     # return path to pdf
-    pdf_filename = "{}.pdf".format(os.path.splitext(latex_filename)[0])
+    pdf_filename = f"{os.path.splitext(latex_filename)[0]}.pdf"
 
-    with open(pdf_filename, 'rb') as f:
-        response.write(f.read())
+    with open(pdf_filename, "rb") as pdf:
+        response.write(pdf.read())
 
     return response
 
 
 @login_required
-def list_keys(request):
-    keys = Key.objects.filter(active=True).order_by("keytype__shortname",
-                                                    "number")
+def list_keys(request: WSGIRequest) -> HttpResponse:
+    keys = Key.objects.filter(active=True).order_by(
+        "keytype__shortname",
+        "number",
+    )
 
     form = FilterKeysForm(request.POST or None)
     if form.is_valid():
-        search = form.cleaned_data['search']
-        given = form.cleaned_data['given']
-        free = form.cleaned_data['free']
-        active = form.cleaned_data['active']
-        keytype = form.cleaned_data['keytype']
+        search = form.cleaned_data["search"]
+        given = form.cleaned_data["given"]
+        free = form.cleaned_data["free"]
+        active = form.cleaned_data["active"]
+        keytype = form.cleaned_data["keytype"]
 
         keys = Key.objects.all()
-        for s in search.split():
+        for search_term in search.split():
             keys = keys.filter(
-                Q(keytype__shortname__icontains=s) |
-                Q(keytype__name__icontains=s) |
-                Q(number__icontains=s) |
-                Q(comment__icontains=s) |
-                Q(person__name__icontains=s) |
-                Q(person__firstname__icontains=s) |
-                Q(person__email__icontains=s) |
-                Q(person__address__icontains=s) |
-                Q(person__plz__icontains=s) |
-                Q(person__city__icontains=s) |
-                Q(person__mobile__icontains=s) |
-                Q(person__phone__icontains=s)
+                Q(keytype__shortname__icontains=search_term)
+                | Q(keytype__name__icontains=search_term)
+                | Q(number__icontains=search_term)
+                | Q(comment__icontains=search_term)
+                | Q(person__name__icontains=search_term)
+                | Q(person__firstname__icontains=search_term)
+                | Q(person__email__icontains=search_term)
+                | Q(person__address__icontains=search_term)
+                | Q(person__plz__icontains=search_term)
+                | Q(person__city__icontains=search_term)
+                | Q(person__mobile__icontains=search_term)
+                | Q(person__phone__icontains=search_term),
             )
 
         if given and not free:
@@ -582,47 +629,47 @@ def list_keys(request):
             keys = keys.filter(keytype=keytype)
 
     context = {
-        'keys': keys,
-        'form': form,
+        "keys": keys,
+        "form": form,
     }
 
-    return render(request, 'schluessel/list_keys.html', context)
+    return render(request, "schluessel/list_keys.html", context)
 
 
 @login_required
-def list_persons(request):
+def list_persons(request: WSGIRequest) -> HttpResponse:
     persons = Person.objects.order_by("name", "firstname")
 
     form = FilterPersonsForm(request.POST or None)
     if form.is_valid():
-        search = form.cleaned_data['search']
+        search = form.cleaned_data["search"]
 
-        for s in search.split():
+        for search_term in search.split():
             persons = persons.filter(
-                Q(name__icontains=s) |
-                Q(firstname__icontains=s) |
-                Q(email__icontains=s) |
-                Q(address__icontains=s) |
-                Q(plz__icontains=s) |
-                Q(city__icontains=s) |
-                Q(mobile__icontains=s) |
-                Q(phone__icontains=s)
+                Q(name__icontains=search_term)
+                | Q(firstname__icontains=search_term)
+                | Q(email__icontains=search_term)
+                | Q(address__icontains=search_term)
+                | Q(plz__icontains=search_term)
+                | Q(city__icontains=search_term)
+                | Q(mobile__icontains=search_term)
+                | Q(phone__icontains=search_term),
             )
 
     context = {
-        'persons': persons,
-        'form': form,
+        "persons": persons,
+        "form": form,
     }
 
-    return render(request, 'schluessel/list_persons.html', context)
+    return render(request, "schluessel/list_persons.html", context)
 
 
 @staff_member_required
-def show_log(request):
+def show_log(request: WSGIRequest) -> HttpResponse:
     logentries = KeyLogEntry.objects.order_by("-date")[:20]
 
     context = {
-        'logentries': logentries,
+        "logentries": logentries,
     }
 
-    return render(request, 'schluessel/show_log.html', context)
+    return render(request, "schluessel/show_log.html", context)

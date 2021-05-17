@@ -44,7 +44,7 @@ class Person(models.Model):
     )
 
     def __str__(self):
-        return "{} {}".format(self.firstname, self.name)
+        return f"{self.firstname} {self.name}"
 
 
 class KeyType(models.Model):
@@ -110,11 +110,10 @@ class Key(models.Model):
     def typename(self):
         if self.keytype.keycard:
             return "Schließkarte"
-        else:
-            return "Schlüssel"
+        return "Schlüssel"
 
     def __str__(self):
-        return "{} {}".format(self.keytype.shortname, self.number)
+        return f"{self.keytype.shortname} {self.number}"
 
 
 class KeyLogEntry(models.Model):
@@ -253,43 +252,55 @@ class KeyLogEntry(models.Model):
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         # Fill some duplicating fields in case original model is deleted:
         if self.key and not self.key_number:
-            self.key_deposit=self.key.keytype.deposit
-            self.key_keytype=self.key.keytype
-            self.key_number=self.key.number
-            self.key_comment=self.key.comment
-            self.key_active=self.key.active
+            self.key_deposit = self.key.keytype.deposit
+            self.key_keytype = self.key.keytype
+            self.key_number = self.key.number
+            self.key_comment = self.key.comment
+            self.key_active = self.key.active
 
         if self.person and not self.person_name:
-            self.person_name=self.person.name
-            self.person_firstname=self.person.firstname
-            self.person_email=self.person.email
-            self.person_address=self.person.address
-            self.person_plz=self.person.plz
-            self.person_city=self.person.city
-            self.person_mobile=self.person.mobile
-            self.person_phone=self.person.phone
+            self.person_name = self.person.name
+            self.person_firstname = self.person.firstname
+            self.person_email = self.person.email
+            self.person_address = self.person.address
+            self.person_plz = self.person.plz
+            self.person_city = self.person.city
+            self.person_mobile = self.person.mobile
+            self.person_phone = self.person.phone
 
         super().save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
         if self.operation == KeyLogEntry.GIVE:
-            return "Ausgabe von {} an {} durch {} am {}".format(self.key,
-                                                                self.person, self.user.get_full_name(), self.date)
+            return "Ausgabe von {} an {} durch {} am {}".format(
+                self.key,
+                self.person,
+                self.user.get_full_name(),
+                self.date,
+            )
         elif self.operation == KeyLogEntry.RETURN:
-            return "Rückgabe von {} von {} an {} am {}".format(self.key,
-                                                               self.person, self.user.get_full_name(), self.date)
+            return "Rückgabe von {} von {} an {} am {}".format(
+                self.key,
+                self.person,
+                self.user.get_full_name(),
+                self.date,
+            )
         elif self.operation == KeyLogEntry.CREATE and self.key:
-            return "Erstellung von {} durch {} am {}".format(self.key,
-                                                             self.user.get_full_name(), self.date)
+            return "Erstellung von {} durch {} am {}".format(
+                self.key,
+                self.user.get_full_name(),
+                self.date,
+            )
         elif self.operation == KeyLogEntry.CREATE and self.person:
-            return "Erstellung von {} durch {} am {}".format(self.person,
-                                                             self.user.get_full_name(), self.date)
+            return "Erstellung von {} durch {} am {}".format(
+                self.person,
+                self.user.get_full_name(),
+                self.date,
+            )
         elif self.operation == KeyLogEntry.EDIT and self.key:
-            return "Bearbeitung von {} durch {} am {}".format(self.key,
-                                                              self.user.get_full_name(), self.date)
+            return f"Bearbeitung von {self.key} durch {self.user.get_full_name()} am {self.date}"
         elif self.operation == KeyLogEntry.EDIT and self.person:
-            return "Bearbeitung von {} durch {} am {}".format(self.person,
-                                                              self.user.get_full_name(), self.date)
+            return f"Bearbeitung von {self.person} durch {self.user.get_full_name()} am {self.date}"
         else:
             return "Unvalid Operation"
 
@@ -326,7 +337,10 @@ class SavedKeyChange(models.Model):
 
     @property
     def violated_key(self):
-        violated_key = Key.objects.filter(keytype=self.new_keytype,
-                                          number=self.key.number)
+        violated_key = Key.objects.filter(
+            keytype=self.new_keytype,
+            number=self.key.number,
+        )
         if violated_key.exists():
             return violated_key.get()
+        return None

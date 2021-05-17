@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class SchluesselConfig(AppConfig):
-    name = 'schluessel'
+    name = "schluessel"
 
     def ready(self):
         pass

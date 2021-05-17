@@ -5,63 +5,62 @@
 {% block title %}Alle Aufgaben{% endblock %}
 
 {% block content %}
-    {% if alle %}
-        <div class="row">
-            <div class="col-md-12">
-                <h3>Alle Aufgaben</h3>
-                <br/>
-                <table class="table table-hover">
-                    <tr>
-                        <th>Bezeichnung</th>
-                        <th>Zusatz</th>
-                        <th>Frist</th>
-                        <th>Zuständiger</th>
-                        <th>Bearbeiter</th>
-                        <th>Jahr</th>
-                        <th>Semester</th>
-                        <th>Text</th>
-                        <th>Erledigt?</th>
-                    </tr>
-                    {% for aufgabe in alle %}
-                        <tr>
-                            <td>
-                                <a href="{% url "aufgaben:aufgabe" aufgabe.id %}">
-                                    {{ aufgabe.art.name }}
-                                </a>
-                            </td>
-                            <td>{{ aufgabe.zusatz|default_if_none:"" }}</td>
-                            <td>
-                                {% if aufgabe.faellig and not aufgabe.erledigt %}
-                                    <span style="color : red;">
-                                    {{ aufgabe.frist }}
-                                    </span>
-                                {% else %}
-                                    {{ aufgabe.frist }}
-                                {% endif %}
-                            </td>
-                            <td>{{ aufgabe.zustaendig.get_short_name }}</td>
-                            <td>{{ aufgabe.bearbeiter.get_short_name }}</td>
-                            <td>
-                                {% localize off %}
-                                    {{ aufgabe.jahr|default_if_none:"" }}
-                                {% endlocalize %}
-                            </td>
-                            <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
-                            <td>{{ aufgabe.text }}</td>
-                            <td>
-                                {% if aufgabe.erledigt %}
-                                    {% bootstrap_icon "ok" %}
-                                {% else %}
-                                    {% bootstrap_icon "remove" %}
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-    {% else %}
-        <p>Es sind keine Aufgaben verfügbar.</p>
-    {% endif %}
+{% if alle_aufgaben %}
+<div class="row">
+    <div class="col-md-12">
+        <h3>Alle Aufgaben</h3>
+        <br />
+        <table class="table table-hover">
+            <tr>
+                <th>Bezeichnung</th>
+                <th>Zusatz</th>
+                <th>Frist</th>
+                <th>Zuständiger</th>
+                <th>Bearbeiter</th>
+                <th>Jahr</th>
+                <th>Semester</th>
+                <th>Text</th>
+                <th>Erledigt?</th>
+            </tr>
+            {% for aufgabe in alle_aufgaben %}
+            <tr>
+                <td>
+                    <a href="{% url "aufgaben:aufgabe" aufgabe.id %}">
+                        {{ aufgabe.art.name }}
+                    </a>
+                </td>
+                <td>{{ aufgabe.zusatz|default_if_none:"" }}</td>
+                <td>
+                    {% if aufgabe.faellig and not aufgabe.erledigt %}
+                    <span style="color: red;">
+                        {{ aufgabe.frist }}
+                    </span>
+                    {% else %}
+                    {{ aufgabe.frist }}
+                    {% endif %}
+                </td>
+                <td>{{ aufgabe.zustaendig.get_short_name }}</td>
+                <td>{{ aufgabe.bearbeiter.get_short_name }}</td>
+                <td>
+                    {% localize off %}
+                    {{ aufgabe.jahr|default_if_none:"" }}
+                    {% endlocalize %}
+                </td>
+                <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
+                <td>{{ aufgabe.text }}</td>
+                <td>
+                    {% if aufgabe.erledigt %}
+                    {% bootstrap_icon "ok" %}
+                    {% else %}
+                    {% bootstrap_icon "remove" %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% else %}
+<p>Es sind keine Aufgaben verfügbar.</p>
+{% endif %}
 {% endblock %}
-

@@ -3,48 +3,45 @@
 {% load bootstrap3 %}
 
 {% block title %}
-    {% if aufgabe.pk %}
-        Aufgabe ändern
-    {% else %}
-        Aufgabe hinzufügen
-    {% endif %}
+Aufgabe {% if aufgabe.pk %}ändern{% else %}hinzufügen{% endif %}
 {% endblock %}
 
 {% block content %}
-    {% if aufgabe.pk %}
-        <h1>Aufgabe ändern</h1>
-    {% else %}
-        <h1>Aufgabe hinzufügen</h1>
-    {% endif %}
+<h1>Aufgabe {% if aufgabe.pk %}ändern{% else %}hinzufügen{% endif %}</h1>
 
-    {% if aufgabe.pk %}
-        <p><a
-                href="{% url "aufgaben:aufgabe" aufgabe_id=aufgabe.pk %}"
-                class="btn btn-default" role="button">{% bootstrap_icon "arrow-left" %}
-            Zurück zur Aufgabe
-        </a></p>
-    {% endif %}
-    <div class="row">
-        <div class="col-md-6">
-            <p><span class="text-muted">
-                    Mit * markierte Felder sind verpflichtend
+{% if aufgabe.pk %}
+<p><a
+        href="{% url "aufgaben:aufgabe" aufgabe_id=aufgabe.pk %}"
+        class="btn btn-default"
+        role="button"
+    >{% bootstrap_icon "arrow-left" %}
+        Zurück zur Aufgabe
+    </a></p>
+{% endif %}
+<div class="row">
+    <div class="col-md-6">
+        <p><span class="text-muted">
+                Mit * markierte Felder sind verpflichtend
             </span></p>
 
-            <form method="POST">{% csrf_token %}
-                {% bootstrap_form form %}
-                <button type="submit" class="save btn btn-default">
-                    {% bootstrap_icon "floppy-disk" %} Sichern
-                </button>
-            </form>
-        </div>
+        <form method="POST">{% csrf_token %}
+            {% bootstrap_form form %}
+            <button
+                type="submit"
+                class="save btn btn-default"
+            >
+                {% bootstrap_icon "floppy-disk" %} Sichern
+            </button>
+        </form>
     </div>
-    <script type="text/javascript">
-        $(function () {
-            $('#pick_frist').datetimepicker({
-                inline: true,
-                sideBySide: true,
-                format: 'DD.MM.YYYY'
-            });
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#pick_frist').datetimepicker({
+            inline: true,
+            sideBySide: true,
+            format: 'DD.MM.YYYY',
         });
-    </script>
+    });
+</script>
 {% endblock %}

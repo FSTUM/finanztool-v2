@@ -10,24 +10,26 @@ register = template.Library()
 @stringfilter
 def latexescape(value):
     """Escapes the text for LaTeX"""
-    LATEX_ESCAPES = OrderedDict([
-        ('\\', '\\textbackslash '),  # \ -> \textbackslash
-        ('\n', '\\newline '),
-        ('#', '\# '),
-        ('$', '\$ '),
-        ('%', '\% '),
-        ('&', '\& '),
-        ('^', '\\textasciicircum '),
-        ('_', '\_ '),
-        ('{', '\{ '),
-        ('}', '\} '),
-        ('~', '\\textasciitilde '),
-        ('<', '\\textless '),
-        ('>', '\\textgreater '),
-        ('€', '\\euro'),
-    ])
+    LATEX_ESCAPES = OrderedDict(
+        [
+            ("\\", "\\textbackslash "),  # \ -> \textbackslash
+            ("\n", "\\newline "),
+            ("#", "\\# "),
+            ("$", "\\$ "),
+            ("%", "\\% "),
+            ("&", "\\& "),
+            ("^", "\\textasciicircum "),
+            ("_", "\\_ "),
+            ("{", "\\{ "),
+            ("}", "\\} "),
+            ("~", "\\textasciitilde "),
+            ("<", "\\textless "),
+            (">", "\\textgreater "),
+            ("€", "\\euro"),
+        ],
+    )
 
-    for s, r in LATEX_ESCAPES.items():
-        value = value.replace(s, r)
+    for string, replacement in LATEX_ESCAPES.items():
+        value = value.replace(string, replacement)
 
     return value

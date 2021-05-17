@@ -5,101 +5,106 @@
 {% block title %}Alle Mahnungen{% endblock %}
 
 {% block content %}
-    {% if rechnungen %}
-        <div class="row">
-            <div class="col-md-12">
-                <h3>Alle Mahnungen</h3>
-                <br/>
-                <table class="table table-hover">
-                    <tr>
-                        <th>{% bootstrap_icon "envelope" %}</th>
-                        <th>Mahnungsnr.</th>
-                        <th>Kunde</th>
-                        <th>Fällig</th>
-                        <th style="text-align:right">Betrag</th>
-                        <th style="text-align:center">Gerichtlich?</th>
-                        <th style="text-align:center">Bezahlt?</th>
-                    </tr>
-                    {% for rechnung in rechnungen %}
-                        {% if rechnung.mahnungen %}
-                            <tr style="border-top: groove">
-                                <td/>
-                                <th>
-                                    <a href="{% url 'rechnung:rechnung' rechnung.id %}">
-                                        {% if not rechnung.erledigt %}
-                                            <span style="color : red;">
-                                        {% endif %}
-                                        {{ rechnung }}
-                                    </a>
-                                </th>
-                                <td>
-                                    <a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">
-                                        {% localize off %} {{ rechnung.kunde.knr }} {% endlocalize %}
-                                    </a>
-                                </td>
-                                <td/>
-                                <td align="right" style="color:grey">
-                                    {{ rechnung.gesamtsumme }} €
-                                </td>
-                                <td/>
-                                <td align="center">
-                                    {% if rechnung.bezahlt %}
-                                        {% bootstrap_icon "ok" %}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% for mahnung in rechnung.mahnungen %}
-                                <tr>
-                                    <td>
-                                        {% if mahnung.geschickt %}
-                                            {% bootstrap_icon "ok" %}
-                                        {% else %}
-                                            {% bootstrap_icon "remove" %}
-                                        {% endif %}
-                                    </td>
-                                    <td style="padding-left:2em"><a
-                                            href="{% url 'rechnung:mahnung' mahnung.rechnung.id mahnung.id %}">
-                                        {{ mahnung.wievielte }}. Mahnung
-                                    </a>
-                                    </td>
-                                    {% if mahnung.geschickt %}
-                                        <td/>
-                                        <td>
-                                            {% if mahnung.faellig and not rechnung.erledigt %}
-                                                <span style="color : red;">
-                                            {% endif %}
-                                            {{ mahnung.mfdatum }}
-                                        </td>
-                                        <td align="right">{{ mahnung.mahnsumme }} €</td>
-                                        <td align="center">
-                                            {% if mahnung.gerichtlich %}
-                                                {% bootstrap_icon "ok" %}
-                                            {% endif %}
-                                        </td>
-                                        <td align="center">
-                                            {% if mahnung.bezahlt %}
-                                                {% bootstrap_icon "ok" %}
-                                            {% endif %}
-                                        </td>
-                                        <td/>
-                                    {% else %}
-                                        <td colspan=5 style="color:grey" align="center">
-                                            Noch nicht gestellt
-                                        </td>
-                                    {% endif %}
-                                </tr>
-                            {% endfor %}
-                        {% else %}
-                            <tr>
-                                <td colspan=7>
-                                    Es existieren keine Mahnungen.
-                                </td>
-                            </tr>
+{% if rechnungen %}
+<div class="row">
+    <div class="col-md-12">
+        <h3>Alle Mahnungen</h3>
+        <br />
+        <table class="table table-hover">
+            <tr>
+                <th>{% bootstrap_icon "envelope" %}</th>
+                <th>Mahnungsnr.</th>
+                <th>Kunde</th>
+                <th>Fällig</th>
+                <th style="text-align: right">Betrag</th>
+                <th style="text-align: center">Gerichtlich?</th>
+                <th style="text-align: center">Bezahlt?</th>
+            </tr>
+            {% for rechnung in rechnungen %}
+            {% if rechnung.mahnungen %}
+            <tr style="border-top: groove">
+                <td />
+                <th>
+                    <a href="{% url 'rechnung:rechnung' rechnung.id %}">
+                        {% if not rechnung.erledigt %}
+                        <span style="color: red;">
+                            {% endif %}
+                            {{ rechnung }}
+                    </a>
+                </th>
+                <td>
+                    <a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">
+                        {% localize off %} {{ rechnung.kunde.knr }} {% endlocalize %}
+                    </a>
+                </td>
+                <td />
+                <td
+                    align="right"
+                    style="color: grey"
+                >
+                    {{ rechnung.gesamtsumme }} €
+                </td>
+                <td />
+                <td align="center">
+                    {% if rechnung.bezahlt %}
+                    {% bootstrap_icon "ok" %}
+                    {% endif %}
+                </td>
+            </tr>
+            {% for mahnung in rechnung.mahnungen %}
+            <tr>
+                <td>
+                    {% if mahnung.geschickt %}
+                    {% bootstrap_icon "ok" %}
+                    {% else %}
+                    {% bootstrap_icon "remove" %}
+                    {% endif %}
+                </td>
+                <td style="padding-left: 2em"><a href="{% url 'rechnung:mahnung' mahnung.rechnung.id mahnung.id %}">
+                        {{ mahnung.wievielte }}. Mahnung
+                    </a>
+                </td>
+                {% if mahnung.geschickt %}
+                <td />
+                <td>
+                    {% if mahnung.faellig and not rechnung.erledigt %}
+                    <span style="color: red;">
                         {% endif %}
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-    {% endif %}
+                        {{ mahnung.mfdatum }}
+                </td>
+                <td align="right">{{ mahnung.mahnsumme }} €</td>
+                <td align="center">
+                    {% if mahnung.gerichtlich %}
+                    {% bootstrap_icon "ok" %}
+                    {% endif %}
+                </td>
+                <td align="center">
+                    {% if mahnung.bezahlt %}
+                    {% bootstrap_icon "ok" %}
+                    {% endif %}
+                </td>
+                <td />
+                {% else %}
+                <td
+                    colspan=5
+                    style="color: grey"
+                    align="center"
+                >
+                    Noch nicht gestellt
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan=7>
+                    Es existieren keine Mahnungen.
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
-

@@ -2,43 +2,49 @@
 {% load bootstrap3 %}
 
 {% block title %}
-    {% if kunde.knr %}
-        Kunde bearbeiten
-    {% else %}
-        Kunde hinzufügen
-    {% endif %}
+{% if kunde.knr %}
+Kunde bearbeiten
+{% else %}
+Kunde hinzufügen
+{% endif %}
 {% endblock %}
 
 {% block content %}
-    <h1>
-        {% if kunde.knr %}
-            Kunde bearbeiten
-        {% else %}
-            Kunde hinzufügen
-        {% endif %}
-    </h1>
-    {% if kunde.pk %}
-        <p><a href="{% url "rechnung:kunde" kunde_id=kunde.pk %}" class="btn btn-default"
-              role="button">{% bootstrap_icon "arrow-left" %} Zurück zum Kunden</a></p>
+<h1>
+    {% if kunde.knr %}
+    Kunde bearbeiten
+    {% else %}
+    Kunde hinzufügen
     {% endif %}
-    <div class="row">
-        <div class="col-md-5">
-            {% if form.kunde_verwendet %}
-                <div class="alert alert-danger">
-                    Dieser Kunde wird bereits in einer Rechnung verwendet,
-                    du kannst ihn nicht mehr bearbeiten.</br>
-                    Lege bei Bedarf einen neuen Kunden an.
-                </div>
-            {% endif %}
-            <p><span class="text-muted">
-                    Mit * markierte Felder sind verpflichtend
-            </span></p>
-            <form method="POST">{% csrf_token %}
-                {% bootstrap_form form %}
-                <button type="submit" class="save btn btn-default">
-                    {% bootstrap_icon "floppy-disk" %} Sichern
-                </button>
-            </form>
+</h1>
+{% if kunde.pk %}
+<p><a
+        href="{% url "rechnung:kunde" kunde_id=kunde.pk %}"
+        class="btn btn-default"
+        role="button"
+    >{% bootstrap_icon "arrow-left" %} Zurück zum Kunden</a></p>
+{% endif %}
+<div class="row">
+    <div class="col-md-5">
+        {% if form.kunde_verwendet %}
+        <div class="alert alert-danger">
+            Dieser Kunde wird bereits in einer Rechnung verwendet,
+            du kannst ihn nicht mehr bearbeiten.</br>
+            Lege bei Bedarf einen neuen Kunden an.
         </div>
+        {% endif %}
+        <p><span class="text-muted">
+                Mit * markierte Felder sind verpflichtend
+            </span></p>
+        <form method="POST">{% csrf_token %}
+            {% bootstrap_form form %}
+            <button
+                type="submit"
+                class="save btn btn-default"
+            >
+                {% bootstrap_icon "floppy-disk" %} Sichern
+            </button>
+        </form>
     </div>
+</div>
 {% endblock %}

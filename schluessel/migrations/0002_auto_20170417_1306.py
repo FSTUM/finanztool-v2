@@ -7,14 +7,17 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('schluessel', '0001_initial'),
+        ("schluessel", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='keylogentry',
-            name='operation',
-            field=models.CharField(choices=[('G', 'Ausgabe'), ('R', 'Rückgabe')], max_length=1,
-                                   verbose_name='Aus-/Rückgabe'),
+            model_name="keylogentry",
+            name="operation",
+            field=models.CharField(
+                choices=[("G", "Ausgabe"), ("R", "Rückgabe")],
+                max_length=1,
+                verbose_name="Aus-/Rückgabe",
+            ),
         ),
     ]

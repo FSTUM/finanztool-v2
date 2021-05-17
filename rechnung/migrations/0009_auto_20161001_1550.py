@@ -7,13 +7,13 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('rechnung', '0008_mahnung'),
+        ("rechnung", "0008_mahnung"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='mahnung',
-            name='wievielte',
-            field=models.IntegerField(null=True, verbose_name='Wievielte Mahnung?'),
+            model_name="mahnung",
+            name="wievielte",
+            field=models.IntegerField(null=True, verbose_name="Wievielte Mahnung?"),
         ),
     ]

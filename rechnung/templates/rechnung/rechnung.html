@@ -4,248 +4,282 @@
 {% block title %}RE {{ rechnung.rnr_string }}{% endblock %}
 
 {% block content %}
-    <h1>RE {{ rechnung.rnr_string }}: {{ rechnung.name }}</h1>
-    {% if rechnung.gestellt and not rechnung.erledigt %}
-        <form class=form-horizontal method="POST">{% csrf_token %}
-            </br>
-            <p>
-                {{ form }}
-                <button type="submit" name="bezahlt" class="save btn btn-success">
-                    {% bootstrap_icon "credit-card" %} Bezahlt
-                </button>
-            </p>
-        </form>
-    {% elif not rechnung.gestellt and not rechnung.erledigt %}
-        <form class=form-horizontal method="POST">{% csrf_token %}
-            </br>
-            <p>
-                {{ form }}
-                <button type="submit" name="gestellt" class="save btn btn-warning">
-                    {% bootstrap_icon "envelope" %} Gestellt
-                </button>
-            </p>
-        </form>
+<h1>RE {{ rechnung.rnr_string }}: {{ rechnung.name }}</h1>
+{% if rechnung.gestellt and not rechnung.erledigt %}
+<form
+    class=form-horizontal
+    method="POST"
+>{% csrf_token %}
+    </br>
+    <p>
+        {{ form }}
+        <button
+            type="submit"
+            name="bezahlt"
+            class="save btn btn-success"
+        >
+            {% bootstrap_icon "credit-card" %} Bezahlt
+        </button>
+    </p>
+</form>
+{% elif not rechnung.gestellt and not rechnung.erledigt %}
+<form
+    class=form-horizontal
+    method="POST"
+>{% csrf_token %}
+    </br>
+    <p>
+        {{ form }}
+        <button
+            type="submit"
+            name="gestellt"
+            class="save btn btn-warning"
+        >
+            {% bootstrap_icon "envelope" %} Gestellt
+        </button>
+    </p>
+</form>
+{% endif %}
+
+<h2>
+    {% if rechnung.gestellt and not rechnung.erledigt and rechnung.faellig %}
+    <a
+        href="{% url "rechnung:mahnung_neu" rechnung.id %}"
+        class="btn btn-danger"
+        role="button"
+    >
+        {% bootstrap_icon "hourglass" %} Mahnung stellen
+    </a>
+    {% endif %}
+    <a
+        href="{% url "rechnung:rechnung_aendern" rechnung.id %}"
+        class="btn btn-info"
+        role="button"
+    >
+        {% bootstrap_icon "pencil" %} Bearbeiten
+    </a>
+
+    <a
+        href="{% url "rechnung:rechnung_duplizieren" rechnung.id %}"
+        class="btn btn-info"
+        role="button"
+    >
+        {% bootstrap_icon "duplicate" %} Duplizieren
+    </a>
+
+    {% if not rechnung.gestellt %}
+    <a
+        href="{% url "rechnung:rechnung_posten_neu" rechnung.id %}"
+        class="btn btn-info"
+        role="button"
+    >
+        {% bootstrap_icon "plus" %} Neuer Posten
+    </a>
     {% endif %}
 
-    <h2>
-        {% if rechnung.gestellt and not rechnung.erledigt and rechnung.faellig %}
-            <a href="{% url "rechnung:mahnung_neu" rechnung.id %}" class="btn btn-danger" role="button">
-                {% bootstrap_icon "hourglass" %} Mahnung stellen
-            </a>
-        {% endif %}
-        <a href="{% url "rechnung:rechnung_aendern" rechnung.id %}" class="btn btn-info" role="button">
-            {% bootstrap_icon "pencil" %} Bearbeiten
-        </a>
+    <a
+        href="{% url "rechnung:rechnungpdf" rechnung.id %}"
+        class="btn btn-info"
+        role="button"
+    >
+        {% bootstrap_icon "download-alt" %} Herunterladen
+    </a>
 
-        <a href="{% url "rechnung:rechnung_duplizieren" rechnung.id %}" class="btn btn-info" role="button">
-            {% bootstrap_icon "duplicate" %} Duplizieren
-        </a>
+</h2>
 
-        {% if not rechnung.gestellt %}
-            <a href="{% url "rechnung:rechnung_posten_neu" rechnung.id %}" class="btn btn-info" role="button">
-                {% bootstrap_icon "plus" %} Neuer Posten
-            </a>
-        {% endif %}
-
-        <a href="{% url "rechnung:rechnungpdf" rechnung.id %}" class="btn btn-info" role="button">
-            {% bootstrap_icon "download-alt" %} Herunterladen
-        </a>
-
-    </h2>
-
-    <div class="row">
-        {% if mahnungen %}
-            <div class="col-md-6">
-                <h3>Mahnungen</h3>
-                {% for mahnung in mahnungen %}
-                    <h4>
-                        <b>
-                            <a href="{% url 'rechnung:mahnung' rechnung.id mahnung.id %}">
-                                {{ mahnung.wievielte }}. Mahnung
-                            </a>
-                        </b>
-                    </h4>
-                    <table class="table table-striped">
-                        <tr>
-                            <th>Mahngebühr {% bootstrap_icon "arrow-right" %} Neue Summe</th>
-                            <td>{{ mahnung.gebuehr }} € {% bootstrap_icon "arrow-right" %} <b> {{ mahnung.mahnsumme }}
-                                €</b></td>
-                        </tr>
-                        <tr>
-                            <th>Gerichtliche Schritte</th>
-                            <td>
-                                {% if mahnung.gerichtlich %}
-                                    <span style="color : red;">wurden angedroht.</span>
-                                {% else %}
-                                    {% bootstrap_icon "minus" %}
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Geschickt?</th>
-                            <td>
-                                {% if mahnung.geschickt %}
-                                    {% bootstrap_icon "ok" %}
-                                {% else %}
-                                    {% bootstrap_icon "remove" %}
-                                {% endif %}
-                            </td>
-                        <tr>
-                            <th>Bezahlt?</th>
-                            <td>
-                                {% if mahnung.bezahlt %}
-                                    {% bootstrap_icon "ok" %}
-                                {% else %}
-                                    {% bootstrap_icon "remove" %}
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Datum, Fällig</th>
-                            <td>
-                                {{ mahnung.mdatum }},
-                                {% if mahnung.faellig and mahnung.geschickt %}
-                                    <span style="color : red;">
-                                {% else %}
-                                    <span>
-                                {% endif %}
-                                {{ mahnung.mfdatum }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Gestellt von</th>
-                            <td>{{ mahnung.ersteller.get_full_name }}</td>
-                        </tr>
-                        <tr>
-                            <th>Einleitung</th>
-                            <td>
-                                {{ mahnung.einleitung }}
-                            </td>
-                        </tr>
-                    </table>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        <div class="col-md-6">
-            <h3>Übersicht</h3>
-            <br/>
-            <table class="table table-striped">
-                <tr>
-                    <th>Rechnung gestellt?</th>
-                    <td>
-                        {% if rechnung.gestellt %}
-                            {% bootstrap_icon "ok" %}
+<div class="row">
+    {% if mahnungen %}
+    <div class="col-md-6">
+        <h3>Mahnungen</h3>
+        {% for mahnung in mahnungen %}
+        <h4>
+            <b>
+                <a href="{% url 'rechnung:mahnung' rechnung.id mahnung.id %}">
+                    {{ mahnung.wievielte }}. Mahnung
+                </a>
+            </b>
+        </h4>
+        <table class="table table-striped">
+            <tr>
+                <th>Mahngebühr {% bootstrap_icon "arrow-right" %} Neue Summe</th>
+                <td>{{ mahnung.gebuehr }} € {% bootstrap_icon "arrow-right" %} <b> {{ mahnung.mahnsumme }}
+                        €</b></td>
+            </tr>
+            <tr>
+                <th>Gerichtliche Schritte</th>
+                <td>
+                    {% if mahnung.gerichtlich %}
+                    <span style="color: red;">wurden angedroht.</span>
+                    {% else %}
+                    {% bootstrap_icon "minus" %}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Geschickt?</th>
+                <td>
+                    {% if mahnung.geschickt %}
+                    {% bootstrap_icon "ok" %}
+                    {% else %}
+                    {% bootstrap_icon "remove" %}
+                    {% endif %}
+                </td>
+            <tr>
+                <th>Bezahlt?</th>
+                <td>
+                    {% if mahnung.bezahlt %}
+                    {% bootstrap_icon "ok" %}
+                    {% else %}
+                    {% bootstrap_icon "remove" %}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Datum, Fällig</th>
+                <td>
+                    {{ mahnung.mdatum }},
+                    {% if mahnung.faellig and mahnung.geschickt %}
+                    <span style="color: red;">
                         {% else %}
-                            {% bootstrap_icon "remove" %}
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th>Rechnung erledigt?</th>
-                    <td>
-                        {% if rechnung.bezahlt %}
-                            <span style="color : green;">
-                                {% bootstrap_icon "ok" %} Die Rechnung wurde bezahlt.
-                            </span>
-                        {% else %}
-                            {% if rechnung.erledigt %}
-                                <span style="color : green;">
-                                    {% bootstrap_icon "ok" %} Eine zugehörige Mahnung wurde bezahlt.
-                                </span>
-                            {% else %}
-                                {% bootstrap_icon "remove" %} Der Betrag ist noch offen
+                        <span>
                             {% endif %}
+                            {{ mahnung.mfdatum }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>Gestellt von</th>
+                <td>{{ mahnung.ersteller.get_full_name }}</td>
+            </tr>
+            <tr>
+                <th>Einleitung</th>
+                <td>
+                    {{ mahnung.einleitung }}
+                </td>
+            </tr>
+        </table>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="col-md-6">
+        <h3>Übersicht</h3>
+        <br />
+        <table class="table table-striped">
+            <tr>
+                <th>Rechnung gestellt?</th>
+                <td>
+                    {% if rechnung.gestellt %}
+                    {% bootstrap_icon "ok" %}
+                    {% else %}
+                    {% bootstrap_icon "remove" %}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Rechnung erledigt?</th>
+                <td>
+                    {% if rechnung.bezahlt %}
+                    <span style="color: green;">
+                        {% bootstrap_icon "ok" %} Die Rechnung wurde bezahlt.
+                    </span>
+                    {% else %}
+                    {% if rechnung.erledigt %}
+                    <span style="color: green;">
+                        {% bootstrap_icon "ok" %} Eine zugehörige Mahnung wurde bezahlt.
+                    </span>
+                    {% else %}
+                    {% bootstrap_icon "remove" %} Der Betrag ist noch offen
+                    {% endif %}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Kunde</th>
+                <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde }}</td>
+            </tr>
+            <tr>
+                <th>Rechnungsdatum</th>
+                <td>{{ rechnung.rdatum }}</td>
+            </tr>
+            <tr>
+                <th>Lieferdatum</th>
+                <td>{{ rechnung.ldatum }}</td>
+            </tr>
+            <tr>
+                <th>Fälligkeitsdatum</th>
+                <td>
+                    {% if rechnung.faellig and rechnung.gestellt %}
+                    {% if not rechnung.erledigt %}
+                    <span style="color: red;">
                         {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th>Kunde</th>
-                    <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde }}</td>
-                </tr>
-                <tr>
-                    <th>Rechnungsdatum</th>
-                    <td>{{ rechnung.rdatum }}</td>
-                </tr>
-                <tr>
-                    <th>Lieferdatum</th>
-                    <td>{{ rechnung.ldatum }}</td>
-                </tr>
-                <tr>
-                    <th>Fälligkeitsdatum</th>
-                    <td>
-                        {% if rechnung.faellig and rechnung.gestellt %}
-                            {% if not rechnung.erledigt %}
-                                <span style="color : red;">
-                            {% endif %}
                         {% endif %}
                         {{ rechnung.fdatum }}</span>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Gestellt von</th>
-                    <td>{{ rechnung.ersteller.get_full_name }}</td>
-                </tr>
-                <tr>
-                    <th>Kategorie</th>
-                    <td><a href="{% url 'rechnung:kategorie_detail' rechnung.kategorie.id %}">{{ rechnung.kategorie }}
-                    </td>
-                </tr>
-                <tr>
-                    <th>Einleitungstext</th>
-                    <td>{{ rechnung.einleitung }}</td>
-                </tr>
-            </table>
-        </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Gestellt von</th>
+                <td>{{ rechnung.ersteller.get_full_name }}</td>
+            </tr>
+            <tr>
+                <th>Kategorie</th>
+                <td><a href="{% url 'rechnung:kategorie_detail' rechnung.kategorie.id %}">{{ rechnung.kategorie }}
+                </td>
+            </tr>
+            <tr>
+                <th>Einleitungstext</th>
+                <td>{{ rechnung.einleitung }}</td>
+            </tr>
+        </table>
     </div>
+</div>
 
-    <div class="row">
-        <div class="col-md-10">
-            <h3>Posten</h3>
-            <br/>
-            <table class="table">
-                <tr>
-                    <th class="text-right">Anzahl</th>
-                    <th>Bezeichnung</th>
-                    <th class="text-right">Einzelpreis</th>
-                    <th class="text-right">Mwst-Satz</th>
-                    <th class="text-right">Summe Netto</th>
-                </tr>
-                {% for posten in rechnung.posten_set.all %}
-                    <tr>
-                        <td align="right">{{ posten.anzahl }} </td>
-                        {% if rechnung.gestellt %}
-                            <td>{{ posten.name }}</td>
-                        {% else %}
-                            <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</td>
-                        {% endif %}
-                        <td align="right">{{ posten.einzelpreis }} €</td>
-                        <td align="right">{{ posten.get_mwst_display }}</td>
-                        <td align="right">{{ posten.summenettogerundet }} €</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-        <div class="col-md-10">
-            <table class="table">
-                <tr>
-                    <th>Zwischensumme (netto):</th>
-                    <td align="right">{{ rechnung.zwischensumme }} €</td>
-                </tr>
-                <tr>
-                    <th>Zzgl. Mehrwertsteuer 7%</th>
-                    <td align="right">{{ rechnung.summe_mwst_7 }} €</td>
-                </tr>
-                <tr>
-                    <th>Zzgl. Mehrwertsteuer 19%</th>
-                    <td align="right">{{ rechnung.summe_mwst_19 }} €</td>
-                </tr>
-                <tr>
-                    <th>Gesamt (brutto):</th>
-                    <td align="right"><b>{{ rechnung.gesamtsumme }} €<b></td>
-                </tr>
-            </table>
-        </div>
+<div class="row">
+    <div class="col-md-10">
+        <h3>Posten</h3>
+        <br />
+        <table class="table">
+            <tr>
+                <th class="text-right">Anzahl</th>
+                <th>Bezeichnung</th>
+                <th class="text-right">Einzelpreis</th>
+                <th class="text-right">Mwst-Satz</th>
+                <th class="text-right">Summe Netto</th>
+            </tr>
+            {% for posten in rechnung.posten_set.all %}
+            <tr>
+                <td align="right">{{ posten.anzahl }} </td>
+                {% if rechnung.gestellt %}
+                <td>{{ posten.name }}</td>
+                {% else %}
+                <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</td>
+                {% endif %}
+                <td align="right">{{ posten.einzelpreis }} €</td>
+                <td align="right">{{ posten.get_mwst_display }}</td>
+                <td align="right">{{ posten.summenettogerundet }} €</td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
+    <div class="col-md-10">
+        <table class="table">
+            <tr>
+                <th>Zwischensumme (netto):</th>
+                <td align="right">{{ rechnung.zwischensumme }} €</td>
+            </tr>
+            <tr>
+                <th>Zzgl. Mehrwertsteuer 7%</th>
+                <td align="right">{{ rechnung.summe_mwst_7 }} €</td>
+            </tr>
+            <tr>
+                <th>Zzgl. Mehrwertsteuer 19%</th>
+                <td align="right">{{ rechnung.summe_mwst_19 }} €</td>
+            </tr>
+            <tr>
+                <th>Gesamt (brutto):</th>
+                <td align="right"><b>{{ rechnung.gesamtsumme }} €<b></td>
+            </tr>
+        </table>
+    </div>
+</div>
 
 {% endblock %}

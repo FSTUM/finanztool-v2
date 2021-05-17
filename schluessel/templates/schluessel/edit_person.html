@@ -4,15 +4,22 @@
 {% block title %}Finanztool - Person {{ person }} bearbeiten{% endblock %}
 
 {% block content %}
-    <h1>Person {{ person }} bearbeiten</h1>
+<h1>Person {{ person }} bearbeiten</h1>
 
-    <div class="col-md-4">
-        <form name="addform" method="post" action="">
-            {% csrf_token %}
+<div class="col-md-4">
+    <form
+        name="addform"
+        method="post"
+        action=""
+    >
+        {% csrf_token %}
 
-            {% bootstrap_form form %}
+        {% bootstrap_form form %}
 
-            <button type="submit" class="btn btn-default btn-info">Ändern</button>
-        </form>
-    </div>
+        <button
+            type="submit"
+            class="btn btn-default btn-info"
+        >Ändern</button>
+    </form>
+</div>
 {% endblock %}

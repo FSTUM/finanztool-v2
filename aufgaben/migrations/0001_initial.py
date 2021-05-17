@@ -17,42 +17,62 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Aufgabe',
+            name="Aufgabe",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('frist', models.DateField(verbose_name='Sollte erledigt sein bis *')),
-                ('erledigt', models.BooleanField(default=False, verbose_name='Erledigt? *')),
-                ('jahr', models.IntegerField(validators=[django.core.validators.MaxValueValidator(9999),
-                                                         django.core.validators.MinValueValidator(1000)])),
-                ('semester',
-                 models.CharField(choices=[('ws', 'Wintersemester'), ('ss', 'Sommersemester')], max_length=2,
-                                  verbose_name='Zugehöriges Semester *')),
-                ('zusatz', models.CharField(blank=True, max_length=50, null=True, verbose_name='Zusatzinformation')),
-                ('text', models.TextField(verbose_name='Text')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("frist", models.DateField(verbose_name="Sollte erledigt sein bis *")),
+                ("erledigt", models.BooleanField(default=False, verbose_name="Erledigt? *")),
+                (
+                    "jahr",
+                    models.IntegerField(
+                        validators=[
+                            django.core.validators.MaxValueValidator(9999),
+                            django.core.validators.MinValueValidator(1000),
+                        ],
+                    ),
+                ),
+                (
+                    "semester",
+                    models.CharField(
+                        choices=[("ws", "Wintersemester"), ("ss", "Sommersemester")],
+                        max_length=2,
+                        verbose_name="Zugehöriges Semester *",
+                    ),
+                ),
+                ("zusatz", models.CharField(blank=True, max_length=50, null=True, verbose_name="Zusatzinformation")),
+                ("text", models.TextField(verbose_name="Text")),
             ],
         ),
         migrations.CreateModel(
-            name='Aufgabenart',
+            name="Aufgabenart",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, verbose_name='Bezeichnung')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("name", models.CharField(max_length=50, verbose_name="Bezeichnung")),
             ],
         ),
         migrations.AddField(
-            model_name='aufgabe',
-            name='art',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='aufgaben.Aufgabenart'),
+            model_name="aufgabe",
+            name="art",
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="aufgaben.Aufgabenart"),
         ),
         migrations.AddField(
-            model_name='aufgabe',
-            name='bearbeiter',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='aufgabe_bearbeiter',
-                                    to=settings.AUTH_USER_MODEL, verbose_name='Wer hat sie erledigt? *'),
+            model_name="aufgabe",
+            name="bearbeiter",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="aufgabe_bearbeiter",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Wer hat sie erledigt? *",
+            ),
         ),
         migrations.AddField(
-            model_name='aufgabe',
-            name='zustaendig',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='aufgabe_zustaendig',
-                                    to=settings.AUTH_USER_MODEL, verbose_name='Wer soll sie erledigen? *'),
+            model_name="aufgabe",
+            name="zustaendig",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="aufgabe_zustaendig",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Wer soll sie erledigen? *",
+            ),
         ),
     ]

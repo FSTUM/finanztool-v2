@@ -4,237 +4,263 @@
 {% block title %}Finanztool - {{ key.typename }} {{ key }}{% endblock %}
 
 {% block content %}
-    <h1>{{ key.typename }} {{ key }}{% if not key.active %} (inaktiv){% endif %}</h1>
+<h1>{{ key.typename }} {{ key }}{% if not key.active %} (inaktiv){% endif %}</h1>
 
-    <div class="col-md-6">
-        <p>
-        <div class="row">
-            {% if key.active and key.person %}
-                <div class="col-md-3">
-                    <a href="{% url "schluessel:return_key" key.id %}" class="btn btn-warning"
-                       role="button">
-                        {% bootstrap_icon "arrow-left" %} Zurücknehmen
-                    </a>
-                </div>
-                <div class="col-md-1"></div>
-                <div class="col-md-2">
-                    <a href="{% url "schluessel:get_kaution" key.id %}" class="btn btn-primary"
-                       role="button">
-                        Kaution
-                    </a>
-                </div>
-                {% if not key.keytype.deposit == 0 %}
-                    <div class="col-md-2">
-                        <a href="{% url "schluessel:get_quittung" key.id %}"
-                           class="btn btn-primary" role="button">
-                            Quittung
-                        </a>
-                    </div>
-                {% endif %}
-            {% elif key.active %}
-                <div class="col-md-2">
-                    <a href="{% url "schluessel:give_key" key.id %}" class="btn btn-success"
-                       role="button">
-                        {% bootstrap_icon "arrow-right" %} Ausgeben
-                    </a>
-                </div>
-            {% endif %}
-            <div class="col-md-1"></div>
-            {% if user.is_staff %}
-                <div class="col-md-2">
-                    <a href="{% url "schluessel:edit_key" key.id %}" class="btn btn-info"
-                       role="button">
-                        {% bootstrap_icon "pencil" %} Bearbeiten
-                    </a>
-                </div>
-            {% endif %}
+<div class="col-md-6">
+    <p>
+    <div class="row">
+        {% if key.active and key.person %}
+        <div class="col-md-3">
+            <a
+                href="{% url "schluessel:return_key" key.id %}"
+                class="btn btn-warning"
+                role="button"
+            >
+                {% bootstrap_icon "arrow-left" %} Zurücknehmen
+            </a>
         </div>
-        </p>
-
-        <table class="table table-striped table-hover">
-            <tr>
-                <th>Typ</th>
-                <td>{{ key.keytype }}</td>
-            </tr>
-            <tr>
-                <th>Nummer</th>
-                <td>{{ key }}</td>
-            </tr>
-            <tr>
-                <th>Kaution</th>
-                <td>{{ key.keytype.deposit|floatformat:2 }} €</td>
-            </tr>
-            <tr>
-                <th>Entleiher*in</th>
-                <td>
-                    {% if key.person %}
-                        <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
-                    {% else %}
-                        {% bootstrap_icon "remove" %}
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <th>Kommentar</th>
-                <td>{{ key.comment }}</td>
-            </tr>
-        </table>
-    </div>
-
-    {% if user.is_staff and key.active %}
-        {% if key.keytype.keycard %}
-            <div class="col-md-8">
-                <h3>Vorgemerkte Änderung</h3>
-                {% if key.savedkeychange %}
-                    <table class="table table-striped table-hover">
-                        <tr>
-                            <th>Alter Typ</th>
-                            <th>Neuer Typ</th>
-                            <th>Kommentar</th>
-                            <th>Datum</th>
-                            <th>Finanzer*in</th>
-                            <th>Anwenden</th>
-                            <th>Bearbeiten</th>
-                            <th>Löschen</th>
-                        </tr>
-                        <tr>
-                            <td>{{ key.keytype }}</td>
-                            <td>{{ key.savedkeychange.new_keytype }}</td>
-                            <td>{{ key.savedkeychange.comment }}</td>
-                            <td>{{ key.savedkeychange.date | date:"SHORT_DATETIME_FORMAT" }}
-                            </td>
-                            <td>
-                                {% if key.savedkeychange.user.get_full_name %}
-                                    {{ key.savedkeychange.user.get_full_name }}
-                                {% else %}
-                                    {{ key.savedkeychange.user.username }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if key.savedkeychange.violated_key %}
-                                    <p class="text-danger">
-                                        nicht möglich, <a
-                                            href="{% url "schluessel:view_key" key.savedkeychange.violated_key.id %}">{{ key.savedkeychange.violated_key }}</a>
-                                        gibt es bereits
-                                    </p>
-                                {% else %}
-                                    <a href="{% url "schluessel:apply_key_change" key.id %}"
-                                       class="btn btn-info" role="button">
-                                        Anwenden
-                                    </a>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <a href="{% url "schluessel:save_key_change" key.id %}"
-                                   class="btn btn-warning" role="button">
-                                    {% bootstrap_icon "pencil" %} Ändern
-                                </a>
-                            </td>
-                            <td>
-                                <a href="{% url "schluessel:delete_key_change" key.id %}"
-                                   class="btn btn-danger" role="button">
-                                    {% bootstrap_icon "remove" %} Löschen
-                                </a>
-                            </td>
-                        </tr>
-                    </table>
-                {% else %}
-                    <div class="col-md-2">
-                        <a href="{% url "schluessel:save_key_change" key.id %}"
-                           class="btn btn-info" role="button">
-                            {% bootstrap_icon "pencil" %} Typ-Änderung vormerken
-                        </a>
-                    </div>
-                {% endif %}
-            </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-2">
+            <a
+                href="{% url "schluessel:get_kaution" key.id %}"
+                class="btn btn-primary"
+                role="button"
+            >
+                Kaution
+            </a>
+        </div>
+        {% if not key.keytype.deposit == 0 %}
+        <div class="col-md-2">
+            <a
+                href="{% url "schluessel:get_quittung" key.id %}"
+                class="btn btn-primary"
+                role="button"
+            >
+                Quittung
+            </a>
+        </div>
         {% endif %}
-    {% endif %}
-
-    <div class="col-md-8">
-        <br/>
-        <h3>Log</h3>
-        <table class="table table-striped table-hover">
-            <tr>
-                <th>Datum</th>
-                <th>Vorgang</th>
-                <th>Aktiv</th>
-                <th>Entleiher*in</th>
-                <th>Schlüsse-Nr</th>
-                <th>Kaution</th>
-                <th>Kommentar</th>
-                <th>Finanzer*in</th>
-            </tr>
-            {% for entry in logentries %}
-                <tr>
-                    <td>{{ entry.date | date:"SHORT_DATETIME_FORMAT" }}</td>
-                    <td>
-                        {{ entry.get_operation_display }}
-                        {% if entry.operation == "G" %}
-                            {% bootstrap_icon "arrow-right" %}
-                        {% elif entry.operation == "R" %}
-                            {% bootstrap_icon "arrow-left" %}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% ifchanged entry.key_active %}
-                            {% if entry.key_active %}
-                                {% bootstrap_icon "ok" %}
-                            {% elif entry.key_active == False %}
-                                {% bootstrap_icon "remove" %}
-                            {% endif %}
-                        {% else %}
-                            <div style="color:lightgrey;">
-                                {% if entry.key_active %}
-                                    {% bootstrap_icon "ok" %}
-                                {% elif entry.key_active == False %}
-                                    {% bootstrap_icon "remove" %}
-                                {% endif %}
-                            </div>
-                        {% endifchanged %}
-                    </td>
-                    <td>
-                        {% if entry.person %}
-                            <a href="{% url "schluessel:view_person" entry.person.id %}">{{ entry.person }}</a>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% ifchanged entry.key_keytype entry.key_number %}
-                            {{ entry.key_keytype.shortname }} {{ entry.key_number }}
-                        {% else %}
-                            <div style="color:lightgrey;">
-                                {{ entry.key_keytype.shortname }} {{ entry.key_number }}
-                            </div>
-                        {% endifchanged %}
-                    </td>
-                    <td>
-                        {% ifchanged entry.key_deposit %}
-                            {{ entry.key_deposit|floatformat:2 }} €
-                        {% else %}
-                            <div style="color:lightgrey;">
-                                {{ entry.key_deposit|floatformat:2 }} €
-                            </div>
-                        {% endifchanged %}
-                    </td>
-                    <td>
-                        {% ifchanged entry.key_comment %}
-                            {{ entry.key_comment }}
-                        {% else %}
-                            <div style="color:lightgrey;">
-                                {{ entry.key_comment }}
-                            </div>
-                        {% endifchanged %}
-                    </td>
-                    <td>
-                        {% if entry.user.get_full_name %}
-                            {{ entry.user.get_full_name }}
-                        {% else %}
-                            {{ entry.user.username }}
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+        {% elif key.active %}
+        <div class="col-md-2">
+            <a
+                href="{% url "schluessel:give_key" key.id %}"
+                class="btn btn-success"
+                role="button"
+            >
+                {% bootstrap_icon "arrow-right" %} Ausgeben
+            </a>
+        </div>
+        {% endif %}
+        <div class="col-md-1"></div>
+        {% if user.is_staff %}
+        <div class="col-md-2">
+            <a
+                href="{% url "schluessel:edit_key" key.id %}"
+                class="btn btn-info"
+                role="button"
+            >
+                {% bootstrap_icon "pencil" %} Bearbeiten
+            </a>
+        </div>
+        {% endif %}
     </div>
+    </p>
+
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Typ</th>
+            <td>{{ key.keytype }}</td>
+        </tr>
+        <tr>
+            <th>Nummer</th>
+            <td>{{ key }}</td>
+        </tr>
+        <tr>
+            <th>Kaution</th>
+            <td>{{ key.keytype.deposit|floatformat:2 }} €</td>
+        </tr>
+        <tr>
+            <th>Entleiher*in</th>
+            <td>
+                {% if key.person %}
+                <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
+                {% else %}
+                {% bootstrap_icon "remove" %}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Kommentar</th>
+            <td>{{ key.comment }}</td>
+        </tr>
+    </table>
+</div>
+
+{% if user.is_staff and key.active %}
+{% if key.keytype.keycard %}
+<div class="col-md-8">
+    <h3>Vorgemerkte Änderung</h3>
+    {% if key.savedkeychange %}
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Alter Typ</th>
+            <th>Neuer Typ</th>
+            <th>Kommentar</th>
+            <th>Datum</th>
+            <th>Finanzer*in</th>
+            <th>Anwenden</th>
+            <th>Bearbeiten</th>
+            <th>Löschen</th>
+        </tr>
+        <tr>
+            <td>{{ key.keytype }}</td>
+            <td>{{ key.savedkeychange.new_keytype }}</td>
+            <td>{{ key.savedkeychange.comment }}</td>
+            <td>{{ key.savedkeychange.date | date:"SHORT_DATETIME_FORMAT" }}
+            </td>
+            <td>
+                {% if key.savedkeychange.user.get_full_name %}
+                {{ key.savedkeychange.user.get_full_name }}
+                {% else %}
+                {{ key.savedkeychange.user.username }}
+                {% endif %}
+            </td>
+            <td>
+                {% if key.savedkeychange.violated_key %}
+                <p class="text-danger">
+                    nicht möglich, <a href="{% url "schluessel:view_key" key.savedkeychange.violated_key.id %}">{{ key.savedkeychange.violated_key }}</a>
+                    gibt es bereits
+                </p>
+                {% else %}
+                <a
+                    href="{% url "schluessel:apply_key_change" key.id %}"
+                    class="btn btn-info"
+                    role="button"
+                >
+                    Anwenden
+                </a>
+                {% endif %}
+            </td>
+            <td>
+                <a
+                    href="{% url "schluessel:save_key_change" key.id %}"
+                    class="btn btn-warning"
+                    role="button"
+                >
+                    {% bootstrap_icon "pencil" %} Ändern
+                </a>
+            </td>
+            <td>
+                <a
+                    href="{% url "schluessel:delete_key_change" key.id %}"
+                    class="btn btn-danger"
+                    role="button"
+                >
+                    {% bootstrap_icon "remove" %} Löschen
+                </a>
+            </td>
+        </tr>
+    </table>
+    {% else %}
+    <div class="col-md-2">
+        <a
+            href="{% url "schluessel:save_key_change" key.id %}"
+            class="btn btn-info"
+            role="button"
+        >
+            {% bootstrap_icon "pencil" %} Typ-Änderung vormerken
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endif %}
+
+<div class="col-md-8">
+    <br />
+    <h3>Log</h3>
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Datum</th>
+            <th>Vorgang</th>
+            <th>Aktiv</th>
+            <th>Entleiher*in</th>
+            <th>Schlüsse-Nr</th>
+            <th>Kaution</th>
+            <th>Kommentar</th>
+            <th>Finanzer*in</th>
+        </tr>
+        {% for entry in logentries %}
+        <tr>
+            <td>{{ entry.date | date:"SHORT_DATETIME_FORMAT" }}</td>
+            <td>
+                {{ entry.get_operation_display }}
+                {% if entry.operation == "G" %}
+                {% bootstrap_icon "arrow-right" %}
+                {% elif entry.operation == "R" %}
+                {% bootstrap_icon "arrow-left" %}
+                {% endif %}
+            </td>
+            <td>
+                {% ifchanged entry.key_active %}
+                {% if entry.key_active %}
+                {% bootstrap_icon "ok" %}
+                {% elif entry.key_active == False %}
+                {% bootstrap_icon "remove" %}
+                {% endif %}
+                {% else %}
+                <div style="color: lightgrey;">
+                    {% if entry.key_active %}
+                    {% bootstrap_icon "ok" %}
+                    {% elif entry.key_active == False %}
+                    {% bootstrap_icon "remove" %}
+                    {% endif %}
+                </div>
+                {% endifchanged %}
+            </td>
+            <td>
+                {% if entry.person %}
+                <a href="{% url "schluessel:view_person" entry.person.id %}">{{ entry.person }}</a>
+                {% endif %}
+            </td>
+            <td>
+                {% ifchanged entry.key_keytype entry.key_number %}
+                {{ entry.key_keytype.shortname }} {{ entry.key_number }}
+                {% else %}
+                <div style="color: lightgrey;">
+                    {{ entry.key_keytype.shortname }} {{ entry.key_number }}
+                </div>
+                {% endifchanged %}
+            </td>
+            <td>
+                {% ifchanged entry.key_deposit %}
+                {{ entry.key_deposit|floatformat:2 }} €
+                {% else %}
+                <div style="color: lightgrey;">
+                    {{ entry.key_deposit|floatformat:2 }} €
+                </div>
+                {% endifchanged %}
+            </td>
+            <td>
+                {% ifchanged entry.key_comment %}
+                {{ entry.key_comment }}
+                {% else %}
+                <div style="color: lightgrey;">
+                    {{ entry.key_comment }}
+                </div>
+                {% endifchanged %}
+            </td>
+            <td>
+                {% if entry.user.get_full_name %}
+                {{ entry.user.get_full_name }}
+                {% else %}
+                {{ entry.user.username }}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
 
 
 {% endblock %}

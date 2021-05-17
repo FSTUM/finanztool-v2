@@ -3,70 +3,75 @@
 {% load bootstrap3 %}
 
 {% block title %}
-    {% if rechnung.pk %}
-        Rechnung ändern
-    {% else %}
-        Rechnung hinzufügen
-    {% endif %}
+{% if rechnung.pk %}
+Rechnung ändern
+{% else %}
+Rechnung hinzufügen
+{% endif %}
 {% endblock %}
 
 {% block content %}
-    {% if rechnung.gestellt %}
-        <h3>
-            <div class="alert alert-danger">
-                Möchtest du wirklich diese Rechnung bearbeiten?</br>
-                Du kannst lediglich einen neuen Kunden auswählen, hebe in diesem Fall
-                das Original auf.</br>
-                Für andere Änderungen erstelle bitte eine neue (Korrektur-)Rechnung!
-            </div>
-        </h3>
-        <h1>Rechnung ändern</h1>
-    {% else %}
-        <h1>Rechnung hinzufügen</h1>
-    {% endif %}
+{% if rechnung.gestellt %}
+<h3>
+    <div class="alert alert-danger">
+        Möchtest du wirklich diese Rechnung bearbeiten?</br>
+        Du kannst lediglich einen neuen Kunden auswählen, hebe in diesem Fall
+        das Original auf.</br>
+        Für andere Änderungen erstelle bitte eine neue (Korrektur-)Rechnung!
+    </div>
+</h3>
+<h1>Rechnung ändern</h1>
+{% else %}
+<h1>Rechnung hinzufügen</h1>
+{% endif %}
 
-    {% if rechnung.pk %}
-        <p><a
-                href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
-                class="btn btn-default" role="button">{% bootstrap_icon "arrow-left" %}
-            Zurück zur Rechnung
-        </a></p>
-    {% endif %}
-    <div class="row">
-        <div class="col-md-6">
-            <p><span class="text-muted">
-                    Mit * markierte Felder sind verpflichtend
+{% if rechnung.pk %}
+<p><a
+        href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
+        class="btn btn-default"
+        role="button"
+    >{% bootstrap_icon "arrow-left" %}
+        Zurück zur Rechnung
+    </a></p>
+{% endif %}
+<div class="row">
+    <div class="col-md-6">
+        <p><span class="text-muted">
+                Mit * markierte Felder sind verpflichtend
             </span></p>
 
-            <form method="POST">{% csrf_token %}
-                {% bootstrap_form form %}
-                <button type="submit" class="save btn btn-default">
-                    {% bootstrap_icon "floppy-disk" %} Sichern
-                </button>
-            </form>
-        </div>
+        <form method="POST">{% csrf_token %}
+            {% bootstrap_form form %}
+            <button
+                type="submit"
+                class="save btn btn-default"
+            >
+                {% bootstrap_icon "floppy-disk" %} Sichern
+            </button>
+        </form>
     </div>
-    <script type="text/javascript">
-        $(function () {
-            $('#pick_ldatum').datetimepicker({
-                inline: true,
-                sideBySide: true,
-                format: 'DD.MM.YYYY'
-            });
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#pick_ldatum').datetimepicker({
+            inline: true,
+            sideBySide: true,
+            format: 'DD.MM.YYYY',
         });
-        $(function () {
-            $('#pick_fdatum').datetimepicker({
-                inline: true,
-                sideBySide: true,
-                format: 'DD.MM.YYYY'
-            });
+    });
+    $(function () {
+        $('#pick_fdatum').datetimepicker({
+            inline: true,
+            sideBySide: true,
+            format: 'DD.MM.YYYY',
         });
-        $(function () {
-            $('#pick_rdatum').datetimepicker({
-                inline: true,
-                sideBySide: true,
-                format: 'DD.MM.YYYY'
-            });
+    });
+    $(function () {
+        $('#pick_rdatum').datetimepicker({
+            inline: true,
+            sideBySide: true,
+            format: 'DD.MM.YYYY',
         });
-    </script>
+    });
+</script>
 {% endblock %}

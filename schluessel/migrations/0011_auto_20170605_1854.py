@@ -7,13 +7,13 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('schluessel', '0010_keylogentry_key_active'),
+        ("schluessel", "0010_keylogentry_key_active"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='keylogentry',
-            name='key_active',
-            field=models.NullBooleanField(default=True, verbose_name='Aktiv'),
+            model_name="keylogentry",
+            name="key_active",
+            field=models.NullBooleanField(default=True, verbose_name="Aktiv"),
         ),
     ]

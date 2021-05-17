@@ -7,13 +7,13 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('schluessel', '0007_savedkeychange'),
+        ("schluessel", "0007_savedkeychange"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='savedkeychange',
-            name='date',
-            field=models.DateTimeField(auto_now=True, verbose_name='Datum'),
+            model_name="savedkeychange",
+            name="date",
+            field=models.DateTimeField(auto_now=True, verbose_name="Datum"),
         ),
     ]

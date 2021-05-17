@@ -7,29 +7,32 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('rechnung', '0010_auto_20161001_1551'),
+        ("rechnung", "0010_auto_20161001_1551"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='mahnung',
-            old_name='erledigt',
-            new_name='bezahlt',
+            model_name="mahnung",
+            old_name="erledigt",
+            new_name="bezahlt",
         ),
         migrations.AddField(
-            model_name='mahnung',
-            name='einleitung',
-            field=models.TextField(default='', max_length=3000,
-                                   verbose_name='Einleitender Text nach "Sehr geehrte..." *'),
+            model_name="mahnung",
+            name="einleitung",
+            field=models.TextField(
+                default="",
+                max_length=3000,
+                verbose_name='Einleitender Text nach "Sehr geehrte..." *',
+            ),
         ),
         migrations.AddField(
-            model_name='mahnung',
-            name='gerichtlich',
-            field=models.BooleanField(default=False, verbose_name='Gerichtliche Schritte androhen?'),
+            model_name="mahnung",
+            name="gerichtlich",
+            field=models.BooleanField(default=False, verbose_name="Gerichtliche Schritte androhen?"),
         ),
         migrations.AddField(
-            model_name='rechnung',
-            name='erledigt',
-            field=models.BooleanField(default=False, verbose_name='Rechnung erledigt, eventuell durch Mahnung'),
+            model_name="rechnung",
+            name="erledigt",
+            field=models.BooleanField(default=False, verbose_name="Rechnung erledigt, eventuell durch Mahnung"),
         ),
     ]

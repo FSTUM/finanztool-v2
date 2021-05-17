@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Person, KeyType, Key, KeyLogEntry
+from .models import Key, KeyLogEntry, KeyType, Person
 
 admin.site.register(Person)
 admin.site.register(KeyType)

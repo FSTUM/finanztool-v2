@@ -4,15 +4,15 @@ from .models import EinzahlungsLog
 
 
 class UploadForm(forms.Form):
-    csv_file = forms.FileField(label='CSV Datei')
+    csv_file = forms.FileField(label="CSV Datei")
 
 
 class MappingConfirmationForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        self.mappings = kwargs.pop('mappings')
-        self.user = kwargs.pop('user')
+        self.mappings = kwargs.pop("mappings")
+        self.user = kwargs.pop("user")
 
-        super(MappingConfirmationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         for entry in self.mappings:
             key = self._get_key(entry)
@@ -21,11 +21,11 @@ class MappingConfirmationForm(forms.Form):
 
     def _get_key(self, entry):
         if entry.mapped_mahnung:
-            return 'ma_{}'.format(entry.mapped_mahnung.pk)
+            return f"ma_{entry.mapped_mahnung.pk}"
         elif entry.mapped_rechnung:
-            return 're_{}'.format(entry.mapped_rechnung.pk)
+            return f"re_{entry.mapped_rechnung.pk}"
         elif entry.mapped_user:
-            return 'us_{}'.format(entry.mapped_user.pk)
+            return f"us_{entry.mapped_user.pk}"
 
     def save(self):
         latest_einzahlung = None

@@ -10,21 +10,39 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('schluessel', '0006_auto_20170423_1741'),
+        ("schluessel", "0006_auto_20170423_1741"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='SavedKeyChange',
+            name="SavedKeyChange",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateTimeField(auto_now_add=True, verbose_name='Datum')),
-                ('key', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='schluessel.Key',
-                                             verbose_name='Schlüssel')),
-                ('new_keytype', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schluessel.KeyType',
-                                                  verbose_name='Schlüssel-Typ')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL,
-                                           verbose_name='Finanzer')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("date", models.DateTimeField(auto_now_add=True, verbose_name="Datum")),
+                (
+                    "key",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schluessel.Key",
+                        verbose_name="Schlüssel",
+                    ),
+                ),
+                (
+                    "new_keytype",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schluessel.KeyType",
+                        verbose_name="Schlüssel-Typ",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Finanzer",
+                    ),
+                ),
             ],
         ),
     ]

@@ -7,13 +7,13 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('schluessel', '0008_auto_20170530_1723'),
+        ("schluessel", "0008_auto_20170530_1723"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='key',
-            name='active',
-            field=models.BooleanField(default=True, verbose_name='Aktiv'),
+            model_name="key",
+            name="active",
+            field=models.BooleanField(default=True, verbose_name="Aktiv"),
         ),
     ]

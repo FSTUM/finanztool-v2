@@ -9,32 +9,49 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('schluessel', '0012_auto_20170608_2136'),
+        ("schluessel", "0012_auto_20170608_2136"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='key',
-            name='person',
-            field=models.ForeignKey(blank=True, default=None, null=True, on_delete=django.db.models.deletion.CASCADE,
-                                    to='schluessel.Person', verbose_name='Entleiher*in'),
+            model_name="key",
+            name="person",
+            field=models.ForeignKey(
+                blank=True,
+                default=None,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="schluessel.Person",
+                verbose_name="Entleiher*in",
+            ),
         ),
         migrations.AlterField(
-            model_name='keylogentry',
-            name='person',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
-                                    to='schluessel.Person', verbose_name='Entleiher*in'),
+            model_name="keylogentry",
+            name="person",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="schluessel.Person",
+                verbose_name="Entleiher*in",
+            ),
         ),
         migrations.AlterField(
-            model_name='keylogentry',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL,
-                                    verbose_name='Finanzer*in'),
+            model_name="keylogentry",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Finanzer*in",
+            ),
         ),
         migrations.AlterField(
-            model_name='savedkeychange',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL,
-                                    verbose_name='Finanzer*in'),
+            model_name="savedkeychange",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Finanzer*in",
+            ),
         ),
     ]

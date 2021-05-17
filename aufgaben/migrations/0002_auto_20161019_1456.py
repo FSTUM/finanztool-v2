@@ -10,33 +10,50 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('aufgaben', '0001_initial'),
+        ("aufgaben", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='aufgabe',
-            name='bearbeiter',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
-                                    related_name='aufgabe_bearbeiter', to=settings.AUTH_USER_MODEL,
-                                    verbose_name='Wer hat sie erledigt? *'),
+            model_name="aufgabe",
+            name="bearbeiter",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="aufgabe_bearbeiter",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Wer hat sie erledigt? *",
+            ),
         ),
         migrations.AlterField(
-            model_name='aufgabe',
-            name='jahr',
-            field=models.IntegerField(blank=True, null=True, validators=[django.core.validators.MaxValueValidator(9999),
-                                                                         django.core.validators.MinValueValidator(
-                                                                             1000)]),
+            model_name="aufgabe",
+            name="jahr",
+            field=models.IntegerField(
+                blank=True,
+                null=True,
+                validators=[
+                    django.core.validators.MaxValueValidator(9999),
+                    django.core.validators.MinValueValidator(
+                        1000,
+                    ),
+                ],
+            ),
         ),
         migrations.AlterField(
-            model_name='aufgabe',
-            name='semester',
-            field=models.CharField(blank=True, choices=[('ws', 'Wintersemester'), ('ss', 'Sommersemester')],
-                                   max_length=2, null=True, verbose_name='Zugehöriges Semester *'),
+            model_name="aufgabe",
+            name="semester",
+            field=models.CharField(
+                blank=True,
+                choices=[("ws", "Wintersemester"), ("ss", "Sommersemester")],
+                max_length=2,
+                null=True,
+                verbose_name="Zugehöriges Semester *",
+            ),
         ),
         migrations.AlterField(
-            model_name='aufgabe',
-            name='text',
-            field=models.TextField(blank=True, null=True, verbose_name='Text'),
+            model_name="aufgabe",
+            name="text",
+            field=models.TextField(blank=True, null=True, verbose_name="Text"),
         ),
     ]

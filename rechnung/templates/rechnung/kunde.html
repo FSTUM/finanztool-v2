@@ -5,41 +5,45 @@
 {% block title %}Kunde {% localize off %} {{ kunde.knr }} {% endlocalize %} {% endblock %}
 
 {% block content %}
-    <h1>Kunde {% localize off %} {{ kunde.knr }} {% endlocalize %}</h1>
-    <h2>
-        <a href="{% url "rechnung:kunde_aendern" kunde.id %}" class="btn btn-info" role="button">
-            {% bootstrap_icon "pencil" %} Kunde bearbeiten
-        </a>
-    </h2>
+<h1>Kunde {% localize off %} {{ kunde.knr }} {% endlocalize %}</h1>
+<h2>
+    <a
+        href="{% url "rechnung:kunde_aendern" kunde.id %}"
+        class="btn btn-info"
+        role="button"
+    >
+        {% bootstrap_icon "pencil" %} Kunde bearbeiten
+    </a>
+</h2>
 
 
-    <div class="row">
-        <div class="col-md-6">
-            <h3>Details</h3>
-            <br/>
-            <table class="table table-striped">
-                <tr>
-                    <th>Organisation</th>
-                    <td>{{ kunde.organisation }}</td>
-                </tr>
-                <tr>
-                    <th>Suborganisation</th>
-                    <td>{{ kunde.suborganisation }}</td>
-                </tr>
-                <tr>
-                    <th>Person</th>
-                    <td>{{ kunde.get_anrede_display|default_if_none:"" }} {{ kunde.titel }} {{ kunde.vorname }} {{ kunde.name }}</td>
-                </tr>
-                <tr>
-                    <th>Adresse</th>
-                    <td>{{ kunde.strasse }}<br>{{ kunde.plz }} {{ kunde.stadt }}<br>{{ kunde.land }}</td>
-                </tr>
-                <tr>
-                    <th>Kommentar</th>
-                    <td>{{ kunde.kommentar }}</td>
-                </tr>
-            </table>
-        </div>
+<div class="row">
+    <div class="col-md-6">
+        <h3>Details</h3>
+        <br />
+        <table class="table table-striped">
+            <tr>
+                <th>Organisation</th>
+                <td>{{ kunde.organisation }}</td>
+            </tr>
+            <tr>
+                <th>Suborganisation</th>
+                <td>{{ kunde.suborganisation }}</td>
+            </tr>
+            <tr>
+                <th>Person</th>
+                <td>{{ kunde.get_anrede_display|default_if_none:"" }} {{ kunde.titel }} {{ kunde.vorname }} {{ kunde.name }}</td>
+            </tr>
+            <tr>
+                <th>Adresse</th>
+                <td>{{ kunde.strasse }}<br>{{ kunde.plz }} {{ kunde.stadt }}<br>{{ kunde.land }}</td>
+            </tr>
+            <tr>
+                <th>Kommentar</th>
+                <td>{{ kunde.kommentar }}</td>
+            </tr>
+        </table>
     </div>
+</div>
 
 {% endblock %}

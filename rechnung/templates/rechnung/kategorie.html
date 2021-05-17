@@ -4,27 +4,25 @@
 {% block title %}Kategorien{% endblock %}
 
 {% block content %}
-    {% if kategorien_liste %}
-        <div class="row">
-            <div class="col-md-10">
-                <h3>Kategorien</h3>
-                <br/>
-                <table class="table borderless">
-                    <tr>
-                        <th>Kategorie</th>
-                    </tr>
-                    {% for kategorie in kategorien_liste %}
-                        <tr>
-                            <td><a href="{% url 'rechnung:kategorie_detail' kategorie.id %}">{{ kategorie.name }}</td>
-                            <td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-    {% else %}
-        <p>Es sind keine Kategorien verfügbar.</p>
-    {% endif %}
+{% if kategorien_liste %}
+<div class="row">
+    <div class="col-md-10">
+        <h3>Kategorien</h3>
+        <br />
+        <table class="table borderless">
+            <tr>
+                <th>Kategorie</th>
+            </tr>
+            {% for kategorie in kategorien_liste %}
+            <tr>
+                <td><a href="{% url 'rechnung:kategorie_detail' kategorie.id %}">{{ kategorie.name }}</td>
+                <td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% else %}
+<p>Es sind keine Kategorien verfügbar.</p>
+{% endif %}
 {% endblock %}
-
-

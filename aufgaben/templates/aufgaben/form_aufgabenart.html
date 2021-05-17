@@ -3,32 +3,35 @@
 {% load bootstrap3 %}
 
 {% block title %}
-    {% if aufgabenart.pk %}
-        Aufgabenart ändern
-    {% else %}
-        Aufgabenart hinzufügen
-    {% endif %}
+{% if aufgabenart.pk %}
+Aufgabenart ändern
+{% else %}
+Aufgabenart hinzufügen
+{% endif %}
 {% endblock %}
 
 {% block content %}
-    {% if aufgabenart.pk %}
-        <h1>Aufgabenart ändern</h1>
-    {% else %}
-        <h1>Aufgabenart hinzufügen</h1>
-    {% endif %}
+{% if aufgabenart.pk %}
+<h1>Aufgabenart ändern</h1>
+{% else %}
+<h1>Aufgabenart hinzufügen</h1>
+{% endif %}
 
-    <div class="row">
-        <div class="col-md-6">
-            <p><span class="text-muted">
-                    Mit * markierte Felder sind verpflichtend
+<div class="row">
+    <div class="col-md-6">
+        <p><span class="text-muted">
+                Mit * markierte Felder sind verpflichtend
             </span></p>
 
-            <form method="POST">{% csrf_token %}
-                {% bootstrap_form form %}
-                <button type="submit" class="save btn btn-default">
-                    {% bootstrap_icon "floppy-disk" %} Sichern
-                </button>
-            </form>
-        </div>
+        <form method="POST">{% csrf_token %}
+            {% bootstrap_form form %}
+            <button
+                type="submit"
+                class="save btn btn-default"
+            >
+                {% bootstrap_icon "floppy-disk" %} Sichern
+            </button>
+        </form>
     </div>
+</div>
 {% endblock %}

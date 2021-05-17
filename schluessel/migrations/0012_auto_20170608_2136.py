@@ -8,19 +8,22 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('schluessel', '0011_auto_20170605_1854'),
+        ("schluessel", "0011_auto_20170605_1854"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='savedkeychange',
-            name='comment',
-            field=models.CharField(blank=True, max_length=500, verbose_name='Kommentar'),
+            model_name="savedkeychange",
+            name="comment",
+            field=models.CharField(blank=True, max_length=500, verbose_name="Kommentar"),
         ),
         migrations.AlterField(
-            model_name='savedkeychange',
-            name='new_keytype',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='schluessel.KeyType',
-                                    verbose_name='Neuer Schlüssel-Typ'),
+            model_name="savedkeychange",
+            name="new_keytype",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="schluessel.KeyType",
+                verbose_name="Neuer Schlüssel-Typ",
+            ),
         ),
     ]
