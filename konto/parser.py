@@ -1,28 +1,33 @@
 import datetime
 import re
 from csv import DictReader
+from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
+from typing import Any, Dict, List, Optional, Pattern
+
+from django.db.models import QuerySet
 
 from getraenke.models import Schulden
-from rechnung.models import Rechnung
+from rechnung.models import Mahnung, Rechnung
 
 from .models import EinzahlungsLog
 
 
-class Entry:
-    datum = None
-    verwendungszweck = None
-    zahlungspflichtiger = None
-    iban = None
-    bic = None
-    betrag = None
+@dataclass
+class Entry:  # pylint: disable=too-many-instance-attributes
+    datum: datetime.date
+    verwendungszweck: str
+    zahlungspflichtiger: str
+    iban: str
+    bic: str
+    betrag: Decimal
 
-    mapped_rechnung = None
-    mapped_mahnung = None
-    erwarteter_betrag = None
-    betrag_passt = False
+    mapped_rechnung: Optional[Rechnung] = None
+    mapped_mahnung: Optional[Mahnung] = None
+    erwarteter_betrag: Optional[Decimal] = None
+    betrag_passt: Optional[bool] = False
 
-    mapped_user = None
+    mapped_user: Optional[Schulden] = None
 
     def __repr__(self):
         if self.mapped_rechnung:
@@ -31,107 +36,92 @@ class Entry:
             rnr = None
 
         return (
-            'Entry <datum={}, verwendungszweck="{}", '
-            'zahlungspflichtiger="{}", iban={}, bic={}, betrag={}, '
-            "mapped_rechnung={}>".format(
-                self.datum,
-                self.verwendungszweck,
-                self.zahlungspflichtiger,
-                self.iban,
-                self.bic,
-                self.betrag,
-                rnr,
-            )
+            f'Entry <datum={self.datum}, verwendungszweck="{self.verwendungszweck}", '
+            f'zahlungspflichtiger="{self.zahlungspflichtiger}", iban={self.iban}, bic={self.bic}, '
+            f"betrag={self.betrag}, mapped_rechnung={rnr}>"
         )
 
 
 def parse_camt_csv(csvfile):
-    results = []
-    errors = []
+    results: List[Entry] = []
+    errors: List[str] = []
 
     # hole alle offenen rechnungen
-    offene_rechnungen = Rechnung.objects.filter(
-        gestellt=True,
-        erledigt=False,
-    ).all()
-    regex_cache = {}
+    offene_rechnungen: QuerySet[Rechnung] = Rechnung.objects.filter(gestellt=True, erledigt=False).all()
+    regex_cache: Dict[Rechnung, Pattern[str]] = {}
+    rechnung: Rechnung
     for rechnung in offene_rechnungen:
-        regex_cache[rechnung] = re.compile(
-            "(.*[^0-9])?{}([^0-9].*)?".format(rechnung.rnr_string),
-        )
+        regex_cache[rechnung] = re.compile(fr"(.*[^0-9])?{rechnung.rnr_string}([^0-9].*)?")
 
-    users = Schulden.objects.all()
-    regex_usernames = {}
-    for u in users:
-        regex_usernames[u] = re.compile(
-            "(.*\s+)?{}(\s+.*)?".format(u.user),
-        )
+    users: QuerySet[Schulden] = Schulden.objects.all()
+    regex_usernames: Dict[Schulden, Pattern[str]] = {}
+    user: Schulden
+    for user in users:
+        regex_usernames[user] = re.compile(fr"(.*\s+)?{user.user}(\s+.*)?")
 
     try:
-        zuletzt_eingetragen = EinzahlungsLog.objects.latest("timestamp").timestamp
+        zuletzt_eingetragen: Optional[datetime.date] = EinzahlungsLog.objects.latest("timestamp").timestamp
     except EinzahlungsLog.DoesNotExist:
         zuletzt_eingetragen = None
 
     # read CSV file
     csvcontents = DictReader(csvfile, delimiter=";")
-    counter = 0
-    for row in csvcontents:
-        counter += 1
-
-        buchungstext = row["Buchungstext"]
-        if buchungstext == "GUTSCHR. UEBERWEISUNG" or buchungstext == "ECHTZEIT-GUTSCHRIFT":
-            entry = Entry()
-
-            try:
-                entry.datum = datetime.datetime.strptime(row["Buchungstag"], "%d.%m.%y")
-                entry.datum = entry.datum.date()
-            except ValueError:
-                errors.append(
-                    "Zeile {}: Ungültiges Datum: {}".format(
-                        counter,
-                        row[1],
-                    ),
-                )
-                continue
-
-            entry.verwendungszweck = row["Verwendungszweck"]
-            entry.zahlungspflichtiger = row["Beguenstigter/Zahlungspflichtiger"]
-            entry.iban = row["Kontonummer/IBAN"]
-            entry.bic = row["BIC (SWIFT-Code)"]
-
-            betrag = row["Betrag"]
-            try:
-                entry.betrag = Decimal(betrag.replace(",", "."))
-            except InvalidOperation:
-                errors.append(
-                    f"Zeile {counter}: Ungültiger Betrag: {betrag}",
-                )
-                continue
-
-            waehrung = row["Waehrung"]
-            if waehrung != "EUR":
-                errors.append(f"Zeile {counter}: Eintrag in anderer Währung als Euro")
-                continue
-
-            suche_rechnung(entry, offene_rechnungen, regex_cache)
-            if not entry.mapped_rechnung:
-                suche_user(entry, users, regex_usernames, zuletzt_eingetragen, errors)
-
-            results.append(entry)
-        elif (
-            buchungstext == "ENTGELTABSCHLUSS"
-            or buchungstext == "ONLINE-UEBERWEISUNG"
-            or buchungstext == "RECHNUNG"
-            or buchungstext == "FOLGELASTSCHRIFT"
-            or buchungstext == "BARGELDAUSZAHLUNG KASSE"
-        ):
+    for counter, row in enumerate(csvcontents):
+        buchungstext: str = row["Buchungstext"]
+        if buchungstext in ["GUTSCHR. UEBERWEISUNG", "ECHTZEIT-GUTSCHRIFT"]:
+            entry: Optional[Entry] = pre_process_entry(counter, row, errors)
+            if entry:
+                suche_rechnung(entry, offene_rechnungen, regex_cache)
+                if not entry.mapped_rechnung:
+                    suche_user(entry, users, regex_usernames, zuletzt_eingetragen, errors)
+                results.append(entry)
+        elif buchungstext in [
+            "ENTGELTABSCHLUSS",
+            "ONLINE-UEBERWEISUNG",
+            "RECHNUNG",
+            "FOLGELASTSCHRIFT",
+            "BARGELDAUSZAHLUNG KASSE",
+        ]:
             pass
         else:
-            errors.append("Transaktion in Zeile {} mit Typ {} nicht erkannt".format(counter, buchungstext))
+            errors.append(f"Transaktion in Zeile {counter} mit Typ {buchungstext} nicht erkannt")
     return results, errors
 
 
-def suche_rechnung(entry, offene_rechnungen, regex_cache):
+def pre_process_entry(counter: int, row: Any, errors: List[str]) -> Optional[Entry]:
+    try:
+        datum = datetime.datetime.strptime(row["Buchungstag"], "%d.%m.%y").date()
+    except ValueError:
+        errors.append(f"Zeile {counter}: Ungültiges Datum: {row[1]}")
+        return None
+
+    betrag = row["Betrag"]
+    try:
+        betrag = Decimal(betrag.replace(",", "."))
+    except InvalidOperation:
+        errors.append(f"Zeile {counter}: Ungültiger Betrag: {betrag}")
+        return None
+    waehrung = row["Waehrung"]
+    if waehrung != "EUR":
+        errors.append(f"Zeile {counter}: Eintrag in anderer Währung als Euro")
+        return None
+
+    return Entry(
+        verwendungszweck=row["Verwendungszweck"],
+        zahlungspflichtiger=row["Beguenstigter/Zahlungspflichtiger"],
+        iban=row["Kontonummer/IBAN"],
+        bic=row["BIC (SWIFT-Code)"],
+        datum=datum,
+        betrag=betrag,
+    )
+
+
+def suche_rechnung(
+    entry: Entry,
+    offene_rechnungen: QuerySet[Rechnung],
+    regex_cache: Dict[Rechnung, Pattern[str]],
+) -> None:
+    rechnung: Rechnung
     for rechnung in offene_rechnungen:
         tmp = regex_cache[rechnung].match(entry.verwendungszweck)
         if tmp:
@@ -141,6 +131,7 @@ def suche_rechnung(entry, offene_rechnungen, regex_cache):
             entry.betrag_passt = entry.betrag == rechnung.gesamtsumme
 
             # nach mahnungen suchen?
+            mahnung: Mahnung
             for mahnung in rechnung.mahnungen:
                 entry.betrag_passt = mahnung.mahnsumme == entry.betrag
                 if entry.betrag_passt:
@@ -153,39 +144,37 @@ def suche_rechnung(entry, offene_rechnungen, regex_cache):
                 entry.erwarteter_betrag = rechnung.gesamtsumme
 
 
-def suche_user(entry, users, regex_usernames, zuletzt_eingetragen, errors):
+def suche_user(
+    entry: Entry,
+    users: QuerySet[Schulden],
+    regex_usernames: Dict[Schulden, Pattern[str]],
+    zuletzt_eingetragen: Optional[datetime.date],
+    errors: List[str],
+) -> None:
+    user: Schulden
     for user in users:
         tmp = regex_usernames[user].fullmatch(entry.verwendungszweck)
-        if tmp and zuletzt_eingetragen and zuletzt_eingetragen < entry.datum:
-            if entry.mapped_user is not None:
-                # If there is a user that was already previously matched,
-                # print a duplicate match error and abort the search.
-                errors.append(
-                    'Einzahlung "{}" vom {} hat mehrere Benutzer gematcht: {}, {}.'.format(
-                        entry.verwendungszweck,
-                        entry.datum,
-                        entry.mapped_user,
-                        user,
-                    ),
-                )
-                entry.mapped_user = None
-                return
-            else:
+        if tmp:
+            if zuletzt_eingetragen and zuletzt_eingetragen < entry.datum:
+                if entry.mapped_user is not None:
+                    # If there is a user that was already previously matched,
+                    # print a duplicate match error and abort the search.
+                    errors.append(
+                        f'Einzahlung "{entry.verwendungszweck}" vom {entry.datum} hat mehrere Benutzer gematcht: '
+                        f"{entry.mapped_user}, {user}.",
+                    )
+                    entry.mapped_user = None
+                    return
                 # Enter the new user
                 entry.mapped_user = user
-        elif tmp and zuletzt_eingetragen and zuletzt_eingetragen >= entry.datum:
-            # Print an error that this transaction lies beyond the date of the last transaction.
-            errors.append(
-                "Letzte Einzahlung von {} am {} liegt nach der Einzahlung vom {}.".format(
-                    user.user,
-                    entry.datum,
-                    zuletzt_eingetragen,
-                ),
-            )
-        elif tmp and zuletzt_eingetragen is None:
-            errors.append(
-                'Nutzer {} hat kein "zuletzt eingetragen" Datum für die Einzahlung vom {}.'.format(
-                    user.user,
-                    entry.datum,
-                ),
-            )
+            elif zuletzt_eingetragen and zuletzt_eingetragen >= entry.datum:
+                # Print an error that this transaction lies beyond the date of the last transaction.
+                errors.append(
+                    f"Letzte Einzahlung von {user.user} am {entry.datum} liegt nach der "
+                    f"Einzahlung vom {zuletzt_eingetragen}.",
+                )
+            else:
+                # zuletzt_eingetragen is None:
+                errors.append(
+                    f'Nutzer {user.user} hat kein "zuletzt eingetragen" Datum für die Einzahlung vom {entry.datum}.',
+                )

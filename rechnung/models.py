@@ -1,7 +1,7 @@
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Max
 from django.utils import timezone
@@ -13,17 +13,14 @@ def get_faelligkeit_default():
 
 def get_new_highest_rnr():
     if Rechnung.objects.all().count() == 0:
-        new_rnr = 1
-    else:
-        new_rnr = (Rechnung.objects.all().aggregate(Max("rnr"))["rnr__max"]) + 1
-    return new_rnr
+        return 1
+    return (Rechnung.objects.all().aggregate(Max("rnr"))["rnr__max"]) + 1
 
 
 def get_new_highest_knr():
     if Kunde.objects.all().count() == 0:
         return 1
-    else:
-        return Kunde.objects.all().aggregate(Max("knr"))["knr__max"] + 1
+    return Kunde.objects.all().aggregate(Max("knr"))["knr__max"] + 1
 
 
 class Rechnung(models.Model):
@@ -65,7 +62,7 @@ class Rechnung(models.Model):
         default=False,
     )
     ersteller = models.ForeignKey(
-        User,
+        get_user_model(),
         models.CASCADE,
     )
     kunde = models.ForeignKey(
@@ -166,7 +163,7 @@ class Mahnung(models.Model):
         default=False,
     )
     ersteller = models.ForeignKey(
-        User,
+        get_user_model(),
         models.CASCADE,
     )
     einleitung = models.TextField(

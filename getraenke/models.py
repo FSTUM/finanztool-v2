@@ -12,6 +12,9 @@ class Blacklist(models.Model):
         managed = False
         db_table = "blacklist"
 
+    def __str__(self):
+        return f"{self.user} am {self.datum}: {self.grund}"
+
 
 class Getraenke(models.Model):
     nummer = models.IntegerField(primary_key=True)
@@ -23,6 +26,9 @@ class Getraenke(models.Model):
     class Meta:
         managed = False
         db_table = "getraenke"
+
+    def __str__(self):
+        return f"{self.nummer}:{self.name} ({self.shortname}) -> {self.preis}"
 
 
 class Log(models.Model):
@@ -40,7 +46,10 @@ class Log(models.Model):
         db_table = "log"
 
     def __str__(self):
-        return f"{self.konto} | {self.gruppe} | {self.aktion} | {self.typ} | {self.betrag} | {self.gesamt_jetzt} | {self.user} | {self.datum}"
+        return (
+            f"{self.konto} | {self.gruppe} | {self.aktion} | {self.typ} | {self.betrag} | {self.gesamt_jetzt} | "
+            f"{self.user} | {self.datum} "
+        )
 
 
 class Schulden(models.Model):
@@ -68,3 +77,6 @@ class Schulden(models.Model):
             user=user.username,
             datum=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         )
+
+    def __str__(self):
+        return f"{self.user} schuldet {self.betrag}"

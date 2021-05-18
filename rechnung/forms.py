@@ -1,7 +1,8 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 
-from .models import Kategorie, Kunde, Mahnung, Posten, Rechnung, User
+from .models import Kategorie, Kunde, Mahnung, Posten, Rechnung
 
 
 class RechnungForm(forms.ModelForm):
@@ -48,7 +49,7 @@ class RechnungForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        users = User.objects.all()
+        users = get_user_model().objects.all()
         self.fields["ersteller"].choices = [(user.pk, user.get_short_name()) for user in users]
         kategorien = Kategorie.objects.exclude(name="Test").exclude(name="test")
         self.fields["kategorie"].queryset = kategorien
@@ -116,7 +117,7 @@ class MahnungForm(forms.ModelForm):
         self.rechnung = kwargs.pop("rechnung")
         super().__init__(*args, **kwargs)
 
-        users = User.objects.all()
+        users = get_user_model().objects.all()
         self.fields["ersteller"].choices = [(user.pk, user.get_short_name()) for user in users]
 
         self.fields.pop("wievielte")

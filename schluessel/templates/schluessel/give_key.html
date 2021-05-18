@@ -6,23 +6,24 @@
 {% block content %}
 <script>
     const persons = [
-    {% for person in persons %}
-    {
-        id: '{{ person.id }}',
-        label: '{{ person }}',
-    },
-    {% endfor %}
+        {% for person in persons %}
+        {
+            id: '{{ person.id }}',
+            label: '{{ person }}',
+        },
+        {% endfor %}
     ];
 
-    $("#id_person_label").autocomplete({
+    const personLabel = $('#id_person_label');
+    personLabel.autocomplete({
         minLength: 0,
         source: persons,
-        focus: function (event, ui) {
-            $('#id_person_label').val(ui.item.label);
+        focus(event, ui) {
+            personLabel.val(ui.item.label);
             return false;
         },
-        select: function (event, ui) {
-            $('#id_person_label').val(ui.item.label);
+        select(event, ui) {
+            personLabel.val(ui.item.label);
             $('#id_person').val(ui.item.id);
             document.addform.submit();
         },

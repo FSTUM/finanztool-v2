@@ -15,22 +15,24 @@ class MappingConfirmationForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         for entry in self.mappings:
-            key = self._get_key(entry)
+            key = self.get_key(entry)
             if key:
                 self.fields[key] = forms.BooleanField(required=False)
 
-    def _get_key(self, entry):
+    @staticmethod
+    def get_key(entry):
         if entry.mapped_mahnung:
             return f"ma_{entry.mapped_mahnung.pk}"
-        elif entry.mapped_rechnung:
+        if entry.mapped_rechnung:
             return f"re_{entry.mapped_rechnung.pk}"
-        elif entry.mapped_user:
+        if entry.mapped_user:
             return f"us_{entry.mapped_user.pk}"
+        return None
 
     def save(self):
         latest_einzahlung = None
         for entry in self.mappings:
-            key = self._get_key(entry)
+            key = self.get_key(entry)
             if key and self.cleaned_data[key]:
                 if entry.mapped_mahnung:
                     entry.mapped_mahnung.bezahlen()

@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterUniqueTogether(
             name="key",
-            unique_together=set([("keytype", "number")]),
+            unique_together={("keytype", "number")},
         ),
     ]

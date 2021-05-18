@@ -1,6 +1,7 @@
 from django import forms
+from django.contrib.auth import get_user_model
 
-from .models import Aufgabe, Aufgabenart, User
+from .models import Aufgabe, Aufgabenart
 
 
 class AufgabeForm(forms.ModelForm):
@@ -9,9 +10,8 @@ class AufgabeForm(forms.ModelForm):
         help_texts = {
             "name": "Beispiel: impulsiv Anzeigenauftrag",
             "zusatz": "z. B. impulsiv Anzeige -> Ausgabe 123",
-            "bearbeiter": 'Zuordnung einer Aufgabe über "Wer soll sie \
-                                erledigen?" Falls jemand anderes übernimmt \
-                                wird es nachvollziehbar mit diesem Feld.',
+            "bearbeiter": 'Zuordnung einer Aufgabe über "Wer soll sie erledigen?" Falls jemand anderes übernimmt wird '
+            "es nachvollziehbar mit diesem Feld.",
             "text": "Raum für alle möglichen Anmerkungen",
         }
         widgets = {
@@ -36,7 +36,7 @@ class AufgabeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        users = User.objects.all()
+        users = get_user_model().objects.all()
         self.fields["zustaendig"].choices = [(user.pk, user.get_short_name()) for user in users]
         self.fields["bearbeiter"].choices = [(user.pk, user.get_short_name()) for user in users]
         if self.instance.pk:
@@ -59,9 +59,6 @@ class AufgabenartForm(forms.ModelForm):
             "name": "Überdefinition einer Aufgabe, z.B. Umfrageabrechnung",
         }
         fields = ("name",)
-
-        def __init__(self, *args, **kwargs):
-            super(AufgabeForm, self).__init__(*args, **kwargs)
 
 
 class AufgabeErledigtForm(forms.Form):

@@ -1,23 +1,26 @@
+from datetime import date
 from io import TextIOWrapper
+from typing import Optional
 
-from django.contrib.admin.views.decorators import staff_member_required
-from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse
+from django.core.files.uploadedfile import UploadedFile
+from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
+
+from schluessel.views import AuthWSGIRequest, finanz_staff_member_required
 
 from .forms import MappingConfirmationForm, UploadForm
 from .models import EinzahlungsLog
 from .parser import parse_camt_csv
 
-staff_member_required = staff_member_required(login_url="rechnung:login")
 
-
-@staff_member_required
-def einlesen(request: WSGIRequest) -> HttpResponse:
+@finanz_staff_member_required
+def einlesen(request: AuthWSGIRequest) -> HttpResponse:
     form = UploadForm(request.POST or None, request.FILES or None)
 
     if form.is_valid():
-        csv_file = request.FILES.get("csv_file")
+        csv_file: Optional[UploadedFile] = request.FILES.get("csv_file")
+        if not csv_file:
+            raise Http404("You did not attach a file")
         csv_file_text = TextIOWrapper(csv_file.file, encoding="iso-8859-1")
         results, errors = parse_camt_csv(csv_file_text)
 
@@ -26,7 +29,7 @@ def einlesen(request: WSGIRequest) -> HttpResponse:
         return redirect("konto:mapping")
 
     try:
-        zuletzt_eingetragen = EinzahlungsLog.objects.latest("timestamp").timestamp
+        zuletzt_eingetragen: Optional[date] = EinzahlungsLog.objects.latest("timestamp").timestamp
     except EinzahlungsLog.DoesNotExist:
         zuletzt_eingetragen = None
 
@@ -37,8 +40,8 @@ def einlesen(request: WSGIRequest) -> HttpResponse:
     return render(request, "konto/einlesen.html", context)
 
 
-@staff_member_required
-def mapping(request: WSGIRequest) -> HttpResponse:
+@finanz_staff_member_required
+def mapping(request: AuthWSGIRequest) -> HttpResponse:
     try:
         results = request.session["results"]
         errors = request.session["errors"]

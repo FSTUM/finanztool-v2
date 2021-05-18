@@ -1,15 +1,17 @@
 import os
-import subprocess
+import subprocess  # nosec: fully defined
 from tempfile import mkdtemp, mkstemp
+from typing import Callable, Optional
 
 from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.handlers.wsgi import WSGIRequest
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
@@ -25,11 +27,15 @@ from .forms import (
 )
 from .models import Key, KeyLogEntry, Person, SavedKeyChange
 
-staff_member_required = staff_member_required(login_url="rechnung:login")
+finanz_staff_member_required: Callable = staff_member_required(login_url="rechnung:login")
+
+
+class AuthWSGIRequest(WSGIRequest):
+    user: User
 
 
 @login_required
-def view_key(request: WSGIRequest, key_pk) -> HttpResponse:
+def view_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     logentries = key.keylogentry_set.order_by("date")
@@ -42,8 +48,8 @@ def view_key(request: WSGIRequest, key_pk) -> HttpResponse:
     return render(request, "schluessel/view_key.html", context)
 
 
-@staff_member_required
-def add_key(request: WSGIRequest) -> HttpResponse:
+@finanz_staff_member_required
+def add_key(request: AuthWSGIRequest) -> HttpResponse:
     form = KeyForm(request.POST or None)
     if form.is_valid():
         key = form.save()
@@ -64,8 +70,8 @@ def add_key(request: WSGIRequest) -> HttpResponse:
     return render(request, "schluessel/add_key.html", context)
 
 
-@staff_member_required
-def edit_key(request: WSGIRequest, key_pk) -> HttpResponse:
+@finanz_staff_member_required
+def edit_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     form = KeyForm(request.POST or None, instance=key)
@@ -89,8 +95,8 @@ def edit_key(request: WSGIRequest, key_pk) -> HttpResponse:
     return render(request, "schluessel/edit_key.html", context)
 
 
-@staff_member_required
-def save_key_change(request: WSGIRequest, key_pk) -> HttpResponse:
+@finanz_staff_member_required
+def save_key_change(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
@@ -139,8 +145,8 @@ def save_key_change(request: WSGIRequest, key_pk) -> HttpResponse:
     return render(request, "schluessel/save_key_change.html", context)
 
 
-@staff_member_required
-def delete_key_change(request: WSGIRequest, key_pk) -> HttpResponse:
+@finanz_staff_member_required
+def delete_key_change(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
@@ -152,7 +158,7 @@ def delete_key_change(request: WSGIRequest, key_pk) -> HttpResponse:
     try:
         keychange = key.savedkeychange
     except ObjectDoesNotExist:
-        raise Http404("Key change does not exist")
+        raise Http404("Key change does not exist")  # pylint: disable=raise-missing-from
 
     form = forms.Form(request.POST or None)
     if form.is_valid():
@@ -168,31 +174,19 @@ def delete_key_change(request: WSGIRequest, key_pk) -> HttpResponse:
     return render(request, "schluessel/delete_key_change.html", context)
 
 
-@staff_member_required
-def apply_key_change(request: WSGIRequest, key_pk=None) -> HttpResponse:
-    key = None
-    keys = (
-        Key.objects.filter(
-            keytype__keycard=True,
-            active=True,
-        )
+@finanz_staff_member_required
+def apply_key_change(request: AuthWSGIRequest, key_pk: Optional[int] = None) -> HttpResponse:
+    key: Optional[Key] = None
+    keys: QuerySet[Key] = (
+        Key.objects.filter(keytype__keycard=True, active=True)
         .exclude(savedkeychange=None)
         .order_by("keytype__shortname", "number")
     )
+
     if key_pk:
         key = get_object_or_404(Key, pk=key_pk)
-        if not key.active:
-            raise Http404("Key is inactive")
-        if not key.keytype.keycard:
-            raise Http404("Key is not a keycard")
-        try:
-            keychange = key.savedkeychange
-        except ObjectDoesNotExist:
-            raise Http404("Key change does not exist")
-        if key.savedkeychange.violated_key:
-            raise Http404("Key change is violating another key")
+        key_state_check(key)
         keys = keys.filter(pk=key_pk)
-
     if not keys.exists():
         raise Http404("There are no key changes")
 
@@ -253,8 +247,20 @@ def apply_key_change(request: WSGIRequest, key_pk=None) -> HttpResponse:
     return render(request, "schluessel/apply_key_change.html", context)
 
 
-@staff_member_required
-def list_key_changes(request: WSGIRequest) -> HttpResponse:
+def key_state_check(key: Key) -> None:
+    if not key.active:
+        raise Http404("Key is inactive")
+    if not key.keytype.keycard:
+        raise Http404("Key is not a keycard")
+    try:
+        if key.savedkeychange.violated_key:
+            raise Http404("Key change is violating another key")
+    except ObjectDoesNotExist:
+        raise Http404("Key change does not exist")  # pylint: disable=raise-missing-from
+
+
+@finanz_staff_member_required
+def list_key_changes(request: AuthWSGIRequest) -> HttpResponse:
     keys = (
         Key.objects.filter(
             keytype__keycard=True,
@@ -290,7 +296,7 @@ def list_key_changes(request: WSGIRequest) -> HttpResponse:
 
 
 @login_required
-def return_key(request: WSGIRequest, key_pk) -> HttpResponse:
+def return_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
@@ -325,7 +331,7 @@ def return_key(request: WSGIRequest, key_pk) -> HttpResponse:
 
 
 @login_required
-def give_key(request: WSGIRequest, key_pk) -> HttpResponse:
+def give_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
@@ -364,7 +370,7 @@ def give_key(request: WSGIRequest, key_pk) -> HttpResponse:
 
 
 @login_required
-def give_key_confirm(request: WSGIRequest, key_pk, person_pk) -> HttpResponse:
+def give_key_confirm(request: AuthWSGIRequest, key_pk: int, person_pk: int) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
@@ -400,7 +406,7 @@ def give_key_confirm(request: WSGIRequest, key_pk, person_pk) -> HttpResponse:
 
 
 @login_required
-def view_person(request: WSGIRequest, person_pk) -> HttpResponse:
+def view_person(request: AuthWSGIRequest, person_pk: int) -> HttpResponse:
     person = get_object_or_404(Person, pk=person_pk)
 
     keys = person.key_set.order_by("keytype__shortname", "number")
@@ -417,7 +423,7 @@ def view_person(request: WSGIRequest, person_pk) -> HttpResponse:
 
 
 @login_required
-def add_person(request: WSGIRequest) -> HttpResponse:
+def add_person(request: AuthWSGIRequest) -> HttpResponse:
     form = PersonForm(request.POST or None)
     if form.is_valid():
         person = form.save()
@@ -439,7 +445,7 @@ def add_person(request: WSGIRequest) -> HttpResponse:
 
 
 @login_required
-def give_add_person(request: WSGIRequest, key_pk) -> HttpResponse:
+def give_add_person(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     form = PersonForm(request.POST or None)
     if form.is_valid():
         person = form.save()
@@ -461,7 +467,7 @@ def give_add_person(request: WSGIRequest, key_pk) -> HttpResponse:
 
 
 @login_required
-def edit_person(request: WSGIRequest, person_pk) -> HttpResponse:
+def edit_person(request: AuthWSGIRequest, person_pk: int) -> HttpResponse:
     person = get_object_or_404(Person, pk=person_pk)
 
     form = PersonForm(request.POST or None, instance=person)
@@ -486,7 +492,7 @@ def edit_person(request: WSGIRequest, person_pk) -> HttpResponse:
 
 
 @login_required
-def give_edit_person(request: WSGIRequest, key_pk, person_pk) -> HttpResponse:
+def give_edit_person(request: AuthWSGIRequest, key_pk: int, person_pk: int) -> HttpResponse:
     person = get_object_or_404(Person, pk=person_pk)
 
     form = PersonForm(request.POST or None, instance=person)
@@ -511,17 +517,17 @@ def give_edit_person(request: WSGIRequest, key_pk, person_pk) -> HttpResponse:
 
 
 @login_required
-def get_kaution(request: WSGIRequest, key_pk) -> HttpResponse:
+def get_kaution(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     return create_pdf(request, key_pk, doc="Kaution")
 
 
 @login_required
-def get_quittung(request: WSGIRequest, key_pk) -> HttpResponse:
+def get_quittung(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     return create_pdf(request, key_pk, doc="Quittung")
 
 
 @login_required
-def create_pdf(request: WSGIRequest, key_pk, doc) -> HttpResponse:
+def create_pdf(request: AuthWSGIRequest, key_pk: int, doc: str) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
@@ -553,7 +559,7 @@ def create_pdf(request: WSGIRequest, key_pk, doc) -> HttpResponse:
 
     # Compile the TeX file with PDFLaTeX
     try:
-        subprocess.check_output(
+        subprocess.check_output(  # nosec: fully defined
             [
                 "pdflatex",
                 "-halt-on-error",
@@ -570,12 +576,9 @@ def create_pdf(request: WSGIRequest, key_pk, doc) -> HttpResponse:
         )
 
     response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = "attachment;" 'filename="{}_{}_{}_{}_{}.pdf"'.format(
-        doc,
-        key.keytype.shortname,
-        key.number,
-        key.person.name,
-        key.person.firstname,
+    response["Content-Disposition"] = (
+        f'attachment;filename="{doc}_{key.keytype.shortname}_{key.number}_'
+        f'{key.person.name}_{key.person.firstname}.pdf"'
     )
 
     # return path to pdf
@@ -588,7 +591,7 @@ def create_pdf(request: WSGIRequest, key_pk, doc) -> HttpResponse:
 
 
 @login_required
-def list_keys(request: WSGIRequest) -> HttpResponse:
+def list_keys(request: AuthWSGIRequest) -> HttpResponse:
     keys = Key.objects.filter(active=True).order_by(
         "keytype__shortname",
         "number",
@@ -637,7 +640,7 @@ def list_keys(request: WSGIRequest) -> HttpResponse:
 
 
 @login_required
-def list_persons(request: WSGIRequest) -> HttpResponse:
+def list_persons(request: AuthWSGIRequest) -> HttpResponse:
     persons = Person.objects.order_by("name", "firstname")
 
     form = FilterPersonsForm(request.POST or None)
@@ -664,8 +667,8 @@ def list_persons(request: WSGIRequest) -> HttpResponse:
     return render(request, "schluessel/list_persons.html", context)
 
 
-@staff_member_required
-def show_log(request: WSGIRequest) -> HttpResponse:
+@finanz_staff_member_required
+def show_log(request: AuthWSGIRequest) -> HttpResponse:
     logentries = KeyLogEntry.objects.order_by("-date")[:20]
 
     context = {

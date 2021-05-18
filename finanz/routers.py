@@ -1,3 +1,4 @@
+# pylint: skip-file
 from django.conf import settings
 
 
@@ -38,6 +39,6 @@ class DatabaseAppsRouter:
         """Make sure that apps only appear in the related database."""
         if db in settings.DATABASE_APPS_MAPPING.values():
             return settings.DATABASE_APPS_MAPPING.get(app_label) == db
-        elif app_label in settings.DATABASE_APPS_MAPPING:
+        if app_label in settings.DATABASE_APPS_MAPPING:
             return False
         return None

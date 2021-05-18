@@ -1,6 +1,6 @@
 from datetime import date
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -12,7 +12,7 @@ class Aufgabenart(models.Model):
     )
 
     def __str__(self):
-        return "{}".format(self.name)
+        return self.name
 
 
 class Aufgabe(models.Model):
@@ -28,13 +28,13 @@ class Aufgabe(models.Model):
         default=False,
     )
     zustaendig = models.ForeignKey(
-        User,
+        get_user_model(),
         models.CASCADE,
         related_name="aufgabe_zustaendig",
         verbose_name="Wer soll sie erledigen? *",
     )
     bearbeiter = models.ForeignKey(
-        User,
+        get_user_model(),
         models.CASCADE,
         related_name="aufgabe_bearbeiter",
         verbose_name="Wer hat sie erledigt?",
@@ -70,7 +70,7 @@ class Aufgabe(models.Model):
     )
 
     def __str__(self):
-        return "{} - {} ({})".format(self.art.name, self.zusatz, self.jahr)
+        return f"{self.art.name} - {self.zusatz} ({self.jahr})"
 
     def faellig(self):
         return self.frist < date.today()

@@ -74,12 +74,12 @@
         Verein zur Studienförderung der FS MPI e. V.,
         Boltzmannstraße 3, 85748 Garching\\[1ex] \hrule}}\\[2ex]
     \raggedright{\parbox[c]{8cm}{\footnotesize
-    \notblank{ {{ rechnung.kunde.organisation|default_if_none:"" | latexescape }} }
+    \notblank{ {{ rechnung.kunde.organisation|default_if_none:"" | latex_escape }} }
         { {{ rechnung.kunde.organisation | latexescape }}\\[0.5ex]}{}
-    \notblank{ {{ rechnung.kunde.suborganisation|default_if_none:"" | latexescape }} }
+    \notblank{ {{ rechnung.kunde.suborganisation|default_if_none:"" | latex_escape }} }
         { {{ rechnung.kunde.suborganisation | latexescape }} \\[0.2ex]}{}
-    \notblank{ {{ rechnung.kunde.name|default_if_none:"" | latexescape }} }
-        { {{ rechnung.kunde.titel|default_if_none:"" | latexescape }} {{ rechnung.kunde.vorname|default_if_none:"" | latexescape }} {{ rechnung.kunde.name | latexescape }}  \\[0.2ex]}{}
+    \notblank{ {{ rechnung.kunde.name|default_if_none:"" | latex_escape }} }
+        { {{ rechnung.kunde.titel|default_if_none:"" | latex_escape }} {{ rechnung.kunde.vorname|default_if_none:"" | latex_escape }} {{ rechnung.kunde.name | latexescape }}  \\[0.2ex]}{}
     {{ rechnung.kunde.strasse | latexescape }} \\[0.2ex]
     \ifnum\pdfstrcmp{ {{ rechnung.kunde.land | latexescape }} }{ Deutschland }=0
         {{ rechnung.kunde.plz | latexescape }} {{ rechnung.kunde.stadt | latexescape }}\\[3ex]
@@ -122,10 +122,10 @@
 
     \normalsize
     \ifnum\pdfstrcmp{ {{ rechnung.kunde.anrede | latexescape }} }{ w }=0
-        Sehr geehrte Frau {{ rechnung.kunde.titel|default_if_none:"" | latexescape }} {{ rechnung.kunde.name | latexescape }},\\[2ex]
+        Sehr geehrte Frau {{ rechnung.kunde.titel|default_if_none:"" | latex_escape }} {{ rechnung.kunde.name | latexescape }},\\[2ex]
     \else
         \ifnum\pdfstrcmp{ {{ rechnung.kunde.anrede | latexescape }} }{ m }=0
-            Sehr geehrter Herr {{ rechnung.kunde.titel|default_if_none:"" | latexescape }} {{ rechnung.kunde.name | latexescape }},\\[2ex]
+            Sehr geehrter Herr {{ rechnung.kunde.titel|default_if_none:"" | latex_escape }} {{ rechnung.kunde.name | latexescape }},\\[2ex]
         \else
             Sehr geehrte Damen und Herren,\\[2ex]
         \fi

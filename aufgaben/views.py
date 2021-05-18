@@ -1,21 +1,18 @@
-from django.contrib.admin.views.decorators import staff_member_required
-from django.core.handlers.wsgi import WSGIRequest
+from typing import Optional
+
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+
+from schluessel.views import AuthWSGIRequest, finanz_staff_member_required
 
 from .forms import AufgabeErledigtForm, AufgabeForm, AufgabenartForm
 from .models import Aufgabe, Aufgabenart
 
-staff_member_required = staff_member_required(login_url="rechnung:login")
 
-
-@staff_member_required
-def unerledigt(request: WSGIRequest) -> HttpResponse:
+@finanz_staff_member_required
+def unerledigt(request: AuthWSGIRequest) -> HttpResponse:
     aufgaben = Aufgabe.objects.filter(erledigt=False).order_by("frist")
-    meine_aufgaben = Aufgabe.objects.filter(
-        erledigt=False,
-        zustaendig=request.user,
-    ).order_by("-frist")
+    meine_aufgaben = Aufgabe.objects.filter(erledigt=False, zustaendig=request.user).order_by("-frist")
     context = {
         "aufgaben": aufgaben,
         "meine_aufgaben": meine_aufgaben,
@@ -23,34 +20,31 @@ def unerledigt(request: WSGIRequest) -> HttpResponse:
     return render(request, "aufgaben/unerledigt.html", context)
 
 
-@staff_member_required
-def form_aufgabe(request: WSGIRequest, aufgabe_id=None) -> HttpResponse:
-    aufgabe = None
+@finanz_staff_member_required
+def form_aufgabe(request: AuthWSGIRequest, aufgabe_id: Optional[int] = None) -> HttpResponse:
+    aufgabe_obj: Optional[Aufgabe] = None
     if aufgabe_id:
-        aufgabe = get_object_or_404(Aufgabe, pk=aufgabe_id)
+        aufgabe_obj = get_object_or_404(Aufgabe, pk=aufgabe_id)
 
     if request.method == "POST":
-        form = AufgabeForm(request.POST, instance=aufgabe)
+        form = AufgabeForm(request.POST, instance=aufgabe_obj)
 
         if form.is_valid():
-            aufgabe = form.save()
-            return redirect("aufgaben:aufgabe", aufgabe_id=aufgabe.pk)
+            aufgabe_pk: int = form.save().pk
+            return redirect("aufgaben:aufgabe", aufgabe_id=aufgabe_pk)
     else:
-        form = AufgabeForm(
-            initial={"zustaendig": request.user},
-            instance=aufgabe,
-        )
+        form = AufgabeForm(initial={"zustaendig": request.user}, instance=aufgabe_obj)
 
     context = {
         "form": form,
-        "aufgabe": aufgabe,
+        "aufgabe": aufgabe_obj,
     }
 
     return render(request, "aufgaben/form_aufgabe.html", context)
 
 
-@staff_member_required
-def form_aufgabenart(request: WSGIRequest, aufgabenart_id=None) -> HttpResponse:
+@finanz_staff_member_required
+def form_aufgabenart(request: AuthWSGIRequest, aufgabenart_id: Optional[int] = None) -> HttpResponse:
     aufgabenart = None
     if aufgabenart_id:
         aufgabenart = get_object_or_404(Aufgabenart, pk=aufgabenart_id)
@@ -72,8 +66,8 @@ def form_aufgabenart(request: WSGIRequest, aufgabenart_id=None) -> HttpResponse:
     return render(request, "aufgaben/form_aufgabenart.html", context)
 
 
-@staff_member_required
-def alle(request: WSGIRequest) -> HttpResponse:
+@finanz_staff_member_required
+def alle(request: AuthWSGIRequest) -> HttpResponse:
     alle_aufgaben = Aufgabe.objects.all().order_by("-frist")
     context = {
         "alle_aufgaben": alle_aufgaben,
@@ -81,17 +75,15 @@ def alle(request: WSGIRequest) -> HttpResponse:
     return render(request, "aufgaben/alle.html", context)
 
 
-@staff_member_required
-def aufgabe(request: WSGIRequest, aufgabe_id) -> HttpResponse:
+@finanz_staff_member_required
+def aufgabe(request: AuthWSGIRequest, aufgabe_id: int) -> HttpResponse:
     _aufgabe = get_object_or_404(Aufgabe, pk=aufgabe_id)
 
     form = AufgabeErledigtForm(request.POST or None)
-    if request.method == "POST":
-        if "erledigt" in request.POST:
-            if form.is_valid():
-                _aufgabe.erledigt = True
-                _aufgabe.save()
-                return redirect("aufgaben:aufgabe", aufgabe_id=_aufgabe.pk)
+    if request.method == "POST" and "erledigt" in request.POST and form.is_valid():
+        _aufgabe.erledigt = True
+        _aufgabe.save()
+        return redirect("aufgaben:aufgabe", aufgabe_id=_aufgabe.pk)
 
     context = {
         "aufgabe": _aufgabe,
