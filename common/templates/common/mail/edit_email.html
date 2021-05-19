@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap5 %}
+
+{% block title %}Email bearbeiten{% endblock %}
+
+{% block content %}
+<h2>Email bearbeiten</h2>
+
+<form
+    method="post"
+    action=""
+>
+    {% csrf_token %}
+
+    {% bootstrap_form form %}
+    {% include "snippets/mail_template_table.html" with mail=mail %}
+
+    <a
+        class="btn btn-secondary"
+        href="{% url "common:list_mail" %}"
+    >Abbrechen</a>
+    <button
+        class="btn btn-primary"
+        type="submit"
+    >Email bearbeiten</button>
+</form>
+{% endblock %}

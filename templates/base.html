@@ -44,6 +44,13 @@
         media="all"
         rel="stylesheet"
     >
+    <link
+        href='{% static "datatables.net-bs4/css/dataTables.bootstrap4.min.css" %}'
+        rel='stylesheet'
+    >
+    <script src="{% static "datatables.net/js/jquery.dataTables.min.js" %}"></script>
+    <script src="{% static "datatables.net-bs4/js/dataTables.bootstrap4.min.js" %}"></script>
+
 
     <title>{% block title %}Finanz - Rechnungen{% endblock %}</title>
 
@@ -244,6 +251,10 @@
                             href="{% url "rechnung:index" %}"
                         >Index</a>
                         {% endif %}
+                        <a
+                            class="nav-link {% active_link 'rechnung:unerledigt' %}"
+                            href="{% url "common:list_mail" %}"
+                        >Mails and Settings</a>
                     </nav>
                     {# login #}
                     <div class="d-flex">

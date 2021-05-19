@@ -1,0 +1,56 @@
+{% if mail.general_placeholders %}
+<label for='generalTemplateTagTable'>Benutzbare generelle Template-tags</label>
+<div class="table-responsive">
+    <table
+        id="generalTemplateTagTable"
+        class="table table-hover dataTable"
+    >
+        <thead>
+            <tr>
+                <th>Tag</th>
+                <th>Beschreibung</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tag, description in mail.general_placeholders %}
+
+            <tr>
+                <td>{{ tag }}</td>
+                <td>{{ description }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% if mail.conditional_placeholders %}
+<label for='contitionalTemplateTagTable'>Nutzbare abhängige Template-tags</label>
+<div class="table-responsive">
+    <table
+        id="contitionalTemplateTagTable"
+        class="table table-hover dataTable"
+    >
+        <thead>
+            <tr>
+                <th>Tag</th>
+                <th>Beschreibung</th>
+                <th>Abhängend von</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tag, description, contition in mail.conditional_placeholders %}
+
+            <tr>
+                <td>{{ tag }}</td>
+                <td>{{ description }}</td>
+                <td>{{ contition }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% if mail.notes %}
+<label for='templateNotes'>Notizen</label>
+<p id='templateNotes'>{{ mail.notes }}</p>
+{% endif %}

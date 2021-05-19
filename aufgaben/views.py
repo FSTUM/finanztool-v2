@@ -3,7 +3,7 @@ from typing import Optional
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from schluessel.views import AuthWSGIRequest, finanz_staff_member_required
+from common.views import AuthWSGIRequest, finanz_staff_member_required
 
 from .forms import AufgabeErledigtForm, AufgabeForm, AufgabenartForm
 from .models import Aufgabe, Aufgabenart

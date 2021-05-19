@@ -10,8 +10,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 
 from aufgaben.models import Aufgabe
+from common.views import AuthWSGIRequest, finanz_staff_member_required
 from schluessel.models import Key
-from schluessel.views import AuthWSGIRequest, finanz_staff_member_required
 
 from .forms import (
     KundeForm,

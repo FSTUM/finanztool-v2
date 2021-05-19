@@ -30,11 +30,13 @@ INSTALLED_APPS = [
     "bootstrap5",
     "bootstrap_datepicker_plus",
     "active_link",
+    "django_crontab",
     "rechnung",
     "konto",
     "aufgaben",
     "schluessel",
     "getraenke",
+    "common",
 ]
 
 MIDDLEWARE = [
@@ -55,7 +57,7 @@ LOGOUT_URL = "logout/"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ["templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -122,3 +124,9 @@ STATICFILES_DIRS = [
 DATABASE_ROUTERS = ["finanz.routers.DatabaseAppsRouter"]
 DATABASE_APPS_MAPPING = {"getraenke": "getraenke"}
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+# cronjobs
+CRONJOBS = [
+    ("0 7 * * *", "common.cron.ueberfaellige_rechnung_reminder"),  # dayly at 07:00
+    ("0 7 * * 1", "common.cron.zugewiesene_aufgabe_reminder"),  # weekly on modays at 7:00
+]
