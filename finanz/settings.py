@@ -47,9 +47,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "finanz.urls"
-LOGIN_URL = "/rechnung/login/"
-LOGOUT_URL = "/rechnung/logout/"
-LOGIN_REDIRECT_URL = "/rechnung/index"
+LOGIN_URL = "login/"
+LOGOUT_URL = "logout/"
 
 TEMPLATES = [
     {
@@ -97,8 +96,6 @@ SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
 SESSION_ENGINE = "django.contrib.sessions.backends.db"  # default, but important due to pickle
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.9/topics/i18n/
-
 LANGUAGE_CODE = "de-de"
 LOCALE_NAME = "de"
 TIME_ZONE = "Europe/Berlin"
@@ -113,14 +110,12 @@ de_formats.DATE_FORMAT = "d.m.Y"
 de_formats.SHORT_DATE_FORMAT = "d.m."
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
-
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-# Database routing
+# Database stuff
 DATABASE_ROUTERS = ["finanz.routers.DatabaseAppsRouter"]
 DATABASE_APPS_MAPPING = {"getraenke": "getraenke"}
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"

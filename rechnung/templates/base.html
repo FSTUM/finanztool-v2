@@ -222,10 +222,10 @@
                     {% if user.is_superuser %}
                     <li><a href="{% url "konto:einlesen" %}">{% bootstrap_icon "credit-card" %} Konto</a></li>
                     {% endif %}
-                    <li><a href="{% url "rechnung:logout" %}">Logout</a></li>
+                    <li><a href="{% url "logout" %}">Logout</a></li>
                     {% else %}
                     <li><a href="{% url "rechnung:index" %}">Index</a></li>
-                    <li><a href="{% url "rechnung:login" %}">Login</a></li>
+                    <li><a href="{% url "login" %}">Login</a></li>
                     {% endif %}
                     {# end login #}
                 </ul>

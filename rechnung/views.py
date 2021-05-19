@@ -27,7 +27,7 @@ from .forms import (
 from .models import Kategorie, Kunde, Mahnung, Posten, Rechnung
 
 
-@login_required
+@login_required(login_url="login")
 def willkommen(request: AuthWSGIRequest) -> HttpResponse:
     rechnungen = Rechnung.objects.filter(gestellt=True, erledigt=False).all()
     offene_rechnungen = rechnungen.count()
@@ -75,15 +75,6 @@ def alle(request: AuthWSGIRequest) -> HttpResponse:
 @finanz_staff_member_required
 def admin(request: AuthWSGIRequest) -> HttpResponse:
     return render(request, "rechnung/admin.html")
-
-
-def login(request: WSGIRequest) -> HttpResponse:
-    return render(request, "registration/login.html")
-
-
-@finanz_staff_member_required
-def logout(request: AuthWSGIRequest) -> HttpResponse:
-    return render(request, "registration/logout.html")
 
 
 # Rechnung#####################################################################
@@ -411,8 +402,8 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
                 rechnung=mahnung_obj.rechnung,
                 wievielte__lt=mahnung_obj.wievielte,
             )
-            .order_by("wievielte")
-            .all()
+                .order_by("wievielte")
+                .all()
         )
 
     # create temporary files
