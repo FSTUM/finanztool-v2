@@ -6,9 +6,9 @@
 {% block content %}
 <h1>Typ-Änderung für {{ key.typename }} {{ key }} vormerken</h1>
 
-<div class="col-md-4">
+<div class="col-lg-4">
     <form
-        method="post"
+        method="POST"
         action=""
     >
         {% csrf_token %}
@@ -17,7 +17,7 @@
 
         <button
             type="submit"
-            class="btn btn-default btn-info"
+            class="btn btn-secondary btn-info"
         >Vormerken</button>
     </form>
 </div>

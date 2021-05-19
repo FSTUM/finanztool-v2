@@ -32,7 +32,7 @@
 
 <h1>{{ key.typename }} {{ key }} ausgeben</h1>
 
-<div class="col-md-6">
+<div class="col-lg-6">
     <p>
         <a
             href="{% url "schluessel:give_add_person" key.id %}"
@@ -59,7 +59,7 @@
         </script>
     <noscript>
         <form
-            method="post"
+            method="POST"
             action=""
         >
             {% csrf_token %}
@@ -67,7 +67,7 @@
             {% bootstrap_form formns %}
             <button
                 type="submit"
-                class="btn btn-default btn-info"
+                class="btn btn-secondary btn-info"
             >Ausgeben
             </button>
         </form>

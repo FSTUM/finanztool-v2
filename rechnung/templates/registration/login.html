@@ -6,14 +6,14 @@
 <h1>Willkommen beim Finanztool</h1>
 <form
     action="{% url "login" %}"
-    method="post"
+    method="POST"
     accept-charset="utf-8"
     role="form"
 >
     {% csrf_token %}
 
     <div class="row">
-        <div class="col-xs-12 col-lg-5">
+        <div class="col-sm-12 col-xl-5">
             {% bootstrap_form form %}
         </div>
     </div>
@@ -26,7 +26,7 @@
     <input
         type="submit"
         value="Login"
-        class="btn btn-default"
+        class="btn btn-secondary"
     />
 </form>
 {% endblock %}

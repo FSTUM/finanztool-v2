@@ -6,7 +6,7 @@
 {% block content %}
 <h1>Vorgemerkte Schlüsseltyp-Änderungen anwenden</h1>
 
-<div class="col-md-6">
+<div class="col-lg-6">
     <p>Sollen folgende Änderungen wirklich angewendet werden?</p>
     <table class="table table-striped table-hover">
         <tr>
@@ -55,7 +55,7 @@
     </table>
 </div>
 <form
-    method="post"
+    method="POST"
     action=""
 >
     {% csrf_token %}
@@ -65,7 +65,7 @@
             <td>
                 <button
                     type="submit"
-                    class="btn btn-default btn-warning"
+                    class="btn btn-secondary btn-warning"
                 >Änderungen anwenden</button>
             </td>
             {% if cur_key %}

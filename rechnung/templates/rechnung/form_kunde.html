@@ -20,12 +20,12 @@ Kunde hinzufügen
 {% if kunde.pk %}
 <p><a
         href="{% url "rechnung:kunde" kunde_id=kunde.pk %}"
-        class="btn btn-default"
+        class="btn btn-secondary"
         role="button"
     >{% bootstrap_icon "arrow-left" %} Zurück zum Kunden</a></p>
 {% endif %}
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-lg-5">
         {% if form.kunde_verwendet %}
         <div class="alert alert-danger">
             Dieser Kunde wird bereits in einer Rechnung verwendet,
@@ -40,7 +40,7 @@ Kunde hinzufügen
             {% bootstrap_form form %}
             <button
                 type="submit"
-                class="save btn btn-default"
+                class="save btn btn-secondary"
             >
                 {% bootstrap_icon "floppy-disk" %} Sichern
             </button>

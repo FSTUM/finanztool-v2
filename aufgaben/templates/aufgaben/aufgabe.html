@@ -9,12 +9,9 @@
 <h2>{{ aufgabe.art.name }} {{ aufgabe.zusatz }} {% localize off %} {{ aufgabe.jahr }} {% endlocalize %}</h2>
 <br>
 
-<div class="col-md-6">
+<div class="col-lg-6">
     {% if not aufgabe.erledigt %}
-    <form
-        class=form-horizontal
-        method="POST"
-    >{% csrf_token %}
+    <form method="POST">{% csrf_token %}
         <p>
             {{ form }}
             <button

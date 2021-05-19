@@ -14,14 +14,14 @@
 
 <p><a
         href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
-        class="btn btn-default"
+        class="btn btn-secondary"
         role="button"
     >{% bootstrap_icon "arrow-left" %}
         Zurück zur Rechnung
     </a></p>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <p><span class="text-muted">
                 Mit * markierte Felder sind verpflichtend
             </span></p>
@@ -30,7 +30,7 @@
             {% bootstrap_form form %}
             <button
                 type="submit"
-                class="save btn btn-default"
+                class="save btn btn-secondary"
             >
                 {% bootstrap_icon "floppy-disk" %} Sichern
             </button>
@@ -38,7 +38,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-lg-10">
         <h3>Posten</h3>
         <p><span class="text-muted">
                 Posten können nach dem Duplizieren bearbeitet werden
@@ -47,11 +47,11 @@
         <br />
         <table class="table">
             <tr>
-                <th class="text-right">Anzahl</th>
+                <th class="text-end">Anzahl</th>
                 <th>Bezeichnung</th>
-                <th class="text-right">Einzelpreis</th>
-                <th class="text-right">Mwst-Satz</th>
-                <th class="text-right">Summe Netto</th>
+                <th class="text-end">Einzelpreis</th>
+                <th class="text-end">Mwst-Satz</th>
+                <th class="text-end">Summe Netto</th>
             </tr>
             {% for posten in rechnung.posten_set.all %}
             <tr>
@@ -64,7 +64,7 @@
             {% endfor %}
         </table>
     </div>
-    <div class="col-md-10">
+    <div class="col-lg-10">
         <table class="table">
             <tr>
                 <th>Zwischensumme (netto):</th>

@@ -6,10 +6,7 @@
 {% block content %}
 <h1>RE {{ rechnung.rnr_string }}: {{ rechnung.name }}</h1>
 {% if rechnung.gestellt and not rechnung.erledigt %}
-<form
-    class=form-horizontal
-    method="POST"
->{% csrf_token %}
+<form method="POST">{% csrf_token %}
     </br>
     <p>
         {{ form }}
@@ -23,10 +20,7 @@
     </p>
 </form>
 {% elif not rechnung.gestellt and not rechnung.erledigt %}
-<form
-    class=form-horizontal
-    method="POST"
->{% csrf_token %}
+<form method="POST">{% csrf_token %}
     </br>
     <p>
         {{ form }}
@@ -89,7 +83,7 @@
 
 <div class="row">
     {% if mahnungen %}
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <h3>Mahnungen</h3>
         {% for mahnung in mahnungen %}
         <h4>
@@ -161,7 +155,7 @@
     </div>
     {% endif %}
 
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <h3>Übersicht</h3>
         <br />
         <table class="table table-striped">
@@ -234,16 +228,16 @@
 </div>
 
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-lg-10">
         <h3>Posten</h3>
         <br />
         <table class="table">
             <tr>
-                <th class="text-right">Anzahl</th>
+                <th class="text-end">Anzahl</th>
                 <th>Bezeichnung</th>
-                <th class="text-right">Einzelpreis</th>
-                <th class="text-right">Mwst-Satz</th>
-                <th class="text-right">Summe Netto</th>
+                <th class="text-end">Einzelpreis</th>
+                <th class="text-end">Mwst-Satz</th>
+                <th class="text-end">Summe Netto</th>
             </tr>
             {% for posten in rechnung.posten_set.all %}
             <tr>
@@ -260,7 +254,7 @@
             {% endfor %}
         </table>
     </div>
-    <div class="col-md-10">
+    <div class="col-lg-10">
         <table class="table">
             <tr>
                 <th>Zwischensumme (netto):</th>
