@@ -543,7 +543,7 @@ def create_pdf(request: AuthWSGIRequest, key_pk: int, doc: str) -> HttpResponse:
     tmplatex = mkdtemp()
     latex_file, latex_filename = mkstemp(suffix=".tex", dir=tmplatex)
 
-    logo_path = os.path.join(settings.BASE_DIR, "schluessel/media/logo")
+    logo_path = os.path.join(settings.BASE_DIR, "static/logo")
 
     # Pass TeX template through Django templating engine and into the temp file
     context = {"key": key, "user": request.user, "logo_path": logo_path}
