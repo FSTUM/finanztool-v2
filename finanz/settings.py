@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
-    "bootstrap3",
+    "bootstrap5",
+    "bootstrap_datepicker_plus",
     "rechnung",
     "konto",
     "aufgaben",
@@ -112,6 +113,7 @@ de_formats.SHORT_DATE_FORMAT = "d.m."
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "node_modules"),
     os.path.join(BASE_DIR, "static"),
 ]
 

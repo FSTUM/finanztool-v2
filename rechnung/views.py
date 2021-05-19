@@ -12,6 +12,7 @@ from django.template.loader import render_to_string
 from aufgaben.models import Aufgabe
 from schluessel.models import Key
 from schluessel.views import AuthWSGIRequest, finanz_staff_member_required
+
 from .forms import (
     KundeForm,
     KundeSuchenForm,
