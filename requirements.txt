@@ -1,3 +1,2 @@
-django==3.2.3
+django~=3.2.3
 django-bootstrap3~=15.0.0
-mysqlclient~=2.0.3

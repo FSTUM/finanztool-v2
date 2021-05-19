@@ -4,7 +4,6 @@ from tempfile import mkdtemp, mkstemp
 from typing import Optional
 
 from django.contrib.auth.decorators import login_required
-from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -13,7 +12,6 @@ from django.template.loader import render_to_string
 from aufgaben.models import Aufgabe
 from schluessel.models import Key
 from schluessel.views import AuthWSGIRequest, finanz_staff_member_required
-
 from .forms import (
     KundeForm,
     KundeSuchenForm,
@@ -402,8 +400,8 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
                 rechnung=mahnung_obj.rechnung,
                 wievielte__lt=mahnung_obj.wievielte,
             )
-                .order_by("wievielte")
-                .all()
+            .order_by("wievielte")
+            .all()
         )
 
     # create temporary files
