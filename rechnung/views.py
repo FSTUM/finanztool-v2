@@ -60,7 +60,7 @@ def unerledigt(request: AuthWSGIRequest) -> HttpResponse:
     context = {
         "unerledigte_rechnungen": unerledigte_rechnungen,
         "aufgaben": aufgaben,
-        "not_rechnung":True,
+        "not_rechnung": True,
     }
     return render(request, "rechnung/index.html", context)
 
@@ -256,7 +256,7 @@ def alle_mahnungen(request: AuthWSGIRequest) -> HttpResponse:
 @finanz_staff_member_required
 def kunde(request: AuthWSGIRequest, kunde_id: int) -> HttpResponse:
     kunde_obj = get_object_or_404(Kunde, pk=kunde_id)
-    return render(request, "rechnung/kunde.html", {"kunde": kunde_obj,"not_rechnung":True,})
+    return render(request, "rechnung/kunde.html", {"kunde": kunde_obj, "not_rechnung": True})
 
 
 @finanz_staff_member_required
@@ -294,7 +294,7 @@ def form_kunde(request: AuthWSGIRequest, kunde_id: Optional[int] = None) -> Http
 @finanz_staff_member_required
 def kunden_alle(request: AuthWSGIRequest) -> HttpResponse:
     kunden_liste = Kunde.objects.order_by("-knr")
-    context = {"kunden_liste": kunden_liste,"not_rechnung":True,}
+    context = {"kunden_liste": kunden_liste, "not_rechnung": True}
     return render(request, "rechnung/kunden_alle.html", context)
 
 
@@ -313,7 +313,7 @@ def kundesuchen(request: AuthWSGIRequest) -> HttpResponse:
         "form": form,
         "result": result,
         "new_search": new_search,
-    "not_rechnung":True,
+        "not_rechnung": True,
     }
 
     return render(request, "rechnung/kundesuchen.html", context)

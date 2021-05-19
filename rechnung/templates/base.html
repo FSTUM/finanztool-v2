@@ -98,25 +98,25 @@
                                 aria-labelledby="navbarDropdown"
                             >
                                 <li><a
-                                         class="dropdown-item {% active_link 'rechnung:rechnung_neu' %}"
+                                        class="dropdown-item {% active_link 'rechnung:rechnung_neu' %}"
                                         href="{% url "rechnung:rechnung_neu" %}"
                                     >
                                         Hinzufügen
                                     </a></li>
                                 <li><a
-                                         class="dropdown-item {% active_link 'rechnung:rechnungsuchen' %}"
+                                        class="dropdown-item {% active_link 'rechnung:rechnungsuchen' %}"
                                         href="{% url "rechnung:rechnungsuchen" %}"
                                     >
                                         Suchen
                                     </a></li>
                                 <li><a
-                                         class="dropdown-item {% active_link 'rechnung:alle' %}"
+                                        class="dropdown-item {% active_link 'rechnung:alle' %}"
                                         href="{% url "rechnung:alle" %}"
                                     >
                                         Alle
                                     </a></li>
                                 <li><a
-                                         class="dropdown-item {% active_link 'rechnung:alle_mahnungen' %}"
+                                        class="dropdown-item {% active_link 'rechnung:alle_mahnungen' %}"
                                         href="{% url "rechnung:alle_mahnungen" %}"
                                     >
                                         Alle Mahnungen
@@ -137,19 +137,19 @@
                                 aria-labelledby="navbarDropdown"
                             >
                                 <li><a
-                                         class="dropdown-item {% active_link 'rechnung:kunde_neu' %}"
+                                        class="dropdown-item {% active_link 'rechnung:kunde_neu' %}"
                                         href="{% url "rechnung:kunde_neu" %}"
                                     >
                                         Hinzufügen
                                     </a></li>
                                 <li><a
-                                         class="dropdown-item {% active_link 'rechnung:kundesuchen' %}"
+                                        class="dropdown-item {% active_link 'rechnung:kundesuchen' %}"
                                         href="{% url "rechnung:kundesuchen" %}"
                                     >
                                         Suchen
                                     </a></li>
                                 <li><a
-                                         class="dropdown-item {% active_link 'rechnung:kunden_alle' %}"
+                                        class="dropdown-item {% active_link 'rechnung:kunden_alle' %}"
                                         href="{% url "rechnung:kunden_alle" %}"
                                     >
                                         Alle
@@ -171,19 +171,19 @@
                                 class="dropdown-menu"
                             >
                                 <li><a
-                                         class="dropdown-item {% active_link 'aufgaben:unerledigt' %}"
+                                        class="dropdown-item {% active_link 'aufgaben:unerledigt' %}"
                                         href="{% url "aufgaben:unerledigt" %}"
                                     >Unerledigt</a></li>
                                 <li><a
-                                         class="dropdown-item {% active_link 'aufgaben:neu' %}"
+                                        class="dropdown-item {% active_link 'aufgaben:neu' %}"
                                         href="{% url "aufgaben:neu" %}"
                                     >Hinzufügen</a></li>
                                 <li><a
-                                         class="dropdown-item {% active_link 'aufgaben:neu_aufgabenart' %}"
+                                        class="dropdown-item {% active_link 'aufgaben:neu_aufgabenart' %}"
                                         href="{% url "aufgaben:neu_aufgabenart" %}"
                                     >Aufgabenart hinzufügen</a></li>
                                 <li><a
-                                         class="dropdown-item {% active_link 'aufgaben:alle' %}"
+                                        class="dropdown-item {% active_link 'aufgaben:alle' %}"
                                         href="{% url "aufgaben:alle" %}"
                                     >Alle</a></li>
                             </ul>
@@ -203,30 +203,30 @@
                                 aria-labelledby="navbarDropdown"
                             >
                                 <li><a
-                                         class="dropdown-item {% active_link 'schluessel:list_keys' %}"
+                                        class="dropdown-item {% active_link 'schluessel:list_keys' %}"
                                         href="{% url "schluessel:list_keys" %}"
                                     >Suchen</a></li>
                                 {% if user.is_superuser %}
                                 <li><a
-                                         class="dropdown-item {% active_link 'schluessel:add_key' %}"
+                                        class="dropdown-item {% active_link 'schluessel:add_key' %}"
                                         href="{% url "schluessel:add_key" %}"
                                     >Hinzufügen</a></li>
                                 {% endif %}
                                 <li><a
-                                         class="dropdown-item {% active_link 'schluessel:list_persons' %}"
+                                        class="dropdown-item {% active_link 'schluessel:list_persons' %}"
                                         href="{% url "schluessel:list_persons" %}"
                                     >Person suchen</a></li>
                                 <li><a
-                                         class="dropdown-item {% active_link 'schluessel:add_person' %}"
+                                        class="dropdown-item {% active_link 'schluessel:add_person' %}"
                                         href="{% url "schluessel:add_person" %}"
                                     >Person hinzufügen</a></li>
                                 {% if user.is_superuser %}
                                 <li><a
-                                         class="dropdown-item {% active_link 'schluessel:list_key_changes' %}"
+                                        class="dropdown-item {% active_link 'schluessel:list_key_changes' %}"
                                         href="{% url "schluessel:list_key_changes" %}"
                                     >Vorgemerkte Typ-Änderungen</a></li>
                                 <li><a
-                                         class="dropdown-item {% active_link 'schluessel:show_log' %}"
+                                        class="dropdown-item {% active_link 'schluessel:show_log' %}"
                                         href="{% url "schluessel:show_log" %}"
                                     >Letzte Änderungen</a></li>
                                 {% endif %}

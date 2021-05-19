@@ -43,7 +43,7 @@ urlpatterns = [
         "person/",
         include(
             [
-                path("",  RedirectView.as_view(pattern_name="schluessel:list_persons")),
+                path("", RedirectView.as_view(pattern_name="schluessel:list_persons")),
                 path("list/", views.list_persons, name="list_persons"),
                 path("add/", views.add_person, name="add_person"),
                 path("<int:person_pk>/", views.view_person, name="view_person"),

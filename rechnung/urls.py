@@ -7,7 +7,7 @@ from . import views
 app_name = "rechnung"
 urlpatterns = [
     # Index
-    path("",RedirectView.as_view(pattern_name="rechnung:willkommen"), name="index"),
+    path("", RedirectView.as_view(pattern_name="rechnung:willkommen"), name="index"),
     path("willkommen/", views.willkommen, name="willkommen"),
     path("admin/", views.admin, name="admin"),
     path("unerledigt/", views.unerledigt, name="unerledigt"),
