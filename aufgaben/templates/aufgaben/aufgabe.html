@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 {% load l10n %}
 
 {% block title %}Finanztool - Aufgabe {{ aufgabe.art.name }}{% endblock %}
@@ -19,7 +19,7 @@
                 name="erledigt"
                 class="save btn btn-success"
             >
-                {% bootstrap_icon "ok" %} Erledigt
+                <span class="bi bi-check-circle-fill"></span> Erledigt
             </button>
         </p>
     </form>
@@ -31,7 +31,7 @@
             class="btn btn-info"
             role="button"
         >
-            {% bootstrap_icon "pencil" %} Bearbeiten
+            <span class="bi bi-pencil-square"></span> Bearbeiten
         </a>
     </p>
 
@@ -44,9 +44,9 @@
             <th>Erledigt?</th>
             <td>
                 {% if aufgabe.erledigt %}
-                {% bootstrap_icon "ok" %}
+                <span class="bi bi-check-circle-fill"></span>
                 {% else %}
-                {% bootstrap_icon "remove" %}
+                <span class="bi bi-person-x-fill"></span>
                 {% endif %}
             </td>
         </tr>

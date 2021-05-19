@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}Finanztool - Entleiher {{ person }}{% endblock %}
 
@@ -14,7 +14,7 @@
                 class="btn btn-info"
                 role="button"
             >
-                {% bootstrap_icon "pencil" %} Bearbeiten
+                <span class="bi bi-pencil-square"></span> Bearbeiten
             </a>
         </p>
 
@@ -79,9 +79,9 @@
         <td>
             {{ entry.get_operation_display }}
             {% if entry.operation == "G" %}
-            {% bootstrap_icon "arrow-right" %}
+            <span class="bi bi-arrow-right"></span>
             {% elif entry.operation == "R" %}
-            {% bootstrap_icon "arrow-left" %}
+            <span class="bi bi-arrow-left"></span>
             {% endif %}
         </td>
         <td>

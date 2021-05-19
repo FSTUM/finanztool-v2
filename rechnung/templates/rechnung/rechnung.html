@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}RE {{ rechnung.rnr_string }}{% endblock %}
 
@@ -15,7 +15,7 @@
             name="bezahlt"
             class="save btn btn-success"
         >
-            {% bootstrap_icon "credit-card" %} Bezahlt
+            <span class="bi bi-credit-card-fill"></span> Bezahlt
         </button>
     </p>
 </form>
@@ -29,7 +29,7 @@
             name="gestellt"
             class="save btn btn-warning"
         >
-            {% bootstrap_icon "envelope" %} Gestellt
+            <span class="bi bi-envelope-fill"></span> Gestellt
         </button>
     </p>
 </form>
@@ -42,7 +42,7 @@
         class="btn btn-danger"
         role="button"
     >
-        {% bootstrap_icon "hourglass" %} Mahnung stellen
+        <span class="bi bi-hourglass"></span> Mahnung stellen
     </a>
     {% endif %}
     <a
@@ -50,7 +50,7 @@
         class="btn btn-info"
         role="button"
     >
-        {% bootstrap_icon "pencil" %} Bearbeiten
+        <span class="bi bi-pencil-square"></span> Bearbeiten
     </a>
 
     <a
@@ -58,7 +58,7 @@
         class="btn btn-info"
         role="button"
     >
-        {% bootstrap_icon "duplicate" %} Duplizieren
+        <span class="bi bi-plus-circle"></span> Duplizieren
     </a>
 
     {% if not rechnung.gestellt %}
@@ -67,7 +67,7 @@
         class="btn btn-info"
         role="button"
     >
-        {% bootstrap_icon "plus" %} Neuer Posten
+        <span class="bi bi-plus-circle-fill"></span> Neuer Posten
     </a>
     {% endif %}
 
@@ -76,7 +76,7 @@
         class="btn btn-info"
         role="button"
     >
-        {% bootstrap_icon "download-alt" %} Herunterladen
+        <span class="bi bi-cloud-arrow-down-fill"></span> Herunterladen
     </a>
 
 </h2>
@@ -95,8 +95,8 @@
         </h4>
         <table class="table table-striped">
             <tr>
-                <th>Mahngebühr {% bootstrap_icon "arrow-right" %} Neue Summe</th>
-                <td>{{ mahnung.gebuehr }} € {% bootstrap_icon "arrow-right" %} <b> {{ mahnung.mahnsumme }}
+                <th>Mahngebühr <span class="bi bi-arrow-right"></span> Neue Summe</th>
+                <td>{{ mahnung.gebuehr }} € <span class="bi bi-arrow-right"></span> <b> {{ mahnung.mahnsumme }}
                         €</b></td>
             </tr>
             <tr>
@@ -105,7 +105,7 @@
                     {% if mahnung.gerichtlich %}
                     <span style="color: red;">wurden angedroht.</span>
                     {% else %}
-                    {% bootstrap_icon "minus" %}
+                    <span class="bi bi-dash-circle-fill"></span>
                     {% endif %}
                 </td>
             </tr>
@@ -113,18 +113,18 @@
                 <th>Geschickt?</th>
                 <td>
                     {% if mahnung.geschickt %}
-                    {% bootstrap_icon "ok" %}
+                    <span class="bi bi-check-circle-fill"></span>
                     {% else %}
-                    {% bootstrap_icon "remove" %}
+                    <span class="bi bi-person-x-fill"></span>
                     {% endif %}
                 </td>
             <tr>
                 <th>Bezahlt?</th>
                 <td>
                     {% if mahnung.bezahlt %}
-                    {% bootstrap_icon "ok" %}
+                    <span class="bi bi-check-circle-fill"></span>
                     {% else %}
-                    {% bootstrap_icon "remove" %}
+                    <span class="bi bi-person-x-fill"></span>
                     {% endif %}
                 </td>
             </tr>
@@ -163,9 +163,9 @@
                 <th>Rechnung gestellt?</th>
                 <td>
                     {% if rechnung.gestellt %}
-                    {% bootstrap_icon "ok" %}
+                    <span class="bi bi-check-circle-fill"></span>
                     {% else %}
-                    {% bootstrap_icon "remove" %}
+                    <span class="bi bi-person-x-fill"></span>
                     {% endif %}
                 </td>
             </tr>
@@ -174,15 +174,15 @@
                 <td>
                     {% if rechnung.bezahlt %}
                     <span style="color: green;">
-                        {% bootstrap_icon "ok" %} Die Rechnung wurde bezahlt.
+                        <span class="bi bi-check-circle-fill"></span> Die Rechnung wurde bezahlt.
                     </span>
                     {% else %}
                     {% if rechnung.erledigt %}
                     <span style="color: green;">
-                        {% bootstrap_icon "ok" %} Eine zugehörige Mahnung wurde bezahlt.
+                        <span class="bi bi-check-circle-fill"></span> Eine zugehörige Mahnung wurde bezahlt.
                     </span>
                     {% else %}
-                    {% bootstrap_icon "remove" %} Der Betrag ist noch offen
+                    <span class="bi bi-person-x-fill"></span> Der Betrag ist noch offen
                     {% endif %}
                     {% endif %}
                 </td>

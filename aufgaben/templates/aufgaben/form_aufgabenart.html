@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}
 {% if aufgabenart.pk %}
@@ -29,7 +29,7 @@ Aufgabenart hinzufügen
                 type="submit"
                 class="save btn btn-secondary"
             >
-                {% bootstrap_icon "floppy-disk" %} Sichern
+                <span class="bi bi-save"></span> Sichern
             </button>
         </form>
     </div>

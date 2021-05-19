@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 {% load l10n %}
 
 {% block title %}Kunde {% localize off %} {{ kunde.knr }} {% endlocalize %} {% endblock %}
@@ -12,7 +12,7 @@
         class="btn btn-info"
         role="button"
     >
-        {% bootstrap_icon "pencil" %} Kunde bearbeiten
+        <span class="bi bi-pencil-square"></span> Kunde bearbeiten
     </a>
 </h2>
 

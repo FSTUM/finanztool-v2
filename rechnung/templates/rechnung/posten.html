@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}Posten {{ posten.name }}{% endblock %}
 
@@ -11,7 +11,7 @@
         class="btn btn-info"
         role="button"
     >
-        {% bootstrap_icon "pencil" %} Posten bearbeiten
+        <span class="bi bi-pencil-square"></span> Posten bearbeiten
     </a>
 </h2>
 

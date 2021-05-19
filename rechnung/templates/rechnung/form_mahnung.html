@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}
 Mahnung {% if mahnung.pk %}ändern{% else %}hinzufügen{% endif %}
@@ -16,7 +16,7 @@ Mahnung {% if mahnung.pk %}ändern{% else %}hinzufügen{% endif %}
         class="btn btn-secondary"
         role="button"
     >
-        {% bootstrap_icon "arrow-left" %} Zurück zur Mahnung
+        <span class="bi bi-arrow-left"></span> Zurück zur Mahnung
     </a></p>
 {% endif %}
 <div class="row">
@@ -31,25 +31,9 @@ Mahnung {% if mahnung.pk %}ändern{% else %}hinzufügen{% endif %}
                 type="submit"
                 class="save btn btn-secondary"
             >
-                {% bootstrap_icon "floppy-disk" %} Sichern
+                <span class="bi bi-save"></span> Sichern
             </button>
         </form>
     </div>
 </div>
-<script type="text/javascript">
-    $(function () {
-        $('#pick_mfdatum').datetimepicker({
-            inline: true,
-            sideBySide: true,
-            format: 'DD.MM.YYYY',
-        });
-    });
-    $(function () {
-        $('#pick_mdatum').datetimepicker({
-            inline: true,
-            sideBySide: true,
-            format: 'DD.MM.YYYY',
-        });
-    });
-</script>
 {% endblock %}

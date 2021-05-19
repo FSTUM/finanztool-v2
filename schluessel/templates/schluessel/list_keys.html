@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}Finanztool - Schlüssel/Schließkarten{% endblock %}
 
@@ -14,7 +14,7 @@
             class="btn btn-info"
             role="button"
         >
-            {% bootstrap_icon "plus" %} Schlüssel/Schließkarte hinzufügen
+            <span class="bi bi-plus-circle-fill"></span> Schlüssel/Schließkarte hinzufügen
         </a>
     </p>
     {% endif %}
@@ -56,7 +56,7 @@
                 {% if key.person %}
                 <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
                 {% else %}
-                {% bootstrap_icon "remove" %}
+                <span class="bi bi-person-x-fill"></span>
                 {% endif %}
             </td>
             <td>{{ key.comment }}</td>

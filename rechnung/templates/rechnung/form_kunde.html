@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}
 {% if kunde.knr %}
@@ -22,7 +22,7 @@ Kunde hinzufügen
         href="{% url "rechnung:kunde" kunde_id=kunde.pk %}"
         class="btn btn-secondary"
         role="button"
-    >{% bootstrap_icon "arrow-left" %} Zurück zum Kunden</a></p>
+    ><span class="bi bi-arrow-left"></span> Zurück zum Kunden</a></p>
 {% endif %}
 <div class="row">
     <div class="col-lg-5">
@@ -42,7 +42,7 @@ Kunde hinzufügen
                 type="submit"
                 class="save btn btn-secondary"
             >
-                {% bootstrap_icon "floppy-disk" %} Sichern
+                <span class="bi bi-save"></span> Sichern
             </button>
         </form>
     </div>

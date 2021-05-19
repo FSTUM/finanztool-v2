@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}Finanztool - Vorgemerkte Schlüsseltyp-Änderungen{% endblock %}
 
@@ -29,7 +29,7 @@
                 {% if key.person %}
                 <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
                 {% else %}
-                {% bootstrap_icon "remove" %}
+                <span class="bi bi-person-x-fill"></span>
                 {% endif %}
             </td>
             <td>{{ key.savedkeychange.comment }}</td>
@@ -63,7 +63,7 @@
                     class="btn btn-warning"
                     role="button"
                 >
-                    {% bootstrap_icon "pencil" %} Ändern
+                    <span class="bi bi-pencil-square"></span> Ändern
                 </a>
             </td>
             <td>
@@ -72,7 +72,7 @@
                     class="btn btn-danger"
                     role="button"
                 >
-                    {% bootstrap_icon "remove" %} Löschen
+                    <span class="bi bi-person-x-fill"></span> Löschen
                 </a>
             </td>
         </tr>

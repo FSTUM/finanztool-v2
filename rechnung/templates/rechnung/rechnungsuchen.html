@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 {% load l10n %}
 
 {% block title %}Rechnung suchen{% endblock %}
@@ -51,15 +51,15 @@
                     <a href="{% url 'rechnung:kategorie_detail' rechnung.kategorie.id %}">{{ rechnung.kategorie }}
                 </td>
                 {% if rechnung.gestellt %}
-                <td>{% bootstrap_icon "ok" %}</td>
+                <td><span class="bi bi-check-circle-fill"></span></td>
                 <td align="right">{{ rechnung.gesamtsumme }} €</td>
                 {% if rechnung.erledigt %}
-                <td>{% bootstrap_icon "ok" %}</td>
+                <td><span class="bi bi-check-circle-fill"></span></td>
                 {% else %}
-                <td>{% bootstrap_icon "remove" %}</td>
+                <td><span class="bi bi-person-x-fill"></span></td>
                 {% endif %}
                 {% else %}
-                <td>{% bootstrap_icon "remove" %}</td>
+                <td><span class="bi bi-person-x-fill"></span></td>
                 <td></td>
                 {% endif %}
             </tr>

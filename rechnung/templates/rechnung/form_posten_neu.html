@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}Posten hinzufügen{% endblock %}
 
@@ -9,7 +9,7 @@
     href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
     class="btn btn-secondary"
     role="button"
->{% bootstrap_icon "arrow-left" %} Zurück zur Rechnung</a>
+><span class="bi bi-arrow-left"></span> Zurück zur Rechnung</a>
 <div class="row">
     <div class="col-lg-5">
         <form method="POST">{% csrf_token %}
@@ -19,14 +19,14 @@
                 name="weiter"
                 class="save btn btn-secondary"
             >
-                {% bootstrap_icon "floppy-disk" %} & neuen Posten
+                <span class="bi bi-save"></span> & neuen Posten
             </button>
             <button
                 type="submit"
                 name="zurueck"
                 class="save btn btn-secondary"
             >
-                {% bootstrap_icon "floppy-disk" %} & zurück zur Rechnung
+                <span class="bi bi-save"></span> & zurück zur Rechnung
             </button>
         </form>
     </div>

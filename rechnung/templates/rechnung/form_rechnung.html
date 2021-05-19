@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}
 {% if rechnung.pk %}
@@ -30,7 +30,7 @@ Rechnung hinzufügen
         href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
         class="btn btn-secondary"
         role="button"
-    >{% bootstrap_icon "arrow-left" %}
+    ><span class="bi bi-arrow-left"></span>
         Zurück zur Rechnung
     </a></p>
 {% endif %}
@@ -46,32 +46,9 @@ Rechnung hinzufügen
                 type="submit"
                 class="save btn btn-secondary"
             >
-                {% bootstrap_icon "floppy-disk" %} Sichern
+                <span class="bi bi-save"></span> Sichern
             </button>
         </form>
     </div>
 </div>
-<script type="text/javascript">
-    $(function () {
-        $('#pick_ldatum').datetimepicker({
-            inline: true,
-            sideBySide: true,
-            format: 'DD.MM.YYYY',
-        });
-    });
-    $(function () {
-        $('#pick_fdatum').datetimepicker({
-            inline: true,
-            sideBySide: true,
-            format: 'DD.MM.YYYY',
-        });
-    });
-    $(function () {
-        $('#pick_rdatum').datetimepicker({
-            inline: true,
-            sideBySide: true,
-            format: 'DD.MM.YYYY',
-        });
-    });
-</script>
 {% endblock %}
