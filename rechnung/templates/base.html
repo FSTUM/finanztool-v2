@@ -23,6 +23,11 @@
         type="image/png"
     >
     <link
+        href="{% static "piggy-bank-fill.svg" %}"
+        rel="shortcut icon"
+        type="image/svg"
+    >
+    <link
         href='{% static "bootstrap/dist/css/bootstrap.min.css" %}'
         rel='stylesheet'
     >
@@ -55,7 +60,7 @@
                 <a
                     class="navbar-brand"
                     href="{% url "rechnung:willkommen" %}"
-                >Finanztool</a>
+                ><span class="bi bi-piggy-bank-fill text-white"></span> Finanztool</a>
                 <button
                     aria-controls="navbarSupportedContent"
                     aria-expanded="false"
