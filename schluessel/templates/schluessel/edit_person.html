@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}Finanztool - Person {{ person }} bearbeiten{% endblock %}
 
 {% block content %}
 <h1>Person {{ person }} bearbeiten</h1>
 
-<div class="col-md-4">
+<div class="col-lg-4">
     <form
         name="addform"
-        method="post"
+        method="POST"
         action=""
     >
         {% csrf_token %}
@@ -18,7 +18,7 @@
 
         <button
             type="submit"
-            class="btn btn-default btn-info"
+            class="btn btn-secondary btn-info"
         >Ändern</button>
     </form>
 </div>

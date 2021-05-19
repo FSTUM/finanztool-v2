@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load i18n %}
 {% load l10n %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}Kunde suchen{% endblock %}
 
@@ -9,7 +9,7 @@
 <h1>Kunde suchen</h1>
 <form
     action=""
-    method="post"
+    method="POST"
 >
     {% csrf_token %}
 
@@ -18,14 +18,14 @@
     <input
         type="submit"
         value="Suchen"
-        class="btn btn-default"
+        class="btn btn-secondary"
     />
 </form>
 
 {% if not new_search %}
 {% if result %}
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-lg-10">
         <h3>Ergebnisse</h3>
         <br />
         <table class="table borderless">

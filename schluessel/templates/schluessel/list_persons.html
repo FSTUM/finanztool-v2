@@ -1,26 +1,26 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}Finanztool - Personen{% endblock %}
 
 {% block content %}
 <h1>Personen</h1>
 
-<div class="col-md-6">
+<div class="col-lg-6">
     <p>
         <a
             href="{% url "schluessel:add_key" %}"
             class="btn btn-info"
             role="button"
         >
-            {% bootstrap_icon "plus" %} Person hinzufügen
+            <span class="bi bi-plus-circle-fill"></span> Person hinzufügen
         </a>
     </p>
 
     <p>
     <form
         id="filterform"
-        method="post"
+        method="POST"
         action=""
     >
         {% csrf_token %}
@@ -28,7 +28,7 @@
         {% bootstrap_form form %}
         <button
             type="submit"
-            class="btn btn-default btn-info"
+            class="btn btn-secondary btn-info"
         >Suchen</button>
     </form>
     </p>

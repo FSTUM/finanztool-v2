@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 {% load l10n %}
 
 {% block title %}Unerledigt{% endblock %}
@@ -9,7 +9,7 @@
 <h3>Rechnung</h3>
 {% if unerledigte_rechnungen %}
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-lg-10">
         <br />
         <table class="table table-hover">
             <tr>
@@ -33,7 +33,7 @@
                 <td>{{ rechnung.rdatum }}</td>
                 {% if rechnung.gestellt %}
                 <td>
-                    {% bootstrap_icon "ok" %}
+                    <span class="bi bi-check-circle-fill"></span>
                 </td>
                 <td align="right">{{ rechnung.gesamtsumme }} €</td>
                 <td>
@@ -48,9 +48,9 @@
                 </td>
                 <td>
                     {% if rechnung.erledigt %}
-                    {% bootstrap_icon "ok" %}
+                    <span class="bi bi-check-circle-fill"></span>
                     {% else %}
-                    {% bootstrap_icon "remove" %}
+                    <span class="bi bi-person-x-fill"></span>
                     {% endif %}
                 </td>
                 <td>
@@ -63,7 +63,7 @@
                 </td>
                 {% else %}
                 <td>
-                    {% bootstrap_icon "remove" %}
+                    <span class="bi bi-person-x-fill"></span>
                 </td>
                 <td>
                 </td>
@@ -86,7 +86,7 @@
 <h3>Aufgaben</h3>
 {% if aufgaben %}
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-lg-10">
         <table class="table table-hover">
             <tr>
                 <th>Bezeichnung</th>

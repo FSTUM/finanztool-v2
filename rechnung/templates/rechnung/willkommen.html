@@ -3,7 +3,12 @@
 {% block title %}Finanztool{% endblock %}
 
 {% block content %}
-<h2>Willkommen beim Finanztool!</h2>
+<h2>{% if user.first_name %}
+    Hallo {{ user.first_name|capfirst }}!
+    {% else %}
+    Hallo {{ user.username|capfirst }}!
+    {% endif %}</h2>
+
 {% if user.is_staff %}
 <p>
     Es existieren <a href="{% url "rechnung:index" %}">{{ offene_rechnungen }} offene Rechnungen,

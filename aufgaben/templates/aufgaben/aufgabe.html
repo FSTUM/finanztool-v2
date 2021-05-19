@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 {% load l10n %}
 
 {% block title %}Finanztool - Aufgabe {{ aufgabe.art.name }}{% endblock %}
@@ -9,12 +9,9 @@
 <h2>{{ aufgabe.art.name }} {{ aufgabe.zusatz }} {% localize off %} {{ aufgabe.jahr }} {% endlocalize %}</h2>
 <br>
 
-<div class="col-md-6">
+<div class="col-lg-6">
     {% if not aufgabe.erledigt %}
-    <form
-        class=form-horizontal
-        method="POST"
-    >{% csrf_token %}
+    <form method="POST">{% csrf_token %}
         <p>
             {{ form }}
             <button
@@ -22,7 +19,7 @@
                 name="erledigt"
                 class="save btn btn-success"
             >
-                {% bootstrap_icon "ok" %} Erledigt
+                <span class="bi bi-check-circle-fill"></span> Erledigt
             </button>
         </p>
     </form>
@@ -34,7 +31,7 @@
             class="btn btn-info"
             role="button"
         >
-            {% bootstrap_icon "pencil" %} Bearbeiten
+            <span class="bi bi-pencil-square"></span> Bearbeiten
         </a>
     </p>
 
@@ -47,9 +44,9 @@
             <th>Erledigt?</th>
             <td>
                 {% if aufgabe.erledigt %}
-                {% bootstrap_icon "ok" %}
+                <span class="bi bi-check-circle-fill"></span>
                 {% else %}
-                {% bootstrap_icon "remove" %}
+                <span class="bi bi-person-x-fill"></span>
                 {% endif %}
             </td>
         </tr>

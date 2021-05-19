@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}Posten {{ posten.name }}{% endblock %}
 
@@ -11,12 +11,12 @@
         class="btn btn-info"
         role="button"
     >
-        {% bootstrap_icon "pencil" %} Posten bearbeiten
+        <span class="bi bi-pencil-square"></span> Posten bearbeiten
     </a>
 </h2>
 
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-lg-3">
         <h3>Übersicht</h3>
         <br />
         <table class="table table-striped">

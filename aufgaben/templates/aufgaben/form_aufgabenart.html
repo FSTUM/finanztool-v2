@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}
 {% if aufgabenart.pk %}
@@ -18,7 +18,7 @@ Aufgabenart hinzufügen
 {% endif %}
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <p><span class="text-muted">
                 Mit * markierte Felder sind verpflichtend
             </span></p>
@@ -27,9 +27,9 @@ Aufgabenart hinzufügen
             {% bootstrap_form form %}
             <button
                 type="submit"
-                class="save btn btn-default"
+                class="save btn btn-secondary"
             >
-                {% bootstrap_icon "floppy-disk" %} Sichern
+                <span class="bi bi-save"></span> Sichern
             </button>
         </form>
     </div>

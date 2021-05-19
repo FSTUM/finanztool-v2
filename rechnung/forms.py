@@ -1,3 +1,4 @@
+from bootstrap_datepicker_plus import DatePickerInput
 from django import forms
 from django.contrib.auth import get_user_model
 from django.db.models import Q
@@ -16,21 +17,9 @@ class RechnungForm(forms.ModelForm):
             "einleitung": "Beispiel: für X stellen wir Ihnen hiermit " "folgende Posten in Rechnung:",
         }
         widgets = {
-            "rdatum": forms.DateInput(
-                attrs={
-                    "id": "pick_rdatum",
-                },
-            ),
-            "fdatum": forms.DateInput(
-                attrs={
-                    "id": "pick_fdatum",
-                },
-            ),
-            "ldatum": forms.DateInput(
-                attrs={
-                    "id": "pick_ldatum",
-                },
-            ),
+            "rdatum": DatePickerInput(format="%d.%m.%Y"),
+            "fdatum": DatePickerInput(format="%d.%m.%Y"),
+            "ldatum": DatePickerInput(format="%d.%m.%Y"),
         }
         fields = (
             "rnr",
@@ -90,16 +79,8 @@ class MahnungForm(forms.ModelForm):
             "gerichtlich": "Wird bei uns in der Regel in der 3. Mahnung " "angedroht.",
         }
         widgets = {
-            "mdatum": forms.DateInput(
-                attrs={
-                    "id": "pick_mdatum",
-                },
-            ),
-            "mfdatum": forms.DateInput(
-                attrs={
-                    "id": "pick_mfdatum",
-                },
-            ),
+            "mdatum": DatePickerInput(format="%d.%m.%Y"),
+            "mfdatum": DatePickerInput(format="%d.%m.%Y"),
         }
         fields = (
             "wievielte",

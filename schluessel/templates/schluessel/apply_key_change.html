@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 
 {% block title %}Finanztool - Vorgemerkte Schlüsseltyp-Änderungen anwenden{% endblock %}
 
 {% block content %}
 <h1>Vorgemerkte Schlüsseltyp-Änderungen anwenden</h1>
 
-<div class="col-md-6">
+<div class="col-lg-6">
     <p>Sollen folgende Änderungen wirklich angewendet werden?</p>
     <table class="table table-striped table-hover">
         <tr>
@@ -28,7 +28,7 @@
                 {% if key.person %}
                 <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
                 {% else %}
-                {% bootstrap_icon "remove" %}
+                <span class="bi bi-person-x-fill"></span>
                 {% endif %}
             </td>
             <td>{{ key.savedkeychange.comment }}</td>
@@ -47,7 +47,7 @@
                     gibt es bereits
                 </p>
                 {% else %}
-                {% bootstrap_icon "ok" %}
+                <span class="bi bi-check-circle-fill"></span>
                 {% endif %}
             </td>
         </tr>
@@ -55,7 +55,7 @@
     </table>
 </div>
 <form
-    method="post"
+    method="POST"
     action=""
 >
     {% csrf_token %}
@@ -65,7 +65,7 @@
             <td>
                 <button
                     type="submit"
-                    class="btn btn-default btn-warning"
+                    class="btn btn-secondary btn-warning"
                 >Änderungen anwenden</button>
             </td>
             {% if cur_key %}

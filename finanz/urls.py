@@ -12,5 +12,5 @@ urlpatterns = [
     path("aufgaben/", include("aufgaben.urls")),
     path("schluessel/", include("schluessel.urls")),
     path("admin/", admin.site.urls),
-    path("", RedirectView.as_view(pattern_name="rechnung:willkommen")),
+    path("", RedirectView.as_view(pattern_name="rechnung:index")),
 ]

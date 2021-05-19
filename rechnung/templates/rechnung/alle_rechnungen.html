@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 {% load l10n %}
 
 {% block title %}Alle Rechnungen{% endblock %}
@@ -7,7 +7,7 @@
 {% block content %}
 {% if rechnungen_liste %}
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-lg-12">
         <h3>Alle Rechnungen</h3>
         <br />
         <table class="table table-hover">
@@ -38,7 +38,7 @@
                 <td>{{ rechnung.ersteller.get_short_name }}</td>
                 {% if rechnung.gestellt %}
                 <td>
-                    {% bootstrap_icon "ok" %}
+                    <span class="bi bi-check-circle-fill"></span>
                 </td>
                 <td align="right">{{ rechnung.gesamtsumme }} €</td>
                 <td>
@@ -53,21 +53,21 @@
                 </td>
                 <td>
                     {% if rechnung.bezahlt %}
-                    {% bootstrap_icon "ok" %}
+                    <span class="bi bi-check-circle-fill"></span>
                     {% else %}
-                    {% bootstrap_icon "remove" %}
+                    <span class="bi bi-person-x-fill"></span>
                     {% endif %}
                 </td>
                 <td>
                     {% if rechnung.erledigt %}
-                    {% bootstrap_icon "ok" %}
+                    <span class="bi bi-check-circle-fill"></span>
                     {% else %}
-                    {% bootstrap_icon "remove" %}
+                    <span class="bi bi-person-x-fill"></span>
                     {% endif %}
                 </td>
                 {% else %}
                 <td>
-                    {% bootstrap_icon "remove" %}
+                    <span class="bi bi-person-x-fill"></span>
                 </td>
                 <td />
                 <td />

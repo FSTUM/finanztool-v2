@@ -4,7 +4,7 @@
 
 <form
     action="{% url 'polls:vote' question.id %}"
-    method="post"
+    method="POST"
 >
     {% csrf_token %}
     {% for choice in question.choice_set.all %}

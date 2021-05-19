@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 {% load l10n %}
 
 {% block title %}Kunde {% localize off %} {{ kunde.knr }} {% endlocalize %} {% endblock %}
@@ -12,13 +12,13 @@
         class="btn btn-info"
         role="button"
     >
-        {% bootstrap_icon "pencil" %} Kunde bearbeiten
+        <span class="bi bi-pencil-square"></span> Kunde bearbeiten
     </a>
 </h2>
 
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-lg-6">
         <h3>Details</h3>
         <br />
         <table class="table table-striped">

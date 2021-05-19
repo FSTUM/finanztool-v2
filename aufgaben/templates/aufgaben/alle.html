@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load bootstrap3 %}
+{% load bootstrap5 %}
 {% load l10n %}
 
 {% block title %}Alle Aufgaben{% endblock %}
@@ -7,7 +7,7 @@
 {% block content %}
 {% if alle_aufgaben %}
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-lg-12">
         <h3>Alle Aufgaben</h3>
         <br />
         <table class="table table-hover">
@@ -50,9 +50,9 @@
                 <td>{{ aufgabe.text }}</td>
                 <td>
                     {% if aufgabe.erledigt %}
-                    {% bootstrap_icon "ok" %}
+                    <span class="bi bi-check-circle-fill"></span>
                     {% else %}
-                    {% bootstrap_icon "remove" %}
+                    <span class="bi bi-person-x-fill"></span>
                     {% endif %}
                 </td>
             </tr>

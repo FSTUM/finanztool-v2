@@ -1,3 +1,4 @@
+from bootstrap_datepicker_plus import DatePickerInput
 from django import forms
 from django.contrib.auth import get_user_model
 
@@ -15,11 +16,7 @@ class AufgabeForm(forms.ModelForm):
             "text": "Raum für alle möglichen Anmerkungen",
         }
         widgets = {
-            "frist": forms.DateInput(
-                attrs={
-                    "id": "pick_frist",
-                },
-            ),
+            "frist": DatePickerInput(format="%d.%m.%Y"),
         }
         fields = (
             "art",
