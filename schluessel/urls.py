@@ -18,7 +18,7 @@ urlpatterns = [
         include(
             [
                 path("list/", views.list_key_changes, name="list_key_changes"),
-                path("apply/", views.apply_key_change, name="apply_key_change"),
+                path("apply/", views.apply_key_change, name="apply_key_change_no_key"),
                 path("apply/<int:key_pk>/", views.apply_key_change, name="apply_key_change"),
                 path("save/<int:key_pk>/", views.save_key_change, name="save_key_change"),
                 path("del/<int:key_pk>/", views.delete_key_change, name="delete_key_change"),
@@ -32,7 +32,7 @@ urlpatterns = [
             [
                 path("", views.give_key, name="give_key"),
                 path("addperson/", views.give_add_person, name="give_add_person"),
-                path("editperson/<int:person_pk>/", views.give_edit_person, name="give_edit_person"),
+                path("editperson/<int:key_pk>/<int:person_pk>/", views.give_edit_person, name="give_edit_person"),
                 path("confirm/<int:person_pk>/", views.give_key_confirm, name="give_key_confirm"),
             ],
         ),

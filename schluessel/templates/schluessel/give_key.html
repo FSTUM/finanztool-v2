@@ -25,7 +25,7 @@
         select(event, ui) {
             personLabel.val(ui.item.label);
             $('#id_person').val(ui.item.id);
-            document.addform.submit();
+            $('#addform').trigger('submit');
         },
     });
 </script>
@@ -45,7 +45,7 @@
         style='display: none'
     >
         <form
-            name='addform'
+            id='addform'
             method='post'
             action=''
         >

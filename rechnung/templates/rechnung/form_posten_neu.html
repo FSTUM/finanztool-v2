@@ -46,13 +46,13 @@
                 </tr>
                 {% for posten in rechnung.posten_set.all %}
                 <tr>
-                    <td align="right">{{ posten.anzahl }} </td>
+                    <td class="align-content-end">{{ posten.anzahl }} </td>
                     <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</td>
-                    <td align="right">{{ posten.einzelpreis }} €</td>
-                    <td align="right">{{ posten.summenetto }} €</td>
-                    <td align="right">{{ posten.summenettogerundet }} €</td>
-                    <td align="right">{{ posten.get_mwst_display }}</td>
-                    <td align="right">{{ posten.summebrutto }} €</td>
+                    <td class="align-content-end">{{ posten.einzelpreis }} €</td>
+                    <td class="align-content-end">{{ posten.summenetto }} €</td>
+                    <td class="align-content-end">{{ posten.summenettogerundet }} €</td>
+                    <td class="align-content-end">{{ posten.get_mwst_display }}</td>
+                    <td class="align-content-end">{{ posten.summebrutto }} €</td>
                 </tr>
                 {% endfor %}
                 <tr>
@@ -62,7 +62,7 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td align="right">{{ rechnung.zwischensumme }} €</td>
+                    <td class="align-content-end">{{ rechnung.zwischensumme }} €</td>
                 </tr>
                 <tr>
                     <td></td>
@@ -71,7 +71,7 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td align="right">{{ rechnung.gesamtsumme }} €</td>
+                    <td class="align-content-end">{{ rechnung.gesamtsumme }} €</td>
                 </tr>
             </table>
         </div>

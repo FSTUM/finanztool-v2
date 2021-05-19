@@ -8,18 +8,14 @@
 
 <div class="col-lg-6">
     {% if user.is_staff %}
-    <p>
-        <a
-            href="{% url "schluessel:add_key" %}"
-            class="btn btn-info"
-            role="button"
-        >
-            <span class="bi bi-plus-circle-fill"></span> Schlüssel/Schließkarte hinzufügen
-        </a>
-    </p>
+    <a
+        href="{% url "schluessel:add_key" %}"
+        class="btn btn-info"
+        role="button"
+    ><span class="bi bi-plus-circle-fill"></span> Schlüssel/Schließkarte hinzufügen
+    </a>
     {% endif %}
 
-    <p>
     <form
         id="filterform"
         method="POST"
@@ -35,7 +31,6 @@
             >Suchen</button>
         </noscript>
     </form>
-    </p>
 
     <table class="table table-striped table-hover">
         <tr>

@@ -16,20 +16,17 @@
                 <th>Mahnungsnr.</th>
                 <th>Kunde</th>
                 <th>Fällig</th>
-                <th style="text-align: right">Betrag</th>
-                <th style="text-align: center">Gerichtlich?</th>
-                <th style="text-align: center">Bezahlt?</th>
+                <th class="align-content-end">Betrag</th>
+                <th class="align-content-center">Gerichtlich?</th>
+                <th class="align-content-center">Bezahlt?</th>
             </tr>
             {% for rechnung in rechnungen %}
             {% if rechnung.mahnungen %}
-            <tr style="border-top: groove">
-                <td />
-                <th>
+            <tr>
+                <td></td>
+                <th class="{% if not rechnung.erledigt %}table-danger{% endif %}">
                     <a href="{% url 'rechnung:rechnung' rechnung.id %}">
-                        {% if not rechnung.erledigt %}
-                        <span style="color: red;">
-                            {% endif %}
-                            {{ rechnung }}
+                        {{ rechnung }}
                     </a>
                 </th>
                 <td>
@@ -37,15 +34,10 @@
                         {% localize off %} {{ rechnung.kunde.knr }} {% endlocalize %}
                     </a>
                 </td>
-                <td />
-                <td
-                    align="right"
-                    style="color: grey"
-                >
-                    {{ rechnung.gesamtsumme }} €
-                </td>
-                <td />
-                <td align="center">
+                <td></td>
+                <td class="text-muted align-content-end">{{ rechnung.gesamtsumme }} €</td>
+                <td></td>
+                <td class="align-content-center">
                     {% if rechnung.bezahlt %}
                     <span class="bi bi-check-circle-fill"></span>
                     {% endif %}
@@ -60,38 +52,35 @@
                     <span class="bi bi-person-x-fill"></span>
                     {% endif %}
                 </td>
-                <td style="padding-left: 2em"><a href="{% url 'rechnung:mahnung' mahnung.rechnung.id mahnung.id %}">
+                <td class="ps-2"><a href="{% url 'rechnung:mahnung' mahnung.rechnung.id mahnung.id %}">
                         {{ mahnung.wievielte }}. Mahnung
                     </a>
                 </td>
                 {% if mahnung.geschickt %}
-                <td />
-                <td>
-                    {% if mahnung.faellig and not rechnung.erledigt %}
-                    <span style="color: red;">
-                        {% endif %}
-                        {{ mahnung.mfdatum }}
+                <td></td>
+                <td
+                    {% if mahnung.faellig and not rechnung.erledigt %}class="table-danger"
+                    {% endif %}
+                >
+                    {{ mahnung.mfdatum }}
                 </td>
-                <td align="right">{{ mahnung.mahnsumme }} €</td>
-                <td align="center">
+                <td class="align-content-end">{{ mahnung.mahnsumme }} €</td>
+                <td class="align-content-center">
                     {% if mahnung.gerichtlich %}
                     <span class="bi bi-check-circle-fill"></span>
                     {% endif %}
                 </td>
-                <td align="center">
+                <td class="align-content-center">
                     {% if mahnung.bezahlt %}
                     <span class="bi bi-check-circle-fill"></span>
                     {% endif %}
                 </td>
-                <td />
+                <td></td>
                 {% else %}
                 <td
                     colspan=5
-                    style="color: grey"
-                    align="center"
-                >
-                    Noch nicht gestellt
-                </td>
+                    class="text-muted align-content-center"
+                >Noch nicht gestellt</td>
                 {% endif %}
             </tr>
             {% endfor %}

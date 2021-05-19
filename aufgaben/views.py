@@ -53,7 +53,7 @@ def form_aufgabenart(request: AuthWSGIRequest, aufgabenart_id: Optional[int] = N
         form = AufgabenartForm(request.POST, instance=aufgabenart)
 
         if form.is_valid():
-            aufgabenart = form.save()
+            form.save()
             return redirect("aufgaben:neu")
     else:
         form = AufgabenartForm()

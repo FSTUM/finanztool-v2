@@ -23,19 +23,21 @@
     {% csrf_token %}
 
     <table class="table">
-        <tr>
-            <td>
-                <button
-                    type="submit"
-                    class="btn btn-secondary btn-warning"
-                >Zurücknehmen</button>
-            </td>
-            <td><a
-                    href="{% url "schluessel:view_key" key.id %}"
-                    class="btn btn-info"
-                >Abbrechen</a></td>
-        </tr>
-        <table>
+        <thead>
+            <tr>
+                <td>
+                    <button
+                        type="submit"
+                        class="btn btn-secondary btn-warning"
+                    >Zurücknehmen</button>
+                </td>
+                <td><a
+                        href="{% url "schluessel:view_key" key.id %}"
+                        class="btn btn-info"
+                    >Abbrechen</a></td>
+            </tr>
+        </thead>
+    </table>
 </form>
 
 {% endblock %}

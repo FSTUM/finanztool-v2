@@ -197,7 +197,7 @@ class RechnungSuchenForm(forms.Form):
     pattern = forms.CharField(
         min_length=2,
         max_length=100,
-        label=("Suche"),
+        label="Suche",
     )
 
     def get(self):
@@ -223,7 +223,7 @@ class KundeSuchenForm(forms.Form):
     pattern = forms.CharField(
         min_length=2,
         max_length=100,
-        label=("Suche"),
+        label="Suche",
     )
 
     def get(self):

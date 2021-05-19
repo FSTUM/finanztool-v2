@@ -397,6 +397,7 @@ def kategorie_detail(request: AuthWSGIRequest, kategorie_id: int) -> HttpRespons
 def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional[int] = None) -> HttpResponse:
     rechnung_obj = get_object_or_404(Rechnung, pk=rechnung_id)
     mahnung_obj = None
+
     if mahnung_id:
         mahnung_obj = get_object_or_404(Mahnung, pk=mahnung_id)
         vorherige_mahnungen = (
@@ -407,13 +408,6 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
             .order_by("wievielte")
             .all()
         )
-
-    # create temporary files
-    tmplatex = mkdtemp()
-    latex_file, latex_filename = mkstemp(suffix=".tex", dir=tmplatex)
-
-    # Pass TeX template through Django templating engine and into the temp file
-    if mahnung_id:
         context = {
             "mahnung": mahnung_obj,
             "rechnung": rechnung_obj,
@@ -421,6 +415,10 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
         }
     else:
         context = {"rechnung": rechnung_obj}
+
+    # create temporary files
+    tmplatex = mkdtemp()
+    latex_file, latex_filename = mkstemp(suffix=".tex", dir=tmplatex)
 
     os.write(
         latex_file,

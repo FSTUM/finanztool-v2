@@ -7,7 +7,7 @@
 <h1>RE {{ rechnung.rnr_string }}: {{ rechnung.name }}</h1>
 {% if rechnung.gestellt and not rechnung.erledigt %}
 <form method="POST">{% csrf_token %}
-    </br>
+    <br />
     <p>
         {{ form }}
         <button
@@ -21,7 +21,7 @@
 </form>
 {% elif not rechnung.gestellt and not rechnung.erledigt %}
 <form method="POST">{% csrf_token %}
-    </br>
+    <br />
     <p>
         {{ form }}
         <button
@@ -241,15 +241,15 @@
             </tr>
             {% for posten in rechnung.posten_set.all %}
             <tr>
-                <td align="right">{{ posten.anzahl }} </td>
+                <td class="align-content-end">{{ posten.anzahl }} </td>
                 {% if rechnung.gestellt %}
                 <td>{{ posten.name }}</td>
                 {% else %}
                 <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</td>
                 {% endif %}
-                <td align="right">{{ posten.einzelpreis }} €</td>
-                <td align="right">{{ posten.get_mwst_display }}</td>
-                <td align="right">{{ posten.summenettogerundet }} €</td>
+                <td class="align-content-end">{{ posten.einzelpreis }} €</td>
+                <td class="align-content-end">{{ posten.get_mwst_display }}</td>
+                <td class="align-content-end">{{ posten.summenettogerundet }} €</td>
             </tr>
             {% endfor %}
         </table>
@@ -258,19 +258,19 @@
         <table class="table">
             <tr>
                 <th>Zwischensumme (netto):</th>
-                <td align="right">{{ rechnung.zwischensumme }} €</td>
+                <td class="align-content-end">{{ rechnung.zwischensumme }} €</td>
             </tr>
             <tr>
                 <th>Zzgl. Mehrwertsteuer 7%</th>
-                <td align="right">{{ rechnung.summe_mwst_7 }} €</td>
+                <td class="align-content-end">{{ rechnung.summe_mwst_7 }} €</td>
             </tr>
             <tr>
                 <th>Zzgl. Mehrwertsteuer 19%</th>
-                <td align="right">{{ rechnung.summe_mwst_19 }} €</td>
+                <td class="align-content-end">{{ rechnung.summe_mwst_19 }} €</td>
             </tr>
             <tr>
                 <th>Gesamt (brutto):</th>
-                <td align="right"><b>{{ rechnung.gesamtsumme }} €<b></td>
+                <td class="align-content-end"><b>{{ rechnung.gesamtsumme }} €<b></td>
             </tr>
         </table>
     </div>

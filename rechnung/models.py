@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
@@ -119,7 +119,7 @@ class Rechnung(models.Model):
         return self.mahnung_set.order_by("wievielte")
 
     def wurde_vor_kurzem_gestellt(self):
-        return self.rdatum >= timezone.now() - datetime.timedelta(days=16)
+        return self.rdatum >= timezone.now() - timedelta(days=16)
 
     @property
     def faellig(self):
