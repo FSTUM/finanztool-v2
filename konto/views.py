@@ -6,7 +6,7 @@ from django.core.files.uploadedfile import UploadedFile
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
 
-from schluessel.views import AuthWSGIRequest, finanz_staff_member_required
+from common.views import AuthWSGIRequest, finanz_staff_member_required
 
 from .forms import MappingConfirmationForm, UploadForm
 from .models import EinzahlungsLog

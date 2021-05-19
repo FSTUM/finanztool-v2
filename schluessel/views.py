@@ -1,20 +1,19 @@
 import os
 import subprocess  # nosec: fully defined
 from tempfile import mkdtemp, mkstemp
-from typing import Callable, Optional
+from typing import Optional
 
 from django import forms
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q, QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+
+from common.views import AuthWSGIRequest, finanz_staff_member_required
 
 from .forms import (
     FilterKeysForm,
@@ -26,12 +25,6 @@ from .forms import (
     SelectPersonFormNoscript,
 )
 from .models import Key, KeyLogEntry, Person, SavedKeyChange
-
-finanz_staff_member_required: Callable = staff_member_required(login_url="login")
-
-
-class AuthWSGIRequest(WSGIRequest):
-    user: User
 
 
 @login_required(login_url="login")

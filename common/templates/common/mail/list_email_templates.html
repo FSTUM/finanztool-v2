@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block head %}
+<script>
+    $(document).ready(() => {
+        $('#emailTable').DataTable({
+            columnDefs: [{ targets: 3, orderable: false }],
+        });
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <td class="table-warning">Mailbenachrichtigung bei überfälligen Rechnungen</td>
+                <td class="table-info">Mailbenachrichtigung über zugewiesene Aufgaben</td>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div class='row'>
+    <div class='col-sm p-1 d-grid'>
+        <a
+            class="btn btn-secondary"
+            href="{% url "common:add_mail" %}"
+        >Neue Email Vorlage hinzufügen</a>
+    </div>
+    <div class='col-sm p-1 d-grid'>
+        <a
+            class="btn btn-secondary"
+            href="{% url "common:edit_settings" %}"
+        >Einstellungen bearbeiten</a>
+    </div>
+</div>
+<div class="table-responsive">
+    <table
+        id="emailTable"
+        class="table dataTable"
+    >
+        <thead>
+            <tr>
+                <th>EMail Subject</th>
+                <th>EMail Text</th>
+                <th>Kommentare</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mail in mails %}
+            <tr
+                {% if mail == settings.zugewiesene_aufgabe_mail %}
+                class="table-info"
+                {% elif mail == settings.ueberfaellige_rechnung_mail %}
+                class="table-warning"
+                {% endif %}
+            >
+                <td><a href="{% url "common:view_mail" mail.id %}">{{ mail.subject }}</a></td>
+                <td>{{ mail.text|slice:":100" }}{% if mail.text|length > 100 %}...{% endif %}</td>
+                <td>{{ mail.comment|slice:":50" }}{% if mail.text|length > 50 %}...{% endif %}</td>
+                <td>
+                    <a href="{% url "common:edit_mail" mail.id %}"><span class="bi bi-pencil-square"></span></a>
+                    <a href="{% url "common:del_mail" mail.id %}"><span class="bi bi-trash-fill"></span></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
