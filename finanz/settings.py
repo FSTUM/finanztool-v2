@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "django.contrib.humanize",
     "bootstrap5",
     "bootstrap_datepicker_plus",
+    "active_link",
     "rechnung",
     "konto",
     "aufgaben",

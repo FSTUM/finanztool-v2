@@ -1,3 +1,4 @@
+{% load active_link_tags %}
 {% load static %}
 {% load i18n %}
 {% load bootstrap5 %}
@@ -75,195 +76,166 @@
                         {% if user.is_authenticated %}
                         {% if user.is_superuser %}
                         <a
-                            class="nav-link"
-                            href="{% url "rechnung:index" %}"
+                            class="nav-link {% active_link 'rechnung:unerledigt' %}"
+                            href="{% url "rechnung:unerledigt" %}"
                         >Unerledigt</a>
                         <li class="nav-item dropdown">
                             <a
                                 aria-expanded="false"
-                                class="nav-link dropdown-toggle"
+                                class="nav-link dropdown-toggle {% if not not_rechnung %}{% active_link 'rechnung:index' %}{% endif %}"
                                 data-bs-toggle="dropdown"
                                 href="#"
                                 id="navbarDropdown"
                                 role="button"
-                            >
-                                <span class="bi bi-list"></span> Rechnung
-                            </a>
+                            >Rechnung</a>
                             <ul
                                 class="dropdown-menu"
                                 aria-labelledby="navbarDropdown"
                             >
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'rechnung:rechnung_neu' %}"
                                         href="{% url "rechnung:rechnung_neu" %}"
                                     >
-                                        <span class="bi bi-plus-circle-fill"></span> Hinzufügen
+                                        Hinzufügen
                                     </a></li>
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'rechnung:rechnungsuchen' %}"
                                         href="{% url "rechnung:rechnungsuchen" %}"
                                     >
-                                        <span class="bi bi-search"></span> Suchen
+                                        Suchen
                                     </a></li>
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'rechnung:alle' %}"
                                         href="{% url "rechnung:alle" %}"
                                     >
-                                        <span class="bi bi-list"></span> Alle
+                                        Alle
                                     </a></li>
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'rechnung:alle_mahnungen' %}"
                                         href="{% url "rechnung:alle_mahnungen" %}"
                                     >
-                                        <span class="bi bi-hourglass"></span> Alle Mahnungen
+                                        Alle Mahnungen
                                     </a></li>
                             </ul>
                         </li>
                         <li class="nav-item dropdown">
                             <a
-                                class="nav-link dropdown-toggle"
+                                class="nav-link dropdown-toggle {% active_link 'rechnung:kunden_index' %}"
                                 href="#"
                                 id="navbarDropdown"
                                 role="button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
-                            >
-                                <span class="bi bi-briefcase-fill"></span> Kunde
-                            </a>
+                            >Kunde</a>
                             <ul
                                 class="dropdown-menu"
                                 aria-labelledby="navbarDropdown"
                             >
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'rechnung:kunde_neu' %}"
                                         href="{% url "rechnung:kunde_neu" %}"
                                     >
-                                        <span class="bi bi-plus-circle-fill"></span> Hinzufügen
+                                        Hinzufügen
                                     </a></li>
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'rechnung:kundesuchen' %}"
                                         href="{% url "rechnung:kundesuchen" %}"
                                     >
-                                        <span class="bi bi-search"></span> Suchen
+                                        Suchen
                                     </a></li>
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'rechnung:kunden_alle' %}"
                                         href="{% url "rechnung:kunden_alle" %}"
                                     >
-                                        <span class="bi bi-list"></span> Alle
+                                        Alle
                                     </a></li>
                             </ul>
                         </li>
 
                         <li class="nav-item dropdown">
                             <a
-                                class="nav-link dropdown-toggle"
+                                class="nav-link dropdown-toggle {% active_link 'aufgaben:index' %}"
                                 href="#"
                                 id="navbarDropdown"
                                 role="button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
-                            >
-                                <span class="bi bi-list-task"></span> Aufgaben
-                            </a>
+                            >Aufgaben</a>
                             <ul
                                 aria-labelledby="navbarDropdown"
                                 class="dropdown-menu"
                             >
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'aufgaben:unerledigt' %}"
                                         href="{% url "aufgaben:unerledigt" %}"
-                                    >
-                                        <span class="bi bi-list"></span> Unerledigt
-                                    </a></li>
+                                    >Unerledigt</a></li>
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'aufgaben:neu' %}"
                                         href="{% url "aufgaben:neu" %}"
-                                    >
-                                        <span class="bi bi-plus-circle-fill"></span> Hinzufügen
-                                    </a></li>
+                                    >Hinzufügen</a></li>
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'aufgaben:neu_aufgabenart' %}"
                                         href="{% url "aufgaben:neu_aufgabenart" %}"
-                                    >
-                                        <span class="bi bi-plus-circle-fill"></span> Aufgabenart hinzufügen
-                                    </a></li>
+                                    >Aufgabenart hinzufügen</a></li>
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'aufgaben:alle' %}"
                                         href="{% url "aufgaben:alle" %}"
-                                    >
-                                        <span class="bi bi-list"></span> Alle
-                                    </a>
-                                </li>
+                                    >Alle</a></li>
                             </ul>
                         </li>
                         {% endif %}
                         <li class="nav-item dropdown">
                             <a
-                                class="nav-link dropdown-toggle"
+                                class="nav-link dropdown-toggle {% active_link 'schluessel:index' %}"
                                 href="#"
                                 id="navbarDropdown"
                                 role="button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
-                            >
-                                <span class="bi bi-key-fill"></span> Schlüssel
-                            </a>
+                            >Schlüssel</a>
                             <ul
                                 class="dropdown-menu"
                                 aria-labelledby="navbarDropdown"
                             >
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'schluessel:list_keys' %}"
                                         href="{% url "schluessel:list_keys" %}"
-                                    >
-                                        <span class="bi bi-search"></span> Suchen
-                                    </a></li>
+                                    >Suchen</a></li>
                                 {% if user.is_superuser %}
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'schluessel:add_key' %}"
                                         href="{% url "schluessel:add_key" %}"
-                                    >
-                                        <span class="bi bi-plus-circle-fill"></span> Hinzufügen
-                                    </a></li>
+                                    >Hinzufügen</a></li>
                                 {% endif %}
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'schluessel:list_persons' %}"
                                         href="{% url "schluessel:list_persons" %}"
-                                    >
-                                        <span class="bi bi-search"></span> Person suchen
-                                    </a></li>
+                                    >Person suchen</a></li>
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'schluessel:add_person' %}"
                                         href="{% url "schluessel:add_person" %}"
-                                    >
-                                        <span class="bi bi-plus-circle-fill"></span> Person hinzufügen
-                                    </a></li>
+                                    >Person hinzufügen</a></li>
                                 {% if user.is_superuser %}
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'schluessel:list_key_changes' %}"
                                         href="{% url "schluessel:list_key_changes" %}"
-                                    >
-                                        <span class="bi bi-list"></span> Vorgemerkte Typ-Änderungen
-                                    </a></li>
+                                    >Vorgemerkte Typ-Änderungen</a></li>
                                 <li><a
-                                        class="dropdown-item"
+                                         class="dropdown-item {% active_link 'schluessel:show_log' %}"
                                         href="{% url "schluessel:show_log" %}"
-                                    >
-                                        <span class="bi bi-list-task"></span> Letzte Änderungen
-                                    </a></li>
+                                    >Letzte Änderungen</a></li>
                                 {% endif %}
                             </ul>
                         </li>
                         {% if user.is_superuser %}
                         <a
-                            class="nav-link"
+                            class="nav-link {% active_link 'konto:einlesen' %}"
                             href="{% url "konto:einlesen" %}"
-                        ><span class="bi bi-credit-card-fill"></span> Konto</a>
+                        >Konto</a>
                         {% endif %}
                         {% else %}
                         <a
-                            class="nav-link"
+                            class="nav-link {% active_link 'rechnung:unerledigt' %}"
                             href="{% url "rechnung:index" %}"
                         >Index</a>
                         {% endif %}
@@ -307,11 +279,11 @@
         <div class="container-md">
             <nav class="navbar-nav text-nowrap overflow-auto mx-auto">
                 <a
-                    class="nav-link"
+                    class="nav-link {% active_link '' %}"
                     href="http://fs.tum.de/datenschutz/"
                 >Datenschutz</a>
                 <a
-                    class="nav-link"
+                    class="nav-link {% active_link '' %}"
                     href="http://fs.tum.de/impressum/"
                 >Impressum</a>
             </nav>

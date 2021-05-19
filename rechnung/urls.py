@@ -1,14 +1,16 @@
 from django.conf.urls import include
 from django.urls import path
+from django.views.generic import RedirectView
 
 from . import views
 
 app_name = "rechnung"
 urlpatterns = [
     # Index
-    path("", views.willkommen, name="willkommen"),
+    path("",RedirectView.as_view(pattern_name="rechnung:willkommen"), name="index"),
+    path("willkommen/", views.willkommen, name="willkommen"),
     path("admin/", views.admin, name="admin"),
-    path("index/", views.index, name="index"),
+    path("unerledigt/", views.unerledigt, name="unerledigt"),
     path("alle/", views.alle, name="alle"),
     # Rechnung
     path("neu/", views.form_rechnung, name="rechnung_neu"),
@@ -36,6 +38,7 @@ urlpatterns = [
         "kunde/",
         include(
             [
+                path("", RedirectView.as_view(pattern_name="rechnung:kunden_alle"), name="kunden_index"),
                 path("alle/", views.kunden_alle, name="kunden_alle"),
                 path("neu/", views.form_kunde, name="kunde_neu"),
                 path("suchen/", views.kundesuchen, name="kundesuchen"),

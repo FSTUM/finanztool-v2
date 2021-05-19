@@ -51,7 +51,7 @@ def willkommen(request: AuthWSGIRequest) -> HttpResponse:
 
 
 @finanz_staff_member_required
-def index(request: AuthWSGIRequest) -> HttpResponse:
+def unerledigt(request: AuthWSGIRequest) -> HttpResponse:
     unerledigte_rechnungen = (
         Rechnung.objects.filter(erledigt=False).exclude(name="test").exclude(name="Test").order_by("-rnr")
     )
@@ -60,6 +60,7 @@ def index(request: AuthWSGIRequest) -> HttpResponse:
     context = {
         "unerledigte_rechnungen": unerledigte_rechnungen,
         "aufgaben": aufgaben,
+        "not_rechnung":True,
     }
     return render(request, "rechnung/index.html", context)
 
@@ -88,7 +89,7 @@ def rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpResponse:
     if request.method == "POST":
         if "bezahlt" in request.POST and form.is_valid():
             rechnung_obj.bezahlen()
-            return redirect("rechnung:index")
+            return redirect("rechnung:unerledigt")
 
         if "gestellt" in request.POST and form.is_valid():
             rechnung_obj.gestellt = True
@@ -255,7 +256,7 @@ def alle_mahnungen(request: AuthWSGIRequest) -> HttpResponse:
 @finanz_staff_member_required
 def kunde(request: AuthWSGIRequest, kunde_id: int) -> HttpResponse:
     kunde_obj = get_object_or_404(Kunde, pk=kunde_id)
-    return render(request, "rechnung/kunde.html", {"kunde": kunde_obj})
+    return render(request, "rechnung/kunde.html", {"kunde": kunde_obj,"not_rechnung":True,})
 
 
 @finanz_staff_member_required
@@ -285,6 +286,7 @@ def form_kunde(request: AuthWSGIRequest, kunde_id: Optional[int] = None) -> Http
             "form": form,
             "kunde": kunde_obj,
             "kunde_verwendet": kunde_verwendet,
+            "not_rechnung": True,
         },
     )
 
@@ -292,7 +294,7 @@ def form_kunde(request: AuthWSGIRequest, kunde_id: Optional[int] = None) -> Http
 @finanz_staff_member_required
 def kunden_alle(request: AuthWSGIRequest) -> HttpResponse:
     kunden_liste = Kunde.objects.order_by("-knr")
-    context = {"kunden_liste": kunden_liste}
+    context = {"kunden_liste": kunden_liste,"not_rechnung":True,}
     return render(request, "rechnung/kunden_alle.html", context)
 
 
@@ -311,6 +313,7 @@ def kundesuchen(request: AuthWSGIRequest) -> HttpResponse:
         "form": form,
         "result": result,
         "new_search": new_search,
+    "not_rechnung":True,
     }
 
     return render(request, "rechnung/kundesuchen.html", context)
