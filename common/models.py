@@ -1,11 +1,36 @@
 import re
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+from django.core.cache import cache
 from django.core.mail import EmailMessage, send_mail
 from django.db import models
 from django.db.models import ForeignKey
 from django.http import HttpResponse
 from django.template import Context, Template
+
+
+class SingletonModel(models.Model):
+    class Meta:
+        abstract = True
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    def set_cache(self):
+        cache.set(self.__class__.__name__, self)
+
+    def save(self, *args, **kwargs):
+        self.pk = 1  # pylint: disable=invalid-name
+        super().save(*args, **kwargs)
+        self.set_cache()
+
+    @classmethod
+    def load(cls):
+        if cache.get(cls.__name__) is None:
+            obj, created = cls.objects.get_or_create(pk=1)
+            if not created:
+                obj.set_cache()
+        return cache.get(cls.__name__)
 
 
 def clean_attachable(response: Union[HttpResponse, Tuple[str, Any, str]]) -> Tuple[str, Any, str]:
@@ -95,7 +120,7 @@ class Mail(models.Model):
         return True
 
 
-class Settings(models.Model):
+class Settings(SingletonModel):
     ueberfaellige_rechnung_mail = ForeignKey(
         Mail,
         related_name="ueberfaellige_rechnung_mail+",
