@@ -251,10 +251,12 @@
                             href="{% url "rechnung:index" %}"
                         >Index</a>
                         {% endif %}
+                        {% if user.is_authenticated %}
                         <a
                             class="nav-link {% active_link 'rechnung:unerledigt' %}"
                             href="{% url "common:list_mail" %}"
                         >Mails and Settings</a>
+                    {% endif %}
                     </nav>
                     {# login #}
                     <div class="d-flex">
