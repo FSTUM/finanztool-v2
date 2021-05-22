@@ -9,28 +9,21 @@ Aufgabe {% if aufgabe.pk %}ändern{% else %}hinzufügen{% endif %}
 <h1>Aufgabe {% if aufgabe.pk %}ändern{% else %}hinzufügen{% endif %}</h1>
 
 {% if aufgabe.pk %}
-<p><a
-        href="{% url "aufgaben:aufgabe" aufgabe_id=aufgabe.pk %}"
-        class="btn btn-secondary"
-        role="button"
-    ><span class="bi bi-arrow-left"></span>
-        Zurück zur Aufgabe
-    </a></p>
+<a
+    class="btn btn-secondary"
+    href="{% url "aufgaben:aufgabe" aufgabe_id=aufgabe.pk %}"
+><span class="bi bi-arrow-left"></span> Zurück zur Aufgabe</a>
 {% endif %}
 <div class="row">
     <div class="col-lg-6">
-        <p><span class="text-muted">
-                Mit * markierte Felder sind verpflichtend
-            </span></p>
+        <p class="text-muted">Mit * markierte Felder sind verpflichtend</p>
 
         <form method="POST">{% csrf_token %}
             {% bootstrap_form form %}
             <button
+                class="btn btn-secondary"
                 type="submit"
-                class="save btn btn-secondary"
-            >
-                <span class="bi bi-save"></span> Sichern
-            </button>
+            >Aufgabe speichern</button>
         </form>
     </div>
 </div>

@@ -10,37 +10,30 @@
 </div>
 <h1>Rechnung duplizieren</h1>
 
-<p><a
-        href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
-        class="btn btn-secondary"
-        role="button"
-    ><span class="bi bi-arrow-left"></span>
-        Zurück zur Rechnung
-    </a></p>
+<a
+    class="btn btn-secondary"
+    href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
+><span class="bi bi-arrow-left"></span> Zurück zur Rechnung</a>
 
 <div class="row">
     <div class="col-lg-6">
-        <p><span class="text-muted">
-                Mit * markierte Felder sind verpflichtend
-            </span></p>
+        <p class="text-muted">Mit * markierte Felder sind verpflichtend</p>
 
         <form method="POST">{% csrf_token %}
             {% bootstrap_form form %}
             <button
+                class="btn btn-secondary"
                 type="submit"
-                class="save btn btn-secondary"
-            >
-                <span class="bi bi-save"></span> Sichern
-            </button>
+            >Rechnung speichern</button>
         </form>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-10">
         <h3>Posten</h3>
-        <p><span class="text-muted">
-                Posten können nach dem Duplizieren bearbeitet werden
-            </span></p>
+        <p class="text-muted">
+            Posten können nach dem Duplizieren bearbeitet werden
+        </p>
 
         <br />
         <table class="table">

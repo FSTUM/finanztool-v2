@@ -38,8 +38,8 @@
 
 <p>
     <a
+        class="btn btn-secondary"
         href="{% url "schluessel:give_edit_person" key.id person.id %}"
-        class="btn btn-info"
     >Nein, Kontaktdaten
         ändern</a>
 </p>
@@ -57,22 +57,23 @@
 <form
     method="POST"
     action=""
->
-    {% csrf_token %}
+>{% csrf_token %}
 
     <table class="table">
         <tbody>
             <tr>
                 <td>
                     <button
-                        type="submit"
                         class="btn btn-secondary btn-success"
+                        type="submit"
                     >Ausgeben</button>
                 </td>
-                <td><a
+                <td>
+                    <a
+                        class="btn btn-secondary"
                         href="{% url "schluessel:view_key" key.id %}"
-                        class="btn btn-info"
-                    >Abbrechen</a></td>
+                    >Abbrechen</a>
+                </td>
             </tr>
         </tbody>
     </table>

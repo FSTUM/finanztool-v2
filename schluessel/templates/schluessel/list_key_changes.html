@@ -49,31 +49,22 @@
                 </p>
                 {% else %}
                 <a
+                    class="btn btn-secondary"
                     href="{% url "schluessel:apply_key_change" key.id %}"
-                    class="btn btn-info"
-                    role="button"
-                >
-                    Anwenden
-                </a>
+                >Anwenden</a>
                 {% endif %}
             </td>
             <td>
                 <a
-                    href="{% url "schluessel:save_key_change" key.id %}"
                     class="btn btn-warning"
-                    role="button"
-                >
-                    <span class="bi bi-pencil-square"></span> Ändern
-                </a>
+                    href="{% url "schluessel:save_key_change" key.id %}"
+                >Ändern</a>
             </td>
             <td>
                 <a
-                    href="{% url "schluessel:delete_key_change" key.id %}"
                     class="btn btn-danger"
-                    role="button"
-                >
-                    <span class="bi bi-person-x-fill"></span> Löschen
-                </a>
+                    href="{% url "schluessel:delete_key_change" key.id %}"
+                >Löschen</a>
             </td>
         </tr>
         {% endfor %}
@@ -81,12 +72,9 @@
     <p>
         {% if keys %}
         <a
+            class="btn btn-secondary"
             href="{% url "schluessel:apply_key_change_no_key" %}"
-            class="btn btn-info"
-            role="button"
-        >
-            Alle Änderungen anwenden
-        </a>
+        >Alle Änderungen anwenden</a>
         {% else %}
         Es sind keine Änderungen vorgemerkt.
         {% endif %}

@@ -7,11 +7,11 @@
 <h2>Email hinzufügen</h2>
 <table class="table table-hover">
     <tr>
-        <th>{% trans "Email subject" %}</th>
+        <th>Email Betreff</th>
         <td>{{ mail.subject }}</td>
     </tr>
     <tr>
-        <th>{% trans "Text" %}</th>
+        <th>Text</th>
         <td>{{ mail.text|linebreaks }}</td>
     </tr>
 </table>
@@ -19,8 +19,7 @@
 <form
     method="post"
     action=""
->
-    {% csrf_token %}
+>{% csrf_token %}
 
     <a
         class="btn btn-secondary"
@@ -29,6 +28,6 @@
     <button
         class="btn btn-danger"
         type="submit"
-    >{% trans "Delete email template" %}</button>
+    >Email Template löschen</button>
 </form>
 {% endblock %}

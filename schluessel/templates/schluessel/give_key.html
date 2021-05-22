@@ -35,8 +35,8 @@
 <div class="col-lg-6">
     <p>
         <a
+            class="btn btn-secondary"
             href="{% url "schluessel:give_add_person" key.id %}"
-            class="btn btn-info"
         >Neue Person hinzufügen</a>
     </p>
 
@@ -48,8 +48,7 @@
             id='addform'
             method='post'
             action=''
-        >
-            {% csrf_token %}
+        >{% csrf_token %}
 
             {% bootstrap_form form %}
         </form>
@@ -61,15 +60,13 @@
         <form
             method="POST"
             action=""
-        >
-            {% csrf_token %}
+        >{% csrf_token %}
 
             {% bootstrap_form formns %}
             <button
+                class="btn btn-secondary"
                 type="submit"
-                class="btn btn-secondary btn-info"
-            >Ausgeben
-            </button>
+            >Ausgeben</button>
         </form>
     </noscript>
 </div>

@@ -4,84 +4,17 @@
 {% block title %}RE {{ rechnung.rnr_string }}{% endblock %}
 
 {% block content %}
-<h1>RE {{ rechnung.rnr_string }}: {{ rechnung.name }}</h1>
-{% if rechnung.gestellt and not rechnung.erledigt %}
-<form method="POST">{% csrf_token %}
-    <br />
-    <p>
-        {{ form }}
-        <button
-            type="submit"
-            name="bezahlt"
-            class="save btn btn-success"
-        >
-            <span class="bi bi-credit-card-fill"></span> Bezahlt
-        </button>
-    </p>
-</form>
-{% elif not rechnung.gestellt and not rechnung.erledigt %}
-<form method="POST">{% csrf_token %}
-    <br />
-    <p>
-        {{ form }}
-        <button
-            type="submit"
-            name="gestellt"
-            class="save btn btn-warning"
-        >
-            <span class="bi bi-envelope-fill"></span> Gestellt
-        </button>
-    </p>
-</form>
+<h1>RE {{ rechnung.rnr_string }}: {{ rechnung.name }}
+</h1>
+
+{% if rechnung.gestellt and not rechnung.erledigt and rechnung.faellig %}
+<a
+    class="btn btn-danger"
+    href="{% url "rechnung:mahnung_neu" rechnung.id %}"
+><span class="bi bi-hourglass"></span> Mahnung stellen</a>
 {% endif %}
 
-<h2>
-    {% if rechnung.gestellt and not rechnung.erledigt and rechnung.faellig %}
-    <a
-        href="{% url "rechnung:mahnung_neu" rechnung.id %}"
-        class="btn btn-danger"
-        role="button"
-    >
-        <span class="bi bi-hourglass"></span> Mahnung stellen
-    </a>
-    {% endif %}
-    <a
-        href="{% url "rechnung:rechnung_aendern" rechnung.id %}"
-        class="btn btn-info"
-        role="button"
-    >
-        <span class="bi bi-pencil-square"></span> Bearbeiten
-    </a>
-
-    <a
-        href="{% url "rechnung:rechnung_duplizieren" rechnung.id %}"
-        class="btn btn-info"
-        role="button"
-    >
-        <span class="bi bi-plus-circle"></span> Duplizieren
-    </a>
-
-    {% if not rechnung.gestellt %}
-    <a
-        href="{% url "rechnung:rechnung_posten_neu" rechnung.id %}"
-        class="btn btn-info"
-        role="button"
-    >
-        <span class="bi bi-plus-circle-fill"></span> Neuer Posten
-    </a>
-    {% endif %}
-
-    <a
-        href="{% url "rechnung:rechnungpdf" rechnung.id %}"
-        class="btn btn-info"
-        role="button"
-    >
-        <span class="bi bi-cloud-arrow-down-fill"></span> Herunterladen
-    </a>
-
-</h2>
-
-<div class="row">
+<div class="row mt-3">
     {% if mahnungen %}
     <div class="col-lg-6">
         <h3>Mahnungen</h3>
@@ -156,7 +89,12 @@
     {% endif %}
 
     <div class="col-lg-6">
-        <h3>Übersicht</h3>
+        <h3>Übersicht
+            <a
+                class="btn btn-secondary"
+                href="{% url "rechnung:rechnung_aendern" rechnung.id %}"
+            >Bearbeiten</a>
+        </h3>
         <br />
         <table class="table table-striped">
             <tr>
@@ -189,7 +127,9 @@
             </tr>
             <tr>
                 <th>Kunde</th>
-                <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde }}</td>
+                <td>
+                    <a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde }}</a>
+                </td>
             </tr>
             <tr>
                 <th>Rechnungsdatum</th>
@@ -216,7 +156,8 @@
             </tr>
             <tr>
                 <th>Kategorie</th>
-                <td><a href="{% url 'rechnung:kategorie_detail' rechnung.kategorie.id %}">{{ rechnung.kategorie }}
+                <td>
+                    <a href="{% url 'rechnung:kategorie_detail' rechnung.kategorie.id %}">{{ rechnung.kategorie }}</a>
                 </td>
             </tr>
             <tr>
@@ -225,11 +166,17 @@
             </tr>
         </table>
     </div>
-</div>
+    <div class="col-lg-{% if not mahnungen %}6{% else %}10{% endif %}">
+        <h3>Posten
+            {% if not rechnung.gestellt %}
+            <a
+                class="btn btn-secondary"
+                href="{% url "rechnung:rechnung_posten_neu" rechnung.id %}"
+            ><span class="bi bi-plus-circle-fill"></span> Neuer Posten</a>
+            {% endif %}
+        </h3>
 
-<div class="row">
-    <div class="col-lg-10">
-        <h3>Posten</h3>
+        {% if rechnung.posten_set.count != 0 %}
         <br />
         <table class="table">
             <tr>
@@ -245,7 +192,9 @@
                 {% if rechnung.gestellt %}
                 <td>{{ posten.name }}</td>
                 {% else %}
-                <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</td>
+                <td>
+                    <a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</a>
+                </td>
                 {% endif %}
                 <td class="align-content-end">{{ posten.einzelpreis }} €</td>
                 <td class="align-content-end">{{ posten.get_mwst_display }}</td>
@@ -253,8 +202,6 @@
             </tr>
             {% endfor %}
         </table>
-    </div>
-    <div class="col-lg-10">
         <table class="table">
             <tr>
                 <th>Zwischensumme (netto):</th>
@@ -270,10 +217,37 @@
             </tr>
             <tr>
                 <th>Gesamt (brutto):</th>
-                <td class="align-content-end"><b>{{ rechnung.gesamtsumme }} €<b></td>
+                <td class="align-content-end"><b>{{ rechnung.gesamtsumme }} €</b>
+                </td>
             </tr>
         </table>
+        {% else %}
+        Es existieren momentan keine Posten für diese Rechnung.
+        {% endif %}
     </div>
 </div>
+<form method="POST">{% csrf_token %}
+    <a
+        class="btn btn-secondary"
+        href="{% url "rechnung:rechnungpdf" rechnung.id %}"
+    ><span class="bi bi-cloud-arrow-down-fill"></span> Herunterladen</a>
+    <a
+        class="btn btn-secondary"
+        href="{% url "rechnung:rechnung_duplizieren" rechnung.id %}"
+    ><span class="bi bi-plus-circle"></span> Duplizieren</a>
 
+    {% if rechnung.gestellt and not rechnung.erledigt %}
+    <button
+        class="btn btn-success"
+        name="bezahlt"
+        type="submit"
+    ><span class="bi bi-credit-card-fill"></span> Bezahlt</button>
+    {% elif not rechnung.gestellt and not rechnung.erledigt %}
+    <button
+        class="btn btn-warning"
+        name="gestellt"
+        type="submit"
+    ><span class="bi bi-envelope-fill"></span> Gestellt</button>
+    {% endif %}
+</form>
 {% endblock %}

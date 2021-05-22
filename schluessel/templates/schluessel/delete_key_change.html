@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load bootstrap5 %}
 
 {% block title %}Finanztool - Typ-Änderung löschen{% endblock %}
 
@@ -15,25 +16,16 @@
 <form
     method="POST"
     action=""
->
-    {% csrf_token %}
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <td>
-                    <button
-                        type="submit"
-                        class="btn btn-secondary btn-warning"
-                    >Löschen</button>
-                </td>
-                <td><a
-                        href="{% url "schluessel:view_key" key.id %}"
-                        class="btn btn-info"
-                    >Abbrechen</a></td>
-            </tr>
-        </tbody>
-    </table>
+>{% csrf_token %}
+    {% bootstrap_form form %}
+    <button
+        class="btn btn-warning"
+        type="submit"
+    >Löschen</button>
+    <a
+        class="btn btn-secondary"
+        href="{% url "schluessel:view_key" key.id %}"
+    >Abbrechen</a>
 </form>
 
 {% endblock %}

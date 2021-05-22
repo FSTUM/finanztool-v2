@@ -25,11 +25,13 @@
             </tr>
             {% for rechnung in unerledigte_rechnungen %}
             <tr>
-                <td><a href="{% url 'rechnung:rechnung' rechnung.id %}">RE {{ rechnung.rnr_string }}</a>
+                <td>
+                    <a href="{% url 'rechnung:rechnung' rechnung.id %}">RE {{ rechnung.rnr_string }}</a>
                 </td>
                 <td>{{ rechnung.name }}</td>
-                <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}"> {% localize off %}
-                        {{ rechnung.kunde.knr }} {% endlocalize %}</td>
+                <td>
+                    <a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde.knr|unlocalize }}</a>
+                </td>
                 <td>{{ rechnung.rdatum }}</td>
                 {% if rechnung.gestellt %}
                 <td>
@@ -65,14 +67,10 @@
                 <td>
                     <span class="bi bi-person-x-fill"></span>
                 </td>
-                <td>
-                </td>
-                <td>
-                </td>
-                <td>
-                </td>
-                <td>
-                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 {% endif %}
             </tr>
             {% endfor %}
@@ -115,9 +113,7 @@
                 </td>
                 <td>{{ aufgabe.zustaendig.get_short_name }}</td>
                 <td>
-                    {% localize off %}
-                    {{ aufgabe.jahr|default_if_none:"" }}
-                    {% endlocalize %}
+                    {{ aufgabe.jahr|unlocalize|default_if_none:"" }}
                 </td>
                 <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
             </tr>

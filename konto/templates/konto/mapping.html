@@ -19,10 +19,7 @@
 <form
     action=""
     method="POST"
->
-
-    {% csrf_token %}
-
+>{% csrf_token %}
 
     <h3>Bezahlte Rechnungen</h3>
     <table class="table">
@@ -117,12 +114,10 @@
         {% endfor %}
     </table>
 
-    <input
-        type="submit"
-        value="Speichern"
+    <button
         class="btn btn-secondary"
-    />
-
+        type="submit"
+    >Speichern</button>
 </form>
 
 <h2>Nicht erkannte Einzahlungen</h2>

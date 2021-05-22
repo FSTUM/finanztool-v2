@@ -57,28 +57,24 @@
 <form
     method="POST"
     action=""
->
-    {% csrf_token %}
+>{% csrf_token %}
 
     <table class="table">
         <tr>
             <td>
                 <button
+                    class="btn btn-warning"
                     type="submit"
-                    class="btn btn-secondary btn-warning"
                 >Änderungen anwenden</button>
             </td>
-            {% if cur_key %}
-            <td><a
-                    href="{% url "schluessel:view_key" cur_key.id %}"
-                    class="btn btn-info"
-                >Abbrechen</a></td>
-            {% else %}
-            <td><a
-                    href="{% url "schluessel:list_key_changes" %}"
-                    class="btn btn-info"
-                >Abbrechen</a></td>
-            {% endif %}
+            <td>
+                <a
+                    class="btn btn-secondary"
+                    {% if cur_key %}href="{% url "schluessel:view_key" cur_key.id %}"
+                    {% else %}href="{% url "schluessel:list_key_changes" %}"
+                    {% endif %}
+                >Abbrechen</a>
+            </td>
         </tr>
     </table>
 </form>

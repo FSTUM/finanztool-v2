@@ -5,15 +5,10 @@
 
 {% block content %}
 <h1>Posten {{ posten.name }}</h1>
-<h2>
-    <a
-        href="{% url "rechnung:posten_aendern" posten.id %}"
-        class="btn btn-info"
-        role="button"
-    >
-        <span class="bi bi-pencil-square"></span> Posten bearbeiten
-    </a>
-</h2>
+<a
+    class="btn btn-primary"
+    href="{% url "rechnung:posten_aendern" posten.id %}"
+>Posten bearbeiten</a>
 
 <div class="row">
     <div class="col-lg-3">

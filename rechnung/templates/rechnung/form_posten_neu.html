@@ -6,28 +6,23 @@
 {% block content %}
 <h1>Posten hinzufügen</h1>
 <a
-    href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
     class="btn btn-secondary"
-    role="button"
+    href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
 ><span class="bi bi-arrow-left"></span> Zurück zur Rechnung</a>
 <div class="row">
     <div class="col-lg-5">
         <form method="POST">{% csrf_token %}
             {% bootstrap_form form %}
             <button
-                type="submit"
+                class="btn btn-secondary"
                 name="weiter"
-                class="save btn btn-secondary"
-            >
-                <span class="bi bi-save"></span> & neuen Posten
-            </button>
-            <button
                 type="submit"
+            >Speichern und neuen Posten eingeben</button>
+            <button
+                class="btn btn-secondary"
                 name="zurueck"
-                class="save btn btn-secondary"
-            >
-                <span class="bi bi-save"></span> & zurück zur Rechnung
-            </button>
+                type="submit"
+            >Speichern und zurück zur Rechnung</button>
         </form>
     </div>
     <div class="row">

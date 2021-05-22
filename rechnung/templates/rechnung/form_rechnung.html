@@ -14,8 +14,7 @@ Rechnung hinzufügen
 {% if rechnung.gestellt %}
 <div class="alert alert-danger">
     Möchtest du wirklich diese Rechnung bearbeiten?<br />
-    Du kannst lediglich einen neuen Kunden auswählen, hebe in diesem Fall
-    das Original auf.<br />
+    Du kannst lediglich einen neuen Kunden auswählen, hebe in diesem Fall das Original auf.<br />
     Für andere Änderungen erstelle bitte eine neue (Korrektur-)Rechnung!
 </div>
 <h1>Rechnung ändern</h1>
@@ -24,28 +23,21 @@ Rechnung hinzufügen
 {% endif %}
 
 {% if rechnung.pk %}
-<p><a
-        href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
-        class="btn btn-secondary"
-        role="button"
-    ><span class="bi bi-arrow-left"></span>
-        Zurück zur Rechnung
-    </a></p>
+<a
+    class="btn btn-secondary"
+    href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
+><span class="bi bi-arrow-left"></span>Zurück zur Rechnung</a>
 {% endif %}
 <div class="row">
     <div class="col-lg-6">
-        <p><span class="text-muted">
-                Mit * markierte Felder sind verpflichtend
-            </span></p>
+        <p class="text-muted">Mit * markierte Felder sind verpflichtend</p>
 
         <form method="POST">{% csrf_token %}
             {% bootstrap_form form %}
             <button
+                class="btn btn-secondary"
                 type="submit"
-                class="save btn btn-secondary"
-            >
-                <span class="bi bi-save"></span> Sichern
-            </button>
+            >Rechnung speichern</button>
         </form>
     </div>
 </div>

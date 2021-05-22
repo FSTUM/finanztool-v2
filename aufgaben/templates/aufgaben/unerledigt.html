@@ -5,14 +5,10 @@
 {% block title %}Finanztool - Unerledigte Aufgaben{% endblock %}
 
 {% block content %}
-<a href="{% url "aufgaben:alle" %}">
-    <button
-        type="link"
-        class="btn btn-info"
-    >
-        <span class="bi bi-list"></span> Alle Aufgaben
-    </button>
-</a>
+<a
+    class="btn btn-primary"
+    href="{% url "aufgaben:alle" %}"
+>Alle Aufgaben</a>
 <h3>Meine Aufgaben</h3>
 <br>
 <div class="row">
@@ -44,9 +40,9 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% localize off %}
-                    {{ aufgabe.jahr|default_if_none:"" }}
-                    {% endlocalize %}
+
+                    {{ aufgabe.jahr|unlocalize|default_if_none:"" }}
+
                 </td>
                 <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
             </tr>
@@ -91,9 +87,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% localize off %}
-                    {{ aufgabe.jahr|default_if_none:"" }}
-                    {% endlocalize %}
+                    {{ aufgabe.jahr|unlocalize|default_if_none:"" }}
                 </td>
                 <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
                 <td>{{ aufgabe.zustaendig.get_short_name }}</td>

@@ -9,25 +9,22 @@
 <div class="col-lg-6">
     {% if user.is_staff %}
     <a
+        class="btn btn-secondary"
         href="{% url "schluessel:add_key" %}"
-        class="btn btn-info"
-        role="button"
-    ><span class="bi bi-plus-circle-fill"></span> Schlüssel/Schließkarte hinzufügen
-    </a>
+    ><span class="bi bi-plus-circle-fill"></span> Schlüssel/Schließkarte hinzufügen</a>
     {% endif %}
 
     <form
         id="filterform"
         method="POST"
         action=""
-    >
-        {% csrf_token %}
+    >{% csrf_token %}
 
         {% bootstrap_form form %}
         <noscript>
             <button
+                class="btn btn-secondary"
                 type="submit"
-                class="btn btn-secondary btn-info"
             >Suchen</button>
         </noscript>
     </form>

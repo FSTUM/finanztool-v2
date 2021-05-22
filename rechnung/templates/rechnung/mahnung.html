@@ -9,54 +9,37 @@
         RE {{ mahnung.rechnung.rnr_string }} ({{ mahnung.rechnung.name }})
     </a>
 </h1>
-{% if mahnung.geschickt and not mahnung.bezahlt and not rechnung.erledigt %}
+{% if not mahnung.bezahlt and not rechnung.erledigt %}
 <form method="POST">{% csrf_token %}
-    <br />
-    <p>
-        {{ form }}
-        <button
-            type="submit"
-            name="bezahlt"
-            class="save btn btn-success"
-        >
-            <span class="bi bi-check-circle-fill"></span> Bezahlt
-        </button>
-    </p>
-</form>
-{% elif not mahnung.geschickt and not mahnung.bezahlt and not rechnung.erledigt %}
-<form method="POST">{% csrf_token %}
-    <br />
-    <p>
-        {{ form }}
-        <button
-            type="submit"
-            name="geschickt"
-            class="save btn btn-warning"
-        >
-            <span class="bi bi-envelope-fill"></span> Geschickt
-        </button>
-    </p>
+    {% bootstrap_form form %}
+    {% if mahnung.geschickt %}
+    <button
+        class="btn btn-success"
+        name="bezahlt"
+        type="submit"
+    ><span class="bi bi-check-circle-fill"></span> Bezahlt</button>
+    {% else %}
+    <button
+        class="btn btn-warning"
+        name="geschickt"
+        type="submit"
+    ><span class="bi bi-envelope-fill"></span> Geschickt</button>
+    {% endif %}
+
 </form>
 {% endif %}
 
 {% if not rechnung.erledigt %}
 <a
+    class="btn btn-secondary"
     href="{% url "rechnung:mahnung_aendern" rechnung.id mahnung.id %}"
-    class="btn btn-info"
-    role="button"
->
-    <span class="bi bi-pencil-square"></span> Bearbeiten
-</a>
+>Bearbeiten</a>
 {% endif %}
 
 <a
+    class="btn btn-secondary"
     href="{% url "rechnung:mahnungpdf" rechnung.id mahnung.id %}"
-    class="btn btn-info"
-    role="button"
->
-    <span class="bi bi-cloud-arrow-down-fill"></span> Herunterladen
-</a>
-
+><span class="bi bi-cloud-arrow-down-fill"></span> Herunterladen</a>
 
 <br />
 <div class="row">

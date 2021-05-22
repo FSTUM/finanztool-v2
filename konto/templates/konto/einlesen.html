@@ -21,18 +21,16 @@
     action=""
     method="POST"
     enctype="multipart/form-data"
->
-    {% csrf_token %}
+>{% csrf_token %}
 
     {% bootstrap_form form %}
 
     <div class="alert alert-info">
         Es funktionieren nur CSV Dateien vom <b>CSV-CAMT</b>-Format.
     </div>
-    <input
-        type="submit"
-        value="Upload"
+    <button
         class="btn btn-secondary"
-    />
+        type="submit"
+    >Upload</button>
 </form>
 {% endblock %}

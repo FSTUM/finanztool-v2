@@ -10,14 +10,13 @@
     <form
         method="POST"
         action=""
-    >
-        {% csrf_token %}
+    >{% csrf_token %}
 
         {% bootstrap_form form %}
 
         <button
+            class="btn btn-secondary"
             type="submit"
-            class="btn btn-secondary btn-info"
         >Ändern</button>
     </form>
 </div>

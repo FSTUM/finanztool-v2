@@ -10,18 +10,14 @@
         <form method="POST">{% csrf_token %}
             {% bootstrap_form form %}
             <button
+                class="btn btn-secondary"
                 type="submit"
-                class="save btn btn-secondary"
-            >
-                <span class="bi bi-save"></span> Sichern
-            </button>
+            >Posten speichern</button>
             <button
-                type="submit"
+                class="btn btn-secondary"
                 name="loeschen"
-                class="save btn btn-secondary"
-            >
-                <span class="bi bi-person-x-fill"></span> Löschen
-            </button>
+                type="submit"
+            >Posten löschen</button>
         </form>
     </div>
 </div>

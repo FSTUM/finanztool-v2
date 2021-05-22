@@ -13,30 +13,21 @@
             <a
                 href="{% url "schluessel:return_key" key.id %}"
                 class="btn btn-warning"
-                role="button"
-            >
-                <span class="bi bi-arrow-left"></span> Zurücknehmen
-            </a>
+            ><span class="bi bi-arrow-left"></span> Zurücknehmen</a>
         </div>
         <div class="col-lg-1"></div>
         <div class="col-lg-2">
             <a
                 href="{% url "schluessel:get_kaution" key.id %}"
-                class="btn btn-primary"
-                role="button"
-            >
-                Kaution
-            </a>
+                class="btn btn-secondary"
+            >Kaution</a>
         </div>
         {% if not key.keytype.deposit == 0 %}
         <div class="col-lg-2">
             <a
                 href="{% url "schluessel:get_quittung" key.id %}"
-                class="btn btn-primary"
-                role="button"
-            >
-                Quittung
-            </a>
+                class="btn btn-secondary"
+            >Quittung</a>
         </div>
         {% endif %}
         {% elif key.active %}
@@ -44,10 +35,7 @@
             <a
                 href="{% url "schluessel:give_key" key.id %}"
                 class="btn btn-success"
-                role="button"
-            >
-                <span class="bi bi-arrow-right"></span> Ausgeben
-            </a>
+            ><span class="bi bi-arrow-right"></span> Ausgeben</a>
         </div>
         {% endif %}
         <div class="col-lg-1"></div>
@@ -55,11 +43,8 @@
         <div class="col-lg-2">
             <a
                 href="{% url "schluessel:edit_key" key.id %}"
-                class="btn btn-info"
-                role="button"
-            >
-                <span class="bi bi-pencil-square"></span> Bearbeiten
-            </a>
+                class="btn btn-secondary"
+            >Bearbeiten</a>
         </div>
         {% endif %}
     </div>
@@ -132,30 +117,21 @@
                 {% else %}
                 <a
                     href="{% url "schluessel:apply_key_change" key.id %}"
-                    class="btn btn-info"
-                    role="button"
-                >
-                    Anwenden
-                </a>
+                    class="btn btn-secondary"
+                >Anwenden</a>
                 {% endif %}
             </td>
             <td>
                 <a
                     href="{% url "schluessel:save_key_change" key.id %}"
                     class="btn btn-warning"
-                    role="button"
-                >
-                    <span class="bi bi-pencil-square"></span> Ändern
-                </a>
+                >Ändern</a>
             </td>
             <td>
                 <a
                     href="{% url "schluessel:delete_key_change" key.id %}"
                     class="btn btn-danger"
-                    role="button"
-                >
-                    <span class="bi bi-person-x-fill"></span> Löschen
-                </a>
+                >Löschen</a>
             </td>
         </tr>
     </table>
@@ -163,11 +139,8 @@
     <div class="col-lg-2">
         <a
             href="{% url "schluessel:save_key_change" key.id %}"
-            class="btn btn-info"
-            role="button"
-        >
-            <span class="bi bi-pencil-square"></span> Typ-Änderung vormerken
-        </a>
+            class="btn btn-secondary"
+        >Typ-Änderung vormerken</a>
     </div>
     {% endif %}
 </div>

@@ -31,7 +31,7 @@
                 </th>
                 <td>
                     <a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">
-                        {% localize off %} {{ rechnung.kunde.knr }} {% endlocalize %}
+                        {{ rechnung.kunde.knr|unlocalize }}
                     </a>
                 </td>
                 <td></td>

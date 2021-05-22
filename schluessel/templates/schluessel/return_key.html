@@ -19,22 +19,23 @@
 <form
     method="POST"
     action=""
->
-    {% csrf_token %}
+>{% csrf_token %}
 
     <table class="table">
         <thead>
             <tr>
                 <td>
                     <button
+                        class="btn btn-warning"
                         type="submit"
-                        class="btn btn-secondary btn-warning"
                     >Zurücknehmen</button>
                 </td>
-                <td><a
+                <td>
+                    <a
+                        class="btn btn-secondary"
                         href="{% url "schluessel:view_key" key.id %}"
-                        class="btn btn-info"
-                    >Abbrechen</a></td>
+                    >Abbrechen</a>
+                </td>
             </tr>
         </thead>
     </table>

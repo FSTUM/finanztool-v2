@@ -9,8 +9,7 @@
     method="POST"
     accept-charset="utf-8"
     role="form"
->
-    {% csrf_token %}
+>{% csrf_token %}
 
     <div class="row">
         <div class="col-sm-12 col-xl-5">
@@ -23,10 +22,9 @@
         name="next"
         value="{{ next }}"
     />
-    <input
-        type="submit"
-        value="Login"
+    <button
         class="btn btn-secondary"
-    />
+        type="submit"
+    >Login</button>
 </form>
 {% endblock %}

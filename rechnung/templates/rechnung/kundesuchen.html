@@ -10,16 +10,14 @@
 <form
     action=""
     method="POST"
->
-    {% csrf_token %}
+>{% csrf_token %}
 
     {% bootstrap_form form %}
 
-    <input
-        type="submit"
-        value="Suchen"
+    <button
         class="btn btn-secondary"
-    />
+        type="submit"
+    >Suchen</button>
 </form>
 
 {% if not new_search %}
@@ -39,8 +37,9 @@
             </tr>
             {% for kunde in result %}
             <tr>
-                <td><a href="{% url 'rechnung:kunde' kunde.id %}">{% localize off %}
-                        {{ kunde.knr }} {% endlocalize %}</a></td>
+                <td>
+                    <a href="{% url 'rechnung:kunde' kunde.id %}">{{ kunde.knr|unlocalize }}</a>
+                </td>
                 <td>{{ kunde.organisation }}</td>
                 <td>{{ kunde.suborganisation }}</td>
                 <td>{{ kunde.get_anrede_display }} {{ kunde.vorname }} {{ kunde.name }}</td>

@@ -18,11 +18,10 @@ Kunde hinzufügen
     {% endif %}
 </h1>
 {% if kunde.pk %}
-<p><a
-        href="{% url "rechnung:kunde" kunde_id=kunde.pk %}"
-        class="btn btn-secondary"
-        role="button"
-    ><span class="bi bi-arrow-left"></span> Zurück zum Kunden</a></p>
+<a
+    class="btn btn-secondary"
+    href="{% url "rechnung:kunde" kunde_id=kunde.pk %}"
+><span class="bi bi-arrow-left"></span> Zurück zum Kunden</a>
 {% endif %}
 <div class="row">
     <div class="col-lg-5">
@@ -33,17 +32,13 @@ Kunde hinzufügen
             Lege bei Bedarf einen neuen Kunden an.
         </div>
         {% endif %}
-        <p><span class="text-muted">
-                Mit * markierte Felder sind verpflichtend
-            </span></p>
+        <p class="text-muted">Mit * markierte Felder sind verpflichtend</p>
         <form method="POST">{% csrf_token %}
             {% bootstrap_form form %}
             <button
+                class="btn btn-secondary"
                 type="submit"
-                class="save btn btn-secondary"
-            >
-                <span class="bi bi-save"></span> Sichern
-            </button>
+            >Kunde speichern</button>
         </form>
     </div>
 </div>

@@ -11,28 +11,21 @@ Mahnung {% if mahnung.pk %}ändern{% else %}hinzufügen{% endif %}
 <h1>Mahnung {% if mahnung.pk %}ändern{% else %}hinzufügen{% endif %}</h1>
 
 {% if mahnung.pk %}
-<p><a
-        href="{% url "rechnung:mahnung" rechnung_id=rechnung.pk mahnung_id=mahnung.pk %}"
-        class="btn btn-secondary"
-        role="button"
-    >
-        <span class="bi bi-arrow-left"></span> Zurück zur Mahnung
-    </a></p>
+<a
+    class="btn btn-secondary"
+    href="{% url "rechnung:mahnung" rechnung_id=rechnung.pk mahnung_id=mahnung.pk %}"
+><span class="bi bi-arrow-left"></span> Zurück zur Mahnung</a>
 {% endif %}
 <div class="row">
     <div class="col-lg-6">
-        <p><span class="text-muted">
-                Mit * markierte Felder sind verpflichtend
-            </span></p>
+        <p class="text-muted">Mit * markierte Felder sind verpflichtend</p>
 
         <form method="POST">{% csrf_token %}
             {% bootstrap_form form %}
             <button
+                class="btn btn-secondary"
                 type="submit"
-                class="save btn btn-secondary"
-            >
-                <span class="bi bi-save"></span> Sichern
-            </button>
+            >Mahnung speichern</button>
         </form>
     </div>
 </div>

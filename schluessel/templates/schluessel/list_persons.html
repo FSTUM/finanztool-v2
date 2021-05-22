@@ -7,27 +7,21 @@
 <h1>Personen</h1>
 
 <div class="col-lg-6">
-    <p>
-        <a
-            href="{% url "schluessel:add_key" %}"
-            class="btn btn-info"
-            role="button"
-        >
-            <span class="bi bi-plus-circle-fill"></span> Person hinzufügen
-        </a>
-    </p>
+    <a
+        class="btn btn-secondary"
+        href="{% url "schluessel:add_key" %}"
+    ><span class="bi bi-plus-circle-fill"></span> Person hinzufügen</a>
 
     <form
         id="filterform"
         method="POST"
         action=""
-    >
-        {% csrf_token %}
+    >{% csrf_token %}
 
         {% bootstrap_form form %}
         <button
+            class="btn btn-secondary"
             type="submit"
-            class="btn btn-secondary btn-info"
         >Suchen</button>
     </form>
 
