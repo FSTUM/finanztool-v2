@@ -5,6 +5,7 @@ from typing import Optional
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import QuerySet
+from django.forms import forms
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
@@ -19,7 +20,6 @@ from .forms import (
     MahnungForm,
     MahnungStatusForm,
     PostenForm,
-    RechnungBezahltForm,
     RechnungForm,
     RechnungSuchenForm,
 )
@@ -85,7 +85,7 @@ def rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpResponse:
     rechnung_obj: Rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
     mahnungen: QuerySet[Mahnung] = Mahnung.objects.filter(rechnung=rechnung_obj.pk).all()
-    form = RechnungBezahltForm(request.POST or None)
+    form = forms.Form(request.POST or None)
     if request.method == "POST":
         if "bezahlt" in request.POST and form.is_valid():
             rechnung_obj.bezahlen()
