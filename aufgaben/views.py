@@ -1,11 +1,12 @@
 from typing import Optional
 
+from django.forms import forms
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from common.views import AuthWSGIRequest, finanz_staff_member_required
 
-from .forms import AufgabeErledigtForm, AufgabeForm, AufgabenartForm
+from .forms import AufgabeForm, AufgabenartForm
 from .models import Aufgabe, Aufgabenart
 
 
@@ -79,9 +80,12 @@ def alle(request: AuthWSGIRequest) -> HttpResponse:
 def aufgabe(request: AuthWSGIRequest, aufgabe_id: int) -> HttpResponse:
     _aufgabe = get_object_or_404(Aufgabe, pk=aufgabe_id)
 
-    form = AufgabeErledigtForm(request.POST or None)
-    if request.method == "POST" and "erledigt" in request.POST and form.is_valid():
-        _aufgabe.erledigt = True
+    form = forms.Form(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        if "nicht-erledigt" in request.POST:
+            _aufgabe.erledigt = False
+        elif "erledigt" in request.POST:
+            _aufgabe.erledigt = True
         _aufgabe.save()
         return redirect("aufgaben:aufgabe", aufgabe_id=_aufgabe.pk)
 
