@@ -448,7 +448,7 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
         )
 
     response = HttpResponse(content_type="application/pdf")
-    content_disposition = f'attachment; filename="RE{rechnung_obj.rnr_string}_{rechnung_obj.kunde.knr}'
+    content_disposition = f'inline; filename="RE{rechnung_obj.rnr_string}_{rechnung_obj.kunde.knr}'
     if mahnung_id and mahnung_obj:
         content_disposition += f"_M{mahnung_obj.wievielte}"
     response["Content-Disposition"] = content_disposition + '.pdf"'
