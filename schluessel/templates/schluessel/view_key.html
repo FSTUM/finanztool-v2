@@ -11,30 +11,32 @@
         {% if key.active and key.person %}
         <div class="col-lg-3">
             <a
-                href="{% url "schluessel:return_key" key.id %}"
-                class="btn btn-warning"
+                    class="btn btn-warning"
+                    href="{% url "schluessel:return_key" key.id %}"
             ><span class="bi bi-arrow-left"></span> Zurücknehmen</a>
         </div>
         <div class="col-lg-1"></div>
         <div class="col-lg-2">
             <a
-                href="{% url "schluessel:get_kaution" key.id %}"
                 class="btn btn-secondary"
+                href="{% url "schluessel:get_kaution" key.id %}"
+                target="_blank"
             >Kaution</a>
         </div>
         {% if not key.keytype.deposit == 0 %}
         <div class="col-lg-2">
             <a
-                href="{% url "schluessel:get_quittung" key.id %}"
                 class="btn btn-secondary"
+                href="{% url "schluessel:get_quittung" key.id %}"
+                target="_blank"
             >Quittung</a>
         </div>
         {% endif %}
         {% elif key.active %}
         <div class="col-lg-2">
             <a
-                href="{% url "schluessel:give_key" key.id %}"
-                class="btn btn-success"
+                    class="btn btn-success"
+                    href="{% url "schluessel:give_key" key.id %}"
             ><span class="bi bi-arrow-right"></span> Ausgeben</a>
         </div>
         {% endif %}
@@ -42,8 +44,8 @@
         {% if user.is_staff %}
         <div class="col-lg-2">
             <a
-                href="{% url "schluessel:edit_key" key.id %}"
-                class="btn btn-secondary"
+                    class="btn btn-secondary"
+                    href="{% url "schluessel:edit_key" key.id %}"
             >Bearbeiten</a>
         </div>
         {% endif %}

@@ -230,8 +230,8 @@
 <form method="POST">{% csrf_token %}
     <a
         class="btn btn-secondary"
-        target="_blank"
         href="{% url "rechnung:rechnungpdf" rechnung.id %}"
+        target="_blank"
     ><span class="bi bi-cloud-arrow-down-fill"></span> Herunterladen</a>
     <a
         class="btn btn-secondary"
