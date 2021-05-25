@@ -569,9 +569,9 @@ def create_pdf(request: AuthWSGIRequest, key_pk: int, doc: str) -> HttpResponse:
         )
 
     response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = (
-        f'inline;filename="{doc}_{key.keytype.shortname}_{key.number}_{key.person.name}_{key.person.firstname}.pdf"'
-    )
+    response[
+        "Content-Disposition"
+    ] = f'inline;filename="{doc}_{key.keytype.shortname}_{key.number}_{key.person.name}_{key.person.firstname}.pdf"'
 
     # return path to pdf
     pdf_filename = f"{os.path.splitext(latex_filename)[0]}.pdf"

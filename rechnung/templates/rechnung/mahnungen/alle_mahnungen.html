@@ -39,20 +39,11 @@
                 <td class="text-muted align-content-end">{{ rechnung.gesamtsumme }} €</td>
                 <td></td>
                 <td class="align-content-center">
-                    {% if rechnung.bezahlt %}
-                    <span class="bi bi-check-circle-fill"></span>
-                    {% endif %}
-                </td>
+                <td>{% include "snippets/true_false_span.html" with value=rechnung.bezahlt %}</td>
             </tr>
             {% for mahnung in rechnung.mahnungen %}
             <tr>
-                <td>
-                    {% if mahnung.geschickt %}
-                    <span class="bi bi-check-circle-fill"></span>
-                    {% else %}
-                    <span class="bi bi-person-x-fill"></span>
-                    {% endif %}
-                </td>
+                <td>{% include "snippets/true_false_span.html" with value=mahnung.geschickt %}</td>
                 <td class="ps-2"><a href="{% url 'rechnung:mahnung' mahnung.rechnung.id mahnung.id %}">
                         {{ mahnung.wievielte }}. Mahnung
                     </a>
@@ -67,15 +58,9 @@
                 </td>
                 <td class="align-content-end">{{ mahnung.mahnsumme }} €</td>
                 <td class="align-content-center">
-                    {% if mahnung.gerichtlich %}
-                    <span class="bi bi-check-circle-fill"></span>
-                    {% endif %}
-                </td>
+                <td>{% include "snippets/true_false_span.html" with value=mahnung.gerichtlich %}</td>
                 <td class="align-content-center">
-                    {% if mahnung.bezahlt %}
-                    <span class="bi bi-check-circle-fill"></span>
-                    {% endif %}
-                </td>
+                <td>{% include "snippets/true_false_span.html" with value=mahnung.bezahlt %}</td>
                 <td></td>
                 {% else %}
                 <td

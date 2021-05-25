@@ -11,8 +11,8 @@
         {% if key.active and key.person %}
         <div class="col-lg-3">
             <a
-                    class="btn btn-warning"
-                    href="{% url "schluessel:return_key" key.id %}"
+                class="btn btn-warning"
+                href="{% url "schluessel:return_key" key.id %}"
             ><span class="bi bi-arrow-left"></span> Zurücknehmen</a>
         </div>
         <div class="col-lg-1"></div>
@@ -35,8 +35,8 @@
         {% elif key.active %}
         <div class="col-lg-2">
             <a
-                    class="btn btn-success"
-                    href="{% url "schluessel:give_key" key.id %}"
+                class="btn btn-success"
+                href="{% url "schluessel:give_key" key.id %}"
             ><span class="bi bi-arrow-right"></span> Ausgeben</a>
         </div>
         {% endif %}
@@ -44,8 +44,8 @@
         {% if user.is_staff %}
         <div class="col-lg-2">
             <a
-                    class="btn btn-secondary"
-                    href="{% url "schluessel:edit_key" key.id %}"
+                class="btn btn-secondary"
+                href="{% url "schluessel:edit_key" key.id %}"
             >Bearbeiten</a>
         </div>
         {% endif %}
@@ -176,18 +176,10 @@
             </td>
             <td>
                 {% ifchanged entry.key_active %}
-                {% if entry.key_active %}
-                <span class="bi bi-check-circle-fill"></span>
-                {% elif entry.key_active == False %}
-                <span class="bi bi-person-x-fill"></span>
-                {% endif %}
+                {% include "snippets/true_false_none_span.html" with value=entry.key_active %}
                 {% else %}
                 <div style="color: lightgrey;">
-                    {% if entry.key_active %}
-                    <span class="bi bi-check-circle-fill"></span>
-                    {% elif entry.key_active == False %}
-                    <span class="bi bi-person-x-fill"></span>
-                    {% endif %}
+                    {% include "snippets/true_false_none_span.html" with value=entry.key_active %}
                 </div>
                 {% endifchanged %}
             </td>

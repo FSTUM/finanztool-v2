@@ -45,22 +45,10 @@
             </tr>
             <tr>
                 <th>Geschickt?</th>
-                <td>
-                    {% if mahnung.geschickt %}
-                    <span class="bi bi-check-circle-fill"></span>
-                    {% else %}
-                    <span class="bi bi-person-x-fill"></span>
-                    {% endif %}
-                </td>
+                <td>{% include "snippets/true_false_span.html" with value=mahnung.geschickt %}</td>
             <tr>
                 <th>Bezahlt?</th>
-                <td>
-                    {% if mahnung.bezahlt %}
-                    <span class="bi bi-check-circle-fill"></span>
-                    {% else %}
-                    <span class="bi bi-person-x-fill"></span>
-                    {% endif %}
-                </td>
+                <td>{% include "snippets/true_false_span.html" with value=mahnung.bezahlt %}</td>
             </tr>
             <tr>
                 <th>Datum, Fällig</th>
@@ -100,28 +88,24 @@
         <table class="table table-striped">
             <tr>
                 <th>Rechnung gestellt?</th>
-                <td>
-                    {% if rechnung.gestellt %}
-                    <span class="bi bi-check-circle-fill"></span>
-                    {% else %}
-                    <span class="bi bi-person-x-fill"></span>
-                    {% endif %}
-                </td>
+                <td>{% include "snippets/true_false_span.html" with value=rechnung.gestellt %}</td>
             </tr>
             <tr>
                 <th>Rechnung erledigt?</th>
                 <td>
+                <td>
+                    {% include "snippets/true_false_span.html" with value=rechnung.bezahlt|default:rechnung.erledigt %}
                     {% if rechnung.bezahlt %}
                     <span style="color: green;">
-                        <span class="bi bi-check-circle-fill"></span> Die Rechnung wurde bezahlt.
+                        Die Rechnung wurde bezahlt.
                     </span>
                     {% else %}
                     {% if rechnung.erledigt %}
                     <span style="color: green;">
-                        <span class="bi bi-check-circle-fill"></span> Eine zugehörige Mahnung wurde bezahlt.
+                        Eine zugehörige Mahnung wurde bezahlt.
                     </span>
                     {% else %}
-                    <span class="bi bi-person-x-fill"></span> Der Betrag ist noch offen
+                    Der Betrag ist noch offen
                     {% endif %}
                     {% endif %}
                 </td>

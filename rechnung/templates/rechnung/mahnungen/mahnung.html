@@ -52,23 +52,23 @@
             <tr>
                 <th>Erledigt?</th>
                 <td>
+
+                    {% include "snippets/true_false_span.html" with value=mahnung.bezahlt|default:rechnung.erledigt %}
                     {% if mahnung.bezahlt %}
                     <span style="color: green;">
-                        <span class="bi bi-check-circle-fill"></span> Diese Mahnung wurde bezahlt.
+                        Diese Mahnung wurde bezahlt.
                     </span>
                     {% else %}
                     {% if rechnung.erledigt %}
-                    {% if rechnung.bezahlt %}
                     <span style="color: green;">
-                        <span class="bi bi-check-circle-fill"></span> Die Originalrechnung wurde bezahlt.
+                        {% if rechnung.bezahlt %}
+                        Die Originalrechnung wurde bezahlt.
+                        {% else %}
+                        Eine andere Mahnung wurde bezahlt.
+                        {% endif %}
                     </span>
                     {% else %}
-                    <span style="color: green;">
-                        <span class="bi bi-check-circle-fill"></span> Eine andere Mahnung wurde bezahlt.
-                    </span>
-                    {% endif %}
-                    {% else %}
-                    <span class="bi bi-person-x-fill"></span> Es wurde noch keine zugehörige Mahnung bezahlt.
+                    Es wurde noch keine zugehörige Mahnung bezahlt.
                     {% endif %}
                     {% endif %}
                 </td>
@@ -109,13 +109,7 @@
             </tr>
             <tr>
                 <th>Geschickt?</th>
-                <td>
-                    {% if mahnung.geschickt %}
-                    <span class="bi bi-check-circle-fill"></span>
-                    {% else %}
-                    <span class="bi bi-person-x-fill"></span>
-                    {% endif %}
-                </td>
+                <td>{% include "snippets/true_false_span.html" with value=mahnung.geschickt %}</td>
             </tr>
             <tr>
                 <th>Datum</th>
@@ -193,22 +187,10 @@
             </tr>
             <tr>
                 <th>Geschickt?</th>
-                <td>
-                    {% if m.geschickt %}
-                    <span class="bi bi-check-circle-fill"></span>
-                    {% else %}
-                    <span class="bi bi-person-x-fill"></span>
-                    {% endif %}
-                </td>
+                <td>{% include "snippets/true_false_span.html" with value=m.geschickt %}</td>
             <tr>
                 <th>Bezahlt?</th>
-                <td>
-                    {% if m.bezahlt %}
-                    <span class="bi bi-check-circle-fill"></span>
-                    {% else %}
-                    <span class="bi bi-person-x-fill"></span>
-                    {% endif %}
-                </td>
+                <td>{% include "snippets/true_false_span.html" with value=m.bezahlt %}</td>
             </tr>
             <tr>
                 <th>Datum, Fällig</th>

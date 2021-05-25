@@ -16,13 +16,7 @@
     </tr>
     <tr>
         <th>Erledigt?</th>
-        <td>
-            {% if aufgabe.erledigt %}
-            <span class="bi bi-check-circle-fill"></span>
-            {% else %}
-            <span class="bi bi-person-x-fill"></span>
-            {% endif %}
-        </td>
+        <td>{% include "snippets/true_false_span.html" with value=aufgabe.erledigt %}</td>
     </tr>
     <tr>
         <th>Zuständig</th>
