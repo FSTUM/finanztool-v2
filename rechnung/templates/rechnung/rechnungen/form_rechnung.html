@@ -1,7 +1,14 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 {% load i18n %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}
+{% if rechnung.pk %}
+Rechnung ändern
+{% else %}
+Rechnung hinzufügen
+{% endif %}
+{% endblock %}
 {% block title %}
 {% if rechnung.pk %}
 Rechnung ändern
@@ -10,7 +17,7 @@ Rechnung hinzufügen
 {% endif %}
 {% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 {% if rechnung.gestellt %}
 <div class="alert alert-danger">
     Möchtest du wirklich diese Rechnung bearbeiten?<br />

@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}{{ mahnung.wievielte }}. Mahnung zur RE {{ mahnung.rechnung.rnr_string }}{% endblock %}
 {% block title %}{{ mahnung.wievielte }}. Mahnung zur RE {{ mahnung.rechnung.rnr_string }}{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 <h1>{{ mahnung.wievielte }}. Mahnung zur
     <a href="{% url "rechnung:rechnung" mahnung.rechnung.id %}">
         RE {{ mahnung.rechnung.rnr_string }} ({{ mahnung.rechnung.name }})
@@ -94,7 +95,7 @@
             </tr>
             <tr>
                 <th>Neue Bruttosumme:</th>
-                <td class="align-content-end"><b>{{ mahnung.mahnsumme }} €<b></td>
+                <td class="align-content-end"><b>{{ mahnung.mahnsumme }} €</b></td>
             </tr>
             <tr>
                 <th>Gerichtliche Schritte</th>
@@ -157,7 +158,7 @@
             </tr>
             <tr>
                 <th>Gesamtsumme (brutto):</th>
-                <td class="align-content-end"><b>{{ mahnung.rechnung.gesamtsumme }} €<b></td>
+                <td class="align-content-end"><b>{{ mahnung.rechnung.gesamtsumme }} €</b></td>
             </tr>
         </table>
     </div>

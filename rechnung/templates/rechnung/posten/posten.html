@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}Posten {{ posten.name }}{% endblock %}
 {% block title %}Posten {{ posten.name }}{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 <h1>Posten {{ posten.name }}</h1>
 <a
     class="btn btn-primary"

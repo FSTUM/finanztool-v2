@@ -1,8 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 
+{% block finanz_common_headercontent %}Fehler!{% endblock %}
 {% block title %}Fehler!{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 <p>Es ist ein Fehler aufgetreten bei der Erstellung der Rechnung mittels pdflatex:</p>
 <pre>{{ erroroutput }}</pre>
 {% endblock %}

@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}RE {{ rechnung.rnr_string }}{% endblock %}
 {% block title %}RE {{ rechnung.rnr_string }}{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 <h1>RE {{ rechnung.rnr_string }}: {{ rechnung.name }}
 </h1>
 

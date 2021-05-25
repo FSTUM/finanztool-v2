@@ -1,10 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 {% load bootstrap5 %}
 {% load l10n %}
 
+{% block finanz_common_headercontent %}Alle Rechnungen{% endblock %}
 {% block title %}Alle Rechnungen{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 {% if rechnungen_liste %}
 <div class="row">
     <div class="col-lg-12">

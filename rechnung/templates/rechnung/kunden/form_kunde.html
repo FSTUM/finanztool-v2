@@ -1,6 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}
+{% if kunde.knr %}
+Kunde bearbeiten
+{% else %}
+Kunde hinzufügen
+{% endif %}
+{% endblock %}
 {% block title %}
 {% if kunde.knr %}
 Kunde bearbeiten
@@ -9,7 +16,7 @@ Kunde hinzufügen
 {% endif %}
 {% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 <h1>
     {% if kunde.knr %}
     Kunde bearbeiten

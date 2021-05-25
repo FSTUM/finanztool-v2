@@ -1,11 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 {% load i18n %}
 {% load l10n %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}Kunde suchen{% endblock %}
 {% block title %}Kunde suchen{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 <h1>Kunde suchen</h1>
 <form
     action=""

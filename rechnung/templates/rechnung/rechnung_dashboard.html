@@ -1,10 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 {% load bootstrap5 %}
 {% load l10n %}
 
+{% block finanz_common_headercontent %}Unerledigt{% endblock %}
 {% block title %}Unerledigt{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 <h2>Unerledigt</h2>
 <h3>Rechnung</h3>
 {% if unerledigte_rechnungen %}
@@ -39,14 +40,9 @@
                 </td>
                 <td class="align-content-end">{{ rechnung.gesamtsumme }} €</td>
                 <td>
-                    {% if rechnung.faellig %}
-                    {% if rechnung.erledigt %}
-                    <span style="color: green;">
-                        {% else %}
-                        <span style="color: red;">
-                            {% endif %}
-                            {% endif %}
-                            {{ rechnung.fdatum|date:"SHORT_DATE_FORMAT" }}
+                    <span class="{% if rechnung.faellig and rechnung.erledigt %}text-success{% elif rechnung.faellig %}text-danger{% endif %}">
+                        {{ rechnung.fdatum|date:"SHORT_DATE_FORMAT" }}
+                    </span>
                 </td>
                 <td>
                     {% if rechnung.erledigt %}

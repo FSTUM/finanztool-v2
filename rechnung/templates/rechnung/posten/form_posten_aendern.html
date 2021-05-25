@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}Posten hinzufügen{% endblock %}
 {% block title %}Posten hinzufügen{% endblock %}
 
-{% block content %}
+{% block finanz_common_finanz_common_content %}
 <h1>Posten hinzufügen</h1>
 <div class="row">
     <div class="col-lg-5">

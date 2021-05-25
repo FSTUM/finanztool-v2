@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}Posten hinzufügen{% endblock %}
 {% block title %}Posten hinzufügen{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 <h1>Posten hinzufügen</h1>
 <a
     class="btn btn-secondary"
@@ -42,7 +43,7 @@
                 {% for posten in rechnung.posten_set.all %}
                 <tr>
                     <td class="align-content-end">{{ posten.anzahl }} </td>
-                    <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</td>
+                    <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</a></td>
                     <td class="align-content-end">{{ posten.einzelpreis }} €</td>
                     <td class="align-content-end">{{ posten.summenetto }} €</td>
                     <td class="align-content-end">{{ posten.summenettogerundet }} €</td>

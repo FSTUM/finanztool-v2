@@ -1,0 +1,44 @@
+{% extends "base_card_layout.html" %}
+{% load active_link_tags %}
+{% load i18n %}
+{% load bootstrap5 %}
+
+{% block finanz_common_navigation %}
+<a
+    class="nav-link {% active_link "rechnung:dashboard" %}"
+    href="{% url "rechnung:dashboard" %}"
+>Dashboard</a>
+<h4 class="navbar-text">Rechnungen</h4>
+<a
+    class="nav-link {% active_link "rechnung:alle" %}"
+    href="{% url "rechnung:alle" %}"
+>Alle Rechnungen</a>
+<a
+    class="nav-link {% active_link "rechnung:rechnung_neu" %}"
+    href="{% url "rechnung:rechnung_neu" %}"
+>Rechnungen hinzufügen</a>
+<a
+    class="nav-link {% active_link "rechnung:rechnungsuchen" %}"
+    href="{% url "rechnung:rechnungsuchen" %}"
+>Rechnungen suchen</a>
+
+<h4 class="navbar-text">Mahnungen</h4>
+<a
+    class="nav-link {% active_link "rechnung:alle_mahnungen" %}"
+    href="{% url "rechnung:alle_mahnungen" %}"
+>Alle Mahnungen</a>
+
+<h4 class="navbar-text">Kunden</h4>
+<a
+    class="nav-link {% active_link "rechnung:kunden_alle" %}"
+    href="{% url "rechnung:kunden_alle" %}"
+>Alle Kunden</a>
+<a
+    class="nav-link {% active_link "rechnung:kunde_neu" %}"
+    href="{% url "rechnung:kunde_neu" %}"
+>Kunde hinzufügen</a>
+<a
+    class="nav-link {% active_link "rechnung:kundesuchen" %}"
+    href="{% url "rechnung:kundesuchen" %}"
+>Kunde suchen</a>
+{% endblock %}

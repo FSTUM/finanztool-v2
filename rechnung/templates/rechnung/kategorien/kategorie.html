@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}Kategorien{% endblock %}
 {% block title %}Kategorien{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 {% if kategorien_liste %}
 <div class="row">
     <div class="col-lg-10">
@@ -15,7 +16,7 @@
             </tr>
             {% for kategorie in kategorien_liste %}
             <tr>
-                <td><a href="{% url 'rechnung:kategorie_detail' kategorie.id %}">{{ kategorie.name }}</td>
+                <td><a href="{% url 'rechnung:kategorie_detail' kategorie.id %}">{{ kategorie.name }}</a></td>
                 <td>
             </tr>
             {% endfor %}

@@ -1,12 +1,15 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 {% load i18n %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}
+Mahnung {% if mahnung.pk %}ändern{% else %}hinzufügen{% endif %}
+{% endblock %}
 {% block title %}
 Mahnung {% if mahnung.pk %}ändern{% else %}hinzufügen{% endif %}
 {% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 
 <h1>Mahnung {% if mahnung.pk %}ändern{% else %}hinzufügen{% endif %}</h1>
 

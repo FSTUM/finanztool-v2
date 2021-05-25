@@ -47,11 +47,11 @@ def willkommen(request: AuthWSGIRequest) -> HttpResponse:
         "schluessel": schluessel,
         "verfuegbare_schluessel": verfuegbare_schluessel,
     }
-    return render(request, "rechnung/willkommen.html", context)
+    return render(request, "common/willkommen.html", context)
 
 
 @finanz_staff_member_required
-def unerledigt(request: AuthWSGIRequest) -> HttpResponse:
+def dashboard(request: AuthWSGIRequest) -> HttpResponse:
     unerledigte_rechnungen = (
         Rechnung.objects.filter(erledigt=False).exclude(name="test").exclude(name="Test").order_by("-rnr")
     )
@@ -62,19 +62,14 @@ def unerledigt(request: AuthWSGIRequest) -> HttpResponse:
         "aufgaben": aufgaben,
         "not_rechnung": True,
     }
-    return render(request, "rechnung/index.html", context)
+    return render(request, "rechnung/rechnung_dashboard.html", context)
 
 
 @finanz_staff_member_required
 def alle(request: AuthWSGIRequest) -> HttpResponse:
     rechnungen_liste = Rechnung.objects.order_by("-rnr")
     context = {"rechnungen_liste": rechnungen_liste}
-    return render(request, "rechnung/alle_rechnungen.html", context)
-
-
-@finanz_staff_member_required
-def admin(request: AuthWSGIRequest) -> HttpResponse:
-    return render(request, "rechnung/admin.html")
+    return render(request, "rechnung/rechnungen/alle_rechnungen.html", context)
 
 
 # Rechnung#####################################################################
@@ -89,7 +84,7 @@ def rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpResponse:
     if request.method == "POST":
         if "bezahlt" in request.POST and form.is_valid():
             rechnung_obj.bezahlen()
-            return redirect("rechnung:unerledigt")
+            return redirect("rechnung:dashboard")
 
         if "gestellt" in request.POST and form.is_valid():
             rechnung_obj.gestellt = True
@@ -97,7 +92,7 @@ def rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpResponse:
             return redirect("rechnung:rechnung", rechnung_id=rechnung_obj.pk)
 
     context = {"form": form, "rechnung": rechnung_obj, "mahnungen": mahnungen}
-    return render(request, "rechnung/rechnung.html", context)
+    return render(request, "rechnung/rechnungen/rechnung.html", context)
 
 
 @finanz_staff_member_required
@@ -120,7 +115,7 @@ def form_rechnung(request: AuthWSGIRequest, rechnung_id: Optional[int] = None) -
 
     return render(
         request,
-        "rechnung/form_rechnung.html",
+        "rechnung/rechnungen/form_rechnung.html",
         {"form": form, "rechnung": rechnung_obj},
     )
 
@@ -154,7 +149,7 @@ def duplicate_rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpRespon
 
     return render(
         request,
-        "rechnung/rechnung_duplizieren.html",
+        "rechnung/rechnungen/rechnung_duplizieren.html",
         {"form": form, "rechnung": rechnung_obj},
     )
 
@@ -176,7 +171,7 @@ def rechnungsuchen(request: AuthWSGIRequest) -> HttpResponse:
         "new_search": new_search,
     }
 
-    return render(request, "rechnung/rechnungsuchen.html", context)
+    return render(request, "rechnung/rechnungen/rechnungsuchen.html", context)
 
 
 # Mahnung#######################################################################
@@ -206,7 +201,7 @@ def mahnung(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: int) -> Http
         "rechnung": rechnung_obj,
         "mahnung": mahnung_obj,
     }
-    return render(request, "rechnung/mahnung.html", context)
+    return render(request, "rechnung/mahnungen/mahnung.html", context)
 
 
 @finanz_staff_member_required
@@ -238,7 +233,7 @@ def form_mahnung(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optiona
 
     return render(
         request,
-        "rechnung/form_mahnung.html",
+        "rechnung/mahnungen/form_mahnung.html",
         {"form": form, "rechnung": rechnung_obj, "mahnung": mahnung_obj},
     )
 
@@ -247,7 +242,7 @@ def form_mahnung(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optiona
 def alle_mahnungen(request: AuthWSGIRequest) -> HttpResponse:
     rechnungen = Rechnung.objects.all().order_by("-rnr")
     context = {"rechnungen": rechnungen}
-    return render(request, "rechnung/alle_mahnungen.html", context)
+    return render(request, "rechnung/mahnungen/alle_mahnungen.html", context)
 
 
 # Kunde#########################################################################
@@ -256,7 +251,7 @@ def alle_mahnungen(request: AuthWSGIRequest) -> HttpResponse:
 @finanz_staff_member_required
 def kunde(request: AuthWSGIRequest, kunde_id: int) -> HttpResponse:
     kunde_obj = get_object_or_404(Kunde, pk=kunde_id)
-    return render(request, "rechnung/kunde.html", {"kunde": kunde_obj, "not_rechnung": True})
+    return render(request, "rechnung/kunden/kunde.html", {"kunde": kunde_obj, "not_rechnung": True})
 
 
 @finanz_staff_member_required
@@ -281,7 +276,7 @@ def form_kunde(request: AuthWSGIRequest, kunde_id: Optional[int] = None) -> Http
 
     return render(
         request,
-        "rechnung/form_kunde.html",
+        "rechnung/kunden/form_kunde.html",
         {
             "form": form,
             "kunde": kunde_obj,
@@ -295,7 +290,7 @@ def form_kunde(request: AuthWSGIRequest, kunde_id: Optional[int] = None) -> Http
 def kunden_alle(request: AuthWSGIRequest) -> HttpResponse:
     kunden_liste = Kunde.objects.order_by("-knr")
     context = {"kunden_liste": kunden_liste, "not_rechnung": True}
-    return render(request, "rechnung/kunden_alle.html", context)
+    return render(request, "rechnung/kunden/kunden_alle.html", context)
 
 
 @finanz_staff_member_required
@@ -316,7 +311,7 @@ def kundesuchen(request: AuthWSGIRequest) -> HttpResponse:
         "not_rechnung": True,
     }
 
-    return render(request, "rechnung/kundesuchen.html", context)
+    return render(request, "rechnung/kunden/kundesuchen.html", context)
 
 
 # Posten#######################################################################
@@ -325,7 +320,7 @@ def kundesuchen(request: AuthWSGIRequest) -> HttpResponse:
 @finanz_staff_member_required
 def posten(request: AuthWSGIRequest, posten_id: int) -> HttpResponse:
     posten_obj = get_object_or_404(Posten, pk=posten_id)
-    return render(request, "rechnung/posten.html", {"posten": posten_obj})
+    return render(request, "rechnung/posten/posten.html", {"posten": posten_obj})
 
 
 # Vorhandenen Posten bearbeiten
@@ -344,7 +339,7 @@ def form_exist_posten(request: AuthWSGIRequest, posten_id: int) -> HttpResponse:
             posten_obj = form.save()
         return redirect("rechnung:rechnung", rechnung_id=posten_obj.rechnung.pk)
     context = {"form": PostenForm(instance=posten_obj)}
-    return render(request, "rechnung/form_posten_aendern.html", context)
+    return render(request, "rechnung/posten/form_posten_aendern.html", context)
 
 
 # Neuen Posten zu vorhandener Rechnung hinzufügen
@@ -372,7 +367,7 @@ def form_rechnung_posten(request: AuthWSGIRequest, rechnung_id: int) -> HttpResp
             )
     return render(
         request,
-        "rechnung/form_posten_neu.html",
+        "rechnung/posten/form_posten_neu.html",
         {"form": PostenForm(), "rechnung": rechnung_obj},
     )
 
@@ -384,13 +379,13 @@ def form_rechnung_posten(request: AuthWSGIRequest, rechnung_id: int) -> HttpResp
 def kategorie(request: AuthWSGIRequest) -> HttpResponse:
     kategorien_liste = Kategorie.objects.order_by("name")
     context = {"kategorien_liste": kategorien_liste}
-    return render(request, "rechnung/kategorie.html", context)
+    return render(request, "rechnung/kategorien/kategorie.html", context)
 
 
 @finanz_staff_member_required
 def kategorie_detail(request: AuthWSGIRequest, kategorie_id: int) -> HttpResponse:
     kategorie_obj = get_object_or_404(Kategorie, pk=kategorie_id)
-    return render(request, "rechnung/kategorie_detail.html", {"kategorie": kategorie_obj})
+    return render(request, "rechnung/kategorien/kategorie_detail.html", {"kategorie": kategorie_obj})
 
 
 @finanz_staff_member_required
@@ -423,7 +418,7 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
     os.write(
         latex_file,
         render_to_string(
-            "rechnung/latex_rechnung.tex",
+            "rechnung/tex/latex_rechnung.tex",
             context,
         ).encode("utf8"),
     )
@@ -443,7 +438,7 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
     except subprocess.CalledProcessError as error:
         return render(
             request,
-            "rechnung/rechnungpdf_error.html",
+            "rechnung/tex/rechnungpdf_error.html",
             {"erroroutput": error.output},
         )
 

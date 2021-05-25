@@ -1,10 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'rechnung/rechnung_base.html' %}
 {% load bootstrap5 %}
 {% load l10n %}
 
+{% block finanz_common_headercontent %}Kunde {{ kunde.knr }} {% endblock %}
 {% block title %}Kunde {{ kunde.knr }} {% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 <h1>Kunde {{ kunde.knr|unlocalize }}</h1>
 <a
     class="btn btn-primary"
