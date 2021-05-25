@@ -2,6 +2,7 @@
 from django.conf import settings
 
 
+# noinspection PyUnusedLocal,PyMethodMayBeStatic,PyProtectedMember
 class DatabaseAppsRouter:
     """
     A router to control all database operations on models for different
