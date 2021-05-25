@@ -3,13 +3,17 @@ from typing import Callable
 
 from django import forms
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from aufgaben.models import Aufgabe
 from common.forms import MailForm, SettingsForm
 from common.models import Mail, Settings
+from rechnung.models import Rechnung
+from schluessel.models import Key
 
 finanz_staff_member_required: Callable = staff_member_required(login_url="login")
 
@@ -99,3 +103,27 @@ def edit_settings(request: AuthWSGIRequest) -> HttpResponse:
         "form": form,
     }
     return render(request, "common/settings.html", context)
+
+
+@login_required(login_url="login")
+def willkommen(request: AuthWSGIRequest) -> HttpResponse:
+    rechnungen = Rechnung.objects.filter(gestellt=True, erledigt=False).all()
+    offene_rechnungen = rechnungen.count()
+    faellige_rechnungen = len(list(filter(lambda r: r.faellig, rechnungen)))
+    eigene_aufgaben = Aufgabe.objects.filter(
+        erledigt=False,
+        zustaendig=request.user,
+    ).count()
+    schluessel = Key.objects.filter(active=True).count()
+    verfuegbare_schluessel = Key.objects.filter(
+        active=True,
+        person=None,
+    ).count()
+    context = {
+        "offene_rechnungen": offene_rechnungen,
+        "faellige_rechnungen": faellige_rechnungen,
+        "eigene_aufgaben": eigene_aufgaben,
+        "schluessel": schluessel,
+        "verfuegbare_schluessel": verfuegbare_schluessel,
+    }
+    return render(request, "common/willkommen.html", context)
