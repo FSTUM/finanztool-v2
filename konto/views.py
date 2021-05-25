@@ -59,7 +59,7 @@ def mapping(request: AuthWSGIRequest) -> HttpResponse:
         del request.session["results"]
         del request.session["errors"]
 
-        return redirect("rechnung:unerledigt")
+        return redirect("rechnung:dashboard")
 
     context = {
         "results": results,

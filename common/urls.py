@@ -7,7 +7,7 @@ from . import views
 app_name = "common"
 
 urlpatterns = [
-    path("", RedirectView.as_view(pattern_name="schluessel:list_keys"), name="index"),
+    path("", RedirectView.as_view(pattern_name="common:list_mail"), name="index"),
     path(
         "mail/",
         include(
@@ -20,5 +20,6 @@ urlpatterns = [
             ],
         ),
     ),
+    path("willkommen/", views.willkommen, name="willkommen"),
     path("settings/", views.edit_settings, name="edit_settings"),
 ]

@@ -6,7 +6,7 @@ from . import views
 app_name = "aufgaben"
 
 urlpatterns = [
-    path("", RedirectView.as_view(pattern_name="rechnung:unerledigt"), name="index"),
+    path("", RedirectView.as_view(pattern_name="aufgaben:alle"), name="index"),
     path("unerledigt/", views.unerledigt, name="unerledigt"),
     path("alle/", views.alle, name="alle"),
     path("neu/", views.form_aufgabe, name="neu"),
