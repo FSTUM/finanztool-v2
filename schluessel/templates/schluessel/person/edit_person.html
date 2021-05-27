@@ -1,11 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'schluessel/schluessel_base.html' %}
 {% load bootstrap5 %}
 
-{% block title %}Finanztool - Person hinzufügen{% endblock %}
+{% block finanz_common_headercontent %}Person {{ person }} bearbeiten{% endblock %}
+{% block title %}Finanztool - Person {{ person }} bearbeiten{% endblock %}
 
-{% block content %}
-<h1>Person hinzufügen</h1>
-
+{% block finanz_common_content %}
 <div class="col-lg-4">
     <form
         name="addform"
@@ -18,7 +17,7 @@
         <button
             class="btn btn-secondary"
             type="submit"
-        >Hinzufügen</button>
+        >Ändern</button>
     </form>
 </div>
 {% endblock %}

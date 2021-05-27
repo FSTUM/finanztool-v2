@@ -1,11 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'schluessel/schluessel_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}Typ-Änderung für {{ key.typename }} {{ key }} vormerken{% endblock %}
 {% block title %}Finanztool - Typ-Änderung vormerken{% endblock %}
 
-{% block content %}
-<h1>Typ-Änderung für {{ key.typename }} {{ key }} vormerken</h1>
-
+{% block finanz_common_content %}
 <div class="col-lg-4">
     <form
         method="POST"

@@ -1,10 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'schluessel/schluessel_base.html' %}
 
+{% block finanz_common_headercontent %}{{ key.typename }} {{ key }} zurücknehmen{% endblock %}
 {% block title %}Finanztool - {{ key.typename }} {{ key }} zurücknehmen{% endblock %}
 
-{% block content %}
-<h1>{{ key.typename }} {{ key }} zurücknehmen</h1>
-
+{% block finanz_common_content %}
 <p>
     Soll
     {% if key.keytype.keycard %}

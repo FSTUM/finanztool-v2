@@ -1,0 +1,38 @@
+{% extends "base_card_layout.html" %}
+{% load active_link_tags %}
+{% load i18n %}
+{% load bootstrap5 %}
+
+{% block finanz_common_navigation %}
+<h4 class="navbar-text">Schlüssel</h4>
+<a
+    class="nav-link {% active_link "schluessel:list_keys" %}"
+    href="{% url "schluessel:list_keys" %}"
+>Suchen</a>
+{% if user.is_superuser %}
+<a
+    class="nav-link {% active_link "schluessel:add_key" %}"
+    href="{% url "schluessel:add_key" %}"
+>Hinzufügen</a>
+{% endif %}
+<h4 class="navbar-text">Personen</h4>
+<a
+    class="nav-link {% active_link "schluessel:list_persons" %}"
+    href="{% url "schluessel:list_persons" %}"
+>Person suchen</a>
+<a
+    class="nav-link {% active_link "schluessel:add_person" %}"
+    href="{% url "schluessel:add_person" %}"
+>Person hinzufügen</a>
+{% if user.is_superuser %}
+<h4 class="navbar-text">Typ-Änderungen</h4>
+<a
+    class="nav-link {% active_link "schluessel:list_key_changes" %}"
+    href="{% url "schluessel:list_key_changes" %}"
+>Vorgemerkte Typ-Änderungen</a>
+<a
+    class="nav-link {% active_link "schluessel:show_log" %}"
+    href="{% url "schluessel:show_log" %}"
+>Letzte Änderungen</a>
+{% endif %}
+{% endblock %}

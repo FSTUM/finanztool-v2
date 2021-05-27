@@ -1,11 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'schluessel/schluessel_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}Schlüssel/Schließkarten{% endblock %}
 {% block title %}Finanztool - Schlüssel/Schließkarten{% endblock %}
 
-{% block content %}
-<h1>Schlüssel/Schließkarten</h1>
-
+{% block finanz_common_content %}
 <div class="col-lg-6">
     {% if user.is_staff %}
     <a

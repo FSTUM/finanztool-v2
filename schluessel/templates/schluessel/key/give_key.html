@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'schluessel/schluessel_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}{{ key.typename }} {{ key }} ausgeben{% endblock %}
 {% block title %}Finanztool - {{ key.typename }} {{ key }} ausgeben{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 <script>
     const persons = [
         {% for person in persons %}
@@ -30,9 +31,6 @@
         },
     });
 </script>
-
-<h1>{{ key.typename }} {{ key }} ausgeben</h1>
-
 <div class="col-lg-6">
     <p>
         <a

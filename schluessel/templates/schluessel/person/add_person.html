@@ -1,0 +1,23 @@
+{% extends 'schluessel/schluessel_base.html' %}
+{% load bootstrap5 %}
+
+{% block finanz_common_headercontent %}Person hinzufügen{% endblock %}
+{% block title %}Finanztool - Person hinzufügen{% endblock %}
+
+{% block finanz_common_content %}
+<div class="col-lg-4">
+    <form
+        name="addform"
+        method="POST"
+        action=""
+    >{% csrf_token %}
+
+        {% bootstrap_form form %}
+
+        <button
+            class="btn btn-secondary"
+            type="submit"
+        >Hinzufügen</button>
+    </form>
+</div>
+{% endblock %}

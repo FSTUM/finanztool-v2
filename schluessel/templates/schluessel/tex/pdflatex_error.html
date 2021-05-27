@@ -1,8 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'schluessel/schluessel_base.html' %}
 
+{% block finanz_common_headercontent %}Fehler!{% endblock %}
 {% block title %}Finanztool - Fehler!{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 <p>Es ist ein Fehler bei der Erstellung der {{ doc }} mittels pdflatex aufgetreten:</p>
 <pre>{{ erroroutput }}</pre>
 {% endblock %}

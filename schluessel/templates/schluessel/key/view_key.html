@@ -1,11 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'schluessel/schluessel_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}{{ key.typename }} {{ key }}{% if not key.active %} (inaktiv){% endif %}{% endblock %}
 {% block title %}Finanztool - {{ key.typename }} {{ key }}{% endblock %}
 
-{% block content %}
-<h1>{{ key.typename }} {{ key }}{% if not key.active %} (inaktiv){% endif %}</h1>
-
+{% block finanz_common_content %}
 <div class="col-lg-6">
     <div class="row">
         {% if key.active and key.person %}

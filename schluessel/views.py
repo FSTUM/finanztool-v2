@@ -38,7 +38,7 @@ def view_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
         "logentries": logentries,
     }
 
-    return render(request, "schluessel/view_key.html", context)
+    return render(request, "schluessel/key/view_key.html", context)
 
 
 @finanz_staff_member_required
@@ -60,7 +60,7 @@ def add_key(request: AuthWSGIRequest) -> HttpResponse:
         "form": form,
     }
 
-    return render(request, "schluessel/add_key.html", context)
+    return render(request, "schluessel/key/add_key.html", context)
 
 
 @finanz_staff_member_required
@@ -85,7 +85,7 @@ def edit_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
         "form": form,
     }
 
-    return render(request, "schluessel/edit_key.html", context)
+    return render(request, "schluessel/key/edit_key.html", context)
 
 
 @finanz_staff_member_required
@@ -135,7 +135,7 @@ def save_key_change(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
         "form": form,
     }
 
-    return render(request, "schluessel/save_key_change.html", context)
+    return render(request, "schluessel/key_change/save_key_change.html", context)
 
 
 @finanz_staff_member_required
@@ -164,7 +164,7 @@ def delete_key_change(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
         "form": form,
     }
 
-    return render(request, "schluessel/delete_key_change.html", context)
+    return render(request, "schluessel/key_change/delete_key_change.html", context)
 
 
 @finanz_staff_member_required
@@ -237,7 +237,7 @@ def apply_key_change(request: AuthWSGIRequest, key_pk: Optional[int] = None) -> 
         "form": form,
     }
 
-    return render(request, "schluessel/apply_key_change.html", context)
+    return render(request, "schluessel/key_change/apply_key_change.html", context)
 
 
 def key_state_check(key: Key) -> None:
@@ -285,7 +285,7 @@ def list_key_changes(request: AuthWSGIRequest) -> HttpResponse:
         "form": form,
     }
 
-    return render(request, "schluessel/list_key_changes.html", context)
+    return render(request, "schluessel/key_change/list_key_changes.html", context)
 
 
 @login_required(login_url="login")
@@ -320,7 +320,7 @@ def return_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
         "form": form,
     }
 
-    return render(request, "schluessel/return_key.html", context)
+    return render(request, "schluessel/key/return_key.html", context)
 
 
 @login_required(login_url="login")
@@ -359,7 +359,7 @@ def give_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
         "formns": formns,
     }
 
-    return render(request, "schluessel/give_key.html", context)
+    return render(request, "schluessel/key/give_key.html", context)
 
 
 @login_required(login_url="login")
@@ -395,7 +395,7 @@ def give_key_confirm(request: AuthWSGIRequest, key_pk: int, person_pk: int) -> H
         "form": form,
     }
 
-    return render(request, "schluessel/give_key_confirm.html", context)
+    return render(request, "schluessel/key/give_key_confirm.html", context)
 
 
 @login_required(login_url="login")
@@ -412,7 +412,7 @@ def view_person(request: AuthWSGIRequest, person_pk: int) -> HttpResponse:
         "logentries": logentries,
     }
 
-    return render(request, "schluessel/view_person.html", context)
+    return render(request, "schluessel/person/view_person.html", context)
 
 
 @login_required(login_url="login")
@@ -434,7 +434,7 @@ def add_person(request: AuthWSGIRequest) -> HttpResponse:
         "form": form,
     }
 
-    return render(request, "schluessel/add_person.html", context)
+    return render(request, "schluessel/person/add_person.html", context)
 
 
 @login_required(login_url="login")
@@ -456,7 +456,7 @@ def give_add_person(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
         "form": form,
     }
 
-    return render(request, "schluessel/add_person.html", context)
+    return render(request, "schluessel/person/add_person.html", context)
 
 
 @login_required(login_url="login")
@@ -481,7 +481,7 @@ def edit_person(request: AuthWSGIRequest, person_pk: int) -> HttpResponse:
         "form": form,
     }
 
-    return render(request, "schluessel/edit_person.html", context)
+    return render(request, "schluessel/person/edit_person.html", context)
 
 
 @login_required(login_url="login")
@@ -506,7 +506,7 @@ def give_edit_person(request: AuthWSGIRequest, key_pk: int, person_pk: int) -> H
         "form": form,
     }
 
-    return render(request, "schluessel/edit_person.html", context)
+    return render(request, "schluessel/person/edit_person.html", context)
 
 
 @login_required(login_url="login")
@@ -564,7 +564,7 @@ def create_pdf(request: AuthWSGIRequest, key_pk: int, doc: str) -> HttpResponse:
     except subprocess.CalledProcessError as error:
         return render(
             request,
-            "schluessel/pdflatex_error.html",
+            "schluessel/tex/pdflatex_error.html",
             {"erroroutput": error.output, "doc": doc},
         )
 
@@ -628,7 +628,7 @@ def list_keys(request: AuthWSGIRequest) -> HttpResponse:
         "form": form,
     }
 
-    return render(request, "schluessel/list_keys.html", context)
+    return render(request, "schluessel/key/list_keys.html", context)
 
 
 @login_required(login_url="login")
@@ -656,7 +656,7 @@ def list_persons(request: AuthWSGIRequest) -> HttpResponse:
         "form": form,
     }
 
-    return render(request, "schluessel/list_persons.html", context)
+    return render(request, "schluessel/person/list_persons.html", context)
 
 
 @finanz_staff_member_required
@@ -667,4 +667,4 @@ def show_log(request: AuthWSGIRequest) -> HttpResponse:
         "logentries": logentries,
     }
 
-    return render(request, "schluessel/show_log.html", context)
+    return render(request, "schluessel/key_change/show_log.html", context)

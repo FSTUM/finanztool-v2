@@ -1,14 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'schluessel/schluessel_base.html' %}
 {% load bootstrap5 %}
 
-{% block title %}Finanztool - Person {{ person }} bearbeiten{% endblock %}
+{% block finanz_common_headercontent %}{{ key.typename }} {{ key }} bearbeiten{% endblock %}
+{% block title %}Finanztool - {{ key.typename }} {{ key }} bearbeiten{% endblock %}
 
-{% block content %}
-<h1>Person {{ person }} bearbeiten</h1>
+{% block finanz_common_content %}
 
 <div class="col-lg-4">
     <form
-        name="addform"
         method="POST"
         action=""
     >{% csrf_token %}

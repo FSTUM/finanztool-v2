@@ -1,11 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'schluessel/schluessel_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}Typ-Änderung für {{ key.typename }} {{ key }} löschen{% endblock %}
 {% block title %}Finanztool - Typ-Änderung löschen{% endblock %}
 
-{% block content %}
-<h1>Typ-Änderung für {{ key.typename }} {{ key }} löschen</h1>
-
+{% block finanz_common_content %}
 <p>
     Soll die vorgemerkte Änderung (<strong>{{ key.keytype.shortname }}</strong> zu
     <strong>{{ key.savedkeychange.new_keytype.shortname }}</strong>) für

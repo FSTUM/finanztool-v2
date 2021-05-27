@@ -1,11 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'schluessel/schluessel_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}Entleiher {{ person }}{% endblock %}
 {% block title %}Finanztool - Entleiher {{ person }}{% endblock %}
 
-{% block content %}
-<h1>Entleiher {{ person }}</h1>
-
+{% block finanz_common_content %}
 <div class="row">
     <div class="col-lg-6">
         <a

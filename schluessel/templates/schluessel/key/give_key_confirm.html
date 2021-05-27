@@ -1,10 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'schluessel/schluessel_base.html' %}
 
+{% block finanz_common_headercontent %}{{ key.typename }} {{ key }} ausgeben{% endblock %}
 {% block title %}Finanztool - {{ key.typename }} {{ key }} ausgeben{% endblock %}
 
-{% block content %}
-<h1>{{ key.typename }} {{ key }} ausgeben</h1>
-
+{% block finanz_common_content %}
 <p>
     Sind die Kontaktdaten von <a href="{% url "schluessel:view_person" person.id %}">{{ person }}</a> noch aktuell?
 </p>
