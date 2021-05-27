@@ -1,0 +1,26 @@
+{% extends "base_card_layout.html" %}
+{% load active_link_tags %}
+{% load i18n %}
+{% load bootstrap5 %}
+
+{% block finanz_common_navigation %}
+<h4 class="navbar-text">Aufgaben</h4>
+<a
+    class="nav-link {% active_link "aufgaben:unerledigt" %}"
+    href="{% url "aufgaben:unerledigt" %}"
+>Unerledigt</a>
+<a
+    class="nav-link {% active_link "aufgaben:neu" %}"
+    href="{% url "aufgaben:neu" %}"
+> Hinzufügen</a>
+<a
+    class="nav-link {% active_link "aufgaben:alle" %}"
+    href="{% url "aufgaben:alle" %}"
+>All</a>
+
+<h4 class="navbar-text">Aufgabenarten</h4>
+<a
+    class="nav-link {% active_link "aufgaben:neu_aufgabenart" %}"
+    href="{% url "aufgaben:neu_aufgabenart" %}"
+>Aufgabenart hinzufügen</a>
+{% endblock %}

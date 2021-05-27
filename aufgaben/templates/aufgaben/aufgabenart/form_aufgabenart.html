@@ -1,22 +1,15 @@
-{% extends 'base.html' %}
+{% extends 'aufgaben/aufgaben_base.html' %}
 {% load i18n %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}
+Aufgabenart {% if aufgabenart.pk %}ändern{% else %}hinzufügen{% endif %}
+{% endblock %}
 {% block title %}
-{% if aufgabenart.pk %}
-Aufgabenart ändern
-{% else %}
-Aufgabenart hinzufügen
-{% endif %}
+Aufgabenart {% if aufgabenart.pk %}ändern{% else %}hinzufügen{% endif %}
 {% endblock %}
 
-{% block content %}
-{% if aufgabenart.pk %}
-<h1>Aufgabenart ändern</h1>
-{% else %}
-<h1>Aufgabenart hinzufügen</h1>
-{% endif %}
-
+{% block finanz_common_content %}
 <div class="row">
     <div class="col-lg-6">
         <p class="text-muted">Mit * markierte Felder sind verpflichtend</p>

@@ -1,10 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'aufgaben/aufgaben_base.html' %}
 {% load bootstrap5 %}
 {% load l10n %}
 
+{% block finanz_common_headercontent %}Finanztool - Unerledigte Aufgaben{% endblock %}
 {% block title %}Finanztool - Unerledigte Aufgaben{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 <a
     class="btn btn-primary"
     href="{% url "aufgaben:alle" %}"

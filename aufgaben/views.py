@@ -18,7 +18,7 @@ def unerledigt(request: AuthWSGIRequest) -> HttpResponse:
         "aufgaben": aufgaben,
         "meine_aufgaben": meine_aufgaben,
     }
-    return render(request, "aufgaben/unerledigt.html", context)
+    return render(request, "aufgaben/aufgaben/unerledigt.html", context)
 
 
 @finanz_staff_member_required
@@ -41,7 +41,7 @@ def form_aufgabe(request: AuthWSGIRequest, aufgabe_id: Optional[int] = None) -> 
         "aufgabe": aufgabe_obj,
     }
 
-    return render(request, "aufgaben/form_aufgabe.html", context)
+    return render(request, "aufgaben/aufgaben/form_aufgabe.html", context)
 
 
 @finanz_staff_member_required
@@ -64,7 +64,7 @@ def form_aufgabenart(request: AuthWSGIRequest, aufgabenart_id: Optional[int] = N
         "aufgabenart": aufgabenart,
     }
 
-    return render(request, "aufgaben/form_aufgabenart.html", context)
+    return render(request, "aufgaben/aufgabenart/form_aufgabenart.html", context)
 
 
 @finanz_staff_member_required
@@ -73,7 +73,7 @@ def alle(request: AuthWSGIRequest) -> HttpResponse:
     context = {
         "alle_aufgaben": alle_aufgaben,
     }
-    return render(request, "aufgaben/alle.html", context)
+    return render(request, "aufgaben/aufgaben/alle.html", context)
 
 
 @finanz_staff_member_required
@@ -93,4 +93,4 @@ def aufgabe(request: AuthWSGIRequest, aufgabe_id: int) -> HttpResponse:
         "aufgabe": _aufgabe,
         "form": form,
     }
-    return render(request, "aufgaben/aufgabe.html", context)
+    return render(request, "aufgaben/aufgaben/aufgabe.html", context)

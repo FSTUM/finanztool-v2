@@ -1,12 +1,12 @@
-{% extends 'base.html' %}
+{% extends 'aufgaben/aufgaben_base.html' %}
 {% load bootstrap5 %}
 {% load l10n %}
 
+{% block finanz_common_headercontent %}Alle Aufgaben{% endblock %}
 {% block title %}Alle Aufgaben{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 {% if alle_aufgaben %}
-
 <div class="row">
     <table class="table">
         <tr>
