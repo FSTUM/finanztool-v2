@@ -1,0 +1,15 @@
+{% extends "base_card_layout.html" %}
+{% load active_link_tags %}
+{% load i18n %}
+
+{% block finanz_common_navigation %}
+<h4 class="navbar-text">Mails</h4>
+<a
+    class="nav-link {% active_link "common:list_mail" %}"
+    href="{% url "common:list_mail" %}"
+>Alle Mails</a>
+<a
+    class="nav-link {% active_link "common:edit_settings" %}"
+    href="{% url "common:edit_settings" %}"
+>Einstellungen bearbeiten</a>
+{% endblock %}

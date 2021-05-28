@@ -1,10 +1,11 @@
-{% extends "base.html" %}
+{% extends "common/common_base.html" %}
 {% load i18n %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}Email details{% endblock %}
 {% block title %}Email details{% endblock %}
 
-{% block content %}
+{% block finanz_common_content %}
 <h2>Email details</h2>
 
 <table class="table table-hover">

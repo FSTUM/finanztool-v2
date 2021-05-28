@@ -102,7 +102,7 @@ def edit_settings(request: AuthWSGIRequest) -> HttpResponse:
     context = {
         "form": form,
     }
-    return render(request, "common/settings.html", context)
+    return render(request, "common/settings/settings.html", context)
 
 
 @login_required(login_url="login")

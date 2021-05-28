@@ -1,12 +1,11 @@
-{% extends "base.html" %}
+{% extends "common/common_base.html" %}
 {% load i18n %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}Einstellungen bearbeiten{% endblock %}
 {% block title %}Einstellungen bearbeiten{% endblock %}
 
-{% block content %}
-<h2>Einstellungen bearbeiten</h2>
-
+{% block finanz_common_content %}
 <form
     method="post"
     action=""

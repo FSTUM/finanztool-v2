@@ -1,7 +1,8 @@
-{% extends 'base.html' %}
+{% extends 'konto/konto_base.html' %}
 {% load mapping %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}Finanztool - Konto{% endblock %}
 {% block title %}Finanztool - Konto{% endblock %}
 
 
@@ -15,8 +16,6 @@
             },
             paging: false,
         });
-    });
-    $(() => {
         $('#getraenkeTable').DataTable({
             language: {
                 decimal: ',',
@@ -24,8 +23,6 @@
             },
             paging: false,
         });
-    });
-    $(() => {
         $('#einzahlungsTable').DataTable({
             language: {
                 decimal: ',',

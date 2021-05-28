@@ -1,0 +1,11 @@
+{% extends "base_card_layout.html" %}
+{% load active_link_tags %}
+{% load i18n %}
+
+{% block finanz_common_navigation %}
+<h4 class="navbar-text">Konto</h4>
+<a
+    class="nav-link {% active_link "konto:einlesen" %}"
+    href="{% url "konto:einlesen" %}"
+>Kontoauszug Einlesen</a>
+{% endblock %}

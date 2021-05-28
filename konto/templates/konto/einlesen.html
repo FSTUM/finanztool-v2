@@ -1,11 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'konto/konto_base.html' %}
 {% load bootstrap5 %}
 
+{% block finanz_common_headercontent %}Kontoauszug einlesen{% endblock %}
 {% block title %}Finanztool - Konto{% endblock %}
 
-{% block content %}
-<h2>Kontoauszug einlesen</h2>
-<br>
+{% block finanz_common_content %}
 <p>
     Umsätze vom Konto einlesen und mit offenen Rechnungen vergleichen.
 </p>

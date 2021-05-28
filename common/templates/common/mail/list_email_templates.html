@@ -1,5 +1,9 @@
-{% extends "base.html" %}
+{% extends "common/common_base.html" %}
 {% load i18n %}
+
+
+{% block finanz_common_headercontent %}Alle Email Templates{% endblock %}
+{% block title %}Alle Email Templates{% endblock %}
 
 {% block head %}
 <script>
@@ -9,14 +13,14 @@
                 decimal: ',',
                 thousands: '.',
             },
+            paging: false,
             columnDefs: [{ targets: 3, orderable: false }],
         });
     });
 </script>
 {% endblock %}
 
-{% block content %}
-
+{% block finanz_common_content %}
 <div class="table-responsive">
     <table class="table">
         <thead>
@@ -33,12 +37,6 @@
             class="btn btn-secondary"
             href="{% url "common:add_mail" %}"
         >Neue Email Vorlage hinzufügen</a>
-    </div>
-    <div class='col-sm p-1 d-grid'>
-        <a
-            class="btn btn-secondary"
-            href="{% url "common:edit_settings" %}"
-        >Einstellungen bearbeiten</a>
     </div>
 </div>
 <div class="table-responsive">
@@ -64,8 +62,8 @@
                 {% endif %}
             >
                 <td><a href="{% url "common:view_mail" mail.id %}">{{ mail.subject }}</a></td>
-                <td>{{ mail.text|slice:":100" }}{% if mail.text|length > 100 %}...{% endif %}</td>
-                <td>{{ mail.comment|slice:":50" }}{% if mail.text|length > 50 %}...{% endif %}</td>
+                <td>{{ mail.text|slice:":100" }}{% if mail.text|length > 100 %}...{% elif not mail.text %}-{% endif %}</td>
+                <td>{{ mail.comment|slice:":50" }}{% if mail.comment|length > 50 %}...{% elif not mail.comment %}-{% endif %}</td>
                 <td>
                     <a href="{% url "common:edit_mail" mail.id %}"><span class="bi bi-pencil-square"></span></a>
                     <a href="{% url "common:del_mail" mail.id %}"><span class="bi bi-trash-fill"></span></a>
