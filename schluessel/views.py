@@ -15,15 +15,7 @@ from django.template.loader import render_to_string
 
 from common.views import AuthWSGIRequest, finanz_staff_member_required
 
-from .forms import (
-    FilterKeysForm,
-    FilterPersonsForm,
-    KeyForm,
-    PersonForm,
-    SaveKeyChangeForm,
-    SelectPersonForm,
-    SelectPersonFormNoscript,
-)
+from .forms import FilterKeysForm, FilterPersonsForm, KeyForm, PersonForm, SaveKeyChangeForm, SelectPersonForm
 from .models import Key, KeyLogEntry, Person, SavedKeyChange
 
 
@@ -347,16 +339,10 @@ def give_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
             return redirect("schluessel:give_key_confirm", key.id, person.id)
         return redirect("schluessel:give_key", key.id)
 
-    formns = SelectPersonFormNoscript(request.POST or None)
-    if formns.is_valid():
-        person = formns.cleaned_data["person"]
-        return redirect("schluessel:give_key_confirm", key.id, person.id)
-
     context = {
         "key": key,
         "persons": persons,
         "form": form,
-        "formns": formns,
     }
 
     return render(request, "schluessel/key/give_key.html", context)

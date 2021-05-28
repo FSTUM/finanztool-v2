@@ -4,14 +4,6 @@ from .models import Key, KeyType, Person
 
 
 class SelectPersonForm(forms.Form):
-    person_label = forms.CharField(
-        label="Entleiher*in",
-        widget=forms.TextInput(attrs={"size": 80}),
-    )
-    person = forms.CharField(widget=forms.HiddenInput(), required=False)
-
-
-class SelectPersonFormNoscript(forms.Form):
     person = forms.ModelChoiceField(
         label="Entleiher*in",
         queryset=Person.objects.all().order_by("name", "firstname"),

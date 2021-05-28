@@ -4,9 +4,7 @@ from decimal import Decimal
 from subprocess import run  # nosec: used for flushing the db
 
 import django.utils.timezone
-
-# noinspection PyPackageRequirements
-import lorem
+import lorem  # noinspection PyPackageRequirements
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from django.utils.datetime_safe import datetime

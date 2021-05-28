@@ -41,14 +41,7 @@
         method="POST"
         action=""
     >{% csrf_token %}
-
         {% bootstrap_form form %}
-        <noscript>
-            <button
-                class="btn btn-secondary"
-                type="submit"
-            >Suchen</button>
-        </noscript>
     </form>
 </div>
 <div class="table-responsive">

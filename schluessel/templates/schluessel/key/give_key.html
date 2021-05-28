@@ -5,68 +5,21 @@
 {% block title %}Finanztool - {{ key.typename }} {{ key }} ausgeben{% endblock %}
 
 {% block finanz_common_content %}
-<script>
-    const persons = [
-        {% for person in persons %}
-        {
-            id: '{{ person.id }}',
-            label: '{{ person }}',
-        },
-        {% endfor %}
-    ];
+<form
+    id='addform'
+    method='post'
+    action=''
+>{% csrf_token %}
 
-    const personLabel = $('#id_person_label');
-    // noinspection JSUnusedGlobalSymbols
-    personLabel.autocomplete({
-        minLength: 0,
-        source: persons,
-        focus(event, ui) {
-            personLabel.val(ui.item.label);
-            return false;
-        },
-        select(event, ui) {
-            personLabel.val(ui.item.label);
-            $('#id_person').val(ui.item.id);
-            $('#addform').trigger('submit');
-        },
-    });
-</script>
-<div class="col-lg-6">
-    <p>
-        <a
-            class="btn btn-secondary"
-            href="{% url "schluessel:give_add_person" key.id %}"
-        >Neue Person hinzufügen</a>
-    </p>
+    {% bootstrap_form form %}
+    <a
+        class="btn btn-secondary"
+        href="{% url "schluessel:give_add_person" key.id %}"
+    >Neue Person hinzufügen</a>
+    <button
+        class="btn btn-primary"
+        type="submit"
+    >Ausgeben</button>
+</form>
 
-    <div
-        id="scriptform"
-        style='display: none'
-    >
-        <form
-            id='addform'
-            method='post'
-            action=''
-        >{% csrf_token %}
-
-            {% bootstrap_form form %}
-        </form>
-    </div>
-    <script>
-            document.getElementById('scriptform').style.display = 'block';
-        </script>
-    <noscript>
-        <form
-            method="POST"
-            action=""
-        >{% csrf_token %}
-
-            {% bootstrap_form formns %}
-            <button
-                class="btn btn-secondary"
-                type="submit"
-            >Ausgeben</button>
-        </form>
-    </noscript>
-</div>
 {% endblock %}
