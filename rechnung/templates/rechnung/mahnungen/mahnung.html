@@ -1,15 +1,14 @@
 {% extends 'rechnung/rechnung_base.html' %}
 {% load bootstrap5 %}
 
-{% block finanz_common_headercontent %}{{ mahnung.wievielte }}. Mahnung zur RE {{ mahnung.rechnung.rnr_string }}{% endblock %}
+{% block finanz_common_headercontent %}{{ mahnung.wievielte }}. Mahnung zur
+<a href="{% url "rechnung:rechnung" mahnung.rechnung.id %}">
+    RE {{ mahnung.rechnung.rnr_string }} ({{ mahnung.rechnung.name }})
+</a>
+{% endblock %}
 {% block title %}{{ mahnung.wievielte }}. Mahnung zur RE {{ mahnung.rechnung.rnr_string }}{% endblock %}
 
 {% block finanz_common_content %}
-<h1>{{ mahnung.wievielte }}. Mahnung zur
-    <a href="{% url "rechnung:rechnung" mahnung.rechnung.id %}">
-        RE {{ mahnung.rechnung.rnr_string }} ({{ mahnung.rechnung.name }})
-    </a>
-</h1>
 {% if not mahnung.bezahlt and not rechnung.erledigt %}
 <form method="POST">{% csrf_token %}
     {% bootstrap_form form %}

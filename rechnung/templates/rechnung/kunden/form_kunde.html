@@ -2,28 +2,13 @@
 {% load bootstrap5 %}
 
 {% block finanz_common_headercontent %}
-{% if kunde.knr %}
-Kunde bearbeiten
-{% else %}
-Kunde hinzufügen
-{% endif %}
+Kunde {% if kunde.knr %}bearbeiten{% else %}hinzufügen{% endif %}
 {% endblock %}
 {% block title %}
-{% if kunde.knr %}
-Kunde bearbeiten
-{% else %}
-Kunde hinzufügen
-{% endif %}
+Kunde {% if kunde.knr %}bearbeiten{% else %}hinzufügen{% endif %}
 {% endblock %}
 
 {% block finanz_common_content %}
-<h1>
-    {% if kunde.knr %}
-    Kunde bearbeiten
-    {% else %}
-    Kunde hinzufügen
-    {% endif %}
-</h1>
 {% if kunde.pk %}
 <a
     class="btn btn-secondary"

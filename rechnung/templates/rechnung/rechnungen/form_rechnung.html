@@ -3,18 +3,10 @@
 {% load bootstrap5 %}
 
 {% block finanz_common_headercontent %}
-{% if rechnung.pk %}
-Rechnung ändern
-{% else %}
-Rechnung hinzufügen
-{% endif %}
+Rechnung {% if rechnung.pk %}ändern{% else %}hinzufügen{% endif %}
 {% endblock %}
 {% block title %}
-{% if rechnung.pk %}
-Rechnung ändern
-{% else %}
-Rechnung hinzufügen
-{% endif %}
+Rechnung {% if rechnung.pk %}ändern{% else %}hinzufügen{% endif %}
 {% endblock %}
 
 {% block finanz_common_content %}
@@ -24,9 +16,6 @@ Rechnung hinzufügen
     Du kannst lediglich einen neuen Kunden auswählen, hebe in diesem Fall das Original auf.<br />
     Für andere Änderungen erstelle bitte eine neue (Korrektur-)Rechnung!
 </div>
-<h1>Rechnung ändern</h1>
-{% else %}
-<h1>Rechnung hinzufügen</h1>
 {% endif %}
 
 {% if rechnung.pk %}
