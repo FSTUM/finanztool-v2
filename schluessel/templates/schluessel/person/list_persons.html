@@ -4,51 +4,58 @@
 {% block finanz_common_headercontent %}Personen{% endblock %}
 {% block title %}Finanztool - Personen{% endblock %}
 
+
+{% block head %}
+<script>
+    $(() => {
+        $('#personTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            paging: false,
+        });
+    });
+</script>
+{% endblock %}
+
 {% block finanz_common_content %}
-
-<div class="col-lg-6">
-    <a
-        class="btn btn-secondary"
-        href="{% url "schluessel:add_key" %}"
-    ><span class="bi bi-plus-circle-fill"></span> Person hinzufügen</a>
-
-    <form
-        id="filterform"
-        method="POST"
-        action=""
-    >{% csrf_token %}
-
-        {% bootstrap_form form %}
-        <button
-            class="btn btn-secondary"
-            type="submit"
-        >Suchen</button>
-    </form>
-
-    <table class="table table-striped table-hover">
-        <tr>
-            <th>Nachname</th>
-            <th>Vorname</th>
-            <th>E-Mail</th>
-            <th>Schlüssel/Schließkarten</th>
-        </tr>
-        {% for person in persons %}
-        <tr>
-            <td>
-                <a href="{% url "schluessel:view_person" person.id %}">{{ person.name }}</a>
-            </td>
-            <td>
-                <a href="{% url "schluessel:view_person" person.id %}">{{ person.firstname }}</a>
-            </td>
-            <td>{{ person.email }}</td>
-            <td>
-                {% for key in person.key_set.all %}
-                <a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a>{% if not forloop.last %},
-                {% endif %}
-                {% endfor %}
-            </td>
-        </tr>
-        {% endfor %}
+<a
+    class="btn btn-secondary"
+    href="{% url "schluessel:add_key" %}"
+><span class="bi bi-plus-circle-fill"></span> Person hinzufügen</a>
+<div class="table-responsive">
+    <table
+        class="table dataTable table-hover"
+        id="personTable"
+    >
+        <thead>
+            <tr>
+                <th>Nachname</th>
+                <th>Vorname</th>
+                <th>E-Mail</th>
+                <th>Schlüssel/Schließkarten</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for person in persons %}
+            <tr>
+                <td>
+                    <a href="{% url "schluessel:view_person" person.id %}">{{ person.name }}</a>
+                </td>
+                <td>
+                    <a href="{% url "schluessel:view_person" person.id %}">{{ person.firstname }}</a>
+                </td>
+                <td>{{ person.email }}</td>
+                <td>
+                    {% for key in person.key_set.all %}
+                    <a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a>{% if not forloop.last %},
+                    {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </div>
 

@@ -4,46 +4,67 @@
 {% block finanz_common_headercontent %}Letzte Schlüsseländerungen{% endblock %}
 {% block title %}Finanztool - Letzte Schlüsseländerungen{% endblock %}
 
+{% block head %}
+<script>
+    $(() => {
+        $('#keyTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            paging: false,
+        });
+    });
+</script>
+{% endblock %}
+
 {% block finanz_common_content %}
-<div class="col-lg-8">
-    <table class="table table-striped table-hover">
-        <tr>
-            <th>Datum</th>
-            <th>Vorgang</th>
-            <th>Schlüssel</th>
-            <th>Person</th>
-            <th>Finanzer*in</th>
-        </tr>
-        {% for entry in logentries %}
-        <tr>
-            <td>{{ entry.date | date:"SHORT_DATETIME_FORMAT" }}</td>
-            <td>
-                {{ entry.get_operation_display }}
-                {% if entry.operation == "G" %}
-                <span class="bi bi-arrow-right"></span>
-                {% elif entry.operation == "R" %}
-                <span class="bi bi-arrow-left"></span>
-                {% endif %}
-            </td>
-            <td>
-                {% if entry.key %}
-                <a href="{% url "schluessel:view_key" entry.key.id %}">{{ entry.key }}</a>
-                {% endif %}
-            </td>
-            <td>
-                {% if entry.person %}
-                <a href="{% url "schluessel:view_person" entry.person.id %}">{{ entry.person }}</a>
-                {% endif %}
-            </td>
-            <td>
-                {% if entry.user.get_full_name %}
-                {{ entry.user.get_full_name }}
-                {% else %}
-                {{ entry.user.username }}
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
+<div class="table-responsive">
+    <table
+        class="table dataTable table-hover"
+        id="keyTable"
+    >
+        <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Vorgang</th>
+                <th>Schlüssel</th>
+                <th>Person</th>
+                <th>Finanzer*in</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in logentries %}
+            <tr>
+                <td>{{ entry.date | date:"SHORT_DATETIME_FORMAT" }}</td>
+                <td>
+                    {{ entry.get_operation_display }}
+                    {% if entry.operation == "G" %}
+                    <span class="bi bi-arrow-right"></span>
+                    {% elif entry.operation == "R" %}
+                    <span class="bi bi-arrow-left"></span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entry.key %}
+                    <a href="{% url "schluessel:view_key" entry.key.id %}">{{ entry.key }}</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entry.person %}
+                    <a href="{% url "schluessel:view_person" entry.person.id %}">{{ entry.person }}</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if entry.user.get_full_name %}
+                    {{ entry.user.get_full_name }}
+                    {% else %}
+                    {{ entry.user.username }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </div>
 

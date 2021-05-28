@@ -4,81 +4,98 @@
 {% block finanz_common_headercontent %}Vorgemerkte Schlüsseltyp-Änderungen{% endblock %}
 {% block title %}Finanztool - Vorgemerkte Schlüsseltyp-Änderungen{% endblock %}
 
+{% block head %}
+<script>
+    $(() => {
+        $('#keyTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            paging: false,
+        });
+    });
+</script>
+{% endblock %}
+
 {% block finanz_common_content %}
-<div class="col-lg-6">
-    <table class="table table-striped table-hover">
-        <tr>
-            <th>Schlüssel</th>
-            <th>Alter Typ</th>
-            <th>Neuer Typ</th>
-            <th>Entleiher*in</th>
-            <th>Kommentar</th>
-            <th>Datum</th>
-            <th>Finanzer*in</th>
-            <th>Anwenden</th>
-            <th>Bearbeiten</th>
-            <th>Löschen</th>
-        </tr>
-        {% for key in keys %}
-        <tr>
-            <td><a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a></td>
-            <td>{{ key.keytype }}</td>
-            <td>{{ key.savedkeychange.new_keytype }}</td>
-            <td>
-                {% if key.person %}
-                <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
-                {% else %}
-                <span class="bi bi-person-x-fill"></span>
-                {% endif %}
-            </td>
-            <td>{{ key.savedkeychange.comment }}</td>
-            <td>{{ key.savedkeychange.date | date:"SHORT_DATETIME_FORMAT" }}</td>
-            <td>
-                {% if key.savedkeychange.user.get_full_name %}
-                {{ key.savedkeychange.user.get_full_name }}
-                {% else %}
-                {{ key.savedkeychange.user.username }}
-                {% endif %}
-            </td>
-            <td>
-                {% if key.savedkeychange.violated_key %}
-                <p class="text-danger">
-                    nicht möglich, <a href="{% url "schluessel:view_key" key.savedkeychange.violated_key.id %}">{{ key.savedkeychange.violated_key }}</a>
-                    gibt es bereits
-                </p>
-                {% else %}
-                <a
-                    class="btn btn-secondary"
-                    href="{% url "schluessel:apply_key_change" key.id %}"
-                >Anwenden</a>
-                {% endif %}
-            </td>
-            <td>
-                <a
-                    class="btn btn-warning"
-                    href="{% url "schluessel:save_key_change" key.id %}"
-                >Ändern</a>
-            </td>
-            <td>
-                <a
-                    class="btn btn-danger"
-                    href="{% url "schluessel:delete_key_change" key.id %}"
-                >Löschen</a>
-            </td>
-        </tr>
-        {% endfor %}
+<div class="table-responsive">
+    <table
+        class="table dataTable table-hover"
+        id="keyTable"
+    >
+        <thead>
+            <tr>
+                <th>Schlüssel</th>
+                <th>Alter Typ</th>
+                <th>Neuer Typ</th>
+                <th>Entleiher*in</th>
+                <th>Kommentar</th>
+                <th>Datum</th>
+                <th>Finanzer*in</th>
+                <th>Anwenden</th>
+                <th>Bearbeiten</th>
+                <th>Löschen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key in keys %}
+            <tr>
+                <td><a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a></td>
+                <td>{{ key.keytype }}</td>
+                <td>{{ key.savedkeychange.new_keytype }}</td>
+                <td>
+                    {% if key.person %}
+                    <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
+                    {% else %}
+                    <span class="bi bi-person-x-fill"></span>
+                    {% endif %}
+                </td>
+                <td>{{ key.savedkeychange.comment }}</td>
+                <td>{{ key.savedkeychange.date | date:"SHORT_DATETIME_FORMAT" }}</td>
+                <td>
+                    {% if key.savedkeychange.user.get_full_name %}
+                    {{ key.savedkeychange.user.get_full_name }}
+                    {% else %}
+                    {{ key.savedkeychange.user.username }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if key.savedkeychange.violated_key %}
+                    <p class="text-danger">
+                        nicht möglich, <a href="{% url "schluessel:view_key" key.savedkeychange.violated_key.id %}">{{ key.savedkeychange.violated_key }}</a>
+                        gibt es bereits
+                    </p>
+                    {% else %}
+                    <a
+                        class="btn btn-secondary"
+                        href="{% url "schluessel:apply_key_change" key.id %}"
+                    >Anwenden</a>
+                    {% endif %}
+                </td>
+                <td>
+                    <a
+                        class="btn btn-warning"
+                        href="{% url "schluessel:save_key_change" key.id %}"
+                    >Ändern</a>
+                </td>
+                <td>
+                    <a
+                        class="btn btn-danger"
+                        href="{% url "schluessel:delete_key_change" key.id %}"
+                    >Löschen</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-    <p>
-        {% if keys %}
-        <a
-            class="btn btn-secondary"
-            href="{% url "schluessel:apply_key_change_no_key" %}"
-        >Alle Änderungen anwenden</a>
-        {% else %}
-        Es sind keine Änderungen vorgemerkt.
-        {% endif %}
-    </p>
 </div>
+{% if keys %}
+<a
+    class="btn btn-secondary"
+    href="{% url "schluessel:apply_key_change_no_key" %}"
+>Alle Änderungen anwenden</a>
+{% endif %}
 
 
 {% endblock %}
