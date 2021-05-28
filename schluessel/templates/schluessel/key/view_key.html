@@ -61,7 +61,7 @@
         </tr>
         <tr>
             <th>Kaution</th>
-            <td>{{ key.keytype.deposit|floatformat:2 }} €</td>
+            <td>{{ key.keytype.deposit|floatformat:2 }}€</td>
         </tr>
         <tr>
             <th>Entleiher*in</th>
@@ -198,10 +198,10 @@
             </td>
             <td>
                 {% ifchanged entry.key_deposit %}
-                {{ entry.key_deposit|floatformat:2 }} €
+                {{ entry.key_deposit|floatformat:2 }}€
                 {% else %}
                 <div style="color: lightgrey;">
-                    {{ entry.key_deposit|floatformat:2 }} €
+                    {{ entry.key_deposit|floatformat:2 }}€
                 </div>
                 {% endifchanged %}
             </td>

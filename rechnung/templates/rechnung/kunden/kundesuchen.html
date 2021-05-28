@@ -6,6 +6,20 @@
 {% block finanz_common_headercontent %}Kunde suchen{% endblock %}
 {% block title %}Kunde suchen{% endblock %}
 
+{% block head %}
+<script>
+    $(() => {
+        $('#searchTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            paging: false,
+        });
+    });
+</script>
+{% endblock %}
+
 {% block finanz_common_content %}
 <h1>Kunde suchen</h1>
 <form
@@ -21,37 +35,43 @@
     >Suchen</button>
 </form>
 
-{% if not new_search %}
-{% if result %}
+{% if not new_search and result %}
 <div class="row">
     <div class="col-lg-10">
         <h3>Ergebnisse</h3>
         <br />
-        <table class="table borderless">
-            <tr>
-                <th>Kundennr.</th>
-                <th>Organisation</th>
-                <th>Suborganisation</th>
-                <th>Name</th>
-                <th>Adresse</th>
-                <th>Kommentar</th>
-            </tr>
-            {% for kunde in result %}
-            <tr>
-                <td>
-                    <a href="{% url 'rechnung:kunde' kunde.id %}">{{ kunde.knr|unlocalize }}</a>
-                </td>
-                <td>{{ kunde.organisation }}</td>
-                <td>{{ kunde.suborganisation }}</td>
-                <td>{{ kunde.get_anrede_display }} {{ kunde.vorname }} {{ kunde.name }}</td>
-                <td>{{ kunde.strasse }}<br>{{ kunde.plz }} {{ kunde.stadt }}</td>
-                <td>{{ kunde.kommentar }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+        <div class="table-responsive">
+            <table
+                class="table dataTable table-hover"
+                id="searchTable"
+            >
+                <thead>
+                    <tr>
+                        <th>Kundennr.</th>
+                        <th>Organisation</th>
+                        <th>Suborganisation</th>
+                        <th>Name</th>
+                        <th>Adresse</th>
+                        <th>Kommentar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for kunde in result %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'rechnung:kunde' kunde.id %}">{{ kunde.knr|unlocalize }}</a>
+                        </td>
+                        <td>{{ kunde.organisation }}</td>
+                        <td>{{ kunde.suborganisation }}</td>
+                        <td>{{ kunde.get_anrede_display }} {{ kunde.vorname }} {{ kunde.name }}</td>
+                        <td>{{ kunde.strasse }}<br>{{ kunde.plz }} {{ kunde.stadt }}</td>
+                        <td>{{ kunde.kommentar }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
-{% else %}
-{% endif %}
 {% endif %}
 {% endblock %}

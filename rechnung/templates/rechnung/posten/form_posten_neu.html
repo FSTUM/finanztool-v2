@@ -4,73 +4,89 @@
 {% block finanz_common_headercontent %}Posten hinzufügen{% endblock %}
 {% block title %}Posten hinzufügen{% endblock %}
 
+
+{% block head %}
+<script>
+    $(() => {
+        $('#postenTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            paging: false,
+        });
+    });
+</script>
+{% endblock %}
+
 {% block finanz_common_content %}
-<h1>Posten hinzufügen</h1>
-<a
-    class="btn btn-secondary"
-    href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
-><span class="bi bi-arrow-left"></span> Zurück zur Rechnung</a>
-<div class="row">
-    <div class="col-lg-5">
-        <form method="POST">{% csrf_token %}
-            {% bootstrap_form form %}
-            <button
-                class="btn btn-secondary"
-                name="weiter"
-                type="submit"
-            >Speichern und neuen Posten eingeben</button>
-            <button
-                class="btn btn-secondary"
-                name="zurueck"
-                type="submit"
-            >Speichern und zurück zur Rechnung</button>
-        </form>
-    </div>
-    <div class="row">
-        <div class="col-lg-10">
-            <h3>Posten</h3>
-            <br />
-            <table class="table">
-                <tr>
-                    <th class="text-end">Anzahl</th>
-                    <th>Bezeichnung</th>
-                    <th class="text-end">Einzelpreis</th>
-                    <th class="text-end">Summe Netto</th>
-                    <th class="text-end">Summe Netto Gerundet</th>
-                    <th class="text-end">Mwst-Satz</th>
-                    <th class="text-end">Summe Brutto</th>
-                </tr>
-                {% for posten in rechnung.posten_set.all %}
-                <tr>
-                    <td class="align-content-end">{{ posten.anzahl }} </td>
-                    <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</a></td>
-                    <td class="align-content-end">{{ posten.einzelpreis }} €</td>
-                    <td class="align-content-end">{{ posten.summenetto }} €</td>
-                    <td class="align-content-end">{{ posten.summenettogerundet }} €</td>
-                    <td class="align-content-end">{{ posten.get_mwst_display }}</td>
-                    <td class="align-content-end">{{ posten.summebrutto }} €</td>
-                </tr>
-                {% endfor %}
-                <tr>
-                    <td></td>
-                    <th>Zwischensumme:</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="align-content-end">{{ rechnung.zwischensumme }} €</td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <th>Gesamt (brutto):</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="align-content-end">{{ rechnung.gesamtsumme }} €</td>
-                </tr>
-            </table>
-        </div>
-    </div>
+<form method="POST">{% csrf_token %}
+    {% bootstrap_form form %}
+    <a
+        class="btn btn-secondary"
+        href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
+    ><span class="bi bi-arrow-left"></span> Zurück zur Rechnung</a>
+    <button
+        class="btn btn-secondary"
+        name="weiter"
+        type="submit"
+    >Speichern und neuen Posten eingeben</button>
+    <button
+        class="btn btn-secondary"
+        name="zurueck"
+        type="submit"
+    >Speichern und zurück zur Rechnung</button>
+</form>
+
+<div class="table-responsive">
+    <table
+        class="table dataTable table-hover"
+        id="postenTable"
+    >
+        <thead>
+            <tr>
+                <th class="text-end">Anzahl</th>
+                <th>Bezeichnung</th>
+                <th class="text-end">Einzelpreis</th>
+                <th class="text-end">Summe Netto</th>
+                <th class="text-end">Summe Netto Gerundet</th>
+                <th class="text-end">Mwst-Satz</th>
+                <th class="text-end">Summe Brutto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for posten in rechnung.posten_set.all %}
+            <tr>
+                <td class="align-content-end">{{ posten.anzahl }} </td>
+                <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</a></td>
+                <td class="align-content-end">{{ posten.einzelpreis }}€</td>
+                <td class="align-content-end">{{ posten.summenetto }}€</td>
+                <td class="align-content-end">{{ posten.summenettogerundet }}€</td>
+                <td class="align-content-end">{{ posten.get_mwst_display }}</td>
+                <td class="align-content-end">{{ posten.summebrutto }}€</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <th>Zwischensumme:</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="align-content-end">{{ rechnung.zwischensumme }}€</td>
+            </tr>
+            <tr>
+                <td></td>
+                <th>Gesamt (brutto):</th>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="align-content-end">{{ rechnung.gesamtsumme }}€</td>
+            </tr>
+        </tfoot>
+    </table>
 </div>
 {% endblock %}

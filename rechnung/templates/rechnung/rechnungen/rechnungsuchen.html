@@ -40,11 +40,11 @@
         <td>{{ rechnung.name }}</td>
         <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde.knr }}</a></td>
         <td>{{ rechnung.rdatum }}</td>
-        <td><a href="{% url 'rechnung:kategorie_detail' rechnung.kategorie.id %}">{{ rechnung.kategorie }}</a></td>
+        <td>{{ rechnung.kategorie }}</td>
 
         <td>{% include "snippets/true_false_span.html" with value=rechnung.gestellt %}</td>
         {% if rechnung.gestellt %}
-        <td class="align-content-end">{{ rechnung.gesamtsumme }} €</td>
+        <td class="align-content-end">{{ rechnung.gesamtsumme }}€</td>
         <td>{% include "snippets/true_false_span.html" with value=rechnung.erledigt %}</td>
         {% else %}
         <td></td>

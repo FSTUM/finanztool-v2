@@ -5,51 +5,77 @@
 {% block finanz_common_headercontent %}Alle Aufgaben{% endblock %}
 {% block title %}Alle Aufgaben{% endblock %}
 
+
+{% block head %}
+<script>
+    $(() => {
+        $('#aufgabenTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            paging: false,
+        });
+    });
+</script>
+{% endblock %}
+
 {% block finanz_common_content %}
 {% if alle_aufgaben %}
 <div class="row">
-    <table class="table">
-        <tr>
-            <td class="table-success">Erledigt</td>
-            <td>Sonstiges</td>
-            <td class="table-warning">Nicht Erledigt und Fällig</td>
-        </tr>
-    </table>
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <td class="table-success">Erledigt</td>
+                <td>Sonstiges</td>
+                <td class="table-warning">Nicht Erledigt und Fällig</td>
+            </tr>
+        </table>
+    </div>
     <div class="col-lg-12">
         <h3>Alle Aufgaben</h3>
         <br />
-        <table class="table table-hover">
-            <tr>
-                <th>Bezeichnung</th>
-                <th>Zusatz</th>
-                <th>Frist</th>
-                <th>Zuständiger</th>
-                <th>Bearbeiter</th>
-                <th>Jahr</th>
-                <th>Semester</th>
-                <th>Text</th>
-            </tr>
-            {% for aufgabe in alle_aufgaben %}
-            <tr
-                {% if aufgabe.faellig and not aufgabe.erledigt %}class="table-warning"
-                {% elif aufgabe.erledigt %}class="table-success"
-                {% endif %}
+        <div class="table-responsive">
+            <table
+                class="table dataTable table-hover"
+                id="aufgabenTable"
             >
-                <td>
-                    <a href="{% url "aufgaben:aufgabe" aufgabe.id %}">
-                        {{ aufgabe.art.name }}
-                    </a>
-                </td>
-                <td>{{ aufgabe.zusatz|default_if_none:"" }}</td>
-                <td>{{ aufgabe.frist }}</td>
-                <td>{{ aufgabe.zustaendig.get_short_name }}</td>
-                <td>{{ aufgabe.bearbeiter.get_short_name }}</td>
-                <td>{{ aufgabe.jahr|unlocalize|default_if_none:"" }}</td>
-                <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
-                <td>{{ aufgabe.text }}</td>
-            </tr>
-            {% endfor %}
-        </table>
+                <thead>
+                    <tr>
+                        <th>Bezeichnung</th>
+                        <th>Zusatz</th>
+                        <th>Frist</th>
+                        <th>Zuständiger</th>
+                        <th>Bearbeiter</th>
+                        <th>Jahr</th>
+                        <th>Semester</th>
+                        <th>Text</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aufgabe in alle_aufgaben %}
+                    <tr
+                        {% if aufgabe.faellig and not aufgabe.erledigt %}class="table-warning"
+                        {% elif aufgabe.erledigt %}class="table-success"
+                        {% endif %}
+                    >
+                        <td>
+                            <a href="{% url "aufgaben:aufgabe" aufgabe.id %}">
+                                {{ aufgabe.art.name }}
+                            </a>
+                        </td>
+                        <td>{{ aufgabe.zusatz|default_if_none:"" }}</td>
+                        <td>{{ aufgabe.frist }}</td>
+                        <td>{{ aufgabe.zustaendig.get_short_name }}</td>
+                        <td>{{ aufgabe.bearbeiter.get_short_name }}</td>
+                        <td>{{ aufgabe.jahr|unlocalize|default_if_none:"" }}</td>
+                        <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
+                        <td>{{ aufgabe.text }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% else %}

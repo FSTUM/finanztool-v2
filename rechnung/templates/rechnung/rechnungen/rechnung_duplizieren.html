@@ -49,9 +49,9 @@
             <tr>
                 <td class="align-content-end">{{ posten.anzahl }} </td>
                 <td>{{ posten.name }}</td>
-                <td class="align-content-end">{{ posten.einzelpreis }} €</td>
+                <td class="align-content-end">{{ posten.einzelpreis }}€</td>
                 <td class="align-content-end">{{ posten.get_mwst_display }}</td>
-                <td class="align-content-end">{{ posten.summenettogerundet }} €</td>
+                <td class="align-content-end">{{ posten.summenettogerundet }}€</td>
             </tr>
             {% endfor %}
         </table>
@@ -60,19 +60,19 @@
         <table class="table">
             <tr>
                 <th>Zwischensumme (netto):</th>
-                <td class="align-content-end">{{ rechnung.zwischensumme }} €</td>
+                <td class="align-content-end">{{ rechnung.zwischensumme }}€</td>
             </tr>
             <tr>
                 <th>Zzgl. Mehrwertsteuer 7%</th>
-                <td class="align-content-end">{{ rechnung.summe_mwst_7 }} €</td>
+                <td class="align-content-end">{{ rechnung.summe_mwst_7 }}€</td>
             </tr>
             <tr>
                 <th>Zzgl. Mehrwertsteuer 19%</th>
-                <td class="align-content-end">{{ rechnung.summe_mwst_19 }} €</td>
+                <td class="align-content-end">{{ rechnung.summe_mwst_19 }}€</td>
             </tr>
             <tr>
                 <th>Gesamt (brutto):</th>
-                <td class="align-content-end"><b>{{ rechnung.gesamtsumme }} €</b></td>
+                <td class="align-content-end"><b>{{ rechnung.gesamtsumme }}€</b></td>
             </tr>
         </table>
     </div>

@@ -5,6 +5,10 @@
 <script>
     $(() => {
         $('#emailTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
             columnDefs: [{ targets: 3, orderable: false }],
         });
     });
@@ -39,8 +43,8 @@
 </div>
 <div class="table-responsive">
     <table
-        id="emailTable"
         class="table dataTable"
+        id="emailTable"
     >
         <thead>
             <tr>

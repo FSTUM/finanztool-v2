@@ -57,24 +57,13 @@
     method="POST"
     action=""
 >{% csrf_token %}
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <td>
-                    <button
-                        class="btn btn-secondary btn-success"
-                        type="submit"
-                    >Ausgeben</button>
-                </td>
-                <td>
-                    <a
-                        class="btn btn-secondary"
-                        href="{% url "schluessel:view_key" key.id %}"
-                    >Abbrechen</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <button
+        class="btn btn-secondary btn-success"
+        type="submit"
+    >Ausgeben</button>
+    <a
+        class="btn btn-secondary"
+        href="{% url "schluessel:view_key" key.id %}"
+    >Abbrechen</a>
 </form>
 {% endblock %}

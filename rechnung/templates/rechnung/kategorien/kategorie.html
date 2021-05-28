@@ -4,24 +4,40 @@
 {% block finanz_common_headercontent %}Kategorien{% endblock %}
 {% block title %}Kategorien{% endblock %}
 
+{% block head %}
+<script>
+    $(() => {
+        $('#kategorieTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            paging: false,
+        });
+    });
+</script>
+{% endblock %}
+
 {% block finanz_common_content %}
 {% if kategorien_liste %}
-<div class="row">
-    <div class="col-lg-10">
-        <h3>Kategorien</h3>
-        <br />
-        <table class="table borderless">
-            <tr>
-                <th>Kategorie</th>
-            </tr>
-            {% for kategorie in kategorien_liste %}
-            <tr>
-                <td><a href="{% url 'rechnung:kategorie_detail' kategorie.id %}">{{ kategorie.name }}</a></td>
-                <td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
+<div class="table-responsive">
+    <table
+        class="table dataTable"
+        id="kategorieTable"
+    >
+    <thead>
+        <tr>
+            <th>Kategorie</th>
+        </tr>
+        </thead>
+    <tbody>
+        {% for kategorie in kategorien_liste %}
+        <tr>
+            <td>{{ kategorie.name }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
 </div>
 {% else %}
 <p>Es sind keine Kategorien verfügbar.</p>

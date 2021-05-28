@@ -26,29 +26,27 @@
         type="submit"
     ><span class="bi bi-envelope-fill"></span> Geschickt</button>
     {% endif %}
+    {% if not rechnung.erledigt %}
+    <a
+        class="btn btn-secondary"
+        href="{% url "rechnung:mahnung_aendern" rechnung.id mahnung.id %}"
+    >Bearbeiten</a>
+    {% endif %}
 
+    <a
+        class="btn btn-secondary"
+        href="{% url "rechnung:mahnungpdf" rechnung.id mahnung.id %}"
+        target="_blank"
+    ><span class="bi bi-cloud-arrow-down-fill"></span> Herunterladen</a>
 </form>
 {% endif %}
-
-{% if not rechnung.erledigt %}
-<a
-    class="btn btn-secondary"
-    href="{% url "rechnung:mahnung_aendern" rechnung.id mahnung.id %}"
->Bearbeiten</a>
-{% endif %}
-
-<a
-    class="btn btn-secondary"
-    href="{% url "rechnung:mahnungpdf" rechnung.id mahnung.id %}"
-    target="_blank"
-><span class="bi bi-cloud-arrow-down-fill"></span> Herunterladen</a>
 
 <br />
 <div class="row">
     <div class="col-lg-12">
         <h3>Allgemein</h3>
         <br />
-        <table class="table">
+        <table class="table table-striped">
             <tr>
                 <th>Erledigt?</th>
                 <td>
@@ -91,11 +89,11 @@
         <table class="table table-striped">
             <tr>
                 <th>Erhobene Mahngebühr</th>
-                <td class="align-content-end">{{ mahnung.gebuehr }} €</td>
+                <td class="align-content-end">{{ mahnung.gebuehr }}€</td>
             </tr>
             <tr>
                 <th>Neue Bruttosumme:</th>
-                <td class="align-content-end"><b>{{ mahnung.mahnsumme }} €</b></td>
+                <td class="align-content-end"><b>{{ mahnung.mahnsumme }}€</b></td>
             </tr>
             <tr>
                 <th>Gerichtliche Schritte</th>
@@ -152,7 +150,7 @@
             </tr>
             <tr>
                 <th>Gesamtsumme (brutto):</th>
-                <td class="align-content-end"><b>{{ mahnung.rechnung.gesamtsumme }} €</b></td>
+                <td class="align-content-end"><b>{{ mahnung.rechnung.gesamtsumme }}€</b></td>
             </tr>
         </table>
     </div>
@@ -173,7 +171,7 @@
         <table class="table table-striped">
             <tr>
                 <th>Mahngebühr <span class="bi bi-arrow-right"></span> Neue Summe</th>
-                <td>{{ m.gebuehr }} € <span class="bi bi-arrow-right"></span> <b> {{ m.mahnsumme }} €</b></td>
+                <td>{{ m.gebuehr }}€ <span class="bi bi-arrow-right"></span> <b> {{ m.mahnsumme }}€</b></td>
             </tr>
             <tr>
                 <th>Gerichtliche Schritte</th>

@@ -5,13 +5,28 @@
 {% block finanz_common_headercontent %}Alle Kunden{% endblock %}
 {% block title %}Alle Kunden{% endblock %}
 
+{% block head %}
+<script>
+    $(() => {
+        $('#kundenTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            paging: false,
+        });
+    });
+</script>
+{% endblock %}
+
 {% block finanz_common_content %}
 {% if kunden_liste %}
-<div class="row">
-    <div class="col-lg-12">
-        <h3>Alle Kunden</h3>
-        <br />
-        <table class="table table-hover">
+<div class="table-responsive">
+    <table
+        class="table dataTable"
+        id="kundenTable"
+    >
+        <thead>
             <tr>
                 <th>Kundennr.</th>
                 <th>Organisation</th>
@@ -20,6 +35,8 @@
                 <th>Adresse</th>
                 <th>Kommentar</th>
             </tr>
+        </thead>
+        <tbody>
             {% for kunde in kunden_liste %}
             <tr>
                 <td>
@@ -38,8 +55,8 @@
                 <td>{{ kunde.kommentar }}</td>
             </tr>
             {% endfor %}
-        </table>
-    </div>
+        </tbody>
+    </table>
 </div>
 {% else %}
 <p>Es sind keine Kunden verfügbar.</p>

@@ -5,51 +5,71 @@
 {% block finanz_common_headercontent %}Alle Rechnungen{% endblock %}
 {% block title %}Alle Rechnungen{% endblock %}
 
+
+{% block head %}
+<script>
+    $(() => {
+        $('#rechnungTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            paging: false,
+        });
+    });
+</script>
+{% endblock %}
+
 {% block finanz_common_content %}
-{% if rechnungen_liste %}
-<table class="table table-hover">
-    <tr>
-        <th>Rechnungsnr.</th>
-        <th>Zweck</th>
-        <th>Kategorie</th>
-        <th>Kunde</th>
-        <th>Datum</th>
-        <th>Ersteller</th>
-        <th>Gestellt?</th>
-        <th>Betrag</th>
-        <th>Fällig</th>
-        <th>Bezahlt?</th>
-        <th>Erledigt?</th>
-    </tr>
-    {% for rechnung in rechnungen_liste %}
-    <tr>
-        <td><a href="{% url 'rechnung:rechnung' rechnung.id %}">RE {{ rechnung.rnr_string }}</a>
-        </td>
-        <td>{{ rechnung.name }}</td>
-        <td><a href="{% url 'rechnung:kategorie_detail' rechnung.kategorie.id %}">{{ rechnung.kategorie }}</a></td>
-        <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde.knr|unlocalize }}</a></td>
-        <td>{{ rechnung.rdatum }}</td>
-        <td>{{ rechnung.ersteller.get_short_name }}</td>
-        <td>{% include "snippets/true_false_span.html" with value=rechnung.gestellt %}</td>
-        {% if rechnung.gestellt %}
-        <td class="align-content-end">{{ rechnung.gesamtsumme }} €</td>
-        <td class="{% if rechnung.faellig and rechnung.erledigt %}table-success
+<div class="table-responsive">
+    <table
+        class="table dataTable table-hover"
+        id="rechnungTable"
+    >
+        <thead>
+            <tr>
+                <th>Rechnungsnr.</th>
+                <th>Zweck</th>
+                <th>Kategorie</th>
+                <th>Kunde</th>
+                <th>Datum</th>
+                <th>Ersteller</th>
+                <th>Gestellt?</th>
+                <th>Betrag</th>
+                <th>Fällig</th>
+                <th>Bezahlt?</th>
+                <th>Erledigt?</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rechnung in rechnungen_liste %}
+            <tr>
+                <td><a href="{% url 'rechnung:rechnung' rechnung.id %}">RE {{ rechnung.rnr_string }}</a>
+                </td>
+                <td>{{ rechnung.name }}</td>
+                <td>{{ rechnung.kategorie }}</td>
+                <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde.knr|unlocalize }}</a></td>
+                <td>{{ rechnung.rdatum }}</td>
+                <td>{{ rechnung.ersteller.get_short_name }}</td>
+                <td>{% include "snippets/true_false_span.html" with value=rechnung.gestellt %}</td>
+                {% if rechnung.gestellt %}
+                <td class="align-content-end">{{ rechnung.gesamtsumme }}€</td>
+                <td class="{% if rechnung.faellig and rechnung.erledigt %}table-success
                            {% elif rechnung.faellig and not rechnung.erledigt %}table-danger
                            {% endif %}">
-            {{ rechnung.fdatum|date:"SHORT_DATE_FORMAT" }}
-        </td>
-        <td>{% include "snippets/true_false_span.html" with value=rechnung.bezahlt %}</td>
-        <td>{% include "snippets/true_false_span.html" with value=rechnung.erledigt %}</td>
-        {% else %}
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        {% endif %}
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-<p>Es sind keine Rechnungen verfügbar.</p>
-{% endif %}
+                    {{ rechnung.fdatum|date:"SHORT_DATE_FORMAT" }}
+                </td>
+                <td>{% include "snippets/true_false_span.html" with value=rechnung.bezahlt %}</td>
+                <td>{% include "snippets/true_false_span.html" with value=rechnung.erledigt %}</td>
+                {% else %}
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

@@ -5,13 +5,29 @@
 {% block finanz_common_headercontent %}Alle Mahnungen{% endblock %}
 {% block title %}Alle Mahnungen{% endblock %}
 
+
+{% block head %}
+<script>
+    $(() => {
+        $('#mahnungsTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            paging: false,
+            ordering: false,
+        });
+    });
+</script>
+{% endblock %}
+
 {% block finanz_common_content %}
-{% if rechnungen %}
-<div class="row">
-    <div class="col-lg-12">
-        <h3>Alle Mahnungen</h3>
-        <br />
-        <table class="table table-hover">
+<div class="table-responsive">
+    <table
+        class="table dataTable table-hover"
+        id="mahnungsTable"
+    >
+        <thead>
             <tr>
                 <th><span class="bi bi-envelope-fill"></span></th>
                 <th>Mahnungsnr.</th>
@@ -21,11 +37,13 @@
                 <th class="align-content-center">Gerichtlich?</th>
                 <th class="align-content-center">Bezahlt?</th>
             </tr>
+        </thead>
+        <tbody>
             {% for rechnung in rechnungen %}
             {% if rechnung.mahnungen %}
-            <tr>
+            <tr class="{% if not rechnung.erledigt %}table-danger{% else %}table-active{% endif %}">
                 <td></td>
-                <th class="{% if not rechnung.erledigt %}table-danger{% endif %}">
+                <th>
                     <a href="{% url 'rechnung:rechnung' rechnung.id %}">
                         {{ rechnung }}
                     </a>
@@ -36,9 +54,8 @@
                     </a>
                 </td>
                 <td></td>
-                <td class="text-muted align-content-end">{{ rechnung.gesamtsumme }} €</td>
+                <td class="text-muted align-content-end">{{ rechnung.gesamtsumme }}€</td>
                 <td></td>
-                <td class="align-content-center">
                 <td>{% include "snippets/true_false_span.html" with value=rechnung.bezahlt %}</td>
             </tr>
             {% for mahnung in rechnung.mahnungen %}
@@ -56,30 +73,21 @@
                 >
                     {{ mahnung.mfdatum }}
                 </td>
-                <td class="align-content-end">{{ mahnung.mahnsumme }} €</td>
-                <td class="align-content-center">
+                <td class="align-content-end">{{ mahnung.mahnsumme }}€</td>
                 <td>{% include "snippets/true_false_span.html" with value=mahnung.gerichtlich %}</td>
-                <td class="align-content-center">
                 <td>{% include "snippets/true_false_span.html" with value=mahnung.bezahlt %}</td>
-                <td></td>
                 {% else %}
-                <td
-                    colspan=5
-                    class="text-muted align-content-center"
-                >Noch nicht gestellt</td>
+                <td class="text-muted align-content-center">Noch nicht gestellt</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
                 {% endif %}
             </tr>
             {% endfor %}
-            {% else %}
-            <tr>
-                <td colspan=7>
-                    Es existieren keine Mahnungen.
-                </td>
-            </tr>
             {% endif %}
             {% endfor %}
-        </table>
-    </div>
+        </tbody>
+    </table>
 </div>
-{% endif %}
 {% endblock %}

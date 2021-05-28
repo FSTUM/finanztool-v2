@@ -4,27 +4,33 @@
 {% block finanz_common_headercontent %}Posten {{ posten.name }}{% endblock %}
 {% block title %}Posten {{ posten.name }}{% endblock %}
 
+{% block head %}
+<script>
+    $(() => {
+        $('#postenTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            paging: false,
+        });
+    });
+</script>
+{% endblock %}
+
 {% block finanz_common_content %}
-<h1>Posten {{ posten.name }}</h1>
+<table class="table table-striped">
+    <tr>
+        <th>Einzelpreis</th>
+        <td>{{ posten.einzelpreis }}€</td>
+    </tr>
+    <tr>
+        <th>Mehrwertsteuersatz</th>
+        <td>{{ posten.mwst }} %</td>
+    </tr>
+</table>
 <a
     class="btn btn-primary"
     href="{% url "rechnung:posten_aendern" posten.id %}"
 >Posten bearbeiten</a>
-
-<div class="row">
-    <div class="col-lg-3">
-        <h3>Übersicht</h3>
-        <br />
-        <table class="table table-striped">
-            <tr>
-                <th>Einzelpreis</th>
-                <td>{{ posten.einzelpreis }} €</td>
-            </tr>
-            <tr>
-                <th>Mehrwertsteuersatz</th>
-                <td>{{ posten.mwst }} %</td>
-            </tr>
-        </table>
-    </div>
-</div>
 {% endblock %}

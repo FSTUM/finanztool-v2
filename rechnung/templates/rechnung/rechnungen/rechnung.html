@@ -30,8 +30,7 @@
         <table class="table table-striped">
             <tr>
                 <th>Mahngebühr <span class="bi bi-arrow-right"></span> Neue Summe</th>
-                <td>{{ mahnung.gebuehr }} € <span class="bi bi-arrow-right"></span> <b> {{ mahnung.mahnsumme }}
-                        €</b></td>
+                <td>{{ mahnung.gebuehr }}€ <span class="bi bi-arrow-right"></span> <b> {{ mahnung.mahnsumme }}€</b></td>
             </tr>
             <tr>
                 <th>Gerichtliche Schritte</th>
@@ -54,12 +53,11 @@
                 <th>Datum, Fällig</th>
                 <td>
                     {{ mahnung.mdatum }},
-                    {% if mahnung.faellig and mahnung.geschickt %}
-                    <span style="color: red;">
-                        {% else %}
-                        <span>
-                            {% endif %}
-                            {{ mahnung.mfdatum }}</span>
+                    <span
+                        {% if mahnung.faellig and mahnung.geschickt %}style="color: red;"
+                        {% endif %}
+                    >
+                        {{ mahnung.mfdatum }}</span>
                 </td>
             </tr>
             <tr>
@@ -142,7 +140,7 @@
             <tr>
                 <th>Kategorie</th>
                 <td>
-                    <a href="{% url 'rechnung:kategorie_detail' rechnung.kategorie.id %}">{{ rechnung.kategorie }}</a>
+                    {{ rechnung.kategorie }}
                 </td>
             </tr>
             <tr>
@@ -181,28 +179,28 @@
                     <a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</a>
                 </td>
                 {% endif %}
-                <td class="align-content-end">{{ posten.einzelpreis }} €</td>
+                <td class="align-content-end">{{ posten.einzelpreis }}€</td>
                 <td class="align-content-end">{{ posten.get_mwst_display }}</td>
-                <td class="align-content-end">{{ posten.summenettogerundet }} €</td>
+                <td class="align-content-end">{{ posten.summenettogerundet }}€</td>
             </tr>
             {% endfor %}
         </table>
         <table class="table">
             <tr>
                 <th>Zwischensumme (netto):</th>
-                <td class="align-content-end">{{ rechnung.zwischensumme }} €</td>
+                <td class="align-content-end">{{ rechnung.zwischensumme }}€</td>
             </tr>
             <tr>
                 <th>Zzgl. Mehrwertsteuer 7%</th>
-                <td class="align-content-end">{{ rechnung.summe_mwst_7 }} €</td>
+                <td class="align-content-end">{{ rechnung.summe_mwst_7 }}€</td>
             </tr>
             <tr>
                 <th>Zzgl. Mehrwertsteuer 19%</th>
-                <td class="align-content-end">{{ rechnung.summe_mwst_19 }} €</td>
+                <td class="align-content-end">{{ rechnung.summe_mwst_19 }}€</td>
             </tr>
             <tr>
                 <th>Gesamt (brutto):</th>
-                <td class="align-content-end"><b>{{ rechnung.gesamtsumme }} €</b>
+                <td class="align-content-end"><b>{{ rechnung.gesamtsumme }}€</b>
                 </td>
             </tr>
         </table>
