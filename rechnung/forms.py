@@ -1,7 +1,6 @@
 from bootstrap_datepicker_plus import DatePickerInput
 from django import forms
 from django.contrib.auth import get_user_model
-from django.db.models import Q
 
 from .models import Kategorie, Kunde, Mahnung, Posten, Rechnung
 
@@ -57,10 +56,6 @@ class RechnungForm(forms.ModelForm):
 
             if self.instance.erledigt:
                 self.fields.pop("kunde")
-
-
-class RechnungBezahltForm(forms.Form):
-    rechnungbezahlt = forms.BooleanField(label="", required=True)
 
 
 class MahnungForm(forms.ModelForm):
@@ -121,10 +116,6 @@ class MahnungForm(forms.ModelForm):
             instance.save()
 
         return instance
-
-
-class MahnungStatusForm(forms.Form):
-    mahnungstatus = forms.BooleanField(label="", required=True)
 
 
 class PostenForm(forms.ModelForm):
