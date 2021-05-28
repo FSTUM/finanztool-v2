@@ -59,16 +59,16 @@
             {% for key in keys %}
             <tr>
                 <td>{{ key.keytype }}</td>
-                <td><a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a>
-                    {% if not key.active %}
-                    (inaktiv)
-                    {% endif %}
+                <td><a href="{% url "schluessel:view_key" key.id %}">
+                        {{ key }} {% if not key.active %}(inaktiv){% endif %}
+                    </a>
+
                 </td>
                 <td>
                     {% if key.person %}
                     <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
                     {% else %}
-                    <span class="bi bi-person-x-fill"></span>
+                    {% include "snippets/true_false_span.html" with value=False %}
                     {% endif %}
                 </td>
                 <td>{{ key.comment }}</td>

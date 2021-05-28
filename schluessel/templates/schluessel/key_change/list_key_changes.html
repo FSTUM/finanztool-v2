@@ -48,7 +48,7 @@
                     {% if key.person %}
                     <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
                     {% else %}
-                    <span class="bi bi-person-x-fill"></span>
+                    {% include "snippets/true_false_span.html" with value=False %}
                     {% endif %}
                 </td>
                 <td>{{ key.savedkeychange.comment }}</td>
