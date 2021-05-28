@@ -8,12 +8,12 @@
 <a
     class="nav-link {% active_link "schluessel:list_keys" %}"
     href="{% url "schluessel:list_keys" %}"
->Suchen</a>
+>Alle Schlüssel</a>
 {% if user.is_superuser %}
 <a
     class="nav-link {% active_link "schluessel:add_key" %}"
     href="{% url "schluessel:add_key" %}"
->Hinzufügen</a>
+>Schlüssel Hinzufügen</a>
 {% endif %}
 <h4 class="navbar-text">Personen</h4>
 <a

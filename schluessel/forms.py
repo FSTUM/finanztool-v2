@@ -54,12 +54,6 @@ class PersonForm(forms.ModelForm):
 
 
 class FilterKeysForm(forms.Form):
-    search = forms.CharField(
-        label="Suchbegriff",
-        required=False,
-    )
-    search.widget.attrs["onchange"] = "document.getElementById('filterform').submit()"
-
     given = forms.BooleanField(
         label="ausgegeben",
         required=False,

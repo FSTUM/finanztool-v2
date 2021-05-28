@@ -14,7 +14,7 @@ from aufgaben.models import Aufgabe
 from common.views import AuthWSGIRequest, finanz_staff_member_required
 from schluessel.models import Key
 
-from .forms import KundeForm, KundeSuchenForm, MahnungForm, PostenForm, RechnungForm, RechnungSuchenForm
+from .forms import KundeForm, MahnungForm, PostenForm, RechnungForm
 from .models import Kategorie, Kunde, Mahnung, Posten, Rechnung
 
 
@@ -146,26 +146,6 @@ def duplicate_rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpRespon
     )
 
 
-@finanz_staff_member_required
-def rechnungsuchen(request: AuthWSGIRequest) -> HttpResponse:
-    form = RechnungSuchenForm(request.POST or None)
-
-    result = None
-    new_search = True
-
-    if form.is_valid():
-        result = form.get()
-        new_search = False
-
-    context = {
-        "form": form,
-        "result": result,
-        "new_search": new_search,
-    }
-
-    return render(request, "rechnung/rechnungen/rechnungsuchen.html", context)
-
-
 # Mahnung#######################################################################
 
 
@@ -283,27 +263,6 @@ def kunden_alle(request: AuthWSGIRequest) -> HttpResponse:
     kunden_liste = Kunde.objects.order_by("-knr")
     context = {"kunden_liste": kunden_liste, "not_rechnung": True}
     return render(request, "rechnung/kunden/kunden_alle.html", context)
-
-
-@finanz_staff_member_required
-def kundesuchen(request: AuthWSGIRequest) -> HttpResponse:
-    form = KundeSuchenForm(request.POST or None)
-
-    result = None
-    new_search = True
-
-    if form.is_valid():
-        result = form.get()
-        new_search = False
-
-    context = {
-        "form": form,
-        "result": result,
-        "new_search": new_search,
-        "not_rechnung": True,
-    }
-
-    return render(request, "rechnung/kunden/kundesuchen.html", context)
 
 
 # Posten#######################################################################

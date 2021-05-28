@@ -591,29 +591,12 @@ def list_keys(request: AuthWSGIRequest) -> HttpResponse:
 
     form = FilterKeysForm(request.POST or None)
     if form.is_valid():
-        search = form.cleaned_data["search"]
         given = form.cleaned_data["given"]
         free = form.cleaned_data["free"]
         active = form.cleaned_data["active"]
         keytype = form.cleaned_data["keytype"]
 
         keys = Key.objects.all()
-        for search_term in search.split():
-            keys = keys.filter(
-                Q(keytype__shortname__icontains=search_term)
-                | Q(keytype__name__icontains=search_term)
-                | Q(number__icontains=search_term)
-                | Q(comment__icontains=search_term)
-                | Q(person__name__icontains=search_term)
-                | Q(person__firstname__icontains=search_term)
-                | Q(person__email__icontains=search_term)
-                | Q(person__address__icontains=search_term)
-                | Q(person__plz__icontains=search_term)
-                | Q(person__city__icontains=search_term)
-                | Q(person__mobile__icontains=search_term)
-                | Q(person__phone__icontains=search_term),
-            )
-
         if given and not free:
             keys = keys.exclude(person=None)
         if free and not given:

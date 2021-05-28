@@ -12,7 +12,6 @@ urlpatterns = [
     path("alle/", views.alle, name="alle"),
     # Rechnung
     path("neu/", views.form_rechnung, name="rechnung_neu"),
-    path("suchen/", views.rechnungsuchen, name="rechnungsuchen"),
     path("<int:rechnung_id>/", views.rechnung, name="rechnung"),
     path("<int:rechnung_id>/aendern/", views.form_rechnung, name="rechnung_aendern"),
     path("<int:rechnung_id>/duplizieren/", views.duplicate_rechnung, name="rechnung_duplizieren"),
@@ -39,7 +38,6 @@ urlpatterns = [
                 path("", RedirectView.as_view(pattern_name="rechnung:kunden_alle"), name="kunden_index"),
                 path("alle/", views.kunden_alle, name="kunden_alle"),
                 path("neu/", views.form_kunde, name="kunde_neu"),
-                path("suchen/", views.kundesuchen, name="kundesuchen"),
                 path("<int:kunde_id>/", views.kunde, name="kunde"),
                 path("<int:kunde_id>/aendern/", views.form_kunde, name="kunde_aendern"),
             ],
