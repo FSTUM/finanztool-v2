@@ -56,13 +56,5 @@ urlpatterns = [
         ),
     ),
     # Kategorie
-    path(
-        "kategorie/",
-        include(
-            [
-                path("", views.kategorie, name="kategorie"),
-                path("<int:kategorie_id>/", views.kategorie_detail, name="kategorie_detail"),
-            ],
-        ),
-    ),
+    path("kategorie/", views.kategorie, name="kategorie"),
 ]

@@ -14,15 +14,7 @@ from aufgaben.models import Aufgabe
 from common.views import AuthWSGIRequest, finanz_staff_member_required
 from schluessel.models import Key
 
-from .forms import (
-    KundeForm,
-    KundeSuchenForm,
-    MahnungForm,
-    MahnungStatusForm,
-    PostenForm,
-    RechnungForm,
-    RechnungSuchenForm,
-)
+from .forms import KundeForm, KundeSuchenForm, MahnungForm, PostenForm, RechnungForm, RechnungSuchenForm
 from .models import Kategorie, Kunde, Mahnung, Posten, Rechnung
 
 
@@ -380,12 +372,6 @@ def kategorie(request: AuthWSGIRequest) -> HttpResponse:
     kategorien_liste = Kategorie.objects.order_by("name")
     context = {"kategorien_liste": kategorien_liste}
     return render(request, "rechnung/kategorien/kategorie.html", context)
-
-
-@finanz_staff_member_required
-def kategorie_detail(request: AuthWSGIRequest, kategorie_id: int) -> HttpResponse:
-    kategorie_obj = get_object_or_404(Kategorie, pk=kategorie_id)
-    return render(request, "rechnung/kategorien/kategorie_detail.html", {"kategorie": kategorie_obj})
 
 
 @finanz_staff_member_required

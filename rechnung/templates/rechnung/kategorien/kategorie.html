@@ -25,18 +25,18 @@
         class="table dataTable"
         id="kategorieTable"
     >
-    <thead>
-        <tr>
-            <th>Kategorie</th>
-        </tr>
+        <thead>
+            <tr>
+                <th>Kategorie</th>
+            </tr>
         </thead>
-    <tbody>
-        {% for kategorie in kategorien_liste %}
-        <tr>
-            <td>{{ kategorie.name }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+        <tbody>
+            {% for kategorie in kategorien_liste %}
+            <tr>
+                <td>{{ kategorie.name }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </div>
 {% else %}

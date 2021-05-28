@@ -22,6 +22,11 @@
     href="{% url "rechnung:rechnungsuchen" %}"
 >Rechnungen suchen</a>
 
+<h4 class="navbar-text">Kategorien</h4>
+<a
+    class="nav-link {% active_link "rechnung:kategorie" %}"
+    href="{% url "rechnung:kategorie" %}"
+>Alle Kategorien</a>
 <h4 class="navbar-text">Mahnungen</h4>
 <a
     class="nav-link {% active_link "rechnung:alle_mahnungen" %}"
