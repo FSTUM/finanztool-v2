@@ -5,19 +5,17 @@
 {% block title %}Finanztool - Person hinzufügen{% endblock %}
 
 {% block finanz_common_content %}
-<div class="col-lg-4">
-    <form
-        name="addform"
-        method="POST"
-        action=""
-    >{% csrf_token %}
+<form
+    name="addform"
+    method="POST"
+    action=""
+>{% csrf_token %}
 
-        {% bootstrap_form form %}
+    {% bootstrap_form form %}
 
-        <button
-            class="btn btn-secondary"
-            type="submit"
-        >Hinzufügen</button>
-    </form>
-</div>
+    <button
+        class="btn btn-secondary"
+        type="submit"
+    >Person hinzufügen</button>
+</form>
 {% endblock %}

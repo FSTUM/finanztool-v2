@@ -5,77 +5,66 @@
 {% block title %}Finanztool - Vorgemerkte Schlüsseltyp-Änderungen anwenden{% endblock %}
 
 {% block finanz_common_content %}
-<div class="col-lg-6">
-    <p>Sollen folgende Änderungen wirklich angewendet werden?</p>
-    <table class="table table-striped table-hover">
-        <tr>
-            <th>Schlüssel</th>
-            <th>Alter Typ</th>
-            <th>Neuer Typ</th>
-            <th>Entleiher*in</th>
-            <th>Kommentar</th>
-            <th>Datum</th>
-            <th>Finanzer*in</th>
-            <th>Anwenden möglich</th>
-        </tr>
-        {% for key in keys %}
-        <tr>
-            <td><a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a></td>
-            <td>{{ key.keytype }}</td>
-            <td>{{ key.savedkeychange.new_keytype }}</td>
-            <td>
-                {% if key.person %}
-                <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
-                {% else %}
-                <span class="bi bi-person-x-fill"></span>
-                {% endif %}
-            </td>
-            <td>{{ key.savedkeychange.comment }}</td>
-            <td>{{ key.savedkeychange.date | date:"SHORT_DATETIME_FORMAT" }}</td>
-            <td>
-                {% if key.savedkeychange.user.get_full_name %}
-                {{ key.savedkeychange.user.get_full_name }}
-                {% else %}
-                {{ key.savedkeychange.user.username }}
-                {% endif %}
-            </td>
-            <td>
-                {% if key.savedkeychange.violated_key %}
-                <p class="text-danger">
-                    nicht möglich, <a href="{% url "schluessel:view_key" key.savedkeychange.violated_key.id %}">{{ key.savedkeychange.violated_key }}</a>
-                    gibt es bereits
-                </p>
-                {% else %}
-                <span class="bi bi-check-circle-fill"></span>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
+<p>Sollen folgende Änderungen wirklich angewendet werden?</p>
+<table class="table table-striped table-hover">
+    <tr>
+        <th>Schlüssel</th>
+        <th>Alter Typ</th>
+        <th>Neuer Typ</th>
+        <th>Entleiher*in</th>
+        <th>Kommentar</th>
+        <th>Datum</th>
+        <th>Finanzer*in</th>
+        <th>Anwenden möglich</th>
+    </tr>
+    {% for key in keys %}
+    <tr>
+        <td><a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a></td>
+        <td>{{ key.keytype }}</td>
+        <td>{{ key.savedkeychange.new_keytype }}</td>
+        <td>
+            {% if key.person %}
+            <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
+            {% else %}
+            <span class="bi bi-person-x-fill"></span>
+            {% endif %}
+        </td>
+        <td>{{ key.savedkeychange.comment }}</td>
+        <td>{{ key.savedkeychange.date | date:"SHORT_DATETIME_FORMAT" }}</td>
+        <td>
+            {% if key.savedkeychange.user.get_full_name %}
+            {{ key.savedkeychange.user.get_full_name }}
+            {% else %}
+            {{ key.savedkeychange.user.username }}
+            {% endif %}
+        </td>
+        <td>
+            {% if key.savedkeychange.violated_key %}
+            <p class="text-danger">
+                nicht möglich, <a href="{% url "schluessel:view_key" key.savedkeychange.violated_key.id %}">{{ key.savedkeychange.violated_key }}</a>
+                gibt es bereits
+            </p>
+            {% else %}
+            <span class="bi bi-check-circle-fill"></span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 <form
     method="POST"
     action=""
 >{% csrf_token %}
-
-    <table class="table">
-        <tr>
-            <td>
-                <button
-                    class="btn btn-warning"
-                    type="submit"
-                >Änderungen anwenden</button>
-            </td>
-            <td>
-                <a
-                    class="btn btn-secondary"
-                    {% if cur_key %}href="{% url "schluessel:view_key" cur_key.id %}"
-                    {% else %}href="{% url "schluessel:list_key_changes" %}"
-                    {% endif %}
-                >Abbrechen</a>
-            </td>
-        </tr>
-    </table>
+    <button
+        class="btn btn-warning"
+        type="submit"
+    >Änderungen anwenden</button>
+    <a
+        class="btn btn-secondary"
+        {% if cur_key %}href="{% url "schluessel:view_key" cur_key.id %}"
+        {% else %}href="{% url "schluessel:list_key_changes" %}"
+        {% endif %}
+    >Abbrechen</a>
 </form>
 
 

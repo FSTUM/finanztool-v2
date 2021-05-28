@@ -10,23 +10,19 @@ Mahnung {% if mahnung.pk %}ändern{% else %}hinzufügen{% endif %}
 {% endblock %}
 
 {% block finanz_common_content %}
-{% if mahnung.pk %}
-<a
-    class="btn btn-secondary"
-    href="{% url "rechnung:mahnung" rechnung_id=rechnung.pk mahnung_id=mahnung.pk %}"
-><span class="bi bi-arrow-left"></span> Zurück zur Mahnung</a>
-{% endif %}
-<div class="row">
-    <div class="col-lg-6">
-        <p class="text-muted">Mit * markierte Felder sind verpflichtend</p>
+<p class="text-muted">Mit * markierte Felder sind verpflichtend</p>
 
-        <form method="POST">{% csrf_token %}
-            {% bootstrap_form form %}
-            <button
-                class="btn btn-secondary"
-                type="submit"
-            >Mahnung speichern</button>
-        </form>
-    </div>
-</div>
+<form method="POST">{% csrf_token %}
+    {% bootstrap_form form %}
+    {% if mahnung.pk %}
+    <a
+        class="btn btn-secondary"
+        href="{% url "rechnung:mahnung" rechnung_id=rechnung.pk mahnung_id=mahnung.pk %}"
+    ><span class="bi bi-arrow-left"></span> Zurück zur Mahnung</a>
+    {% endif %}
+    <button
+        class="btn btn-secondary"
+        type="submit"
+    >Mahnung speichern</button>
+</form>
 {% endblock %}

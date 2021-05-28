@@ -5,55 +5,51 @@
 {% block title %}Finanztool - Entleiher {{ person }}{% endblock %}
 
 {% block finanz_common_content %}
-<div class="row">
-    <div class="col-lg-6">
-        <a
-            href="{% url "schluessel:edit_person" person.id %}"
-            class="btn btn-secondary"
-        >Bearbeiten</a>
+<a
+    href="{% url "schluessel:edit_person" person.id %}"
+    class="btn btn-secondary"
+>Bearbeiten</a>
 
-        <table class="table table-striped table-hover">
-            <tr>
-                <th>Nachname</th>
-                <td>{{ person.name }}</td>
-            </tr>
-            <tr>
-                <th>Vorname</th>
-                <td>{{ person.firstname }}</td>
-            </tr>
-            <tr>
-                <th>E-Mail</th>
-                <td>{{ person.email }}</td>
-            </tr>
-            <tr>
-                <th>Adresse</th>
-                <td>{{ person.address }}<br>{{ person.plz }} {{ person.city }}</td>
-            </tr>
-            <tr>
-                <th>Mobil</th>
-                <td>{{ person.mobile }}</td>
-            </tr>
-            <tr>
-                <th>Telefon</th>
-                <td>{{ person.phone }}</td>
-            </tr>
-        </table>
+<table class="table table-striped table-hover">
+    <tr>
+        <th>Nachname</th>
+        <td>{{ person.name }}</td>
+    </tr>
+    <tr>
+        <th>Vorname</th>
+        <td>{{ person.firstname }}</td>
+    </tr>
+    <tr>
+        <th>E-Mail</th>
+        <td>{{ person.email }}</td>
+    </tr>
+    <tr>
+        <th>Adresse</th>
+        <td>{{ person.address }}<br>{{ person.plz }} {{ person.city }}</td>
+    </tr>
+    <tr>
+        <th>Mobil</th>
+        <td>{{ person.mobile }}</td>
+    </tr>
+    <tr>
+        <th>Telefon</th>
+        <td>{{ person.phone }}</td>
+    </tr>
+</table>
 
-        <h3>Ausgeliehene Schlüssel/Schließkarten</h3>
-        <table class="table table-striped table-hover">
-            {% for key in keys %}
-            <tr>
-                <th>{{ key.keytype }}</th>
-                <td><a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a>
-                    {% if not key.active %}
-                    (inaktiv)
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-</div>
+<h3>Ausgeliehene Schlüssel/Schließkarten</h3>
+<table class="table table-striped table-hover">
+    {% for key in keys %}
+    <tr>
+        <th>{{ key.keytype }}</th>
+        <td><a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a>
+            {% if not key.active %}
+            (inaktiv)
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 
 <h3>Log</h3>
 <table class="table table-striped table-hover">

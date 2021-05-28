@@ -17,24 +17,19 @@ Rechnung {% if rechnung.pk %}ändern{% else %}hinzufügen{% endif %}
     Für andere Änderungen erstelle bitte eine neue (Korrektur-)Rechnung!
 </div>
 {% endif %}
+<p class="text-muted">Mit * markierte Felder sind verpflichtend</p>
 
-{% if rechnung.pk %}
-<a
-    class="btn btn-secondary"
-    href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
-><span class="bi bi-arrow-left"></span>Zurück zur Rechnung</a>
-{% endif %}
-<div class="row">
-    <div class="col-lg-6">
-        <p class="text-muted">Mit * markierte Felder sind verpflichtend</p>
-
-        <form method="POST">{% csrf_token %}
-            {% bootstrap_form form %}
-            <button
-                class="btn btn-secondary"
-                type="submit"
-            >Rechnung speichern</button>
-        </form>
-    </div>
-</div>
+<form method="POST">{% csrf_token %}
+    {% bootstrap_form form %}
+    {% if rechnung.pk %}
+    <a
+        class="btn btn-secondary"
+        href="{% url "rechnung:rechnung" rechnung_id=rechnung.pk %}"
+    ><span class="bi bi-arrow-left"></span>Zurück zur Rechnung</a>
+    {% endif %}
+    <button
+        class="btn btn-secondary"
+        type="submit"
+    >Rechnung speichern</button>
+</form>
 {% endblock %}

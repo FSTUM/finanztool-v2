@@ -5,18 +5,16 @@
 {% block title %}Finanztool - Typ-Änderung vormerken{% endblock %}
 
 {% block finanz_common_content %}
-<div class="col-lg-4">
-    <form
-        method="POST"
-        action=""
-    >{% csrf_token %}
+<form
+    method="POST"
+    action=""
+>{% csrf_token %}
 
-        {% bootstrap_form form %}
+    {% bootstrap_form form %}
 
-        <button
-            class="btn btn-secondary"
-            type="submit"
-        >Vormerken</button>
-    </form>
-</div>
+    <button
+        class="btn btn-secondary"
+        type="submit"
+    >Typ-Änderung vormerken</button>
+</form>
 {% endblock %}

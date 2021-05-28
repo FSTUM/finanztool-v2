@@ -9,23 +9,19 @@ Aufgabe {% if aufgabe.pk %}ändern{% else %}hinzufügen{% endif %}
 {% endblock %}
 
 {% block finanz_common_content %}
-{% if aufgabe.pk %}
-<a
-    class="btn btn-secondary"
-    href="{% url "aufgaben:aufgabe" aufgabe_id=aufgabe.pk %}"
-><span class="bi bi-arrow-left"></span> Zurück zur Aufgabe</a>
-{% endif %}
-<div class="row">
-    <div class="col-lg-6">
-        <p class="text-muted">Mit * markierte Felder sind verpflichtend</p>
+<p class="text-muted">Mit * markierte Felder sind verpflichtend</p>
 
-        <form method="POST">{% csrf_token %}
-            {% bootstrap_form form %}
-            <button
-                class="btn btn-secondary"
-                type="submit"
-            >Aufgabe speichern</button>
-        </form>
-    </div>
-</div>
+<form method="POST">{% csrf_token %}
+    {% bootstrap_form form %}
+    {% if aufgabe.pk %}
+    <a
+        class="btn btn-secondary"
+        href="{% url "aufgaben:aufgabe" aufgabe_id=aufgabe.pk %}"
+    ><span class="bi bi-arrow-left"></span> Zurück zur Aufgabe</a>
+    {% endif %}
+    <button
+        class="btn btn-secondary"
+        type="submit"
+    >Aufgabe speichern</button>
+</form>
 {% endblock %}

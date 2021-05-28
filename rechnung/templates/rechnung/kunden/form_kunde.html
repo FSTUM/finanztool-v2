@@ -9,29 +9,25 @@ Kunde {% if kunde.knr %}bearbeiten{% else %}hinzufügen{% endif %}
 {% endblock %}
 
 {% block finanz_common_content %}
-{% if kunde.pk %}
-<a
-    class="btn btn-secondary"
-    href="{% url "rechnung:kunde" kunde_id=kunde.pk %}"
-><span class="bi bi-arrow-left"></span> Zurück zum Kunden</a>
-{% endif %}
-<div class="row">
-    <div class="col-lg-5">
-        {% if form.kunde_verwendet %}
-        <div class="alert alert-danger">
-            Dieser Kunde wird bereits in einer Rechnung verwendet,
-            du kannst ihn nicht mehr bearbeiten.<br />
-            Lege bei Bedarf einen neuen Kunden an.
-        </div>
-        {% endif %}
-        <p class="text-muted">Mit * markierte Felder sind verpflichtend</p>
-        <form method="POST">{% csrf_token %}
-            {% bootstrap_form form %}
-            <button
-                class="btn btn-secondary"
-                type="submit"
-            >Kunde speichern</button>
-        </form>
-    </div>
+{% if form.kunde_verwendet %}
+<div class="alert alert-danger">
+    Dieser Kunde wird bereits in einer Rechnung verwendet,
+    du kannst ihn nicht mehr bearbeiten.<br />
+    Lege bei Bedarf einen neuen Kunden an.
 </div>
+{% endif %}
+<p class="text-muted">Mit * markierte Felder sind verpflichtend</p>
+<form method="POST">{% csrf_token %}
+    {% bootstrap_form form %}
+    {% if kunde.pk %}
+    <a
+        class="btn btn-secondary"
+        href="{% url "rechnung:kunde" kunde_id=kunde.pk %}"
+    ><span class="bi bi-arrow-left"></span> Zurück zum Kunden</a>
+    {% endif %}
+    <button
+        class="btn btn-secondary"
+        type="submit"
+    >Kunde speichern</button>
+</form>
 {% endblock %}
