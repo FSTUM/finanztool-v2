@@ -14,7 +14,13 @@
 
     <button
         class="btn btn-secondary"
+        name="vormerken"
         type="submit"
     >Typ-Änderung vormerken</button>
+    <button
+        class="{% if not settings.typ_aenderungs_beauftragter or not settings.typ_aenderung_single %}disabled {% endif %}btn btn-primary"
+        name="email-und-vormerken"
+        type="submit"
+    >Typ-Änderung vormerken und Email an {{ settings.typ_aenderungs_beauftragter }} senden</button>
 </form>
 {% endblock %}

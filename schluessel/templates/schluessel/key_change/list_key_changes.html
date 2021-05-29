@@ -19,6 +19,16 @@
 {% endblock %}
 
 {% block finanz_common_content %}
+<form
+    method="POST"
+    action=""
+>{% csrf_token %}
+    {% bootstrap_form form %}
+    <button
+        class="{% if not settings.typ_aenderungs_beauftragter or not settings.typ_aenderung_multiple %}disabled {% endif %}btn btn-primary"
+        type="submit"
+    >mehrere Typ-Änderungen per Email an {{ settings.typ_aenderungs_beauftragter }} senden</button>
+</form>
 <div class="table-responsive">
     <table
         class="table dataTable table-hover"

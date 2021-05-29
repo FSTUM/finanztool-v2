@@ -57,6 +57,21 @@ class Mail(models.Model):
             "zugewiesene Aufgaben pro User",
             "falls in den Einstellungen als Mailbenachrichtigung bei zugewiesene Aufgaben konfiguriert",
         ),
+        (
+            "keycard",
+            "Schlüsselkare, deren Typ geändert werden soll",
+            "falls in den Einstellungen als Template für eine einzige Typ-Änderung konfiguriert",
+        ),
+        (
+            "keycard.savedkeychange",
+            "Keycard-Änderungsantrag",
+            "falls in den Einstellungen als Template für eine einzige Typ-Änderung konfiguriert",
+        ),
+        (
+            "{% for key in keycards %}...",
+            "Schlüsselkaren, deren Typ geändert werden soll",
+            "falls in den Einstellungen als Template für mehrere Typ-Änderungen konfiguriert",
+        ),
     ]
     notes: str = ""
 
@@ -133,6 +148,27 @@ class Settings(SingletonModel):
         Mail,
         related_name="zugewiesene_aufgabe_mail+",
         verbose_name="Mailbenachrichtigung über zugewiesene Aufgaben",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    typ_aenderungs_beauftragter = models.EmailField(
+        verbose_name="Emailadresse, ab die die Keycard-Typ-Änderngs-anfragen geschickt werden",
+        null=True,
+        blank=True,
+    )
+    typ_aenderung_single = ForeignKey(
+        Mail,
+        related_name="typ_aenderung_single+",
+        verbose_name="Template, das ausgewählt wird, wenn eine einzige Keycard-Typ-Änderung versendet werden soll",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    typ_aenderung_multiple = ForeignKey(
+        Mail,
+        related_name="typ_aenderung_single+",
+        verbose_name="Template, das ausgewählt wird, wenn mehrere Keycard-Typ-Änderungen versendet werden sollen",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

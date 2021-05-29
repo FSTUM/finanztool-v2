@@ -11,8 +11,8 @@ urlpatterns = [
     path("list/", views.list_keys, name="list_keys"),
     path("log/", views.show_log, name="show_log"),
     path("add/", views.add_key, name="add_key"),
-    path("<int:key_pk>/", views.view_key, name="view_key"),
-    path("<int:key_pk>/edit/", views.edit_key, name="edit_key"),
+    path("view/<int:key_pk>/", views.view_key, name="view_key"),
+    path("edit/<int:key_pk>/", views.edit_key, name="edit_key"),
     path(
         "changes/",
         include(
@@ -25,15 +25,15 @@ urlpatterns = [
             ],
         ),
     ),
-    path("<int:key_pk>/return/", views.return_key, name="return_key"),
+    path("return/<int:key_pk>", views.return_key, name="return_key"),
     path(
-        "<int:key_pk>/give/",
+        "give/",
         include(
             [
-                path("", views.give_key, name="give_key"),
-                path("addperson/", views.give_add_person, name="give_add_person"),
-                path("editperson/<int:person_pk>/", views.give_edit_person, name="give_edit_person"),
-                path("confirm/<int:person_pk>/", views.give_key_confirm, name="give_key_confirm"),
+                path("<int:key_pk>/", views.give_key, name="give_key"),
+                path("<int:key_pk>/addperson/", views.give_add_person, name="give_add_person"),
+                path("<int:key_pk>/editperson/<int:person_pk>/", views.give_edit_person, name="give_edit_person"),
+                path("<int:key_pk>/confirm/<int:person_pk>/", views.give_key_confirm, name="give_key_confirm"),
             ],
         ),
     ),

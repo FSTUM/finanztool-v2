@@ -203,4 +203,7 @@ class SavedKeyChange(models.Model):
         return None
 
     def __str__(self):
-        return f"{self.user} ({self.date}): {self.key}->{self.new_keytype}"
+        return (
+            f"{self.user} ({self.date}) stellt den ändeungsantrag:"
+            f" {self.key}(vorher {self.key.keytype})->{self.new_keytype}"
+        )

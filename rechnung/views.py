@@ -158,12 +158,12 @@ def mahnung(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: int) -> Http
         raise Http404
 
     form = forms.Form(request.POST or None)
-    if request.method == "POST":
-        if "bezahlt" in request.POST and form.is_valid():
+    if request.method == "POST" and form.is_valid():
+        if "bezahlt" in request.POST:
             mahnung_obj.bezahlen()
             return redirect("rechnung:mahnung", rechnung_id=rechnung_obj.pk, mahnung_id=mahnung_obj.pk)
 
-        if "geschickt" in request.POST and form.is_valid():
+        if "geschickt" in request.POST:
             mahnung_obj.geschickt = True
             mahnung_obj.save()
             return redirect("rechnung:mahnung", rechnung_id=rechnung_obj.pk, mahnung_id=mahnung_obj.pk)

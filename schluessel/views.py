@@ -13,6 +13,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 
+from common.models import Settings
 from common.views import AuthWSGIRequest, finanz_staff_member_required
 
 from .forms import FilterKeysForm, KeyForm, PersonForm, SaveKeyChangeForm, SelectPersonForm
@@ -102,7 +103,7 @@ def save_key_change(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
         initial=initial,
         keytype=key.keytype,
     )
-
+    common_settings: Settings = Settings.load()
     if form.is_valid():
         keytype = form.cleaned_data["keytype"]
         comment = form.cleaned_data["comment"]
@@ -120,11 +121,31 @@ def save_key_change(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
                 user=request.user,
             )
 
+        if "email-und-vormerken" in request.POST:
+            if not common_settings.typ_aenderungs_beauftragter:
+                messages.error(request, "Es ist kein Keycard-Typ-Änderungs-Beauftragter eingetragen")
+            elif not common_settings.typ_aenderung_single:
+                messages.error(
+                    request,
+                    "Es ist kein Keycard-Typ-Änderungs-Template für mehrere Keycard-Typ-Änderungen eingetragen",
+                )
+            else:
+                mail_context = {"keycard": key}
+                common_settings.typ_aenderung_single.send_mail(
+                    mail_context,
+                    common_settings.typ_aenderungs_beauftragter,
+                )
+                messages.success(
+                    request,
+                    "Keycard-Typ-Änderungs-Antrag wurden per email an den Keycard-Typ-Änderungs-Beauftragten gesendet",
+                )
+
         return redirect("schluessel:view_key", key.id)
 
     context = {
         "key": key,
         "form": form,
+        "settings": common_settings,
     }
 
     return render(request, "schluessel/key_change/save_key_change.html", context)
@@ -254,22 +275,21 @@ def list_key_changes(request: AuthWSGIRequest) -> HttpResponse:
         .exclude(savedkeychange=None)
         .order_by("keytype__shortname", "number")
     )
-
     form = forms.Form(request.POST or None)
     if form.is_valid():
-        for k in keys:
-            try:
-                k.keytype = k.savedkeychange.new_keytype
-            except ObjectDoesNotExist:
-                continue
-            k.save()
-            SavedKeyChange.objects.filter(pk=k.savedkeychange.pk).delete()
-            KeyLogEntry.objects.create(
-                key=k,
-                person=None,
-                user=request.user,
-                operation=KeyLogEntry.EDIT,
+        common_settings: Settings = Settings.load()
+        if not common_settings.typ_aenderungs_beauftragter:
+            messages.error(request, "Es ist kein Keycard-Typ-Änderungs-Beauftragter eingetragen")
+        elif not common_settings.typ_aenderung_multiple:
+            messages.error(
+                request,
+                "Es ist kein Keycard-Typ-Änderungs-Template für mehrere Keycard-Typ-Änderungen eingetragen",
             )
+        else:
+            mail_context = {"keycards": keys}
+            common_settings.typ_aenderung_multiple.send_mail(mail_context, common_settings.typ_aenderungs_beauftragter)
+
+            messages.success(request, "Keycards wurden per email an den Keycard-Typ-Änderungs-Beauftragten gesendet")
         return redirect("schluessel:list_key_changes")
 
     context = {
