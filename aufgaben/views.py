@@ -27,14 +27,10 @@ def form_aufgabe(request: AuthWSGIRequest, aufgabe_id: Optional[int] = None) -> 
     if aufgabe_id:
         aufgabe_obj = get_object_or_404(Aufgabe, pk=aufgabe_id)
 
-    if request.method == "POST":
-        form = AufgabeForm(request.POST, instance=aufgabe_obj)
-
-        if form.is_valid():
-            aufgabe_pk: int = form.save().pk
-            return redirect("aufgaben:aufgabe", aufgabe_id=aufgabe_pk)
-    else:
-        form = AufgabeForm(initial={"zustaendig": request.user}, instance=aufgabe_obj)
+    form = AufgabeForm(request.POST or None, request.FILES, initial={"zustaendig": request.user}, instance=aufgabe_obj)
+    if request.POST and form.is_valid():
+        aufgabe_new: Aufgabe = form.save()
+        return redirect("aufgaben:aufgabe", aufgabe_id=aufgabe_new.pk)
 
     context = {
         "form": form,

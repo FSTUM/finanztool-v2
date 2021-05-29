@@ -26,3 +26,4 @@ Session.vim
 /venv/
 /.mypy_cache/
 /node_modules/
+/mediafiles/

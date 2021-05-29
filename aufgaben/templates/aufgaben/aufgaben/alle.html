@@ -48,6 +48,7 @@
                 <th>Jahr</th>
                 <th>Semester</th>
                 <th>Text</th>
+                <th>Anhang</th>
             </tr>
         </thead>
         <tbody>
@@ -69,6 +70,7 @@
                 <td>{{ aufgabe.jahr|unlocalize|default_if_none:"" }}</td>
                 <td>{{ aufgabe.get_semester_display|default_if_none:"" }}</td>
                 <td>{{ aufgabe.text }}</td>
+                <td>{% if aufgabe.attachment %}<a href="{{ aufgabe.attachment.url }}"><span class="bi bi-cloud-arrow-down-fill"></span></a>{% endif %}</td>
             </tr>
             {% endfor %}
         </tbody>

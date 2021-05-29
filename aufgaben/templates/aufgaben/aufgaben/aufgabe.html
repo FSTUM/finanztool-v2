@@ -33,6 +33,12 @@
         <th>Weitere Informationen</th>
         <td>{{ aufgabe.text }}</td>
     </tr>
+    {% if aufgabe.attachment %}
+    <tr>
+        <th>Anhang</th>
+        <td><a href="{{ aufgabe.attachment.url }}"><span class="bi bi-cloud-arrow-down-fill"></span></a></td>
+    </tr>
+    {% endif %}
 </table>
 
 <form method="POST">{% csrf_token %}

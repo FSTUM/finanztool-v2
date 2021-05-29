@@ -130,3 +130,7 @@ CRONJOBS = [
     ("0 7 * * *", "common.cron.ueberfaellige_rechnung_reminder"),  # dayly at 07:00
     ("0 7 * * 1", "common.cron.zugewiesene_aufgabe_reminder"),  # weekly on modays at 7:00
 ]
+
+# Media files (aufgaben.attachments, ...)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")

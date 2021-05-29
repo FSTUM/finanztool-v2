@@ -1,8 +1,10 @@
+import os
 from datetime import date
 
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.dispatch import receiver
 
 
 class Aufgabenart(models.Model):
@@ -68,9 +70,21 @@ class Aufgabe(models.Model):
         null=True,
         blank=True,
     )
+    attachment = models.FileField(upload_to="aufgben-attachments", null=True, blank=True)
 
     def __str__(self):
         return f"{self.art.name} - {self.zusatz} ({self.jahr})"
 
     def faellig(self):
         return self.frist < date.today()
+
+
+@receiver(models.signals.post_delete, sender=Aufgabe)
+def auto_delete_aufgabe_attachment_on_delete(sender, instance, **_kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `Aufgabe` object is deleted.
+    """
+    _ = sender  # sender is needed, for api. it cannot be renamed, but is unused here.
+    if instance.qr_code and os.path.isfile(instance.qr_code.path):
+        os.remove(instance.qr_code.path)

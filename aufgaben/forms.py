@@ -28,6 +28,7 @@ class AufgabeForm(forms.ModelForm):
             "semester",
             "text",
             "erledigt",
+            "attachment",
         )
 
     def __init__(self, *args, **kwargs):
