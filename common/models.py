@@ -153,7 +153,7 @@ class Settings(SingletonModel):
         blank=True,
     )
     typ_aenderungs_beauftragter = models.EmailField(
-        verbose_name="Emailadresse, ab die die Keycard-Typ-Änderngs-anfragen geschickt werden",
+        verbose_name="Emailadresse, an die die Keycard-Typ-Änderngs-anfragen geschickt werden",
         null=True,
         blank=True,
     )

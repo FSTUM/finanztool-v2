@@ -21,6 +21,11 @@
         class="{% if not settings.typ_aenderungs_beauftragter or not settings.typ_aenderung_single %}disabled {% endif %}btn btn-primary"
         name="email-und-vormerken"
         type="submit"
-    >Typ-Änderung vormerken und Email an {{ settings.typ_aenderungs_beauftragter }} senden</button>
+    >
+        {% if settings.typ_aenderungs_beauftragter and settings.typ_aenderung_single %}Typ-Änderung vormerken und Email an {{ settings.typ_aenderungs_beauftragter }} senden
+        {% elif settings.typ_aenderungs_beauftragter %}Keycard-Typ-Änderungs-Emails müssen in den Einstellungen konfigurert werden, um Keycard-Typ-Änderungs-Emails freizuschalten.
+        {% else %}Keycard-Typ-Änderungs-Beauftragten-Emailardesse muss in den Einstellungen konfigurert werden, um Keycard-Typ-Änderungs-Emails freizuschalten.
+        {% endif %}
+    </button>
 </form>
 {% endblock %}
