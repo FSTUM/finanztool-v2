@@ -8,14 +8,14 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, QuerySet
+from django.db.models import QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 
 from common.views import AuthWSGIRequest, finanz_staff_member_required
 
-from .forms import FilterKeysForm, FilterPersonsForm, KeyForm, PersonForm, SaveKeyChangeForm, SelectPersonForm
+from .forms import FilterKeysForm, KeyForm, PersonForm, SaveKeyChangeForm, SelectPersonForm
 from .models import Key, KeyLogEntry, Person, SavedKeyChange
 
 
@@ -329,15 +329,8 @@ def give_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
 
     form = SelectPersonForm(request.POST or None)
     if form.is_valid():
-        person_id = form.cleaned_data["person"]
-        if person_id:
-            try:
-                person = persons.get(id=person_id)
-            except Person.DoesNotExist:
-                return redirect("schluessel:give_key", key.id)
-
-            return redirect("schluessel:give_key_confirm", key.id, person.id)
-        return redirect("schluessel:give_key", key.id)
+        person: Person = form.cleaned_data["person"]
+        return redirect("schluessel:give_key_confirm", key.id, person.id)
 
     context = {
         "key": key,
@@ -604,27 +597,9 @@ def list_keys(request: AuthWSGIRequest) -> HttpResponse:
 def list_persons(request: AuthWSGIRequest) -> HttpResponse:
     persons = Person.objects.order_by("name", "firstname")
 
-    form = FilterPersonsForm(request.POST or None)
-    if form.is_valid():
-        search = form.cleaned_data["search"]
-
-        for search_term in search.split():
-            persons = persons.filter(
-                Q(name__icontains=search_term)
-                | Q(firstname__icontains=search_term)
-                | Q(email__icontains=search_term)
-                | Q(address__icontains=search_term)
-                | Q(plz__icontains=search_term)
-                | Q(city__icontains=search_term)
-                | Q(mobile__icontains=search_term)
-                | Q(phone__icontains=search_term),
-            )
-
     context = {
         "persons": persons,
-        "form": form,
     }
-
     return render(request, "schluessel/person/list_persons.html", context)
 
 

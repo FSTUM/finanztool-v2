@@ -32,7 +32,7 @@ urlpatterns = [
             [
                 path("", views.give_key, name="give_key"),
                 path("addperson/", views.give_add_person, name="give_add_person"),
-                path("editperson/<int:key_pk>/<int:person_pk>/", views.give_edit_person, name="give_edit_person"),
+                path("editperson/<int:person_pk>/", views.give_edit_person, name="give_edit_person"),
                 path("confirm/<int:person_pk>/", views.give_key_confirm, name="give_key_confirm"),
             ],
         ),
