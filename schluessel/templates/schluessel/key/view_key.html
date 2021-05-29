@@ -4,227 +4,212 @@
 {% block finanz_common_headercontent %}{{ key.typename }} {{ key }}{% if not key.active %} (inaktiv){% endif %}{% endblock %}
 {% block title %}Finanztool - {{ key.typename }} {{ key }}{% endblock %}
 
+{% block head %}
+<script>
+    $(() => {
+        $('#logTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            paging: false,
+            ordering: false,
+        });
+    });
+</script>
+{% endblock %}
+
 {% block finanz_common_content %}
-<div class="col-lg-6">
-    <div class="row">
-        {% if key.active and key.person %}
-        <div class="col-lg-3">
-            <a
-                class="btn btn-warning"
-                href="{% url "schluessel:return_key" key.id %}"
-            ><span class="bi bi-arrow-left"></span> Zurücknehmen</a>
-        </div>
-        <div class="col-lg-1"></div>
-        <div class="col-lg-2">
-            <a
-                class="btn btn-secondary"
-                href="{% url "schluessel:get_kaution" key.id %}"
-                target="_blank"
-            >Kaution</a>
-        </div>
-        {% if not key.keytype.deposit == 0 %}
-        <div class="col-lg-2">
-            <a
-                class="btn btn-secondary"
-                href="{% url "schluessel:get_quittung" key.id %}"
-                target="_blank"
-            >Quittung</a>
-        </div>
-        {% endif %}
-        {% elif key.active %}
-        <div class="col-lg-2">
-            <a
-                class="btn btn-success"
-                href="{% url "schluessel:give_key" key.id %}"
-            ><span class="bi bi-arrow-right"></span> Ausgeben</a>
-        </div>
-        {% endif %}
-        <div class="col-lg-1"></div>
-        {% if user.is_staff %}
-        <div class="col-lg-2">
-            <a
-                class="btn btn-secondary"
-                href="{% url "schluessel:edit_key" key.id %}"
-            >Bearbeiten</a>
-        </div>
-        {% endif %}
-    </div>
-
-    <table class="table table-striped table-hover">
-        <tr>
-            <th>Typ</th>
-            <td>{{ key.keytype }}</td>
-        </tr>
-        <tr>
-            <th>Nummer</th>
-            <td>{{ key }}</td>
-        </tr>
-        <tr>
-            <th>Kaution</th>
-            <td>{{ key.keytype.deposit|floatformat:2 }}€</td>
-        </tr>
-        <tr>
-            <th>Entleiher*in</th>
-            <td>
-                {% if key.person %}
-                <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
-                {% else %}
-                {% include "snippets/true_false_span.html" with value=False %}
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <th>Kommentar</th>
-            <td>{{ key.comment }}</td>
-        </tr>
-    </table>
-</div>
-
-{% if user.is_staff and key.active %}
-{% if key.keytype.keycard %}
-<div class="col-lg-8">
-    <h3>Vorgemerkte Änderung</h3>
-    {% if key.savedkeychange %}
-    <table class="table table-striped table-hover">
-        <tr>
-            <th>Alter Typ</th>
-            <th>Neuer Typ</th>
-            <th>Kommentar</th>
-            <th>Datum</th>
-            <th>Finanzer*in</th>
-            <th>Anwenden</th>
-            <th>Bearbeiten</th>
-            <th>Löschen</th>
-        </tr>
-        <tr>
-            <td>{{ key.keytype }}</td>
-            <td>{{ key.savedkeychange.new_keytype }}</td>
-            <td>{{ key.savedkeychange.comment }}</td>
-            <td>{{ key.savedkeychange.date | date:"SHORT_DATETIME_FORMAT" }}
-            </td>
-            <td>
-                {% if key.savedkeychange.user.get_full_name %}
-                {{ key.savedkeychange.user.get_full_name }}
-                {% else %}
-                {{ key.savedkeychange.user.username }}
-                {% endif %}
-            </td>
-            <td>
-                {% if key.savedkeychange.violated_key %}
-                <p class="text-danger">
-                    nicht möglich, <a href="{% url "schluessel:view_key" key.savedkeychange.violated_key.id %}">{{ key.savedkeychange.violated_key }}</a>
-                    gibt es bereits
-                </p>
-                {% else %}
-                <a
-                    href="{% url "schluessel:apply_key_change" key.id %}"
-                    class="btn btn-secondary"
-                >Anwenden</a>
-                {% endif %}
-            </td>
-            <td>
-                <a
-                    href="{% url "schluessel:save_key_change" key.id %}"
-                    class="btn btn-warning"
-                >Ändern</a>
-            </td>
-            <td>
-                <a
-                    href="{% url "schluessel:delete_key_change" key.id %}"
-                    class="btn btn-danger"
-                >Löschen</a>
-            </td>
-        </tr>
-    </table>
-    {% else %}
-    <div class="col-lg-2">
-        <a
-            href="{% url "schluessel:save_key_change" key.id %}"
-            class="btn btn-secondary"
-        >Typ-Änderung vormerken</a>
-    </div>
+<table class="table table-striped table-hover">
+    <tr>
+        <th>Typ</th>
+        <td>{{ key.keytype }}</td>
+    </tr>
+    <tr>
+        <th>Nummer</th>
+        <td>{{ key }}</td>
+    </tr>
+    <tr>
+        <th>Kaution</th>
+        <td>{{ key.keytype.deposit|floatformat:2 }}€</td>
+    </tr>
+    <tr>
+        <th>Entleiher*in</th>
+        <td>
+            {% if key.person %}
+            <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>
+            {% else %}
+            {% include "snippets/true_false_span.html" with value=False %}
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Kommentar</th>
+        <td>{{ key.comment }}</td>
+    </tr>
+</table>
+<div class="mb-3">
+    {% if user.is_staff %}
+    <a
+        class="btn btn-secondary"
+        href="{% url "schluessel:edit_key" key.id %}"
+    >Bearbeiten</a>
+    {% endif %}
+    {% if user.is_staff and key.active and key.keytype.keycard and not key.savedkeychange %}
+    <a
+        href="{% url "schluessel:save_key_change" key.id %}"
+        class="btn btn-secondary"
+    >Typ-Änderung vormerken</a>
+    {% endif %}
+    {% if key.active and key.person %}
+    <a
+        class="btn btn-secondary"
+        href="{% url "schluessel:get_kaution" key.id %}"
+        target="_blank"
+    >Kaution</a>
+    {% if key.keytype.deposit != 0 %}
+    <a
+        class="btn btn-secondary"
+        href="{% url "schluessel:get_quittung" key.id %}"
+        target="_blank"
+    >Quittung</a>
+    {% endif %}
+    <a
+        class="btn btn-warning"
+        href="{% url "schluessel:return_key" key.id %}"
+    >{{ key.typename }} zurücknehmen</a>
+    {% elif key.active %}
+    <a
+        class="btn btn-success"
+        href="{% url "schluessel:give_key" key.id %}"
+    >{{ key.typename }} ausgeben</a>
     {% endif %}
 </div>
+{% if user.is_staff and key.active and key.keytype.keycard and key.savedkeychange %}
+<h3>Vorgemerkte Änderung</h3>
+<table class="table table-hover">
+    <tr>
+        <th>Alter Typ</th>
+        <th>Neuer Typ</th>
+        <th>Kommentar</th>
+        <th>Datum</th>
+        <th>Finanzer*in</th>
+        <th>Anwenden</th>
+        <th>Bearbeiten</th>
+        <th>Löschen</th>
+    </tr>
+    <tr>
+        <td>{{ key.keytype }}</td>
+        <td>{{ key.savedkeychange.new_keytype }}</td>
+        <td>{{ key.savedkeychange.comment }}</td>
+        <td>{{ key.savedkeychange.date | date:"SHORT_DATETIME_FORMAT" }}
+        </td>
+        <td>
+            {% if key.savedkeychange.user.get_full_name %}
+            {{ key.savedkeychange.user.get_full_name }}
+            {% else %}
+            {{ key.savedkeychange.user.username }}
+            {% endif %}
+        </td>
+        <td>
+            {% if key.savedkeychange.violated_key %}
+            <p class="text-danger">
+                nicht möglich, <a href="{% url "schluessel:view_key" key.savedkeychange.violated_key.id %}">{{ key.savedkeychange.violated_key }}</a>
+                gibt es bereits
+            </p>
+            {% else %}
+            <a
+                href="{% url "schluessel:apply_key_change" key.id %}"
+                class="btn btn-secondary"
+            >Anwenden</a>
+            {% endif %}
+        </td>
+        <td>
+            <a
+                href="{% url "schluessel:save_key_change" key.id %}"
+                class="btn btn-warning"
+            >Ändern</a>
+        </td>
+        <td>
+            <a
+                href="{% url "schluessel:delete_key_change" key.id %}"
+                class="btn btn-danger"
+            >Löschen</a>
+        </td>
+    </tr>
+</table>
 {% endif %}
-{% endif %}
-
-<div class="col-lg-8">
-    <br />
-    <h3>Log</h3>
-    <table class="table table-striped table-hover">
-        <tr>
-            <th>Datum</th>
-            <th>Vorgang</th>
-            <th>Aktiv</th>
-            <th>Entleiher*in</th>
-            <th>Schlüsse-Nr</th>
-            <th>Kaution</th>
-            <th>Kommentar</th>
-            <th>Finanzer*in</th>
-        </tr>
-        {% for entry in logentries %}
-        <tr>
-            <td>{{ entry.date | date:"SHORT_DATETIME_FORMAT" }}</td>
-            <td>
-                {{ entry.get_operation_display }}
-                {% if entry.operation == "G" %}
-                <span class="bi bi-arrow-right"></span>
-                {% elif entry.operation == "R" %}
-                <span class="bi bi-arrow-left"></span>
-                {% endif %}
-            </td>
-            <td>
-                {% ifchanged entry.key_active %}
-                {% include "snippets/true_false_none_span.html" with value=entry.key_active %}
-                {% else %}
-                <div style="color: lightgrey;">
-                    {% include "snippets/true_false_none_span.html" with value=entry.key_active %}
-                </div>
-                {% endifchanged %}
-            </td>
-            <td>
-                {% if entry.person %}
-                <a href="{% url "schluessel:view_person" entry.person.id %}">{{ entry.person }}</a>
-                {% endif %}
-            </td>
-            <td>
-                {% ifchanged entry.key_keytype entry.key_number %}
-                {{ entry.key_keytype.shortname }} {{ entry.key_number }}
-                {% else %}
-                <div style="color: lightgrey;">
-                    {{ entry.key_keytype.shortname }} {{ entry.key_number }}
-                </div>
-                {% endifchanged %}
-            </td>
-            <td>
-                {% ifchanged entry.key_deposit %}
-                {{ entry.key_deposit|floatformat:2 }}€
-                {% else %}
-                <div style="color: lightgrey;">
-                    {{ entry.key_deposit|floatformat:2 }}€
-                </div>
-                {% endifchanged %}
-            </td>
-            <td>
-                {% ifchanged entry.key_comment %}
-                {{ entry.key_comment }}
-                {% else %}
-                <div style="color: lightgrey;">
-                    {{ entry.key_comment }}
-                </div>
-                {% endifchanged %}
-            </td>
-            <td>
-                {% if entry.user.get_full_name %}
-                {{ entry.user.get_full_name }}
-                {% else %}
-                {{ entry.user.username }}
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
+<h3>Log</h3>
+<div class="table-responsive">
+    <table
+        class="table dataTable table-hover"
+        id="logTable"
+    >
+        <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Vorgang</th>
+                <th>Aktiv</th>
+                <th>Entleiher*in</th>
+                <th>Schlüsse-Nr</th>
+                <th>Kaution</th>
+                <th>Kommentar</th>
+                <th>Finanzer*in</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in logentries %}
+            <tr>
+                <td>{{ entry.date | date:"SHORT_DATETIME_FORMAT" }}</td>
+                <td>
+                    {{ entry.get_operation_display }}
+                    {% if entry.operation == "G" %}
+                    <span class="bi bi-arrow-right"></span>
+                    {% elif entry.operation == "R" %}
+                    <span class="bi bi-arrow-left"></span>
+                    {% endif %}
+                </td>
+                <td>
+                    <div
+                        {% ifchanged entry.key_active %}class="text-muted"
+                        {% endifchanged %}
+                    >{% include "snippets/true_false_none_span.html" with value=entry.key_active %}
+                    </div>
+                </td>
+                <td>
+                    {% if entry.person %}
+                    <a href="{% url "schluessel:view_person" entry.person.id %}">{{ entry.person }}</a>
+                    {% endif %}
+                </td>
+                <td>
+                    <div
+                        {% ifchanged entry.key_keytype entry.key_number %}class="text-muted"
+                        {% endifchanged %}
+                    >{{ entry.key_keytype.shortname }} {{ entry.key_number }}
+                    </div>
+                </td>
+                <td>
+                    <div
+                        {% ifchanged entry.key_deposit %}class="text-muted"
+                        {% endifchanged %}
+                    >{{ entry.key_deposit|floatformat:2 }}€
+                    </div>
+                </td>
+                <td>
+                    <div
+                        {% ifchanged entry.key_comment %}class="text-muted"
+                        {% endifchanged %}
+                    >{{ entry.key_comment }}
+                    </div>
+                </td>
+                <td>
+                    {% if entry.user.get_full_name %}{{ entry.user.get_full_name }}
+                    {% else %}{{ entry.user.username }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </div>
-
-
 {% endblock %}
