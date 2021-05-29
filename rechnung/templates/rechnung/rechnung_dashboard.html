@@ -65,7 +65,7 @@
                 <td class="align-content-end">{{ rechnung.gesamtsumme }}€</td>
                 <td>
                     <span class="{% if rechnung.faellig and rechnung.erledigt %}text-success{% elif rechnung.faellig %}text-danger{% endif %}">
-                        {{ rechnung.fdatum|date:"SHORT_DATE_FORMAT" }}
+                        {{ rechnung.fdatum }}
                     </span>
                 </td>
                 <td>{% include "snippets/true_false_span.html" with value=rechnung.erledigt %}</td>

@@ -57,7 +57,7 @@
                 <td class="{% if rechnung.faellig and rechnung.erledigt %}table-success
                            {% elif rechnung.faellig and not rechnung.erledigt %}table-danger
                            {% endif %}">
-                    {{ rechnung.fdatum|date:"SHORT_DATE_FORMAT" }}
+                    {{ rechnung.fdatum }}
                 </td>
                 <td>{% include "snippets/true_false_span.html" with value=rechnung.bezahlt %}</td>
                 <td>{% include "snippets/true_false_span.html" with value=rechnung.erledigt %}</td>
