@@ -219,16 +219,92 @@
 
     {% if rechnung.gestellt and not rechnung.erledigt %}
     <button
-        class="btn btn-success"
-        name="bezahlt"
-        type="submit"
+        type="button"
+        class="btn btn-warning"
+        data-bs-toggle="modal"
+        data-bs-target="#bezahltModal"
     ><span class="bi bi-credit-card-fill"></span> Bezahlt</button>
+    <div
+        class="modal fade"
+        id="bezahltModal"
+        tabindex="-1"
+        aria-labelledby="bezahltModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5
+                        class="modal-title"
+                        id="bezahltModalLabel"
+                    >Rechnung wurde bezahlt</h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">Bestätigung, das die Rechnung bezahlt wurde</div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >Schließen</button>
+                    <button
+                        class="btn btn-success"
+                        name="bezahlt"
+                        type="submit"
+                    >Rechnung wurde bezahlt</button>
+                </div>
+            </div>
+        </div>
+    </div>
     {% elif not rechnung.gestellt and not rechnung.erledigt %}
     <button
+        type="button"
         class="btn btn-warning"
-        name="gestellt"
-        type="submit"
+        data-bs-toggle="modal"
+        data-bs-target="#gestelltModal"
     ><span class="bi bi-envelope-fill"></span> Gestellt</button>
+    <div
+        class="modal fade"
+        id="gestelltModal"
+        tabindex="-1"
+        aria-labelledby="gestelltModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5
+                        class="modal-title"
+                        id="gestelltModalLabel"
+                    >Rechnung wurde gestellt</h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">Bestätigung, das die Rechnung gestellt wurde</div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >Schließen</button>
+                    <button
+                        class="btn btn-warning"
+                        name="gestellt"
+                        type="submit"
+                    >Rechnung wurde gestellt</button>
+                </div>
+            </div>
+        </div>
+    </div>
     {% endif %}
 </form>
 {% endblock %}

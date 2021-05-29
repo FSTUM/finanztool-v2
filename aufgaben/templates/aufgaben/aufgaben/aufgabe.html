@@ -43,16 +43,92 @@
     {% bootstrap_form form %}
     {% if aufgabe.erledigt %}
     <button
+        type="button"
         class="btn btn-warning"
-        name="nicht-erledigt"
-        type="submit"
+        data-bs-toggle="modal"
+        data-bs-target="#nicht-erledigtModal"
     >Nicht mehr Erledigt</button>
+    <div
+        class="modal fade"
+        id="nicht-erledigtModal"
+        tabindex="-1"
+        aria-labelledby="nicht-erledigtModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5
+                        class="modal-title"
+                        id="nicht-erledigtModalLabel"
+                    >Aufgabe ist nicht mehr erledigt</h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">Bestätigung, das die Aufgabe nicht erledigt sein soll</div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >Schließen</button>
+                    <button
+                        class="btn btn-warning"
+                        name="nicht-erledigt"
+                        type="submit"
+                    >Aufgabe ist nicht mehr erledigt</button>
+                </div>
+            </div>
+        </div>
+    </div>
     {% else %}
     <button
+        type="button"
         class="btn btn-success"
-        name="erledigt"
-        type="submit"
+        data-bs-toggle="modal"
+        data-bs-target="#erledigtModal"
     >Erledigt</button>
+    <div
+        class="modal fade"
+        id="erledigtModal"
+        tabindex="-1"
+        aria-labelledby="erledigtModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5
+                        class="modal-title"
+                        id="erledigtModalLabel"
+                    >Aufgabe wurde erledigt</h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">Bestätigung, das die Aufgabe erledigt wurde</div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >Schließen</button>
+                    <button
+                        class="btn btn-success"
+                        name="erledigt"
+                        type="submit"
+                    >Aufgabe wurde erledigt</button>
+                </div>
+            </div>
+        </div>
+    </div>
     {% endif %}
 </form>
 
