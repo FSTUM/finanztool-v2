@@ -88,7 +88,6 @@
             <tr>
                 <th>Rechnung erledigt?</th>
                 <td>
-                <td>
                     {% include "snippets/true_false_span.html" with value=rechnung.bezahlt|default:rechnung.erledigt %}
                     {% if rechnung.bezahlt %}
                     <span style="color: green;">

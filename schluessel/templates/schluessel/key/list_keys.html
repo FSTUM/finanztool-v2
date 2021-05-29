@@ -56,6 +56,8 @@
                 <th>Entleiher*in</th>
                 <th>Kommentar</th>
             </tr>
+        </thead>
+        <tbody>
             {% for key in keys %}
             <tr>
                 <td>{{ key.keytype }}</td>
@@ -74,6 +76,7 @@
                 <td>{{ key.comment }}</td>
             </tr>
             {% endfor %}
+        </tbody>
     </table>
 </div>
 

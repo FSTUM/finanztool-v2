@@ -49,7 +49,6 @@
             <tr>
                 <th>Erledigt?</th>
                 <td>
-
                     {% include "snippets/true_false_span.html" with value=mahnung.bezahlt|default:rechnung.erledigt %}
                     {% if mahnung.bezahlt %}
                     <span style="color: green;">
@@ -58,11 +57,7 @@
                     {% else %}
                     {% if rechnung.erledigt %}
                     <span style="color: green;">
-                        {% if rechnung.bezahlt %}
-                        Die Originalrechnung wurde bezahlt.
-                        {% else %}
-                        Eine andere Mahnung wurde bezahlt.
-                        {% endif %}
+                        {% if rechnung.bezahlt %}Die Originalrechnung{% else %}Eine andere Mahnung{% endif %} wurde bezahlt.
                     </span>
                     {% else %}
                     Es wurde noch keine zugehörige Mahnung bezahlt.
@@ -120,7 +115,6 @@
                 <th>Gestellt von</th>
                 <td>{{ mahnung.ersteller.get_full_name }}</td>
             </tr>
-            <tr>
             <tr>
                 <th>Einleitungstext</th>
                 <td>{{ mahnung.einleitung }}</td>
