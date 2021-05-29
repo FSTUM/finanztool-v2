@@ -1,7 +1,7 @@
 import os
 import subprocess  # nosec: fully defined
 from tempfile import mkdtemp, mkstemp
-from typing import Optional
+from typing import Any, Dict, Optional
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import QuerySet
@@ -335,10 +335,14 @@ def kategorie(request: AuthWSGIRequest) -> HttpResponse:
 
 @finanz_staff_member_required
 def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional[int] = None) -> HttpResponse:
+    # context-setup
     rechnung_obj = get_object_or_404(Rechnung, pk=rechnung_id)
-    mahnung_obj = None
-
+    context: Dict[str, Any] = {"rechnung": rechnung_obj}
+    # disposition-setup
+    response = HttpResponse(content_type="application/pdf")
+    content_disposition = f'inline; filename="RE{rechnung_obj.rnr_string}_{rechnung_obj.kunde.knr}'
     if mahnung_id:
+        # context-setup
         mahnung_obj = get_object_or_404(Mahnung, pk=mahnung_id)
         vorherige_mahnungen = (
             Mahnung.objects.filter(
@@ -348,25 +352,18 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
             .order_by("wievielte")
             .all()
         )
-        context = {
-            "mahnung": mahnung_obj,
-            "rechnung": rechnung_obj,
-            "vorherige_mahnungen": vorherige_mahnungen,
-        }
-    else:
-        context = {"rechnung": rechnung_obj}
+        context["mahnung"] = mahnung_obj
+        context["vorherige_mahnungen"] = vorherige_mahnungen
+        # disposition-setup
+        content_disposition += f"_M{mahnung_obj.wievielte}"
+    response["Content-Disposition"] = content_disposition + '.pdf"'
 
     # create temporary files
     tmplatex = mkdtemp()
     latex_file, latex_filename = mkstemp(suffix=".tex", dir=tmplatex)
 
-    os.write(
-        latex_file,
-        render_to_string(
-            "rechnung/tex/latex_rechnung.tex",
-            context,
-        ).encode("utf8"),
-    )
+    rendered_template = render_to_string("rechnung/tex/latex_rechnung.tex", context).encode("utf8")
+    os.write(latex_file, rendered_template)
     os.close(latex_file)
 
     # Compile the TeX file with PDFLaTeX
@@ -387,16 +384,7 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
             {"erroroutput": error.output},
         )
 
-    response = HttpResponse(content_type="application/pdf")
-    content_disposition = f'inline; filename="RE{rechnung_obj.rnr_string}_{rechnung_obj.kunde.knr}'
-    if mahnung_id and mahnung_obj:
-        content_disposition += f"_M{mahnung_obj.wievielte}"
-    response["Content-Disposition"] = content_disposition + '.pdf"'
-
-    # return path to pdf
-    pdf_filename = f"{os.path.splitext(latex_filename)[0]}.pdf"
-
-    with open(pdf_filename, "rb") as pdf:
+    with open(f"{os.path.splitext(latex_filename)[0]}.pdf", "rb") as pdf:
         response.write(pdf.read())
     # shutil.rmtree(tmplatex)
 

@@ -520,13 +520,8 @@ def create_pdf(request: AuthWSGIRequest, key_pk: int, doc: str) -> HttpResponse:
     # Pass TeX template through Django templating engine and into the temp file
     context = {"key": key, "user": request.user, "logo_path": logo_path}
 
-    os.write(
-        latex_file,
-        render_to_string(
-            f"schluessel/latex_{doc}.tex",
-            context,
-        ).encode("utf8"),
-    )
+    rendered_template = render_to_string(f"schluessel/tex/latex_{doc}.tex", context).encode("utf8")
+    os.write(latex_file, rendered_template)
     os.close(latex_file)
 
     # Compile the TeX file with PDFLaTeX
