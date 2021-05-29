@@ -6,38 +6,24 @@
 {% block finanz_common_content %}
 <p>
     Soll
-    {% if key.keytype.keycard %}
-    die Schließkarte
-    {% else %}
-    der Schlüssel
-    {% endif %}
-    <a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a>, momentan ausgegeben an <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>, wirklich zurückgenommen
-    werden?
+    {% if key.keytype.keycard %}die Schließkarte{% else %}der Schlüssel{% endif %}
+    <a href="{% url "schluessel:view_key" key.id %}">{{ key }}</a>,
+    momentan ausgegeben an <a href="{% url "schluessel:view_person" key.person.id %}">{{ key.person }}</a>,
+    wirklich zurückgenommen werden?
 </p>
 
 <form
     method="POST"
     action=""
 >{% csrf_token %}
-
-    <table class="table">
-        <thead>
-            <tr>
-                <td>
-                    <button
-                        class="btn btn-warning"
-                        type="submit"
-                    >Zurücknehmen</button>
-                </td>
-                <td>
-                    <a
-                        class="btn btn-secondary"
-                        href="{% url "schluessel:view_key" key.id %}"
-                    >Abbrechen</a>
-                </td>
-            </tr>
-        </thead>
-    </table>
+    <a
+        class="btn btn-secondary"
+        href="{% url "schluessel:view_key" key.id %}"
+    >Abbrechen</a>
+    <button
+        class="btn btn-warning"
+        type="submit"
+    >Zurücknehmen</button>
 </form>
 
 {% endblock %}
