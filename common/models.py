@@ -58,18 +58,18 @@ class Mail(models.Model):
             "falls in den Einstellungen als Mailbenachrichtigung bei zugewiesene Aufgaben konfiguriert",
         ),
         (
-            "keycard",
-            "Schlüsselkare, deren Typ geändert werden soll",
+            "{{ keycard }}",
+            "Schlüsselkarte, deren Typ geändert werden soll",
             "falls in den Einstellungen als Template für eine einzige Typ-Änderung konfiguriert",
         ),
         (
-            "keycard.savedkeychange",
-            "Keycard-Änderungsantrag",
+            "{{ keycard.savedkeychange }}",
+            "Schlüsselkarten-Änderungsantrag",
             "falls in den Einstellungen als Template für eine einzige Typ-Änderung konfiguriert",
         ),
         (
-            "{% for key in keycards %}...",
-            "Schlüsselkaren, deren Typ geändert werden soll",
+            "{% for keycard in keycards %}...",
+            "Schlüsselkarten, deren Typ geändert werden soll",
             "falls in den Einstellungen als Template für mehrere Typ-Änderungen konfiguriert",
         ),
     ]
