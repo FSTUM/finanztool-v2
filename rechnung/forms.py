@@ -130,6 +130,11 @@ class PostenForm(forms.ModelForm):
             "mwst",
             "anzahl",
         )
+        widgets = {
+            "name": forms.widgets.TextInput(attrs={"list": "nameDataList"}),
+            "einzelpreis": forms.widgets.TextInput(attrs={"list": "einzelpreisDataList"}),
+            "anzahl": forms.widgets.TextInput(attrs={"list": "anzahlDataList"}),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

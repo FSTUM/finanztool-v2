@@ -4,7 +4,7 @@ from tempfile import mkdtemp, mkstemp
 from typing import Any, Dict, Optional
 
 from django.contrib.auth.decorators import login_required
-from django.db.models import QuerySet
+from django.db.models import Count, QuerySet
 from django.forms import forms
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -306,20 +306,32 @@ def form_rechnung_posten(request: AuthWSGIRequest, rechnung_id: int) -> HttpResp
         if form.is_valid():
             posten_obj = form.save(commit=False)
             posten_obj.rechnung = rechnung_obj
-            posten_obj = form.save()  # TODO: WTF??
+            posten_obj.save()
             if "zurueck" in request.POST:
-                return redirect(
-                    "rechnung:rechnung",
-                    rechnung_id=rechnung_obj.pk,
-                )
-            return redirect(
-                "rechnung:rechnung_posten_neu",
-                rechnung_id=rechnung_obj.pk,
-            )
-    return render(
-        request,
-        "rechnung/posten/form_posten_neu.html",
-        {"form": PostenForm(), "rechnung": rechnung_obj},
+                return redirect("rechnung:rechnung", rechnung_id=rechnung_obj.pk)
+            return redirect("rechnung:rechnung_posten_neu", rechnung_id=rechnung_obj.pk)
+    posten_suggestions = Posten.objects.filter(rechnung__kategorie=rechnung_obj.kategorie)
+
+    posten_name_suggestions = get_distinct_values_in_order(posten_suggestions, "name")
+    posten_einzelpreis_suggestions = get_distinct_values_in_order(posten_suggestions, "einzelpreis")
+    posten_anzahl_suggestions = get_distinct_values_in_order(posten_suggestions, "anzahl")
+    context = {
+        "form": PostenForm(),
+        "rechnung": rechnung_obj,
+        "posten_name_suggestions": posten_name_suggestions,
+        "posten_einzelpreis_suggestions": posten_einzelpreis_suggestions,
+        "posten_anzahl_suggestions": posten_anzahl_suggestions,
+    }
+    return render(request, "rechnung/posten/form_posten_neu.html", context)
+
+
+def get_distinct_values_in_order(posten_suggestions, field):
+    return (
+        posten_suggestions.values(field)
+        .annotate(c_field=Count(field))
+        .order_by("c_field")
+        .distinct()
+        .values_list(field, flat=True)
     )
 
 
