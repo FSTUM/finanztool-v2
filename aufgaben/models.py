@@ -70,7 +70,7 @@ class Aufgabe(models.Model):
         null=True,
         blank=True,
     )
-    attachment = models.FileField(upload_to="aufgben-attachments", null=True, blank=True)
+    attachment = models.FileField(upload_to="aufgben-attachments", verbose_name="Anhang", null=True, blank=True)
 
     def __str__(self):
         return f"{self.art.name} - {self.zusatz} ({self.jahr})"
