@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import Dict, List
 
 from django.conf.locale.de import formats as de_formats
 
@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "bootstrap_datepicker_plus",
     "active_link",
     "django_crontab",
+    "storages",
     "rechnung",
     "konto",
     "aufgaben",
@@ -134,3 +135,14 @@ CRONJOBS = [
 # Media files (aufgaben.attachments, ...)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+
+# sftp transfer to valhalla
+SFTP_STORAGE_HOST = "valhalla.fs.tum.de"
+SFTP_STORAGE_ROOT = "/group/finanz/01-Ausgang/Rechnung/"
+SFTP_STORAGE_PARAMS: Dict[str, str] = {}
+SFTP_STORAGE_INTERACTIVE = False
+SFTP_STORAGE_FILE_MODE = 660
+SFTP_STORAGE_DIR_MODE = 770
+# SFTP_STORAGE_UID = ""
+SFTP_STORAGE_GID = 10004
+# SFTP_KNOWN_HOST_FILE = ""

@@ -1,7 +1,8 @@
 import os
+import shutil
 import subprocess  # nosec: fully defined
 from tempfile import mkdtemp, mkstemp
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, QuerySet
@@ -9,6 +10,8 @@ from django.forms import forms
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from storages.backends.sftpstorage import SFTPStorage
+from storages.base import ImproperlyConfigured
 
 from aufgaben.models import Aufgabe
 from common.views import AuthWSGIRequest, finanz_staff_member_required
@@ -347,29 +350,48 @@ def kategorie(request: AuthWSGIRequest) -> HttpResponse:
 
 @finanz_staff_member_required
 def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional[int] = None) -> HttpResponse:
-    # context-setup
+    context, proposed_filename = gen_context(rechnung_id, mahnung_id)
+    try:
+        path_to_pdf, tmplatex = gen_rechnung(context)
+    except subprocess.CalledProcessError as error:
+        return render(
+            request,
+            "rechnung/tex/rechnungpdf_error.html",
+            {"erroroutput": error.output},
+        )
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'inline; filename="{proposed_filename}"'
+
+    with open(path_to_pdf, "rb") as pdf:
+        response.write(pdf.read())
+    shutil.rmtree(tmplatex, ignore_errors=True)
+
+    return response
+
+
+def gen_context(
+    rechnung_id: int,
+    mahnung_id: Optional[int] = None,
+) -> Tuple[Dict[str, Any], str]:
     rechnung_obj = get_object_or_404(Rechnung, pk=rechnung_id)
     context: Dict[str, Any] = {"rechnung": rechnung_obj}
-    # disposition-setup
-    response = HttpResponse(content_type="application/pdf")
-    content_disposition = f'inline; filename="RE{rechnung_obj.rnr_string}_{rechnung_obj.kunde.knr}'
+    proposed_filename = f"RE{rechnung_obj.rnr_string}_{rechnung_obj.kunde.knr}"
     if mahnung_id:
-        # context-setup
         mahnung_obj = get_object_or_404(Mahnung, pk=mahnung_id)
         vorherige_mahnungen = (
-            Mahnung.objects.filter(
-                rechnung=mahnung_obj.rechnung,
-                wievielte__lt=mahnung_obj.wievielte,
-            )
+            Mahnung.objects.filter(rechnung=mahnung_obj.rechnung, wievielte__lt=mahnung_obj.wievielte)
             .order_by("wievielte")
             .all()
         )
         context["mahnung"] = mahnung_obj
         context["vorherige_mahnungen"] = vorherige_mahnungen
-        # disposition-setup
-        content_disposition += f"_M{mahnung_obj.wievielte}"
-    response["Content-Disposition"] = content_disposition + '.pdf"'
+        proposed_filename += f"_M{mahnung_obj.wievielte}"
+    proposed_filename = f"{proposed_filename}.pdf"
+    return context, proposed_filename
 
+
+def gen_rechnung(context: Dict[str, Any]) -> Tuple[str, str]:
     # create temporary files
     tmplatex = mkdtemp()
     latex_file, latex_filename = mkstemp(suffix=".tex", dir=tmplatex)
@@ -379,25 +401,32 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
     os.close(latex_file)
 
     # Compile the TeX file with PDFLaTeX
+    subprocess.check_output(  # nosec: fully defined
+        [
+            "pdflatex",
+            "-halt-on-error",
+            "-output-directory",
+            tmplatex,
+            latex_filename,
+        ],
+    )
+
+    path_to_pdf = f"{os.path.splitext(latex_filename)[0]}.pdf"
+
+    return path_to_pdf, tmplatex
+
+
+sftp = SFTPStorage()
+
+
+def gen_rechnung_upload_to_sftp(rechnung_id: int, mahnung_id: Optional[int] = None) -> None:
+    context, proposed_filename = gen_context(rechnung_id, mahnung_id)
+    tmplatex = ""  # happy now, mypy?
     try:
-        subprocess.check_output(  # nosec: fully defined
-            [
-                "pdflatex",
-                "-halt-on-error",
-                "-output-directory",
-                tmplatex,
-                latex_filename,
-            ],
-        )
-    except subprocess.CalledProcessError as error:
-        return render(
-            request,
-            "rechnung/tex/rechnungpdf_error.html",
-            {"erroroutput": error.output},
-        )
-
-    with open(f"{os.path.splitext(latex_filename)[0]}.pdf", "rb") as pdf:
-        response.write(pdf.read())
-    # shutil.rmtree(tmplatex)
-
-    return response
+        path_to_pdf, tmplatex = gen_rechnung(context)
+        remote_path_to_pdf = sftp.get_valid_name(proposed_filename)
+        with open(path_to_pdf, "rb") as pdf:
+            sftp.save(remote_path_to_pdf, pdf)
+    except (subprocess.CalledProcessError, ImproperlyConfigured):
+        pass
+    shutil.rmtree(tmplatex, ignore_errors=True)
