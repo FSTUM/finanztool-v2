@@ -107,6 +107,7 @@
 </div>
 {% endblock %}
 
+{% block defered_script %}
 <script>
     /* eslint-disable no-unused-vars */
     const netto = document.getElementById('nettoInput');
@@ -168,3 +169,4 @@
         brutto.value = `${i.toLocaleString()}€`;
     }
 </script>
+{% endblock %}
