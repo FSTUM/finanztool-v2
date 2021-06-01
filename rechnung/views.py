@@ -278,18 +278,19 @@ def posten(request: AuthWSGIRequest, posten_id: int) -> HttpResponse:
 @finanz_staff_member_required
 def form_exist_posten(request: AuthWSGIRequest, posten_id: int) -> HttpResponse:
     posten_obj = get_object_or_404(Posten, pk=posten_id)
+    rechnung_obj = posten_obj.rechnung
 
-    if posten_obj.rechnung.gestellt:
-        return redirect("rechnung:rechnung", rechnung_id=posten_obj.rechnung.pk)
+    if rechnung_obj.gestellt:
+        return redirect("rechnung:rechnung", rechnung_id=rechnung_obj.pk)
+
+    form = PostenForm(request.POST or None, instance=posten_obj)
     if request.method == "POST":
-        form = PostenForm(request.POST, instance=posten_obj)
-
         if "loeschen" in request.POST:
             posten_obj.delete()
         elif form.is_valid():
-            posten_obj = form.save()
-        return redirect("rechnung:rechnung", rechnung_id=posten_obj.rechnung.pk)
-    context = {"form": PostenForm(instance=posten_obj)}
+            form.save()
+        return redirect("rechnung:rechnung", rechnung_id=rechnung_obj.pk)
+    context = {"form": form, "rechnung": rechnung_obj, "posten": posten_obj}
     return render(request, "rechnung/posten/form_posten_aendern.html", context)
 
 

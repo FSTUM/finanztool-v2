@@ -1,20 +1,109 @@
 {% extends 'rechnung/rechnung_base.html' %}
 {% load bootstrap5 %}
 
-{% block finanz_common_headercontent %}Posten hinzufügen{% endblock %}
-{% block title %}Posten hinzufügen{% endblock %}
+{% block finanz_common_headercontent %}Posten ändern{% endblock %}
+{% block title %}Posten ändern{% endblock %}
 
-{% block finanz_common_finanz_common_content %}
+{% block finanz_common_content %}
 <form method="POST">{% csrf_token %}
     {% bootstrap_form form %}
-    <button
+    <a
         class="btn btn-secondary"
-        type="submit"
-    >Posten speichern</button>
+        href="{% url "rechnung:rechnung" rechnung.id %}"
+    >Zurück zur Rechnung</a>
     <button
-        class="btn btn-secondary"
-        name="loeschen"
-        type="submit"
+        type="button"
+        class="btn btn-warning"
+        data-bs-toggle="modal"
+        data-bs-target="#editModal"
+    >Posten bearbeiten</button>
+    <div
+        class="modal fade"
+        id="editModal"
+        tabindex="-1"
+        aria-labelledby="editModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5
+                        class="modal-title"
+                        id="editModalLabel"
+                    >Posten wirklich bearbeiten?</h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bestätigung, den Posten {{ posten }} wirklich bearbeiten willst.</p>
+                    <p>Die zugehöreige Rechnung ist <a href="{% url "rechnung:rechnung" rechnung.id %}">{{ rechnung}}</a></p>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >Schließen</button>
+                    <button
+                        class="btn btn-warning"
+                        name="edit"
+                        type="submit"
+                    >Rechnung bearbeiten</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button
+        type="button"
+        class="btn btn-danger"
+        data-bs-toggle="modal"
+        data-bs-target="#loeschenModal"
     >Posten löschen</button>
+    <div
+        class="modal fade"
+        id="loeschenModal"
+        tabindex="-1"
+        aria-labelledby="loeschenModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5
+                        class="modal-title"
+                        id="loeschenModalLabel"
+                    >Posten wirklich löschen?</h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bestätigung, den Posten {{ posten }} wirklich löschen willst.</p>
+                    <p>Die zugehöreige Rechnung ist <a href="{% url "rechnung:rechnung" rechnung.id %}">{{ rechnung}}</a></p>
+
+                </div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >Schließen</button>
+                    <button
+                        class="btn btn-danger"
+                        name="loeschen"
+                        type="submit"
+                    >Rechnung löschen</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 {% endblock %}
