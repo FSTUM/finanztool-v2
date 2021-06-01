@@ -13,6 +13,7 @@ urlpatterns = [
         "management/",
         include(
             [
+                path("", RedirectView.as_view(pattern_name="common:list_mail"), name="management"),
                 path(
                     "mail/",
                     include(
@@ -26,8 +27,7 @@ urlpatterns = [
                     ),
                 ),
                 path("settings/", views.edit_settings, name="edit_settings"),
-            ]
+            ],
         ),
-        name="management",
     ),
 ]
