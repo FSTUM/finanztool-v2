@@ -9,9 +9,9 @@
 {% block title %}{{ mahnung.wievielte }}. Mahnung zur RE {{ mahnung.rechnung.rnr_string }}{% endblock %}
 
 {% block finanz_common_content %}
-{% if not mahnung.bezahlt and not rechnung.erledigt %}
 <form method="POST">{% csrf_token %}
     {% bootstrap_form form %}
+    {% if not mahnung.bezahlt and not rechnung.erledigt %}
     {% if mahnung.geschickt %}
     <button
         class="btn btn-success"
@@ -25,7 +25,6 @@
         type="submit"
     ><span class="bi bi-envelope-fill"></span> Geschickt</button>
     {% endif %}
-    {% if not rechnung.erledigt %}
     <a
         class="btn btn-secondary"
         href="{% url "rechnung:mahnung_aendern" rechnung.id mahnung.id %}"
@@ -38,7 +37,6 @@
         target="_blank"
     ><span class="bi bi-cloud-arrow-down-fill"></span> Herunterladen</a>
 </form>
-{% endif %}
 
 <br />
 <div class="row">
