@@ -51,13 +51,13 @@ def parse_camt_csv(csvfile):
     regex_cache: Dict[Rechnung, Pattern[str]] = {}
     rechnung: Rechnung
     for rechnung in offene_rechnungen:
-        regex_cache[rechnung] = re.compile(fr"(.*[^0-9])?{rechnung.rnr_string}([^0-9].*)?")
+        regex_cache[rechnung] = re.compile(fr"(.*\D)?{rechnung.rnr_string}(\D.*)?")
 
     users: QuerySet[Schulden] = Schulden.objects.all()
     regex_usernames: Dict[Schulden, Pattern[str]] = {}
     user: Schulden
     for user in users:
-        regex_usernames[user] = re.compile(fr"(.*\s+)?{user.user}(\s+.*)?")
+        regex_usernames[user] = re.compile(fr"(.*\W)?{user.user}(\W.*)?")
 
     try:
         zuletzt_eingetragen: Optional[datetime.date] = EinzahlungsLog.objects.latest("timestamp").timestamp
