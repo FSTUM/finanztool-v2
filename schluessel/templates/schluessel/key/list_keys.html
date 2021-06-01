@@ -59,7 +59,7 @@
         </thead>
         <tbody>
             {% for key in keys %}
-            <tr>
+            <tr {% if not key.active %}class="table-danger"{% endif %}>
                 <td>{{ key.keytype }}</td>
                 <td><a href="{% url "schluessel:view_key" key.id %}">
                         {{ key }} {% if not key.active %}(inaktiv){% endif %}
