@@ -9,6 +9,10 @@
     href="{% url "common:list_mail" %}"
 >Alle Mails</a>
 <a
+    class="nav-link {% active_link "common:add_mail" %}"
+    href="{% url "common:add_mail" %}"
+>Mail hinzufügen</a>
+<a
     class="nav-link {% active_link "common:edit_settings" %}"
     href="{% url "common:edit_settings" %}"
 >Einstellungen bearbeiten</a>
