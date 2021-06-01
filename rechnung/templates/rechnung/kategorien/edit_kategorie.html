@@ -1,0 +1,15 @@
+{% extends 'rechnung/rechnung_base.html' %}
+{% load bootstrap5 %}
+
+{% block finanz_common_headercontent %}Kategorie {{ kategorie }} bearbeiten{% endblock %}
+{% block title %}Kategorie bearbeiten{% endblock %}
+
+{% block finanz_common_content %}
+<form method="POST">{% csrf_token %}
+    {% bootstrap_form form %}
+    <button
+        class="btn btn-warning"
+        type="submit"
+    >Kategorie bearbeiten</button>
+</form>
+{% endblock %}

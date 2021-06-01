@@ -53,6 +53,15 @@ urlpatterns = [
             ],
         ),
     ),
-    # Kategorie
-    path("kategorie/", views.kategorie, name="kategorie"),
+    path(
+        "kategorie/",
+        include(
+            [
+                path("list/", views.list_kategorien, name="list_kategorien"),
+                path("add/", views.add_kategorie, name="add_kategorie"),
+                path("edit/<int:kategorie_pk>/", views.edit_kategorie, name="edit_kategorie"),
+                path("del/<int:kategorie_pk>/", views.del_kategorie, name="del_kategorie"),
+            ],
+        ),
+    ),
 ]

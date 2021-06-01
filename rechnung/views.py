@@ -3,6 +3,7 @@ import subprocess  # nosec: fully defined
 from tempfile import mkdtemp, mkstemp
 from typing import Any, Dict, Optional
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, QuerySet
 from django.forms import forms
@@ -14,7 +15,7 @@ from aufgaben.models import Aufgabe
 from common.views import AuthWSGIRequest, finanz_staff_member_required
 from schluessel.models import Key
 
-from .forms import KundeForm, MahnungForm, PostenForm, RechnungForm
+from .forms import KategorieForm, KundeForm, MahnungForm, PostenForm, RechnungForm
 from .models import Kategorie, Kunde, Mahnung, Posten, Rechnung
 
 
@@ -340,10 +341,44 @@ def get_distinct_values_in_order(posten_suggestions, field):
 
 
 @finanz_staff_member_required
-def kategorie(request: AuthWSGIRequest) -> HttpResponse:
+def list_kategorien(request: AuthWSGIRequest) -> HttpResponse:
     kategorien_liste = Kategorie.objects.order_by("name")
     context = {"kategorien_liste": kategorien_liste}
-    return render(request, "rechnung/kategorien/kategorie.html", context)
+    return render(request, "rechnung/kategorien/list_kategorien.html", context)
+
+
+def add_kategorie(request: AuthWSGIRequest) -> HttpResponse:
+    form = KategorieForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("rechnung:list_kategorien")
+    context = {"form": form}
+    return render(request, "rechnung/kategorien/add_kategorie.html", context)
+
+
+def edit_kategorie(request: AuthWSGIRequest, kategorie_pk: int) -> HttpResponse:
+    kategorie = get_object_or_404(Kategorie, pk=kategorie_pk)
+    form = KategorieForm(request.POST or None, instance=kategorie)
+    if form.is_valid():
+        kategorie.delete()
+        return redirect("rechnung:list_kategorien")
+    context = {"form": form, "kategorie": kategorie}
+    return render(request, "rechnung/kategorien/edit_kategorie.html", context)
+
+
+def del_kategorie(request: AuthWSGIRequest, kategorie_pk: int) -> HttpResponse:
+    kategorie = get_object_or_404(Kategorie, pk=kategorie_pk)
+    messages.error(
+        request,
+        "Wenn du diese Kategorie löschst, dann wirst du alle davon abhängigen Rechnungen mit löschen. "
+        "There be dragons.",
+    )
+    form = forms.Form()
+    if form.is_valid():
+        kategorie.delete()
+        return redirect("rechnung:list_kategorien")
+    context = {"form": form, "kategorie": kategorie}
+    return render(request, "rechnung/kategorien/del_kategorie.html", context)
 
 
 @finanz_staff_member_required

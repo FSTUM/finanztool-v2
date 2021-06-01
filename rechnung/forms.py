@@ -187,3 +187,9 @@ class KundeForm(forms.ModelForm):
                 self.fields.pop("land")
 
         self.fields.pop("knr")
+
+
+class KategorieForm(forms.ModelForm):
+    class Meta:
+        model = Kategorie
+        fields = ["name"]

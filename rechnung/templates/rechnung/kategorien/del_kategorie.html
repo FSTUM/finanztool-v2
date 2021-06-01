@@ -1,0 +1,54 @@
+{% extends 'rechnung/rechnung_base.html' %}
+{% load bootstrap5 %}
+
+{% block finanz_common_headercontent %}Kategorie {{ kategorie }} löschen{% endblock %}
+{% block title %}Kategorie löschen{% endblock %}
+
+{% block finanz_common_content %}
+<form method="POST">{% csrf_token %}
+    {% bootstrap_form form %}
+    <button
+        type="button"
+        class="btn btn-danger"
+        data-bs-toggle="modal"
+        data-bs-target="#loeschenModal"
+    >Kategorie löschen</button>
+    <div
+        class="modal fade"
+        id="loeschenModal"
+        tabindex="-1"
+        aria-labelledby="loeschenModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5
+                        class="modal-title"
+                        id="loeschenModalLabel"
+                    >Kategorie wirklich löschen?</h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <div class="modal-body">Bestätigung, den Kategorie {{ kategorie }} wirklich löschen willst.</div>
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >Schließen</button>
+                    <button
+                        class="btn btn-danger"
+                        name="loeschen"
+                        type="submit"
+                    >Kategorie löschen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

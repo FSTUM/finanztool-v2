@@ -27,9 +27,13 @@
 
 <h4 class="navbar-text">Kategorien</h4>
 <a
-    class="nav-link {% active_link "rechnung:kategorie" %}"
-    href="{% url "rechnung:kategorie" %}"
+    class="nav-link {% active_link "rechnung:list_kategorien" %}"
+    href="{% url "rechnung:list_kategorien" %}"
 >Alle Kategorien</a>
+<a
+    class="nav-link {% active_link "rechnung:add_kategorie" %}"
+    href="{% url "rechnung:add_kategorie" %}"
+>Kategorie hinzufügen</a>
 <h4 class="navbar-text">Mahnungen</h4>
 <a
     class="nav-link {% active_link "rechnung:alle_mahnungen" %}"
