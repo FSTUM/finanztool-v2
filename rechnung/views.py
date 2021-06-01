@@ -347,6 +347,7 @@ def list_kategorien(request: AuthWSGIRequest) -> HttpResponse:
     return render(request, "rechnung/kategorien/list_kategorien.html", context)
 
 
+@finanz_staff_member_required
 def add_kategorie(request: AuthWSGIRequest) -> HttpResponse:
     form = KategorieForm(request.POST or None)
     if form.is_valid():
@@ -356,16 +357,18 @@ def add_kategorie(request: AuthWSGIRequest) -> HttpResponse:
     return render(request, "rechnung/kategorien/add_kategorie.html", context)
 
 
+@finanz_staff_member_required
 def edit_kategorie(request: AuthWSGIRequest, kategorie_pk: int) -> HttpResponse:
     kategorie = get_object_or_404(Kategorie, pk=kategorie_pk)
     form = KategorieForm(request.POST or None, instance=kategorie)
     if form.is_valid():
-        kategorie.delete()
+        form.save()
         return redirect("rechnung:list_kategorien")
     context = {"form": form, "kategorie": kategorie}
     return render(request, "rechnung/kategorien/edit_kategorie.html", context)
 
 
+@finanz_staff_member_required
 def del_kategorie(request: AuthWSGIRequest, kategorie_pk: int) -> HttpResponse:
     kategorie = get_object_or_404(Kategorie, pk=kategorie_pk)
     messages.error(
@@ -373,7 +376,7 @@ def del_kategorie(request: AuthWSGIRequest, kategorie_pk: int) -> HttpResponse:
         "Wenn du diese Kategorie löschst, dann wirst du alle davon abhängigen Rechnungen mit löschen. "
         "There be dragons.",
     )
-    form = forms.Form()
+    form = forms.Form(request.POST or None)
     if form.is_valid():
         kategorie.delete()
         return redirect("rechnung:list_kategorien")

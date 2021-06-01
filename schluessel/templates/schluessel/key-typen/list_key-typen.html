@@ -1,0 +1,56 @@
+{% extends 'schluessel/schluessel_base.html' %}
+{% load bootstrap5 %}
+
+{% block finanz_common_headercontent %}Schlüssel-Typen{% endblock %}
+{% block title %}Schlüssel-Typen{% endblock %}
+
+{% block head %}
+<script>
+    $(() => {
+        $('#keyTypesTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            paging: false,
+        });
+    });
+</script>
+{% endblock %}
+
+{% block finanz_common_content %}
+{% if key_types_liste %}
+<div class="table-responsive">
+    <table
+        class="table dataTable"
+        id="keyTypesTable"
+    >
+        <thead>
+            <tr>
+                <th>Kurzname</th>
+                <th>Schlüssel-Typ</th>
+                <th>Kaution</th>
+                <th>Schließkarte</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key_type in key_types_liste %}
+            <tr>
+                <td>{{ key_type.shortname }}</td>
+                <td>{{ key_type.name }}</td>
+                <td>{{ key_type.deposit }}</td>
+                <td>{{ key_type.keycard }}</td>
+                <td>
+                    <a href="{% url "schluessel:edit_key_typ" key_type.pk %}"><span class="bi bi-pencil"></span></a>
+                    <a href="{% url "schluessel:del_key_typ" key_type.pk %}"><span class="bi bi-trash-fill"></span></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>Es sind keine Schlüssel-Typen verfügbar.</p>
+{% endif %}
+{% endblock %}

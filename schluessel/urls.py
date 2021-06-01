@@ -51,4 +51,15 @@ urlpatterns = [
             ],
         ),
     ),
+    path(
+        "schluessel_typ/",
+        include(
+            [
+                path("list/", views.list_key_types, name="list_key_types"),
+                path("add/", views.add_key_typ, name="add_key_typ"),
+                path("edit/<int:schluessel_typ_pk>/", views.edit_key_typ, name="edit_key_typ"),
+                path("del/<int:schluessel_typ_pk>/", views.del_key_typ, name="del_key_typ"),
+            ],
+        ),
+    ),
 ]

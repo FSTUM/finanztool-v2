@@ -35,4 +35,13 @@
     href="{% url "schluessel:show_log" %}"
 >Letzte Änderungen</a>
 {% endif %}
+<h4 class="navbar-text">Schlüssel-Typen</h4>
+<a
+    class="nav-link {% active_link "schluessel:list_key_types" %}"
+    href="{% url "schluessel:list_key_types" %}"
+>Alle Schlüssel-Typen</a>
+<a
+    class="nav-link {% active_link "schluessel:add_key_typ" %}"
+    href="{% url "schluessel:add_key_typ" %}"
+>Schlüssel-Typ hinzufügen</a>
 {% endblock %}

@@ -16,8 +16,8 @@ from django.template.loader import render_to_string
 from common.models import Settings
 from common.views import AuthWSGIRequest, finanz_staff_member_required
 
-from .forms import FilterKeysForm, KeyForm, PersonForm, SaveKeyChangeForm, SelectPersonForm
-from .models import Key, KeyLogEntry, Person, SavedKeyChange
+from .forms import FilterKeysForm, KeyForm, KeyTypeForm, PersonForm, SaveKeyChangeForm, SelectPersonForm
+from .models import Key, KeyLogEntry, KeyType, Person, SavedKeyChange
 
 
 @login_required(login_url="login")
@@ -627,3 +627,47 @@ def show_log(request: AuthWSGIRequest) -> HttpResponse:
     }
 
     return render(request, "schluessel/key_change/show_log.html", context)
+
+
+@finanz_staff_member_required
+def list_key_types(request: AuthWSGIRequest) -> HttpResponse:
+    key_types_liste = KeyType.objects.order_by("name")
+    context = {"key_types_liste": key_types_liste}
+    return render(request, "schluessel/key-typen/list_key-typen.html", context)
+
+
+@finanz_staff_member_required
+def add_key_typ(request: AuthWSGIRequest) -> HttpResponse:
+    form = KeyTypeForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("schluessel:list_key_types")
+    context = {"form": form}
+    return render(request, "schluessel/key-typen/add_key-typen.html", context)
+
+
+@finanz_staff_member_required
+def edit_key_typ(request: AuthWSGIRequest, schluessel_typ_pk: int) -> HttpResponse:
+    schluessel_typ = get_object_or_404(KeyType, pk=schluessel_typ_pk)
+    form = KeyTypeForm(request.POST or None, instance=schluessel_typ)
+    if form.is_valid():
+        form.save()
+        return redirect("schluessel:list_key_types")
+    context = {"form": form, "schluessel_typ": schluessel_typ}
+    return render(request, "schluessel/key-typen/edit_key-typen.html", context)
+
+
+@finanz_staff_member_required
+def del_key_typ(request: AuthWSGIRequest, schluessel_typ_pk: int) -> HttpResponse:
+    schluessel_typ = get_object_or_404(KeyType, pk=schluessel_typ_pk)
+    messages.error(
+        request,
+        "Wenn du diesen Schlüssel-Typ löschst, dann wirst du alle davon abhängigen Schlüssel mit löschen. "
+        "There be dragons.",
+    )
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        schluessel_typ.delete()
+        return redirect("schluessel:list_key_types")
+    context = {"form": form, "schluessel_typ": schluessel_typ}
+    return render(request, "schluessel/key-typen/del_key-typen.html", context)

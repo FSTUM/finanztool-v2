@@ -1,3 +1,5 @@
+from typing import List
+
 from django import forms
 
 from .models import Key, KeyType, Person
@@ -79,3 +81,9 @@ class FilterPersonsForm(forms.Form):
         required=False,
     )
     search.widget.attrs["onchange"] = "document.getElementById('filterform').submit()"
+
+
+class KeyTypeForm(forms.ModelForm):
+    class Meta:
+        model = KeyType
+        exclude: List[str] = []
