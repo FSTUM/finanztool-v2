@@ -5,6 +5,13 @@
 
 {% block finanz_common_navigation %}
 <a
+    class="nav-link"
+    data-bs-toggle="offcanvas"
+    href="#offcanvasBruttoNetto"
+    role="button"
+    aria-controls="offcanvasBruttoNetto"
+>Brutto-Netto-converter</a>
+<a
     class="nav-link {% active_link "rechnung:dashboard" %}"
     href="{% url "rechnung:dashboard" %}"
 >Dashboard</a>
@@ -38,4 +45,126 @@
     class="nav-link {% active_link "rechnung:kunde_neu" %}"
     href="{% url "rechnung:kunde_neu" %}"
 >Kunde hinzufügen</a>
+
+<div
+    class="offcanvas offcanvas-end"
+    data-bs-scroll="true"
+    data-bs-backdrop="false"
+    tabindex="-1"
+    id="offcanvasBruttoNetto"
+    aria-labelledby="offcanvasScrollingLabel"
+>
+    <div class="offcanvas-header">
+        <h5
+            class="offcanvas-title"
+            id="offcanvasBruttoNetto"
+        >Brutto <span class="bi bi-arrow-left-right"></span> Netto-Rechner</h5>
+        <button
+            type="button"
+            class="btn-close text-reset"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+        ></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="mb-3">
+            <label
+                class="form-label"
+                for="nettoInput"
+            >Netto [€]</label>
+            <input
+                class="form-control"
+                id="nettoInput"
+                value="0€"
+                onchange="calculateBrutto()"
+            >
+        </div>
+        <div class="mb-3">
+            <label
+                class="form-label"
+                for="steuerInput"
+            >Steuersatz [%]</label>
+            <input
+                class="form-control bg-info text-white"
+                id="steuerInput"
+                value="7%"
+                onchange="resetBoth()"
+            >
+        </div>
+        <div class="mb-3">
+            <label
+                class="form-label"
+                for="bruttoInput"
+            >Brutto [€]</label>
+            <input
+                class="form-control"
+                id="bruttoInput"
+                value="0€"
+                onchange="calculateNetto()"
+            >
+        </div>
+    </div>
+</div>
 {% endblock %}
+
+<script>
+    /* eslint-disable no-unused-vars */
+    const netto = document.getElementById('nettoInput');
+    const steuer = document.getElementById('steuerInput');
+    const brutto = document.getElementById('bruttoInput');
+
+    function resetBoth() {
+        netto.classList.remove('text-white');
+        netto.classList.remove('bg-info');
+        brutto.classList.remove('text-white');
+        brutto.classList.remove('bg-info');
+    }
+
+    function validateMoney(ident) {
+        if (!/[0-9]+([,.][0-9]*)?€?/.test(ident.value)) {
+            /* eslint no-alert: off */
+            alert('Money-value does not match the expected format ([0-9]+([,.][0-9]*)?€?)');
+        }
+    }
+
+    function validatePercent() {
+        if (!/[0-9]+%?/.test(steuer.value)) {
+            /* eslint no-alert: off */
+            alert('Steuersatz does not match the expected format ([0-9]+%?)');
+        }
+    }
+
+    function getSteuerSatz() {
+        return parseInt(steuer.value.replace(/^([^0-9%])$/, ''), 10);
+    }
+
+    function getMoney(ident) {
+        return parseFloat(ident.value.replace(/^([^0-9.,])$/, ''));
+    }
+
+    function calculateNetto() {
+        validateMoney(brutto);
+        validatePercent();
+        resetBoth();
+        brutto.addClass('bg-info');
+        brutto.addClass('text-white');
+        const bruttoMoney = getMoney(brutto);
+        const steuerSatz = getSteuerSatz();
+        const i = bruttoMoney / (steuerSatz / 100 + 1);
+        brutto.value = `${bruttoMoney.toLocaleString()}€`;
+        netto.value = `${i.toLocaleString()}€`;
+    }
+
+    function calculateBrutto() {
+        validateMoney(netto);
+        validatePercent();
+        resetBoth();
+        netto.classList.add('text-white');
+        netto.classList.add('bg-info');
+        const nettoMoney = getMoney(netto);
+        const steuerSatz = getSteuerSatz();
+        const i = nettoMoney * (steuerSatz / 100 + 1);
+        netto.value = `${nettoMoney.toLocaleString()}€`;
+        brutto.value = `${i.toLocaleString()}€`;
+    }
+</script>
