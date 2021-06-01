@@ -85,7 +85,7 @@
                 for="steuerInput"
             >Steuersatz [%]</label>
             <input
-                class="form-control bg-info text-white"
+                class="form-control bg-secondary text-white"
                 id="steuerInput"
                 value="7%"
                 onchange="resetBoth()"
@@ -116,9 +116,9 @@
 
     function resetBoth() {
         netto.classList.remove('text-white');
-        netto.classList.remove('bg-info');
+        netto.classList.remove('bg-secondary');
         brutto.classList.remove('text-white');
-        brutto.classList.remove('bg-info');
+        brutto.classList.remove('bg-secondary');
     }
 
     function validateMoney(ident) {
@@ -147,8 +147,8 @@
         validateMoney(brutto);
         validatePercent();
         resetBoth();
-        brutto.addClass('bg-info');
-        brutto.addClass('text-white');
+        brutto.classList.add('bg-secondary');
+        brutto.classList.add('text-white');
         const bruttoMoney = getMoney(brutto);
         const steuerSatz = getSteuerSatz();
         const i = bruttoMoney / (steuerSatz / 100 + 1);
@@ -160,8 +160,8 @@
         validateMoney(netto);
         validatePercent();
         resetBoth();
+        netto.classList.add('bg-secondary');
         netto.classList.add('text-white');
-        netto.classList.add('bg-info');
         const nettoMoney = getMoney(netto);
         const steuerSatz = getSteuerSatz();
         const i = nettoMoney * (steuerSatz / 100 + 1);
