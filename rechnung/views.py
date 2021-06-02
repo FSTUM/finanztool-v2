@@ -15,7 +15,7 @@ from aufgaben.models import Aufgabe
 from common.views import AuthWSGIRequest, finanz_staff_member_required
 from schluessel.models import Key
 
-from .forms import KategorieForm, KundeForm, MahnungForm, PostenForm, RechnungForm
+from .forms import FilterRechnungenForm, KategorieForm, KundeForm, MahnungForm, PostenForm, RechnungForm
 from .models import Kategorie, Kunde, Mahnung, Posten, Rechnung
 
 
@@ -59,10 +59,24 @@ def dashboard(request: AuthWSGIRequest) -> HttpResponse:
 
 
 @finanz_staff_member_required
-def alle(request: AuthWSGIRequest) -> HttpResponse:
-    rechnungen_liste = Rechnung.objects.order_by("-rnr")
-    context = {"rechnungen_liste": rechnungen_liste}
-    return render(request, "rechnung/rechnungen/alle_rechnungen.html", context)
+def list_rechnungen(request: AuthWSGIRequest, kategorie_pk_filter: Optional[int] = None) -> HttpResponse:
+    rechnungen_liste = Rechnung.objects.order_by("-rnr")  #
+
+    form = FilterRechnungenForm(request.POST or None)
+    if kategorie_pk_filter:
+        kategorie: Kategorie = get_object_or_404(Kategorie, pk=kategorie_pk_filter)
+        rechnungen_liste = rechnungen_liste.filter(kategorie=kategorie)
+
+        form = FilterRechnungenForm(request.POST or None, initial={"kategorie": kategorie})
+
+    if form.is_valid():
+        kategorie = form.cleaned_data["kategorie"]
+        return redirect("rechnung:list_rechnungen_filter", kategorie_pk_filter=kategorie.pk)
+    context = {
+        "rechnungen_liste": rechnungen_liste,
+        "form": form,
+    }
+    return render(request, "rechnung/rechnungen/list_rechnungen.html", context)
 
 
 # Rechnung#####################################################################

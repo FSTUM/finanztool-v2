@@ -21,6 +21,25 @@
 {% endblock %}
 
 {% block finanz_common_content %}
+<button
+    class="btn btn-secondary"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseFilters"
+    aria-expanded="false"
+    aria-controls="collapseFilters"
+>Zur verfügung stehende Filter</button>
+<div
+    class="collapse"
+    id="collapseFilters"
+>
+    <form
+        id="filterform"
+        method="POST"
+        action=""
+    >{% csrf_token %}
+        {% bootstrap_form form %}
+    </form>
+</div>
 <div class="table-responsive">
     <table
         class="table dataTable table-hover"

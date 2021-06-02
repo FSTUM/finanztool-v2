@@ -193,3 +193,12 @@ class KategorieForm(forms.ModelForm):
     class Meta:
         model = Kategorie
         fields = ["name"]
+
+
+class FilterRechnungenForm(forms.Form):
+    kategorie = forms.ModelChoiceField(
+        label="Kategorie",
+        queryset=Kategorie.objects.all().order_by("name"),
+        required=False,
+    )
+    kategorie.widget.attrs["onchange"] = "document.getElementById('filterform').submit()"

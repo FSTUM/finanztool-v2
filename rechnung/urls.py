@@ -9,14 +9,29 @@ urlpatterns = [
     # Index
     path("", RedirectView.as_view(pattern_name="rechnung:dashboard"), name="index"),
     path("dashboard/", views.dashboard, name="dashboard"),
-    path("alle/", views.alle, name="alle"),
     # Rechnung
-    path("neu/", views.form_rechnung, name="rechnung_neu"),
-    path("<int:rechnung_id>/", views.rechnung, name="rechnung"),
-    path("<int:rechnung_id>/aendern/", views.form_rechnung, name="rechnung_aendern"),
-    path("<int:rechnung_id>/duplizieren/", views.duplicate_rechnung, name="rechnung_duplizieren"),
-    path("<int:rechnung_id>/posten/neu/", views.form_rechnung_posten, name="rechnung_posten_neu"),
-    path("<int:rechnung_id>/pdf/", views.rechnungpdf, name="rechnungpdf"),
+    path(
+        "rechnung/",
+        include(
+            [
+                path(
+                    "list/",
+                    include(
+                        [
+                            path("", views.list_rechnungen, name="list_rechnungen"),
+                            path("<int:kategorie_pk_filter>/", views.list_rechnungen, name="list_rechnungen_filter"),
+                        ],
+                    ),
+                ),
+                path("neu/", views.form_rechnung, name="rechnung_neu"),
+                path("<int:rechnung_id>/", views.rechnung, name="rechnung"),
+                path("<int:rechnung_id>/aendern/", views.form_rechnung, name="rechnung_aendern"),
+                path("<int:rechnung_id>/duplizieren/", views.duplicate_rechnung, name="rechnung_duplizieren"),
+                path("<int:rechnung_id>/posten/neu/", views.form_rechnung_posten, name="rechnung_posten_neu"),
+                path("<int:rechnung_id>/pdf/", views.rechnungpdf, name="rechnungpdf"),
+            ],
+        ),
+    ),
     # Mahnung
     path(
         "mahnung/",
