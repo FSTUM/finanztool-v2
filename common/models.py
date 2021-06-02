@@ -8,6 +8,8 @@ from django.db.models import ForeignKey
 from django.http import HttpResponse
 from django.template import Context, Template
 
+from schluessel.models import Key
+
 
 class SingletonModel(models.Model):
     class Meta:
@@ -169,6 +171,15 @@ class Settings(SingletonModel):
         Mail,
         related_name="typ_aenderung_single+",
         verbose_name="Template, das ausgewählt wird, wenn mehrere Keycard-Typ-Änderungen versendet werden sollen",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    set_inactive_key_type = ForeignKey(
+        Key,
+        related_name="set_inactive_key_type+",
+        verbose_name="Keycard-Typ-Änderung, die falls dieser Keycard-Typ-Änderungens-antrag angenommen wird, "
+        "den Schlüssel als inaktiv setzt. Bisherige Keycards werden nicht behandelt/ geupdated.",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,

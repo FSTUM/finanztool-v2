@@ -196,6 +196,13 @@ def apply_key_change(request: AuthWSGIRequest, key_pk: Optional[int] = None) -> 
     if not keys.exists():
         raise Http404("There are no key changes")
 
+    setting = Settings.load()
+    if not setting.set_inactive_key_type:
+        messages.warning(
+            request,
+            "Es is kein Key-Typ als Keycard-Typ-Änderung, die den schlüssel als inaktiv setzt, "
+            "eingestellt. Dies wird also im folgenden nicht gemacht.",
+        )
     form = forms.Form(request.POST or None)
     if form.is_valid():
         not_applied_keys = []
@@ -210,6 +217,8 @@ def apply_key_change(request: AuthWSGIRequest, key_pk: Optional[int] = None) -> 
             else:
                 old_keytype = key.keytype
                 key.keytype = saved_key_change.new_keytype
+                if key.keytype == setting.set_inactive_key_type:
+                    key.active = False
                 key.save()
                 applied_keys.append((old_keytype, key))
                 SavedKeyChange.objects.filter(pk=key.savedkeychange.pk).delete()
