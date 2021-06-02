@@ -1,4 +1,3 @@
-from datetime import date
 from io import TextIOWrapper
 from typing import Optional
 
@@ -29,13 +28,16 @@ def einlesen(request: AuthWSGIRequest) -> HttpResponse:
         return redirect("konto:mapping")
 
     try:
-        zuletzt_eingetragen: Optional[date] = EinzahlungsLog.objects.latest("timestamp").timestamp
+        konto_einlesen: Optional[EinzahlungsLog] = EinzahlungsLog.objects.latest("konto_einlesen")
+        konto_last_einzahlung: Optional[EinzahlungsLog] = EinzahlungsLog.objects.latest("konto_last_einzahlung")
     except EinzahlungsLog.DoesNotExist:
-        zuletzt_eingetragen = None
+        konto_einlesen = None
+        konto_last_einzahlung = None
 
     context = {
         "form": form,
-        "zuletzt_eingetragen": zuletzt_eingetragen,
+        "konto_einlesen": konto_einlesen,
+        "konto_last_einzahlung": konto_last_einzahlung,
     }
     return render(request, "konto/einlesen.html", context)
 
@@ -67,3 +69,12 @@ def mapping(request: AuthWSGIRequest) -> HttpResponse:
         "form": mapping_form,
     }
     return render(request, "konto/mapping.html", context)
+
+
+@finanz_staff_member_required
+def einzahlungslog(request: AuthWSGIRequest) -> HttpResponse:
+
+    context = {
+        "einzahlungen": EinzahlungsLog.objects.all(),
+    }
+    return render(request, "konto/einzahlungslog.html", context)

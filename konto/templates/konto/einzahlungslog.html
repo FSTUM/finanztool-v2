@@ -1,0 +1,53 @@
+{% extends 'konto/konto_base.html' %}
+{% load mapping %}
+{% load bootstrap5 %}
+
+{% block finanz_common_headercontent %}Finanztool - Konto-Einzahlungslog{% endblock %}
+{% block title %}Finanztool - Konto-Einzahlungslog{% endblock %}
+
+
+{% block head %}
+<script>
+    $(() => {
+        $('#einzahlungsLogTable').DataTable({
+            language: {
+                decimal: ',',
+                thousands: '.',
+            },
+            order: [
+                [1, 'desc'],
+                [2, 'desc'],
+            ],
+            paging: false,
+        });
+    });
+</script>
+{% endblock %}
+
+{% block finanz_common_content %}
+<div class="table-responsive">
+    <table
+        class="table dataTable"
+        id="einzahlungsLogTable"
+    >
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Zeitpunkt des Einlesens</th>
+                <th>Zeitpunk der letzten eingelesenen Transaktion</th>
+                <th>Betreff der letzten eingelesenen Transaktion</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for einzahlung in einzahlungen %}
+            <tr>
+                <td>{{ user|default:"-" }}</td>
+                <td>{{ konto_einlesen }}</td>
+                <td>{{ konto_last_einzahlung }}</td>
+                <td>{{ einzahlungs_betreff|default:"-" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

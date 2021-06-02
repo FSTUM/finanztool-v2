@@ -45,5 +45,5 @@ class MappingConfirmationForm(forms.Form):
         if latest_einzahlung:
             EinzahlungsLog.objects.create(
                 user=self.user,
-                timestamp=latest_einzahlung,
+                latest_einzahlung=latest_einzahlung,
             )

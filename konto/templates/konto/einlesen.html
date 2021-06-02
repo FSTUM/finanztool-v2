@@ -9,10 +9,13 @@
     Umsätze vom Konto einlesen und mit offenen Rechnungen vergleichen.
 </p>
 <p>
-    {% if zuletzt_eingetragen %}
-    Die letzte Einzahlung war am {{ zuletzt_eingetragen }}.
-    {% else %}
+    {% if not konto_einlesen %}
     Keine Eintragungen bekannt.
+    {% else %}
+    Die letzte Konto-einlesung war am {{ konto_einlesen }}.
+    {% if konto_einlesen.pk != konto_last_einzahlung.pk %}
+    Die letzte gelesene Konto-Einzahlung war am {{ konto_last_einzahlung }}.
+    {% endif %}
     {% endif %}
 </p>
 <br>
