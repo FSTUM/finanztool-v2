@@ -23,7 +23,7 @@
         type="image/png"
     >
     <link
-        href="{% static "piggy-bank-fill.svg" %}"
+        href="{% static "piggy-bank-fill-color-sceme-respecting.svg" %}"
         rel="shortcut icon"
         type="image/svg"
     >
@@ -71,7 +71,12 @@
                 <a
                     class="navbar-brand"
                     href="{% url "common:willkommen" %}"
-                ><span class="bi bi-piggy-bank-fill text-white"></span> Finanztool</a>
+                ><img
+                        src="{% static "piggy-bank-fill.svg" %}"
+                        alt="piggy-bank Logo"
+                        height="24"
+                        class="d-inline-block align-text-top"
+                    > Finanztool</a>
                 <button
                     aria-controls="navbarSupportedContent"
                     aria-expanded="false"
