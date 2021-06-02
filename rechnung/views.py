@@ -4,12 +4,14 @@ import subprocess  # nosec: fully defined
 from tempfile import mkdtemp, mkstemp
 from typing import Any, Dict, Optional, Tuple
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count, QuerySet
 from django.forms import forms
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from paramiko.ssh_exception import AuthenticationException
 from storages.backends.sftpstorage import SFTPStorage
 from storages.base import ImproperlyConfigured
 
@@ -96,23 +98,16 @@ def form_rechnung(request: AuthWSGIRequest, rechnung_id: Optional[int] = None) -
     if rechnung_id:
         rechnung_obj = get_object_or_404(Rechnung, pk=rechnung_id)
 
-    if request.method == "POST":
-        form = RechnungForm(request.POST, instance=rechnung_obj)
+    form = RechnungForm(request.POST or None, instance=rechnung_obj, initial={"ersteller": request.user})
 
-        if form.is_valid():
-            rechnung_form_obj: Rechnung = form.save()
-            return redirect("rechnung:rechnung", rechnung_id=rechnung_form_obj.pk)
-    else:
-        form = RechnungForm(
-            initial={"ersteller": request.user},
-            instance=rechnung_obj,
-        )
+    if form.is_valid():
+        rechnung_form_obj: Rechnung = form.save()
+        if rechnung_form_obj.erledigt:
+            gen_rechnung_upload_to_sftp(request, rechnung_form_obj.id)
+        return redirect("rechnung:rechnung", rechnung_id=rechnung_form_obj.pk)
 
-    return render(
-        request,
-        "rechnung/rechnungen/form_rechnung.html",
-        {"form": form, "rechnung": rechnung_obj},
-    )
+    context = {"form": form, "rechnung": rechnung_obj}
+    return render(request, "rechnung/rechnungen/form_rechnung.html", context)
 
 
 @finanz_staff_member_required
@@ -189,22 +184,18 @@ def form_mahnung(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optiona
         if mahnung_obj.rechnung != rechnung_obj:
             raise Http404
 
-    if request.method == "POST":
-        form = MahnungForm(request.POST, rechnung=rechnung_obj, instance=mahnung_obj)
+    form = MahnungForm(
+        request.POST or None,
+        rechnung=rechnung_obj,
+        instance=mahnung_obj,
+        initial={"ersteller": request.user},
+    )
 
-        if form.is_valid():
-            mahnung_form_obj: Mahnung = form.save()
-            return redirect(
-                "rechnung:mahnung",
-                rechnung_id=rechnung_obj.pk,
-                mahnung_id=mahnung_form_obj.pk,
-            )
-    else:
-        form = MahnungForm(
-            initial={"ersteller": request.user},
-            rechnung=rechnung_obj,
-            instance=mahnung_obj,
-        )
+    if form.is_valid():
+        mahnung_form_obj: Mahnung = form.save()
+        if mahnung_form_obj.geschickt:
+            gen_rechnung_upload_to_sftp(request, rechnung_id, mahnung_form_obj.id)
+        return redirect("rechnung:mahnung", rechnung_id=rechnung_obj.pk, mahnung_id=mahnung_form_obj.pk)
 
     return render(
         request,
@@ -419,14 +410,30 @@ def gen_rechnung(context: Dict[str, Any]) -> Tuple[str, str]:
 sftp = SFTPStorage()
 
 
-def gen_rechnung_upload_to_sftp(rechnung_id: int, mahnung_id: Optional[int] = None) -> None:
+def gen_rechnung_upload_to_sftp(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional[int] = None) -> None:
     context, proposed_filename = gen_context(rechnung_id, mahnung_id)
     tmplatex = ""  # happy now, mypy?
+    if mahnung_id:
+        data_type = "Mahnung"
+    else:
+        data_type = "Rechnung"
     try:
         path_to_pdf, tmplatex = gen_rechnung(context)
         remote_path_to_pdf = sftp.get_valid_name(proposed_filename)
         with open(path_to_pdf, "rb") as pdf:
             sftp.save(remote_path_to_pdf, pdf)
-    except (subprocess.CalledProcessError, ImproperlyConfigured):
-        pass
+        messages.success(request, f"Die {data_type} '{remote_path_to_pdf}' wurde zu valhalla hinzugefügt.")
+
+    except subprocess.CalledProcessError as error:
+        messages.error(
+            request,
+            f"Beim versuch die datei '{proposed_filename}' zu generieren ist der folgende Fehler "
+            f"aufgetreten:\n{error}",
+        )
+    except (ImproperlyConfigured, AuthenticationException, IOError) as error:
+        messages.error(
+            request,
+            f"Beim versuch die datei '{proposed_filename}' auf valhalla hochzuladen ist der "
+            f"folgende Fehler aufgetragen:\n{error}",
+        )
     shutil.rmtree(tmplatex, ignore_errors=True)
