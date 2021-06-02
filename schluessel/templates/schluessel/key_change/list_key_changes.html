@@ -19,21 +19,34 @@
 {% endblock %}
 
 {% block finanz_common_content %}
+{% if keys %}
 <form
     method="POST"
     action=""
 >{% csrf_token %}
     {% bootstrap_form form %}
-    <button
-        class="{% if not settings.typ_aenderungs_beauftragter or not settings.typ_aenderung_multiple %}disabled {% endif %}btn btn-primary"
-        type="submit"
-    >
-        {% if settings.typ_aenderungs_beauftragter and settings.typ_aenderung_multiple %}mehrere Typ-Änderungen per Email an {{ settings.typ_aenderungs_beauftragter }} senden
-        {% elif settings.typ_aenderungs_beauftragter %}Keycard-Typ-Änderungs-Emails müssen in den Einstellungen konfigurert werden, um Keycard-Typ-Änderungs-Emails freizuschalten.
-        {% else %}Keycard-Typ-Änderungs-Beauftragten-Emailardesse muss in den Einstellungen konfigurert werden, um Keycard-Typ-Änderungs-Emails freizuschalten.
-        {% endif %}
-    </button>
+    <div class='row'>
+        <div class='col-xl p-1 d-grid'>
+            <a
+                class="btn btn-secondary"
+                href="{% url "schluessel:apply_key_change_no_key" %}"
+            >Alle Änderungen anwenden</a>
+        </div>
+        <div class='col-xl p-1 d-grid'>
+            <button
+                class="{% if not settings.typ_aenderungs_beauftragter or not settings.typ_aenderung_multiple %}disabled {% endif %}btn btn-primary"
+                type="submit"
+            >
+                {% if settings.typ_aenderungs_beauftragter and settings.typ_aenderung_multiple %}Mehrere Typ-Änderungen per Email an {{ settings.typ_aenderungs_beauftragter }} senden
+                {% elif settings.typ_aenderungs_beauftragter %}Keycard-Typ-Änderungs-Emails müssen in den Einstellungen konfigurert werden, um Keycard-Typ-Änderungs-Emails freizuschalten
+                {% else %}Keycard-Typ-Änderungs-Beauftragten-Emailardesse muss in den Einstellungen konfigurert werden, um Keycard-Typ-Änderungs-Emails freizuschalten
+                {% endif %}
+            </button>
+        </div>
+    </div>
 </form>
+{% endif %}
+
 <div class="table-responsive">
     <table
         class="table dataTable table-hover"
@@ -105,12 +118,5 @@
         </tbody>
     </table>
 </div>
-{% if keys %}
-<a
-    class="btn btn-secondary"
-    href="{% url "schluessel:apply_key_change_no_key" %}"
->Alle Änderungen anwenden</a>
-{% endif %}
-
 
 {% endblock %}
