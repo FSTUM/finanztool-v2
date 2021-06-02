@@ -67,6 +67,25 @@ pre-commit run --all-files
 
 This will also be run by CI if you push to the repository.
 
+## Sample-Data/ "Fixtures"
+
+you can generate example-data (overrides every model with data that looks partially plausible, but is clearly not
+production-data)
+by opening the django shell using:
+
+```shell
+python3 manage.py shell
+```
+
+In the shell type
+
+```python
+import common.fixture as fixture
+fixture.showroom_fixture_state()
+```
+
+This operation might take a few seconds. Don't worry.
+
 ## Adding Depenencies
 
 If you want to add a dependency that is in `pip` add it to the appropriate `requirements`-file.  
