@@ -60,9 +60,9 @@ def parse_camt_csv(csvfile):
         regex_usernames[user] = re.compile(fr"(.*\W)?{user.user}(\W.*)?")
 
     try:
-        zuletzt_eingetragen: Optional[datetime.date] = EinzahlungsLog.objects.latest("konto_einlesen").konto_einlesen
+        zuletzt_einlesen: Optional[datetime.date] = EinzahlungsLog.objects.latest("konto_einlesen").konto_einlesen
     except EinzahlungsLog.DoesNotExist:
-        zuletzt_eingetragen = None
+        zuletzt_einlesen = None
 
     # read CSV file
     csvcontents = DictReader(csvfile, delimiter=";")
@@ -73,7 +73,7 @@ def parse_camt_csv(csvfile):
             if entry:
                 suche_rechnung(entry, offene_rechnungen, regex_cache)
                 if not entry.mapped_rechnung:
-                    suche_user(entry, users, regex_usernames, zuletzt_eingetragen, errors)
+                    suche_user(entry, users, regex_usernames, zuletzt_einlesen, errors)
                 results.append(entry)
         elif buchungstext in [
             "ENTGELTABSCHLUSS",
@@ -148,14 +148,14 @@ def suche_user(
     entry: Entry,
     users: QuerySet[Schulden],
     regex_usernames: Dict[Schulden, Pattern[str]],
-    zuletzt_eingetragen: Optional[datetime.date],
+    zuletzt_einlesen: Optional[datetime.date],
     errors: List[str],
 ) -> None:
     user: Schulden
     for user in users:
         tmp = regex_usernames[user].fullmatch(entry.verwendungszweck)
         if tmp:
-            if zuletzt_eingetragen and zuletzt_eingetragen < entry.datum:
+            if zuletzt_einlesen and zuletzt_einlesen < entry.datum:
                 if entry.mapped_user is not None:
                     # If there is a user that was already previously matched,
                     # print a duplicate match error and abort the search.
@@ -167,11 +167,11 @@ def suche_user(
                     return
                 # Enter the new user
                 entry.mapped_user = user
-            elif zuletzt_eingetragen and zuletzt_eingetragen >= entry.datum:
+            elif zuletzt_einlesen and zuletzt_einlesen >= entry.datum:
                 # Print an error that this transaction lies beyond the date of the last transaction.
                 errors.append(
                     f"Letzte Einzahlung von {user.user} am {entry.datum} liegt nach der "
-                    f"Einzahlung vom {zuletzt_eingetragen}.",
+                    f"Einzahlung vom {zuletzt_einlesen}.",
                 )
             else:
                 # zuletzt_eingetragen is None:

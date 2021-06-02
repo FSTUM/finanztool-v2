@@ -36,6 +36,7 @@
                 <th>Zeitpunkt des Einlesens</th>
                 <th>Zeitpunk der letzten eingelesenen Transaktion</th>
                 <th>Betreff der letzten eingelesenen Transaktion</th>
+                <th>Summe der letzten eingelesenen Transaktion</th>
             </tr>
         </thead>
         <tbody>
@@ -43,8 +44,9 @@
             <tr>
                 <td>{{ user|default:"-" }}</td>
                 <td>{{ konto_einlesen }}</td>
-                <td>{{ konto_last_einzahlung }}</td>
-                <td>{{ einzahlungs_betreff|default:"-" }}</td>
+                <td>{{ konto_last_einzahlung|default:"?" }}</td>
+                <td>{{ latest_einzahlung_verwendungszweck|default:"?" }}</td>
+                <td>{{ latest_einzahlung_betrag|default:"?" }}€</td>
             </tr>
             {% endfor %}
         </tbody>

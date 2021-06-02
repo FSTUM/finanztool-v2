@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django import forms
 
 from .models import EinzahlungsLog
@@ -31,6 +33,8 @@ class MappingConfirmationForm(forms.Form):
 
     def save(self):
         latest_einzahlung = None
+        latest_einzahlung_betrag: Decimal = Decimal("0.0")
+        latest_einzahlung_verwendungszweck = ""
         for entry in self.mappings:
             key = self.get_key(entry)
             if key and self.cleaned_data[key]:
@@ -42,8 +46,12 @@ class MappingConfirmationForm(forms.Form):
                     entry.mapped_user.einzahlen(entry.betrag, self.user)
                     if not latest_einzahlung or latest_einzahlung < entry.datum:
                         latest_einzahlung = entry.datum
+                        latest_einzahlung_betrag = entry.betrag
+                        latest_einzahlung_verwendungszweck = entry.verwendungszweck
         if latest_einzahlung:
             EinzahlungsLog.objects.create(
                 user=self.user,
-                latest_einzahlung=latest_einzahlung,
+                konto_last_einzahlung=latest_einzahlung,
+                latest_einzahlung_betrag=latest_einzahlung_betrag,
+                latest_einzahlung_verwendungszweck=latest_einzahlung_verwendungszweck,
             )
