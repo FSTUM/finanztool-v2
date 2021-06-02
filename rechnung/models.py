@@ -24,6 +24,9 @@ def get_new_highest_knr():
 
 
 class Rechnung(models.Model):
+    class Meta:
+        verbose_name_plural = "Rechnungen"
+
     name = models.CharField(
         verbose_name="Zweck der Rechnung",
         max_length=50,
