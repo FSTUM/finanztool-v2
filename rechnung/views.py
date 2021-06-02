@@ -1,7 +1,8 @@
 import os
+import shutil
 import subprocess  # nosec: fully defined
 from tempfile import mkdtemp, mkstemp
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -10,6 +11,9 @@ from django.forms import forms
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from paramiko.ssh_exception import AuthenticationException
+from storages.backends.sftpstorage import SFTPStorage
+from storages.base import ImproperlyConfigured
 
 from aufgaben.models import Aufgabe
 from common.views import AuthWSGIRequest, finanz_staff_member_required
@@ -108,23 +112,16 @@ def form_rechnung(request: AuthWSGIRequest, rechnung_id: Optional[int] = None) -
     if rechnung_id:
         rechnung_obj = get_object_or_404(Rechnung, pk=rechnung_id)
 
-    if request.method == "POST":
-        form = RechnungForm(request.POST, instance=rechnung_obj)
+    form = RechnungForm(request.POST or None, instance=rechnung_obj, initial={"ersteller": request.user})
 
-        if form.is_valid():
-            rechnung_form_obj: Rechnung = form.save()
-            return redirect("rechnung:rechnung", rechnung_id=rechnung_form_obj.pk)
-    else:
-        form = RechnungForm(
-            initial={"ersteller": request.user},
-            instance=rechnung_obj,
-        )
+    if form.is_valid():
+        rechnung_form_obj: Rechnung = form.save()
+        if rechnung_form_obj.erledigt:
+            gen_rechnung_upload_to_sftp(request, rechnung_form_obj.id)
+        return redirect("rechnung:rechnung", rechnung_id=rechnung_form_obj.pk)
 
-    return render(
-        request,
-        "rechnung/rechnungen/form_rechnung.html",
-        {"form": form, "rechnung": rechnung_obj},
-    )
+    context = {"form": form, "rechnung": rechnung_obj}
+    return render(request, "rechnung/rechnungen/form_rechnung.html", context)
 
 
 @finanz_staff_member_required
@@ -201,22 +198,18 @@ def form_mahnung(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optiona
         if mahnung_obj.rechnung != rechnung_obj:
             raise Http404
 
-    if request.method == "POST":
-        form = MahnungForm(request.POST, rechnung=rechnung_obj, instance=mahnung_obj)
+    form = MahnungForm(
+        request.POST or None,
+        rechnung=rechnung_obj,
+        instance=mahnung_obj,
+        initial={"ersteller": request.user},
+    )
 
-        if form.is_valid():
-            mahnung_form_obj: Mahnung = form.save()
-            return redirect(
-                "rechnung:mahnung",
-                rechnung_id=rechnung_obj.pk,
-                mahnung_id=mahnung_form_obj.pk,
-            )
-    else:
-        form = MahnungForm(
-            initial={"ersteller": request.user},
-            rechnung=rechnung_obj,
-            instance=mahnung_obj,
-        )
+    if form.is_valid():
+        mahnung_form_obj: Mahnung = form.save()
+        if mahnung_form_obj.geschickt:
+            gen_rechnung_upload_to_sftp(request, rechnung_id, mahnung_form_obj.id)
+        return redirect("rechnung:mahnung", rechnung_id=rechnung_obj.pk, mahnung_id=mahnung_form_obj.pk)
 
     return render(
         request,
@@ -400,29 +393,48 @@ def del_kategorie(request: AuthWSGIRequest, kategorie_pk: int) -> HttpResponse:
 
 @finanz_staff_member_required
 def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional[int] = None) -> HttpResponse:
-    # context-setup
+    context, proposed_filename = gen_context(rechnung_id, mahnung_id)
+    try:
+        path_to_pdf, tmplatex = gen_rechnung(context)
+    except subprocess.CalledProcessError as error:
+        return render(
+            request,
+            "rechnung/tex/rechnungpdf_error.html",
+            {"erroroutput": error.output},
+        )
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'inline; filename="{proposed_filename}"'
+
+    with open(path_to_pdf, "rb") as pdf:
+        response.write(pdf.read())
+    shutil.rmtree(tmplatex, ignore_errors=True)
+
+    return response
+
+
+def gen_context(
+    rechnung_id: int,
+    mahnung_id: Optional[int] = None,
+) -> Tuple[Dict[str, Any], str]:
     rechnung_obj = get_object_or_404(Rechnung, pk=rechnung_id)
     context: Dict[str, Any] = {"rechnung": rechnung_obj}
-    # disposition-setup
-    response = HttpResponse(content_type="application/pdf")
-    content_disposition = f'inline; filename="RE{rechnung_obj.rnr_string}_{rechnung_obj.kunde.knr}'
+    proposed_filename = f"RE{rechnung_obj.rnr_string}_{rechnung_obj.kunde.knr}"
     if mahnung_id:
-        # context-setup
         mahnung_obj = get_object_or_404(Mahnung, pk=mahnung_id)
         vorherige_mahnungen = (
-            Mahnung.objects.filter(
-                rechnung=mahnung_obj.rechnung,
-                wievielte__lt=mahnung_obj.wievielte,
-            )
+            Mahnung.objects.filter(rechnung=mahnung_obj.rechnung, wievielte__lt=mahnung_obj.wievielte)
             .order_by("wievielte")
             .all()
         )
         context["mahnung"] = mahnung_obj
         context["vorherige_mahnungen"] = vorherige_mahnungen
-        # disposition-setup
-        content_disposition += f"_M{mahnung_obj.wievielte}"
-    response["Content-Disposition"] = content_disposition + '.pdf"'
+        proposed_filename += f"_M{mahnung_obj.wievielte}"
+    proposed_filename = f"{proposed_filename}.pdf"
+    return context, proposed_filename
 
+
+def gen_rechnung(context: Dict[str, Any]) -> Tuple[str, str]:
     # create temporary files
     tmplatex = mkdtemp()
     latex_file, latex_filename = mkstemp(suffix=".tex", dir=tmplatex)
@@ -432,25 +444,48 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
     os.close(latex_file)
 
     # Compile the TeX file with PDFLaTeX
+    subprocess.check_output(  # nosec: fully defined
+        [
+            "pdflatex",
+            "-halt-on-error",
+            "-output-directory",
+            tmplatex,
+            latex_filename,
+        ],
+    )
+
+    path_to_pdf = f"{os.path.splitext(latex_filename)[0]}.pdf"
+
+    return path_to_pdf, tmplatex
+
+
+sftp = SFTPStorage()
+
+
+def gen_rechnung_upload_to_sftp(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional[int] = None) -> None:
+    context, proposed_filename = gen_context(rechnung_id, mahnung_id)
+    tmplatex = ""  # happy now, mypy?
+    if mahnung_id:
+        data_type = "Mahnung"
+    else:
+        data_type = "Rechnung"
     try:
-        subprocess.check_output(  # nosec: fully defined
-            [
-                "pdflatex",
-                "-halt-on-error",
-                "-output-directory",
-                tmplatex,
-                latex_filename,
-            ],
-        )
+        path_to_pdf, tmplatex = gen_rechnung(context)
+        remote_path_to_pdf = sftp.get_valid_name(proposed_filename)
+        with open(path_to_pdf, "rb") as pdf:
+            sftp.save(remote_path_to_pdf, pdf)
+        messages.success(request, f"Die {data_type} '{remote_path_to_pdf}' wurde zu valhalla hinzugefügt.")
+
     except subprocess.CalledProcessError as error:
-        return render(
+        messages.error(
             request,
-            "rechnung/tex/rechnungpdf_error.html",
-            {"erroroutput": error.output},
+            f"Beim versuch die datei '{proposed_filename}' zu generieren ist der folgende Fehler "
+            f"aufgetreten:\n{error}",
         )
-
-    with open(f"{os.path.splitext(latex_filename)[0]}.pdf", "rb") as pdf:
-        response.write(pdf.read())
-    # shutil.rmtree(tmplatex)
-
-    return response
+    except (ImproperlyConfigured, AuthenticationException, IOError) as error:
+        messages.error(
+            request,
+            f"Beim versuch die datei '{proposed_filename}' auf valhalla hochzuladen ist der "
+            f"folgende Fehler aufgetragen:\n{error}",
+        )
+    shutil.rmtree(tmplatex, ignore_errors=True)
