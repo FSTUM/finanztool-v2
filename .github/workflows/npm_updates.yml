@@ -8,7 +8,6 @@ on:
 
 jobs:
     update_npm:
-        needs: update_pre-commit
         runs-on: ubuntu-latest
         strategy:
             max-parallel: 4
