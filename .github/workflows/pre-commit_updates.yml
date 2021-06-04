@@ -2,8 +2,8 @@ name: dependabot for pre-commit
 
 on:
     schedule:
-    # * is a special character in YAML so you have to quote this string
-        - cron:  '0 19 * * 5' # monthly
+        # * is a special character in YAML so you have to quote this string
+        - cron: '0 19 * * 5' # monthly
 
     workflow_dispatch:
 
