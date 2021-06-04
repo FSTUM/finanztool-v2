@@ -19,12 +19,6 @@
 {% endblock %}
 
 {% block finanz_common_content %}
-{% if user.is_staff %}
-<a
-    class="btn btn-secondary"
-    href="{% url "schluessel:add_key" %}"
-><span class="bi bi-plus-circle-fill"></span> Schlüssel/Schließkarte hinzufügen</a>
-{% endif %}
 <button
     class="btn btn-secondary"
     data-bs-toggle="collapse"
