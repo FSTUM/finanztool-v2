@@ -10,22 +10,29 @@
     class="btn btn-secondary d-block"
     href="{% url "konto:add_referent" %}"
 >Referent hinzufügen</a>
-    <div class="row mt-3">
-{% for referent in referenten %}
-<div class="col-xxl">
-<div class="d-flex flex-column">
-    <p>{{ referent.referenten_name }}
-<a href="{% url "konto:edit_referent" referent.pk %}"><span class="bi bi-pencil"></span></a>
-<a href="{% url "konto:del_referent" referent.pk %}"><span class="bi bi-trash-fill"></span></a>
-    </p>
-        <img src="{{ referent.counter_image.url }}" alt="" style="max-height: 100%;max-width: 100%">
+<div class="row mt-3">
+    {% for referent in referenten %}
+    <div class="col-xxl">
+        <div class="d-flex flex-column">
+            <p>{{ referent.referenten_name }}
+                <a href="{% url "konto:edit_referent" referent.pk %}"><span class="bi bi-pencil"></span></a>
+                <a href="{% url "konto:del_referent" referent.pk %}"><span class="bi bi-trash-fill"></span></a>
+            </p>
+            <img
+                src="{{ referent.counter_image.url }}"
+                alt="Logo of {{ referent.referenten_name }}"
+                style="max-height: 100%;max-width: 100%"
+            >
 
-    <div class="d-flex align-items-center justify-content-center">
-        <p class="text-primary display-4">{{ referent.taken_free_beverages }}/{{ referent.allowed_free_beverages }}</p>
+            <div class="d-flex align-items-center justify-content-center">
+                <p class="text-primary display-4">{{ referent.taken_free_beverages }}/{{ referent.allowed_free_beverages }}</p>
+            </div>
+            <a
+                class="btn btn-primary"
+                href="{% url "konto:inc_referent" referent.pk %}"
+            >99 Bottles of beer on the wall</a>
+        </div>
     </div>
-<a class="btn btn-primary" href="{% url "konto:inc_referent" referent.pk %}">99 Bottles of beer on the wall</a>
+    {% endfor %}
 </div>
-    </div>
-{% endfor %}
-    </div>
 {% endblock %}

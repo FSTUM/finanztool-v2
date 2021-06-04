@@ -7,18 +7,50 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('konto', '0003_auto_20210602_2212'),
+        ("konto", "0003_auto_20210602_2212"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Referent',
+            name="Referent",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('allowed_free_beverages', models.IntegerField(default=10, validators=[django.core.validators.MaxValueValidator(20), django.core.validators.MinValueValidator(0)], verbose_name='Anzahl an Freigetränke, die diesem Referenten zustehen')),
-                ('taken_free_beverages', models.IntegerField(default=0, validators=[django.core.validators.MaxValueValidator(20), django.core.validators.MinValueValidator(0)], verbose_name='Anzahl an Freigetränke, die dieser Referenten sachon getrunken hat')),
-                ('counter_image', models.ImageField(blank=True, null=True, upload_to='bevarage_counter_image', verbose_name='Name wird als hintergrund für die statistik genommen, wie viele Getränke man schon getrunken hat')),
-                ('referenten_name', models.CharField(default='Rick Sanchez', max_length=40, verbose_name='Name des/der Referent*in')),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "allowed_free_beverages",
+                    models.IntegerField(
+                        default=10,
+                        validators=[
+                            django.core.validators.MaxValueValidator(20),
+                            django.core.validators.MinValueValidator(0),
+                        ],
+                        verbose_name="Anzahl an Freigetränke, die diesem Referenten zustehen",
+                    ),
+                ),
+                (
+                    "taken_free_beverages",
+                    models.IntegerField(
+                        default=0,
+                        validators=[
+                            django.core.validators.MaxValueValidator(20),
+                            django.core.validators.MinValueValidator(0),
+                        ],
+                        verbose_name="Anzahl an Freigetränke, die dieser Referenten sachon getrunken hat",
+                    ),
+                ),
+                (
+                    "counter_image",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to="bevarage_counter_image",
+                        verbose_name="Name wird als hintergrund für die statistik genommen, wie viele Getränke man "
+                        "schon getrunken hat",
+                    ),
+                ),
+                (
+                    "referenten_name",
+                    models.CharField(default="Rick Sanchez", max_length=40, verbose_name="Name des/der Referent*in"),
+                ),
             ],
         ),
     ]
