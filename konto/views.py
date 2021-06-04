@@ -82,7 +82,7 @@ def einzahlungslog(request: AuthWSGIRequest) -> HttpResponse:
 
 @finanz_staff_member_required
 def add_referent(request: AuthWSGIRequest) -> HttpResponse:
-    form = ReferentForm(request.POST or None)
+    form = ReferentForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
         return redirect("konto:list_referenten")
@@ -93,7 +93,7 @@ def add_referent(request: AuthWSGIRequest) -> HttpResponse:
 @finanz_staff_member_required
 def edit_referent(request: AuthWSGIRequest, referent_pk: int) -> HttpResponse:
     referent: Referent = get_object_or_404(Referent, pk=referent_pk)
-    form = ReferentForm(request.POST or None)
+    form = ReferentForm(request.POST or None, request.FILES or None, instance=referent)
     if form.is_valid():
         form.save()
         return redirect("konto:list_referenten")
