@@ -1,4 +1,4 @@
-name: \'dependabot\' for pre-commit
+name: 'dependabot' for pre-commit
 
 on:
     push:
