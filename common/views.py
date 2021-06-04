@@ -2,6 +2,7 @@
 from typing import Callable
 
 from django import forms
+from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
@@ -10,8 +11,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from aufgaben.models import Aufgabe
-from common.forms import MailForm, SettingsForm
-from common.models import Mail, Settings
+from common.forms import MailForm, QRCodeForm, SettingsForm
+from common.models import Mail, QRCode, Settings
 from rechnung.models import Rechnung
 from schluessel.models import Key
 
@@ -127,3 +128,43 @@ def willkommen(request: AuthWSGIRequest) -> HttpResponse:
         "verfuegbare_schluessel": verfuegbare_schluessel,
     }
     return render(request, "common/willkommen.html", context)
+
+
+@finanz_staff_member_required
+def list_qr_codes(request: WSGIRequest) -> HttpResponse:
+    context = {"qr_codes": QRCode.objects.all()}
+    return render(request, "common/qr-codes/list_qr_codes.html", context)
+
+
+@finanz_staff_member_required
+def add_qr_code(request: WSGIRequest) -> HttpResponse:
+    form = QRCodeForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("common:list_qr_codes")
+
+    context = {
+        "form": form,
+    }
+    return render(request, "common/qr-codes/add_qr_code.html", context)
+
+
+@finanz_staff_member_required
+def del_qr_code(request: WSGIRequest, qr_code_pk: int) -> HttpResponse:
+    qr_code: QRCode = get_object_or_404(QRCode, id=qr_code_pk)
+    if qr_code.pk == 0:
+        messages.error(request, "Finanztool sagt nein. Rick wird da bleiben.")
+        redirect("")
+    form = forms.Form(request.POST or None)
+    if form.is_valid():
+        qr_code.delete()
+        messages.success(request, "Der QRCode wurde erfolgreich gelöscht")
+        return redirect("common:list_qr_codes")
+    messages.warning(
+        request,
+        "Be aware that deleting this deletes the actual file from the server. This means that if an "
+        "other user has included this image via a hardlink, this image will not be loaded anymore. "
+        "There be dragons.",
+    )
+    context = {"form": form, "qr_code": qr_code}
+    return render(request, "common/qr-codes/del_qr_code.html", context)

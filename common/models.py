@@ -1,13 +1,20 @@
+import os
 import re
+from io import BytesIO
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+import qrcode
 from django.core.cache import cache
+from django.core.files import File
 from django.core.mail import EmailMessage, send_mail
 from django.db import models
 from django.db.models import ForeignKey
+from django.dispatch import receiver
 from django.http import HttpResponse
 from django.template import Context, Template
+from PIL import Image
 
+import finanz.settings as main_settings
 from schluessel.models import Key
 
 
@@ -190,3 +197,62 @@ class Settings(SingletonModel):
             f"ueberfaellige_rechnung_mail={self.ueberfaellige_rechnung_mail}, "
             f"zugewiesene_aufgabe_mail={self.zugewiesene_aufgabe_mail}"
         )
+
+
+class QRCode(models.Model):
+    content = models.CharField(max_length=200, unique=True)
+    qr_code = models.ImageField(upload_to="qr_codes", blank=True)
+
+    def __str__(self):
+        return self.content
+
+    # pylint: disable=signature-differs
+    def save(self, *args, **kwargs):
+        qr_code = qrcode.QRCode(
+            error_correction=qrcode.constants.ERROR_CORRECT_H,
+            box_size=19,
+            border=1,
+        )
+        qr_code.add_data(self.content)
+        qr_code.make(fit=True)
+        qr_image = qr_code.make_image(fill_color="black", back_color="white")
+
+        with Image.new("RGB", (qr_image.pixel_size, qr_image.pixel_size), "white") as canvas:
+            canvas.paste(qr_image)
+
+            logo_path = os.path.join(main_settings.STATIC_ROOT, "eule_squared.png")
+            with Image.open(logo_path) as logo:
+                total_usable_height = qr_image.pixel_size - qr_image.box_size * qr_image.border * 2
+                usable_height = total_usable_height * 0.3
+                size = int(usable_height // qr_image.box_size + 1) * qr_image.box_size
+                # current image version can take it to have up to 30% covered up.
+                # due to math we are always below that limt
+                if ((qr_image.pixel_size - size) // 2 % qr_image.box_size) != 0:
+                    size += qr_image.box_size
+
+                t_logo = logo.resize((size, size))
+                pos = (qr_image.pixel_size - size) // 2
+                canvas.paste(t_logo, (pos, pos))
+
+            f_cleaned_content = (
+                self.content.replace("https://", "")
+                .replace("http://", "")
+                .strip("/")
+                .replace("/", "-")
+                .replace(".", "_")
+            )
+            buffer = BytesIO()
+            canvas.save(buffer, "PNG")
+            self.qr_code.save(f"qr_code_{f_cleaned_content}.png", File(buffer), save=False)
+            super().save(*args, **kwargs)
+
+
+@receiver(models.signals.post_delete, sender=QRCode)
+def auto_delete_qr_code_on_delete(sender, instance, **_kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `QRCode` object is deleted.
+    """
+    _ = sender  # sender is needed, for api. it cannot be renamed, but is unused here.
+    if instance.pk and instance.pk != 0 and instance.qr_code and os.path.isfile(instance.qr_code.path):
+        os.remove(instance.qr_code.path)
