@@ -8,6 +8,7 @@
     class="nav-link"
     data-bs-toggle="offcanvas"
     href="#offcanvasBruttoNetto"
+    id="converterOffcanvasToggler"
     role="button"
     aria-controls="offcanvasBruttoNetto"
 >Brutto-Netto-converter</a>
@@ -113,6 +114,7 @@
 
 {% block defered_script %}
 <script>
+    /* global bootstrap */
     /* eslint-disable no-unused-vars */
     const netto = document.getElementById('nettoInput');
     const steuer = document.getElementById('steuerInput');
@@ -172,5 +174,24 @@
         netto.value = `${nettoMoney.toLocaleString()}€`;
         brutto.value = `${i.toLocaleString()}€`;
     }
+
+    // correct active label and open the
+    const converterOffcanvasToggler = document.getElementById('converterOffcanvasToggler');
+    const offcanvasBruttoNetto = document.getElementById('offcanvasBruttoNetto');
+    offcanvasBruttoNetto.addEventListener('hidden.bs.offcanvas', () => {
+        converterOffcanvasToggler.classList.remove('active');
+        sessionStorage.setItem('offcanvasBruttoNetto', null);
+    });
+    offcanvasBruttoNetto.addEventListener('shown.bs.offcanvas', () => {
+        converterOffcanvasToggler.classList.add('active');
+        sessionStorage.setItem('offcanvasBruttoNetto', 'open');
+    });
+
+    const bsOffcanvas = new bootstrap.Offcanvas(offcanvasBruttoNetto);
+
+    // on browser load "offcanvasBruttoNetto" wont be set in sessionstorage.
+    // on subsequent tries accept previous set information will be used
+    const stateOffcanvas = sessionStorage.getItem('offcanvasBruttoNetto');
+    if (stateOffcanvas === 'open') bsOffcanvas.show();
 </script>
 {% endblock %}
