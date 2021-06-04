@@ -25,11 +25,7 @@ class AuthWSGIRequest(WSGIRequest):
 
 @finanz_staff_member_required
 def list_mail(request: AuthWSGIRequest) -> HttpResponse:
-    if Settings.objects.exists():
-        settings = Settings.objects.first()
-    else:
-        settings = Settings.objects.create()
-    context = {"mails": Mail.objects.all(), "settings": settings}
+    context = {"mails": Mail.objects.all(), "settings": Settings.load()}
     return render(request, "common/mail/list_email_templates.html", context)
 
 
@@ -91,10 +87,7 @@ def del_mail(request: AuthWSGIRequest, mail_pk: int) -> HttpResponse:
 
 @finanz_staff_member_required
 def edit_settings(request: AuthWSGIRequest) -> HttpResponse:
-    if Settings.objects.exists():
-        settings = Settings.objects.first()
-    else:
-        settings = Settings.objects.create()
+    settings: Settings = Settings.load()
     form = SettingsForm(request.POST or None, instance=settings)
     if form.is_valid():
         form.save()

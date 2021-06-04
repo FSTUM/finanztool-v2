@@ -1,7 +1,7 @@
 import os
 import re
 from io import BytesIO
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 import qrcode
 from django.core.cache import cache
@@ -15,7 +15,9 @@ from django.template import Context, Template
 from PIL import Image
 
 import finanz.settings as main_settings
-from schluessel.models import Key
+from schluessel.models import KeyType
+
+SingletonType = TypeVar("SingletonType", bound="SingletonModel")
 
 
 class SingletonModel(models.Model):
@@ -34,12 +36,10 @@ class SingletonModel(models.Model):
         self.set_cache()
 
     @classmethod
-    def load(cls):
-        if cache.get(cls.__name__) is None:
-            obj, created = cls.objects.get_or_create(pk=1)
-            if not created:
-                obj.set_cache()
-        return cache.get(cls.__name__)
+    def load(cls) -> SingletonType:
+        obj: SingletonType
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
 
 
 def clean_attachable(response: Union[HttpResponse, Tuple[str, Any, str]]) -> Tuple[str, Any, str]:
@@ -183,7 +183,7 @@ class Settings(SingletonModel):
         blank=True,
     )
     set_inactive_key_type = ForeignKey(
-        Key,
+        KeyType,
         related_name="set_inactive_key_type+",
         verbose_name="Keycard-Typ-Änderung, die falls dieser Keycard-Typ-Änderungens-antrag angenommen wird, "
         "den Schlüssel als inaktiv setzt. Bisherige Keycards werden nicht behandelt/ geupdated.",

@@ -196,7 +196,7 @@ def apply_key_change(request: AuthWSGIRequest, key_pk: Optional[int] = None) -> 
     if not keys.exists():
         raise Http404("There are no key changes")
 
-    setting = Settings.load()
+    setting: Settings = Settings.load()
     if not setting.set_inactive_key_type:
         messages.warning(
             request,
@@ -217,7 +217,7 @@ def apply_key_change(request: AuthWSGIRequest, key_pk: Optional[int] = None) -> 
             else:
                 old_keytype = key.keytype
                 key.keytype = saved_key_change.new_keytype
-                if key.keytype == setting.set_inactive_key_type:
+                if setting.set_inactive_key_type and key.keytype == setting.set_inactive_key_type:
                     key.active = False
                 key.save()
                 applied_keys.append((old_keytype, key))
