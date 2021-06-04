@@ -1,8 +1,9 @@
 from decimal import Decimal
+from typing import List
 
 from django import forms
 
-from .models import EinzahlungsLog
+from .models import EinzahlungsLog, Referent
 
 
 class UploadForm(forms.Form):
@@ -55,3 +56,9 @@ class MappingConfirmationForm(forms.Form):
                 latest_einzahlung_betrag=latest_einzahlung_betrag,
                 latest_einzahlung_verwendungszweck=latest_einzahlung_verwendungszweck,
             )
+
+
+class ReferentForm(forms.ModelForm):
+    class Meta:
+        model = Referent
+        exclude: List[str] = []

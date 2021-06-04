@@ -1,0 +1,20 @@
+{% extends 'konto/konto_base.html' %}
+{% load bootstrap5 %}
+
+{% block finanz_common_headercontent %}Referent*in {{ referent }} bearbeiten{% endblock %}
+{% block title %}Finanztool - Referent*in bearbeiten{% endblock %}
+
+{% block finanz_common_content %}
+<p>Referent*in {{ referent }} wirklich bearbeiten?</p>
+<form
+    name="addform"
+    method="POST"
+    action=""
+>{% csrf_token %}
+    {% bootstrap_form form %}
+    <button
+        class="btn btn-danger"
+        type="submit"
+    >Referent*in bearbeiten</button>
+</form>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'konto/konto_base.html' %}
+{% load bootstrap5 %}
+
+{% block finanz_common_headercontent %}Referent*in hinzufügen{% endblock %}
+{% block title %}Finanztool - Referent*in hinzufügen{% endblock %}
+
+{% block finanz_common_content %}
+<form
+    name="addform"
+    method="POST"
+    action=""
+>{% csrf_token %}
+    {% bootstrap_form form %}
+    <button
+        class="btn btn-primary"
+        type="submit"
+    >Referent*in hinzufügen</button>
+</form>
+{% endblock %}
