@@ -154,7 +154,7 @@ def del_qr_code(request: WSGIRequest, qr_code_pk: int) -> HttpResponse:
     qr_code: QRCode = get_object_or_404(QRCode, id=qr_code_pk)
     if qr_code.pk == 0:
         messages.error(request, "Finanztool sagt nein. Rick wird da bleiben.")
-        redirect("")
+        redirect("common:list_qr_codes")
     form = forms.Form(request.POST or None)
     if form.is_valid():
         qr_code.delete()
