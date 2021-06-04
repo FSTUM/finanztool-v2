@@ -34,6 +34,7 @@ def showroom_fixture_state_no_confirmation():  # nosec: this is only used in a f
     # app common
     _generate_common_mails()
     _generate_common_settings()
+    _generate_qrcodes_posten()
 
     # app aufgaben
     _generate_aufgaben_aufgabenart()
@@ -113,6 +114,17 @@ def rand_name():  # nosec: this is only used in a fixture
             ("Miriam", "Schlosser"),
         ],
     )
+
+
+def _generate_qrcodes_posten():  # nosec: this is only used in a fixture
+    m_common.QRCode.objects.create(pk=0, content="https://www.yo" "utub" "e.com/" "wat" "ch?v=dQw4w" "9WgXcQ")
+    links = [
+        "https://www.google.com",
+        "mpi.fs.tum.de",
+        "finanz.mpi.fs.tum.de",
+    ]
+    for link in links:
+        m_common.QRCode.objects.create(content=link)
 
 
 def _generate_rechnung_posten():  # nosec: this is only used in a fixture
