@@ -23,7 +23,7 @@ from .forms import FilterRechnungenForm, KategorieForm, KundeForm, MahnungForm, 
 from .models import Kategorie, Kunde, Mahnung, Posten, Rechnung
 
 
-@login_required(login_url="login")
+@login_required(login_url="two_factor:login")
 def willkommen(request: AuthWSGIRequest) -> HttpResponse:
     rechnungen = Rechnung.objects.filter(gestellt=True, erledigt=False).all()
     offene_rechnungen = rechnungen.count()

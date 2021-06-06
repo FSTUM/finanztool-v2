@@ -114,7 +114,7 @@
                         >Konto</a>
                         {% endif %}
                         <a
-                            class="nav-link {% active_link 'common:management' %}"
+                            class="nav-link {% active_link 'common:management' %}{% active_link 'two_factor:profile' %}"
                             href="{% url "common:management" %}"
                         >Mails and Einstellungen</a>
                         {% endif %}
@@ -130,7 +130,7 @@
                             {% else %}
                             <a
                                 class="nav-link"
-                                href="{% url "login" %}"
+                                href="{% url "two_factor:login" %}"
                             >Login</a>
                             {% endif %}
                         </nav>
@@ -150,7 +150,9 @@
         {% bootstrap_messages messages %}
         {% endif %}
 
-        {% block content %}{% endblock %}
+        {% block content_override %}
+        {% block f_content %}{% endblock %}
+        {% endblock %}
     </main>
     {% block after_content %}{% endblock %}
 
