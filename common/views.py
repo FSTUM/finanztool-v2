@@ -16,7 +16,7 @@ from common.models import Mail, QRCode, Settings
 from rechnung.models import Rechnung
 from schluessel.models import Key
 
-finanz_staff_member_required: Callable = staff_member_required(login_url="login")
+finanz_staff_member_required: Callable = staff_member_required(login_url="two_factor:login")
 
 
 class AuthWSGIRequest(WSGIRequest):
