@@ -1,14 +1,14 @@
 import os
 import subprocess  # nosec: fully defined
 from tempfile import mkdtemp, mkstemp
-from typing import Optional
+from typing import List, Optional
 
 from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import QuerySet
+from django.db.models import Count, Exists, OuterRef, QuerySet
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
@@ -682,6 +682,41 @@ def del_key_typ(request: AuthWSGIRequest, schluessel_typ_pk: int) -> HttpRespons
     return render(request, "schluessel/key-typen/del_key-typen.html", context)
 
 
+def get_key_status(is_keycard: bool) -> List[int]:
+    aktive_keys = Key.objects.filter(active=True, keytype__keycard=is_keycard)
+
+    key_change_event = SavedKeyChange.objects.filter(key=OuterRef("pk"))
+    assigned_keys_count = aktive_keys.exclude(person=None).filter(~Exists(key_change_event)).count()
+    keys_change_request_cnt: int = 0
+    if is_keycard:
+        keys_change_request_cnt = aktive_keys.exclude(person=None).filter(Exists(key_change_event)).count()
+
+    no_person_cnt = aktive_keys.filter(person=None).count()
+    if is_keycard:
+        return [assigned_keys_count, no_person_cnt, keys_change_request_cnt]
+    else:
+        return [assigned_keys_count, no_person_cnt]
+
+
+def get_key_tpye_cnt_by_key_type():
+    aktive_keys = Key.objects.filter(active=True)
+    kt_cnts = aktive_keys.values("keytype").annotate(keytype_count=Count("keytype"))
+
+    return (
+        [keytype["keytype_count"] for keytype in kt_cnts],
+        [KeyType.objects.get(pk=keytype["keytype"]).shortname for keytype in kt_cnts],
+    )
+
+
 @finanz_staff_member_required
 def dashboard(request: AuthWSGIRequest) -> HttpResponse:
-    pass  # TODO
+    key_card_status = get_key_status(True)
+    key_status = get_key_status(False)
+    key_types_values, key_types_labels = get_key_tpye_cnt_by_key_type()
+    context = {
+        "key_card_status": key_card_status,
+        "key_status": key_status,
+        "key_types_values": key_types_values,
+        "key_types_labels": key_types_labels,
+    }
+    return render(request, "schluessel/schluessel_dashboard.html", context)

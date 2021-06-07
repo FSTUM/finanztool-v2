@@ -1,0 +1,108 @@
+{% extends 'schluessel/schluessel_base.html' %}
+{% load i18n %}
+{% load bootstrap5 %}
+
+{% block finanz_common_headercontent %}Schlüssel-Dashboard{% endblock %}
+{% block title %}Schlüssel-Dashboard{% endblock %}
+
+{% block head %}
+<script src="https://cdn.plot.ly/plotly-2.0.0.min.js"></script>
+{% endblock %}
+
+{% block finanz_common_content %}
+<div class='row'>
+        <div
+                class='col-xl'
+            id="aktiv_schluesselstatus"
+        ></div>
+        <div
+            class='col-xl'
+            id="total_schluesselstatus"
+        ></div>
+</div>
+{% endblock %}
+
+{% block defered_script %}
+<script>
+    /* global Plotly */
+    const settings = { modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d'], responsive: true };
+
+    Plotly.newPlot(
+        document.getElementById('aktiv_schluesselstatus'),
+        [
+            {
+                type: 'pie',
+                values: {{ key_card_status }},
+                labels: ['Normal', 'Verfügbar', 'Zugewiesen und Typ Änderung Vorgemerkt'],
+                marker: { colors: ['#1dd1a1', '#feca57', '#ff6b6b'] },
+                hoverinfo: 'percent+label',
+                textinfo: 'value',
+                domain: {
+                    row: 0,
+                    column: 0
+                },
+            },
+            {
+                type: 'pie',
+                values: {{ key_status }},
+                labels: ['Normal', 'Verfügbar'],
+                marker: { colors: ['#1dd1a1', '#feca57', '#ff6b6b'] },
+                hoverinfo: 'percent+label',
+                textinfo: 'value',
+                domain: {
+                    row: 0,
+                    column: 1
+                },
+            },
+        ],
+        {
+            title: 'Aktive Schlüsselkarten vs Aktive Schlüssel',
+            font: { size: 18 },
+            legend: {"orientation": "h"},
+            grid: {rows: 1, columns: 2}
+        },
+        settings,
+    );
+    const backgroundColor = [
+        '#1dd1a1',
+        '#48dbfb',
+        '#feca57',
+        '#70a1ff',
+        '#ff6b6b',
+        '#badc58',
+        '#ff9ff3',
+        '#c8d6e5',
+        '#f6e58d',
+        '#00d2d3',
+        '#54a0ff',
+        '#ff7979',
+        '#ffbe76',
+        '#7ed6df',
+        '#95afc0',
+        '#ff7f50',
+        '#eccc68',
+        '#7bed9f',
+        '#2ed573',
+        '#a4b0be',
+        '#f1f2f6',
+    ]
+    Plotly.newPlot(
+        document.getElementById('total_schluesselstatus'),
+        [
+            {
+                type: 'pie',
+                values: {{ key_types_values }},
+                labels: {{ key_types_labels|safe }},
+                marker: { colors: backgroundColor },
+                hoverinfo: 'percent+label',
+                textinfo: 'value',
+            },
+        ],
+        {
+            title: 'Schlüsselanzahl je Schlüsseltyp',
+            font: { size: 18 },
+        },
+        settings,
+    );
+    </script>
+{% endblock %}

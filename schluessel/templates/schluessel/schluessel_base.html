@@ -4,6 +4,10 @@
 {% load bootstrap5 %}
 
 {% block finanz_common_navigation %}
+<a
+    class="nav-link {% active_link "schluessel:dashboard" %}"
+    href="{% url "schluessel:dashboard" %}"
+>Dashboard</a>
 <h4 class="navbar-text">Schlüssel</h4>
 <a
     class="nav-link {% active_link "schluessel:list_keys" %}"
