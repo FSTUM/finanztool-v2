@@ -1,0 +1,45 @@
+{% extends 'aufgaben/aufgaben_base.html' %}
+{% load i18n %}
+{% load bootstrap5 %}
+
+{% block finanz_common_headercontent %}Aufgaben-Dashboard{% endblock %}
+{% block title %}Aufgaben-Dashboard{% endblock %}
+
+{% block head %}
+<script src="https://cdn.plot.ly/plotly-2.0.0.min.js"></script>
+{% endblock %}
+
+{% block finanz_common_content %}
+<div class='row'>
+    <div class='col-md'>
+        <div
+            id="aufgabenstatus"
+            style='max-width: 50rem;min-width: 20rem;min-height: 40rem;'
+        ></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block defered_script %}
+<script>
+    /* global Plotly */
+    const settings = { modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d'], responsive: true };
+
+    const layout = {
+        title: 'Aufgaben nach Aufgabenstatus',
+        font: { size: 18 },
+    };
+
+    const data = [
+        {
+            type: 'pie',
+            values: {{ aufgabenstatus }},
+            labels: ['Erledigt', 'NICHT Erledigt und NICHT Fällig', 'NICHT Erledigt und Fällig'],
+            marker: { colors: ['#1dd1a1', '#feca57', '#ff6b6b'] },
+            hoverinfo: 'percent+label',
+            textinfo: 'value',
+        },
+    ];
+    Plotly.newPlot(document.getElementById('aufgabenstatus'), data, layout, settings);
+    </script>
+{% endblock %}

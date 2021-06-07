@@ -4,6 +4,10 @@
 {% load bootstrap5 %}
 
 {% block finanz_common_navigation %}
+<a
+    class="nav-link {% active_link "aufgaben:dashboard" %}"
+    href="{% url "aufgaben:dashboard" %}"
+>Dashboard</a>
 <h4 class="navbar-text">Aufgaben</h4>
 <a
     class="nav-link {% active_link "aufgaben:list_aufgaben_unerledigt" %}"
