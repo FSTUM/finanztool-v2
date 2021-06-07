@@ -10,6 +10,9 @@ jobs:
     git-sync:
         runs-on: ubuntu-latest
         steps:
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
             - name: git-sync
               uses: wei/git-sync@v3
               with:
@@ -18,3 +21,4 @@ jobs:
                   destination_repo: 'git@git.fs.tum.de:elsinga/finanz.git'
                   destination_branch: 'master'
                   ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  github_token: ${{ secrets.PAT }}
