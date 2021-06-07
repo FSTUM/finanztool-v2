@@ -114,7 +114,7 @@ def dashboard(request: AuthWSGIRequest) -> HttpResponse:
         "schluessel": schluessel_cnt,
         "verfuegbare_schluessel": verfuegbare_schluessel_cnt,
     }
-    return render(request, "common/commo_dashboard.html", context)
+    return render(request, "common/common_dashboard.html", context)
 
 
 @finanz_staff_member_required
