@@ -13,8 +13,8 @@ jobs:
             - uses: actions/checkout@v2
               with:
                   persist-credentials: false
-            - name: git-sync
-              uses: wei/git-sync@v3
+            - name: repo-sync
+              uses: repo-sync/github-sync@v2
               with:
                   source_repo: 'git@github.com:CommanderStorm/finanztool-v2.git'
                   source_branch: 'main'
