@@ -694,8 +694,7 @@ def get_key_status(is_keycard: bool) -> List[int]:
     no_person_cnt = aktive_keys.filter(person=None).count()
     if is_keycard:
         return [assigned_keys_count, no_person_cnt, keys_change_request_cnt]
-    else:
-        return [assigned_keys_count, no_person_cnt]
+    return [assigned_keys_count, no_person_cnt]
 
 
 def get_key_tpye_cnt_by_key_type():

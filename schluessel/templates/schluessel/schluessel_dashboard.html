@@ -11,14 +11,14 @@
 
 {% block finanz_common_content %}
 <div class='row'>
-        <div
-                class='col-xl'
-            id="aktiv_schluesselstatus"
-        ></div>
-        <div
-            class='col-xl'
-            id="total_schluesselstatus"
-        ></div>
+    <div
+        class='col-xl'
+        id="aktiv_schluesselstatus"
+    ></div>
+    <div
+        class='col-xl'
+        id="total_schluesselstatus"
+    ></div>
 </div>
 {% endblock %}
 
@@ -39,7 +39,7 @@
                 textinfo: 'value',
                 domain: {
                     row: 0,
-                    column: 0
+                    column: 0,
                 },
             },
             {
@@ -49,20 +49,18 @@
                 marker: { colors: ['#1dd1a1', '#feca57', '#ff6b6b'] },
                 hoverinfo: 'percent+label',
                 textinfo: 'value',
-                domain: {
-                    row: 0,
-                    column: 1
-                },
+                domain: { row: 0, column: 1 },
             },
         ],
         {
             title: 'Aktive Schlüsselkarten vs Aktive Schlüssel',
             font: { size: 18 },
-            legend: {"orientation": "h"},
-            grid: {rows: 1, columns: 2}
+            legend: { orientation: 'h' },
+            grid: { rows: 1, columns: 2 },
         },
         settings,
     );
+
     const backgroundColor = [
         '#1dd1a1',
         '#48dbfb',
@@ -85,7 +83,8 @@
         '#2ed573',
         '#a4b0be',
         '#f1f2f6',
-    ]
+    ];
+
     Plotly.newPlot(
         document.getElementById('total_schluesselstatus'),
         [
