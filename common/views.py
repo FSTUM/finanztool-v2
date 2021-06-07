@@ -36,7 +36,7 @@ def view_mail(request: AuthWSGIRequest, mail_pk: int) -> HttpResponse:
     context = {
         "mail": mail,
     }
-    return render(request, "common/mail/email_details.html", context)
+    return render(request, "common/mail/view_email.html", context)
 
 
 @finanz_staff_member_required
@@ -82,7 +82,7 @@ def del_mail(request: AuthWSGIRequest, mail_pk: int) -> HttpResponse:
         "mail": mail,
         "form": form,
     }
-    return render(request, "common/mail/delete_email.html", context)
+    return render(request, "common/mail/del_email.html", context)
 
 
 @finanz_staff_member_required
@@ -96,31 +96,25 @@ def edit_settings(request: AuthWSGIRequest) -> HttpResponse:
     context = {
         "form": form,
     }
-    return render(request, "common/settings/settings.html", context)
+    return render(request, "common/settings/edit_settings.html", context)
 
 
 @login_required(login_url="two_factor:login")
-def willkommen(request: AuthWSGIRequest) -> HttpResponse:
+def dashboard(request: AuthWSGIRequest) -> HttpResponse:
     rechnungen = Rechnung.objects.filter(gestellt=True, erledigt=False).all()
-    offene_rechnungen = rechnungen.count()
-    faellige_rechnungen = len(list(filter(lambda r: r.faellig, rechnungen)))
-    eigene_aufgaben = Aufgabe.objects.filter(
-        erledigt=False,
-        zustaendig=request.user,
-    ).count()
-    schluessel = Key.objects.filter(active=True).count()
-    verfuegbare_schluessel = Key.objects.filter(
-        active=True,
-        person=None,
-    ).count()
+    offene_rechnungen_cnt: int = rechnungen.count()
+    faellige_rechnungen_cnt: int = len([r for r in rechnungen if r.faellig])
+    eigene_aufgaben_cnt: int = Aufgabe.objects.filter(erledigt=False, zustaendig=request.user).count()
+    schluessel_cnt: int = Key.objects.filter(active=True).count()
+    verfuegbare_schluessel_cnt: int = Key.objects.filter(active=True, person=None).count()
     context = {
-        "offene_rechnungen": offene_rechnungen,
-        "faellige_rechnungen": faellige_rechnungen,
-        "eigene_aufgaben": eigene_aufgaben,
-        "schluessel": schluessel,
-        "verfuegbare_schluessel": verfuegbare_schluessel,
+        "offene_rechnungen": offene_rechnungen_cnt,
+        "faellige_rechnungen": faellige_rechnungen_cnt,
+        "eigene_aufgaben": eigene_aufgaben_cnt,
+        "schluessel": schluessel_cnt,
+        "verfuegbare_schluessel": verfuegbare_schluessel_cnt,
     }
-    return render(request, "common/willkommen.html", context)
+    return render(request, "common/commo_dashboard.html", context)
 
 
 @finanz_staff_member_required

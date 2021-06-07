@@ -6,18 +6,33 @@ from . import views
 app_name = "aufgaben"
 
 urlpatterns = [
-    path("", RedirectView.as_view(pattern_name="aufgaben:alle"), name="index"),
-    path("unerledigt/", views.unerledigt, name="unerledigt"),
-    path("alle/", views.alle, name="alle"),
-    path("neu/", views.form_aufgabe, name="neu"),
-    path("<int:aufgabe_id>/", views.aufgabe, name="aufgabe"),
-    path("<int:aufgabe_id>/aendern/", views.form_aufgabe, name="aendern"),
+    path("", RedirectView.as_view(pattern_name="aufgaben:list_aufgaben"), name="index"),
+    path("dashboard/", views.dashboard, name="dashboard"),
+    path(
+        "aufgabe/",
+        include(
+            [
+                path(
+                    "list/",
+                    include(
+                        [
+                            path("unerledigt/", views.list_aufgaben_unerledigt, name="list_aufgaben_unerledigt"),
+                            path("alle/", views.list_aufgaben, name="list_aufgaben"),
+                        ],
+                    ),
+                ),
+                path("add/", views.form_aufgabe, name="add_aufgabe"),
+                path("view/<int:aufgabe_id>/", views.view_aufgabe, name="view_aufgabe"),
+                path("edit/<int:aufgabe_id>/", views.form_aufgabe, name="edit_aufgabe"),
+            ],
+        ),
+    ),
     path(
         "art/",
         include(
             [
-                path("neu/", views.form_aufgabenart, name="neu_aufgabenart"),
-                path("<int:aufgabenart_id>/aendern/", views.form_aufgabenart, name="aendern_aufgabenart"),
+                path("add/", views.form_aufgabenart, name="add_aufgabenart"),
+                path("edit/<int:aufgabenart_id>/", views.form_aufgabenart, name="edit_aufgabenart"),
             ],
         ),
     ),

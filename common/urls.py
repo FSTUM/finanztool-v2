@@ -8,7 +8,7 @@ app_name = "common"
 
 urlpatterns = [
     path("", RedirectView.as_view(pattern_name="common:list_mail"), name="index"),
-    path("willkommen/", views.willkommen, name="willkommen"),
+    path("dashboard/", views.dashboard, name="dashboard"),
     path(
         "management/",
         include(
@@ -21,7 +21,7 @@ urlpatterns = [
                             path("list/all/", views.list_mail, name="list_mail"),
                             path("add/", views.add_mail, name="add_mail"),
                             path("edit/<int:mail_pk>/", views.edit_mail, name="edit_mail"),
-                            path("delete/<int:mail_pk>/", views.del_mail, name="del_mail"),
+                            path("del/<int:mail_pk>/", views.del_mail, name="del_mail"),
                             path("view/<int:mail_pk>/", views.view_mail, name="view_mail"),
                         ],
                     ),

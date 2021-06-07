@@ -19,7 +19,7 @@ Aufgabe {% if aufgabe.pk %}ändern{% else %}hinzufügen{% endif %}
     {% if aufgabe.pk %}
     <a
         class="btn btn-secondary"
-        href="{% url "aufgaben:aufgabe" aufgabe_id=aufgabe.pk %}"
+        href="{% url "aufgaben:view_aufgabe" aufgabe_id=aufgabe.pk %}"
     ><span class="bi bi-arrow-left"></span> Zurück zur Aufgabe</a>
     {% endif %}
     <button

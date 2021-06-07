@@ -63,11 +63,11 @@
         <tbody>
             {% for rechnung in rechnungen_liste %}
             <tr>
-                <td><a href="{% url 'rechnung:rechnung' rechnung.id %}">RE {{ rechnung.rnr_string }}</a>
+                <td><a href="{% url "rechnung:rechnung" rechnung.id %}">RE {{ rechnung.rnr_string }}</a>
                 </td>
                 <td>{{ rechnung.name }}</td>
                 <td>{{ rechnung.kategorie }}</td>
-                <td><a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde.knr|unlocalize }}</a></td>
+                <td><a href="{% url "rechnung:view_kunde" rechnung.kunde.id %}">{{ rechnung.kunde.knr|unlocalize }}</a></td>
                 <td>{{ rechnung.rdatum }}</td>
                 <td>{{ rechnung.ersteller.get_short_name }}</td>
                 <td>{% include "snippets/true_false_span.html" with value=rechnung.gestellt %}</td>

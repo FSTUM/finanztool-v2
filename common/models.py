@@ -234,6 +234,7 @@ class QRCode(models.Model):
                 pos = (qr_image.pixel_size - size) // 2
                 canvas.paste(t_logo, (pos, pos))
 
+            # noinspection HttpUrlsUsage
             f_cleaned_content = (
                 self.content.replace("https://", "")
                 .replace("http://", "")
@@ -248,7 +249,7 @@ class QRCode(models.Model):
 
 
 @receiver(models.signals.post_delete, sender=QRCode)
-def auto_delete_qr_code_on_delete(sender, instance, **_kwargs):
+def auto_del_qr_code_on_delete(sender, instance, **_kwargs):
     """
     Deletes file from filesystem
     when corresponding `QRCode` object is deleted.

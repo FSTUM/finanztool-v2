@@ -5,7 +5,6 @@ from tempfile import mkdtemp, mkstemp
 from typing import Any, Dict, Optional, Tuple
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.db.models import Count, QuerySet
 from django.forms import forms
 from django.http import Http404, HttpResponse
@@ -17,38 +16,19 @@ from storages.base import ImproperlyConfigured
 
 from aufgaben.models import Aufgabe
 from common.views import AuthWSGIRequest, finanz_staff_member_required
-from schluessel.models import Key
 
 from .forms import FilterRechnungenForm, KategorieForm, KundeForm, MahnungForm, PostenForm, RechnungForm
 from .models import Kategorie, Kunde, Mahnung, Posten, Rechnung
 
 
-@login_required(login_url="two_factor:login")
-def willkommen(request: AuthWSGIRequest) -> HttpResponse:
-    rechnungen = Rechnung.objects.filter(gestellt=True, erledigt=False).all()
-    offene_rechnungen = rechnungen.count()
-    faellige_rechnungen = len(list(filter(lambda r: r.faellig, rechnungen)))
-    eigene_aufgaben = Aufgabe.objects.filter(
-        erledigt=False,
-        zustaendig=request.user,
-    ).count()
-    schluessel = Key.objects.filter(active=True).count()
-    verfuegbare_schluessel = Key.objects.filter(
-        active=True,
-        person=None,
-    ).count()
-    context = {
-        "offene_rechnungen": offene_rechnungen,
-        "faellige_rechnungen": faellige_rechnungen,
-        "eigene_aufgaben": eigene_aufgaben,
-        "schluessel": schluessel,
-        "verfuegbare_schluessel": verfuegbare_schluessel,
-    }
-    return render(request, "common/willkommen.html", context)
+@finanz_staff_member_required
+def dashboard(request: AuthWSGIRequest) -> HttpResponse:
+    context = {"placholder": True}  # TODO
+    return render(request, "rechnung/rechnung_dashboard.html", context)
 
 
 @finanz_staff_member_required
-def dashboard(request: AuthWSGIRequest) -> HttpResponse:
+def list_rechnungen_aufgaben_unerledigt(request: AuthWSGIRequest) -> HttpResponse:
     unerledigte_rechnungen = (
         Rechnung.objects.filter(erledigt=False).exclude(name="test").exclude(name="Test").order_by("-rnr")
     )
@@ -57,9 +37,8 @@ def dashboard(request: AuthWSGIRequest) -> HttpResponse:
     context = {
         "unerledigte_rechnungen": unerledigte_rechnungen,
         "aufgaben": aufgaben,
-        "not_rechnung": True,
     }
-    return render(request, "rechnung/rechnung_dashboard.html", context)
+    return render(request, "rechnung/rechnungen/list/list_rechnungen_aufgaben_unerledigt.html", context)
 
 
 @finanz_staff_member_required
@@ -80,66 +59,66 @@ def list_rechnungen(request: AuthWSGIRequest, kategorie_pk_filter: Optional[int]
         "rechnungen_liste": rechnungen_liste,
         "form": form,
     }
-    return render(request, "rechnung/rechnungen/list_rechnungen.html", context)
+    return render(request, "rechnung/rechnungen/list/list_rechnungen.html", context)
 
 
 # Rechnung#####################################################################
 
 
 @finanz_staff_member_required
-def rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpResponse:
-    rechnung_obj: Rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
+def view_rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpResponse:
+    rechnung: Rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
-    mahnungen: QuerySet[Mahnung] = Mahnung.objects.filter(rechnung=rechnung_obj.pk).all()
+    mahnungen: QuerySet[Mahnung] = Mahnung.objects.filter(rechnung=rechnung.pk).all()
     form = forms.Form(request.POST or None)
     if request.method == "POST":
         if "bezahlt" in request.POST and form.is_valid():
-            rechnung_obj.bezahlen()
+            rechnung.bezahlen()
             return redirect("rechnung:dashboard")
 
         if "gestellt" in request.POST and form.is_valid():
-            rechnung_obj.gestellt = True
-            rechnung_obj.save()
-            return redirect("rechnung:rechnung", rechnung_id=rechnung_obj.pk)
+            rechnung.gestellt = True
+            rechnung.save()
+            return redirect("rechnung:rechnung", rechnung_id=rechnung.pk)
 
-    context = {"form": form, "rechnung": rechnung_obj, "mahnungen": mahnungen}
-    return render(request, "rechnung/rechnungen/rechnung.html", context)
+    context = {"form": form, "rechnung": rechnung, "mahnungen": mahnungen}
+    return render(request, "rechnung/rechnungen/view_rechnung.html", context)
 
 
 @finanz_staff_member_required
 def form_rechnung(request: AuthWSGIRequest, rechnung_id: Optional[int] = None) -> HttpResponse:
-    rechnung_obj: Optional[Rechnung] = None
+    rechnung: Optional[Rechnung] = None
     if rechnung_id:
-        rechnung_obj = get_object_or_404(Rechnung, pk=rechnung_id)
+        rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
-    form = RechnungForm(request.POST or None, instance=rechnung_obj, initial={"ersteller": request.user})
+    form = RechnungForm(request.POST or None, instance=rechnung, initial={"ersteller": request.user})
 
     if form.is_valid():
-        rechnung_form_obj: Rechnung = form.save()
-        if rechnung_form_obj.erledigt:
-            gen_rechnung_upload_to_sftp(request, rechnung_form_obj.id)
-        return redirect("rechnung:rechnung", rechnung_id=rechnung_form_obj.pk)
+        rechnung_form: Rechnung = form.save()
+        if rechnung_form.erledigt:
+            gen_rechnung_upload_to_sftp(request, rechnung_form.id)
+        return redirect("rechnung:rechnung", rechnung_id=rechnung_form.pk)
 
-    context = {"form": form, "rechnung": rechnung_obj}
+    context = {"form": form, "rechnung": rechnung}
     return render(request, "rechnung/rechnungen/form_rechnung.html", context)
 
 
 @finanz_staff_member_required
 def duplicate_rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpResponse:
-    rechnung_obj = get_object_or_404(Rechnung, pk=rechnung_id)
+    rechnung: Rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
     initial = {
-        "name": rechnung_obj.name,
-        "kunde": rechnung_obj.kunde,
-        "einleitung": rechnung_obj.einleitung,
-        "kategorie": rechnung_obj.kategorie,
+        "name": rechnung.name,
+        "kunde": rechnung.kunde,
+        "einleitung": rechnung.einleitung,
+        "kategorie": rechnung.kategorie,
     }
 
     form = RechnungForm(request.POST or None, initial=initial)
     if form.is_valid():
         rechnung_neu = form.save()
 
-        alle_posten = rechnung_obj.posten_set.all()
+        alle_posten = rechnung.posten_set.all()
         for new_posten in alle_posten:
             Posten.objects.create(
                 rechnung=rechnung_neu,
@@ -154,7 +133,7 @@ def duplicate_rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpRespon
     return render(
         request,
         "rechnung/rechnungen/rechnung_duplizieren.html",
-        {"form": form, "rechnung": rechnung_obj},
+        {"form": form, "rechnung": rechnung},
     )
 
 
@@ -162,176 +141,175 @@ def duplicate_rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpRespon
 
 
 @finanz_staff_member_required
-def mahnung(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: int) -> HttpResponse:
-    rechnung_obj = get_object_or_404(Rechnung, pk=rechnung_id)
+def view_mahnung(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: int) -> HttpResponse:
+    rechnung: Rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
-    mahnung_obj = get_object_or_404(Mahnung, pk=mahnung_id)
-    if mahnung_obj.rechnung != rechnung_obj:
+    mahnung: Mahnung = get_object_or_404(Mahnung, pk=mahnung_id)
+    if mahnung.rechnung != rechnung:
         raise Http404
 
     form = forms.Form(request.POST or None)
     if request.method == "POST" and form.is_valid():
         if "bezahlt" in request.POST:
-            mahnung_obj.bezahlen()
-            return redirect("rechnung:mahnung", rechnung_id=rechnung_obj.pk, mahnung_id=mahnung_obj.pk)
+            mahnung.bezahlen()
+            return redirect("rechnung:view_mahnung", rechnung_id=rechnung.pk, mahnung_id=mahnung.pk)
 
         if "geschickt" in request.POST:
-            mahnung_obj.geschickt = True
-            mahnung_obj.save()
-            return redirect("rechnung:mahnung", rechnung_id=rechnung_obj.pk, mahnung_id=mahnung_obj.pk)
+            mahnung.geschickt = True
+            mahnung.save()
+            return redirect("rechnung:view_mahnung", rechnung_id=rechnung.pk, mahnung_id=mahnung.pk)
 
     context = {
         "form": form,
-        "rechnung": rechnung_obj,
-        "mahnung": mahnung_obj,
+        "rechnung": rechnung,
+        "mahnung": mahnung,
     }
-    return render(request, "rechnung/mahnungen/mahnung.html", context)
+    return render(request, "rechnung/mahnungen/view_mahnung.html", context)
 
 
 @finanz_staff_member_required
 def form_mahnung(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional[int] = None) -> HttpResponse:
-    rechnung_obj = get_object_or_404(Rechnung, pk=rechnung_id)
+    rechnung: Rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
-    mahnung_obj: Optional[Mahnung] = None
+    mahnung: Optional[Mahnung] = None
     if mahnung_id:
-        mahnung_obj = get_object_or_404(Mahnung, pk=mahnung_id)
-        if mahnung_obj.rechnung != rechnung_obj:
+        mahnung = get_object_or_404(Mahnung, pk=mahnung_id)
+        if mahnung.rechnung != rechnung:
             raise Http404
 
     form = MahnungForm(
         request.POST or None,
-        rechnung=rechnung_obj,
-        instance=mahnung_obj,
+        rechnung=rechnung,
+        instance=mahnung,
         initial={"ersteller": request.user},
     )
 
     if form.is_valid():
-        mahnung_form_obj: Mahnung = form.save()
-        if mahnung_form_obj.geschickt:
-            gen_rechnung_upload_to_sftp(request, rechnung_id, mahnung_form_obj.id)
-        return redirect("rechnung:mahnung", rechnung_id=rechnung_obj.pk, mahnung_id=mahnung_form_obj.pk)
+        mahnung_form: Mahnung = form.save()
+        if mahnung_form.geschickt:
+            gen_rechnung_upload_to_sftp(request, rechnung_id, mahnung_form.id)
+        return redirect("rechnung:view_mahnung", rechnung_id=rechnung.pk, mahnung_id=mahnung_form.pk)
 
     return render(
         request,
         "rechnung/mahnungen/form_mahnung.html",
-        {"form": form, "rechnung": rechnung_obj, "mahnung": mahnung_obj},
+        {"form": form, "rechnung": rechnung, "mahnung": mahnung},
     )
 
 
 @finanz_staff_member_required
-def alle_mahnungen(request: AuthWSGIRequest) -> HttpResponse:
+def list_mahnungen(request: AuthWSGIRequest) -> HttpResponse:
     rechnungen = Rechnung.objects.all().order_by("-rnr")
     context = {"rechnungen": rechnungen}
-    return render(request, "rechnung/mahnungen/alle_mahnungen.html", context)
+    return render(request, "rechnung/mahnungen/list_mahnungen.html", context)
 
 
 # Kunde#########################################################################
 
 
 @finanz_staff_member_required
-def kunde(request: AuthWSGIRequest, kunde_id: int) -> HttpResponse:
-    kunde_obj = get_object_or_404(Kunde, pk=kunde_id)
-    return render(request, "rechnung/kunden/kunde.html", {"kunde": kunde_obj, "not_rechnung": True})
+def view_kunde(request: AuthWSGIRequest, kunde_id: int) -> HttpResponse:
+    kunde: Kunde = get_object_or_404(Kunde, pk=kunde_id)
+    return render(request, "rechnung/kunden/view_kunde.html", {"kunde": kunde})
 
 
 @finanz_staff_member_required
 def form_kunde(request: AuthWSGIRequest, kunde_id: Optional[int] = None) -> HttpResponse:
-    kunde_obj = None
+    kunde: Optional[Kunde] = None
     kunde_verwendet = None
     if kunde_id:
-        kunde_obj = get_object_or_404(Kunde, pk=kunde_id)
+        kunde = get_object_or_404(Kunde, pk=kunde_id)
         kunde_verwendet = Rechnung.objects.filter(
             gestellt=True,
-            kunde=kunde_obj,
+            kunde=kunde,
         ).exists()
 
     if request.method == "POST":
-        form = KundeForm(request.POST, instance=kunde_obj)
+        form = KundeForm(request.POST, instance=kunde)
 
         if form.is_valid():
             kunde_pk: int = form.save().pk
-            return redirect("rechnung:kunde", kunde_id=kunde_pk)
+            return redirect("rechnung:view_kunde", kunde_id=kunde_pk)
     else:
-        form = KundeForm(instance=kunde_obj)
+        form = KundeForm(instance=kunde)
 
     return render(
         request,
         "rechnung/kunden/form_kunde.html",
         {
             "form": form,
-            "kunde": kunde_obj,
+            "kunde": kunde,
             "kunde_verwendet": kunde_verwendet,
-            "not_rechnung": True,
         },
     )
 
 
 @finanz_staff_member_required
-def kunden_alle(request: AuthWSGIRequest) -> HttpResponse:
+def list_kunden(request: AuthWSGIRequest) -> HttpResponse:
     kunden_liste = Kunde.objects.order_by("-knr")
-    context = {"kunden_liste": kunden_liste, "not_rechnung": True}
-    return render(request, "rechnung/kunden/kunden_alle.html", context)
+    context = {"kunden_liste": kunden_liste}
+    return render(request, "rechnung/kunden/list_kunden.html", context)
 
 
 # Posten#######################################################################
 
 
 @finanz_staff_member_required
-def posten(request: AuthWSGIRequest, posten_id: int) -> HttpResponse:
-    posten_obj = get_object_or_404(Posten, pk=posten_id)
-    return render(request, "rechnung/posten/posten.html", {"posten": posten_obj})
+def view_posten(request: AuthWSGIRequest, posten_id: int) -> HttpResponse:
+    posten: Posten = get_object_or_404(Posten, pk=posten_id)
+    return render(request, "rechnung/posten/view_posten.html", {"posten": posten})
 
 
 # Vorhandenen Posten bearbeiten
 @finanz_staff_member_required
 def form_exist_posten(request: AuthWSGIRequest, posten_id: int) -> HttpResponse:
-    posten_obj = get_object_or_404(Posten, pk=posten_id)
-    rechnung_obj = posten_obj.rechnung
+    posten: Posten = get_object_or_404(Posten, pk=posten_id)
+    rechnung_obj = posten.rechnung
 
     if rechnung_obj.gestellt:
         return redirect("rechnung:rechnung", rechnung_id=rechnung_obj.pk)
 
-    form = PostenForm(request.POST or None, instance=posten_obj)
+    form = PostenForm(request.POST or None, instance=posten)
     if request.method == "POST":
         if "loeschen" in request.POST:
-            posten_obj.delete()
+            posten.delete()
         elif form.is_valid():
             form.save()
         return redirect("rechnung:rechnung", rechnung_id=rechnung_obj.pk)
-    context = {"form": form, "rechnung": rechnung_obj, "posten": posten_obj}
-    return render(request, "rechnung/posten/form_posten_aendern.html", context)
+    context = {"form": form, "rechnung": rechnung_obj, "posten": posten}
+    return render(request, "rechnung/posten/edit_posten.html", context)
 
 
 # Neuen Posten zu vorhandener Rechnung hinzufügen
 @finanz_staff_member_required
 def form_rechnung_posten(request: AuthWSGIRequest, rechnung_id: int) -> HttpResponse:
-    rechnung_obj = get_object_or_404(Rechnung, pk=rechnung_id)
+    rechnung: Rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
-    if rechnung_obj.gestellt:
-        return redirect("rechnung:rechnung", rechnung_id=rechnung_obj.pk)
+    if rechnung.gestellt:
+        return redirect("rechnung:rechnung", rechnung_id=rechnung.pk)
     if request.method == "POST":
         form = PostenForm(request.POST, instance=Posten())
 
         if form.is_valid():
             posten_obj = form.save(commit=False)
-            posten_obj.rechnung = rechnung_obj
+            posten_obj.rechnung = rechnung
             posten_obj.save()
             if "zurueck" in request.POST:
-                return redirect("rechnung:rechnung", rechnung_id=rechnung_obj.pk)
-            return redirect("rechnung:rechnung_posten_neu", rechnung_id=rechnung_obj.pk)
-    posten_suggestions = Posten.objects.filter(rechnung__kategorie=rechnung_obj.kategorie)
+                return redirect("rechnung:rechnung", rechnung_id=rechnung.pk)
+            return redirect("rechnung:add_posten", rechnung_id=rechnung.pk)
+    posten_suggestions = Posten.objects.filter(rechnung__kategorie=rechnung.kategorie)
 
     posten_name_suggestions = get_distinct_values_in_order(posten_suggestions, "name")
     posten_einzelpreis_suggestions = get_distinct_values_in_order(posten_suggestions, "einzelpreis")
     posten_anzahl_suggestions = get_distinct_values_in_order(posten_suggestions, "anzahl")
     context = {
         "form": PostenForm(),
-        "rechnung": rechnung_obj,
+        "rechnung": rechnung,
         "posten_name_suggestions": posten_name_suggestions,
         "posten_einzelpreis_suggestions": posten_einzelpreis_suggestions,
         "posten_anzahl_suggestions": posten_anzahl_suggestions,
     }
-    return render(request, "rechnung/posten/form_posten_neu.html", context)
+    return render(request, "rechnung/posten/add_posten.html", context)
 
 
 def get_distinct_values_in_order(posten_suggestions, field):

@@ -65,7 +65,7 @@ class Referent(models.Model):
 
 
 @receiver(models.signals.post_delete, sender=Referent)
-def auto_delete_qr_code_on_delete(sender, instance, **_kwargs):
+def auto_del_qr_code_on_delete(sender, instance, **_kwargs):
     """
     Deletes file from filesystem
     when corresponding `QRCode` object is deleted.

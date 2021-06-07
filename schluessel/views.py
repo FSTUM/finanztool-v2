@@ -152,7 +152,7 @@ def save_key_change(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
 
 
 @finanz_staff_member_required
-def delete_key_change(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
+def del_key_change(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
     if not key.active:
@@ -177,7 +177,7 @@ def delete_key_change(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
         "form": form,
     }
 
-    return render(request, "schluessel/key_change/delete_key_change.html", context)
+    return render(request, "schluessel/key_change/del_key_change.html", context)
 
 
 @finanz_staff_member_required
@@ -680,3 +680,8 @@ def del_key_typ(request: AuthWSGIRequest, schluessel_typ_pk: int) -> HttpRespons
         return redirect("schluessel:list_key_types")
     context = {"form": form, "schluessel_typ": schluessel_typ}
     return render(request, "schluessel/key-typen/del_key-typen.html", context)
+
+
+@finanz_staff_member_required
+def dashboard(request: AuthWSGIRequest) -> HttpResponse:
+    pass  # TODO

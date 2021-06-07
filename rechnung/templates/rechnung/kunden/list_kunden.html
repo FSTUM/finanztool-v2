@@ -40,7 +40,7 @@
             {% for kunde in kunden_liste %}
             <tr>
                 <td>
-                    <a href="{% url 'rechnung:kunde' kunde.id %}">{{ kunde.knr|unlocalize }}</a>
+                    <a href="{% url "rechnung:view_kunde" kunde.id %}">{{ kunde.knr|unlocalize }}</a>
                 </td>
                 <td>{{ kunde.organisation }}</td>
                 <td>{{ kunde.suborganisation }}</td>

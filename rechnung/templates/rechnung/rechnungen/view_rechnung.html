@@ -8,7 +8,7 @@
 {% if rechnung.gestellt and not rechnung.erledigt and rechnung.faellig %}
 <a
     class="btn btn-danger"
-    href="{% url "rechnung:mahnung_neu" rechnung.id %}"
+    href="{% url "rechnung:add_mahnung" rechnung.id %}"
 ><span class="bi bi-hourglass"></span> Mahnung stellen</a>
 {% endif %}
 
@@ -19,7 +19,7 @@
         {% for mahnung in mahnungen %}
         <h4>
             <b>
-                <a href="{% url 'rechnung:mahnung' rechnung.id mahnung.id %}">
+                <a href="{% url "rechnung:mahnung" rechnung.id mahnung.id %}">
                     {{ mahnung.wievielte }}. Mahnung
                 </a>
             </b>
@@ -76,7 +76,7 @@
         <h3>Übersicht
             <a
                 class="btn btn-secondary"
-                href="{% url "rechnung:rechnung_aendern" rechnung.id %}"
+                href="{% url "rechnung:edit_rechnung" rechnung.id %}"
             >Bearbeiten</a>
         </h3>
         <br />
@@ -107,7 +107,7 @@
             <tr>
                 <th>Kunde</th>
                 <td>
-                    <a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">{{ rechnung.kunde }}</a>
+                    <a href="{% url "rechnung:view_kunde" rechnung.kunde.id %}">{{ rechnung.kunde }}</a>
                 </td>
             </tr>
             <tr>
@@ -150,7 +150,7 @@
             {% if not rechnung.gestellt %}
             <a
                 class="btn btn-secondary"
-                href="{% url "rechnung:rechnung_posten_neu" rechnung.id %}"
+                href="{% url "rechnung:add_posten" rechnung.id %}"
             ><span class="bi bi-plus-circle-fill"></span> Neuer Posten</a>
             {% endif %}
         </h3>
@@ -172,7 +172,7 @@
                 <td>{{ posten.name }}</td>
                 {% else %}
                 <td>
-                    <a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</a>
+                    <a href="{% url "rechnung:posten_aendern" posten.id %}">{{ posten.name }}</a>
                 </td>
                 {% endif %}
                 <td class="align-content-end">{{ posten.einzelpreis }}€</td>

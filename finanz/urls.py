@@ -8,15 +8,19 @@ from django.views.generic import RedirectView
 from two_factor.urls import urlpatterns as tf_urls
 
 urlpatterns = [
+    # Auth
+    path("", include(tf_urls)),
     path("logout/", LogoutView.as_view(), name="logout"),
+    # Views
     path("common/", include("common.urls")),
     path("rechnung/", include("rechnung.urls")),
     path("konto/", include("konto.urls")),
     path("aufgaben/", include("aufgaben.urls")),
     path("schluessel/", include("schluessel.urls")),
+    # Admin
     path("admin/", admin.site.urls),
-    path("", RedirectView.as_view(pattern_name="rechnung:index")),
-    path("", include(tf_urls)),
+    # Index
+    path("", RedirectView.as_view(pattern_name="common:dashboard")),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

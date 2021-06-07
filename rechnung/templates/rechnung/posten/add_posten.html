@@ -75,7 +75,7 @@
             {% for posten in rechnung.posten_set.all %}
             <tr>
                 <td class="align-content-end">{{ posten.anzahl }} </td>
-                <td><a href="{% url 'rechnung:posten_aendern' posten.id %}">{{ posten.name }}</a></td>
+                <td><a href="{% url "rechnung:posten_aendern" posten.id %}">{{ posten.name }}</a></td>
                 <td class="align-content-end">{{ posten.einzelpreis }}€</td>
                 <td class="align-content-end">{{ posten.summenetto }}€</td>
                 <td class="align-content-end">{{ posten.summenettogerundet }}€</td>

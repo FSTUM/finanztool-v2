@@ -17,7 +17,7 @@ Mahnung {% if mahnung.pk %}ändern{% else %}hinzufügen{% endif %}
     {% if mahnung.pk %}
     <a
         class="btn btn-secondary"
-        href="{% url "rechnung:mahnung" rechnung_id=rechnung.pk mahnung_id=mahnung.pk %}"
+        href="{% url "rechnung:view_mahnung" rechnung_id=rechnung.pk mahnung_id=mahnung.pk %}"
     ><span class="bi bi-arrow-left"></span> Zurück zur Mahnung</a>
     {% endif %}
     <button

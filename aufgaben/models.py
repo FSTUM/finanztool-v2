@@ -80,7 +80,7 @@ class Aufgabe(models.Model):
 
 
 @receiver(models.signals.post_delete, sender=Aufgabe)
-def auto_delete_aufgabe_attachment_on_delete(sender, instance, **_kwargs):
+def auto_del_aufgabe_attachment_on_delete(sender, instance, **_kwargs):
     """
     Deletes file from filesystem
     when corresponding `Aufgabe` object is deleted.

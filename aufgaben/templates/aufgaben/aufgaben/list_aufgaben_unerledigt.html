@@ -42,7 +42,7 @@
             {% for aufgabe in meine_aufgaben %}
             <tr>
                 <td>
-                    <a href="{% url "aufgaben:aufgabe" aufgabe.id %}">
+                    <a href="{% url "aufgaben:view_aufgabe" aufgabe.id %}">
                         {{ aufgabe.art.name }}
                     </a>
                 </td>
@@ -93,7 +93,7 @@
             {% for aufgabe in aufgaben %}
             <tr>
                 <td>
-                    <a href="{% url "aufgaben:aufgabe" aufgabe.id %}">
+                    <a href="{% url "aufgaben:view_aufgabe" aufgabe.id %}">
                         {{ aufgabe.art.name }}
                     </a>
                 </td>

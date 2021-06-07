@@ -22,8 +22,12 @@
     href="{% url "rechnung:list_rechnungen" %}"
 >Alle Rechnungen</a>
 <a
-    class="nav-link {% active_link "rechnung:rechnung_neu" %}"
-    href="{% url "rechnung:rechnung_neu" %}"
+    class="nav-link {% active_link "rechnung:list_rechnungen_aufgaben_unerledigt" %}"
+    href="{% url "rechnung:list_rechnungen_aufgaben_unerledigt" %}"
+>Unerledigte Rechnungen und Aufgaben</a>
+<a
+    class="nav-link {% active_link "rechnung:add_rechnung" %}"
+    href="{% url "rechnung:add_rechnung" %}"
 >Rechnung hinzufügen</a>
 
 <h4 class="navbar-text">Kategorien</h4>
@@ -37,18 +41,18 @@
 >Kategorie hinzufügen</a>
 <h4 class="navbar-text">Mahnungen</h4>
 <a
-    class="nav-link {% active_link "rechnung:alle_mahnungen" %}"
-    href="{% url "rechnung:alle_mahnungen" %}"
+    class="nav-link {% active_link "rechnung:list_mahnungen" %}"
+    href="{% url "rechnung:list_mahnungen" %}"
 >Alle Mahnungen</a>
 
 <h4 class="navbar-text">Kunden</h4>
 <a
-    class="nav-link {% active_link "rechnung:kunden_alle" %}"
-    href="{% url "rechnung:kunden_alle" %}"
+    class="nav-link {% active_link "rechnung:list_kunden" %}"
+    href="{% url "rechnung:list_kunden" %}"
 >Alle Kunden</a>
 <a
-    class="nav-link {% active_link "rechnung:kunde_neu" %}"
-    href="{% url "rechnung:kunde_neu" %}"
+    class="nav-link {% active_link "rechnung:add_kunde" %}"
+    href="{% url "rechnung:add_kunde" %}"
 >Kunde hinzufügen</a>
 
 <div

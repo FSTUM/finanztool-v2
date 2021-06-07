@@ -24,7 +24,7 @@ urlpatterns = [
                 path("list/", views.list_referenten, name="list_referenten"),
                 path("add/", views.add_referent, name="add_referent"),
                 path("edit/<int:referent_pk>/", views.edit_referent, name="edit_referent"),
-                path("delete/<int:referent_pk>/", views.del_referent, name="del_referent"),
+                path("del/<int:referent_pk>/", views.del_referent, name="del_referent"),
                 path("inc/<int:referent_pk>/", views.inc_referent, name="inc_referent"),
             ],
         ),

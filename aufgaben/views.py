@@ -11,30 +11,30 @@ from .models import Aufgabe, Aufgabenart
 
 
 @finanz_staff_member_required
-def unerledigt(request: AuthWSGIRequest) -> HttpResponse:
+def list_aufgaben_unerledigt(request: AuthWSGIRequest) -> HttpResponse:
     aufgaben = Aufgabe.objects.filter(erledigt=False).order_by("frist")
     meine_aufgaben = Aufgabe.objects.filter(erledigt=False, zustaendig=request.user).order_by("-frist")
     context = {
         "aufgaben": aufgaben,
         "meine_aufgaben": meine_aufgaben,
     }
-    return render(request, "aufgaben/aufgaben/unerledigt.html", context)
+    return render(request, "aufgaben/aufgaben/list_aufgaben_unerledigt.html", context)
 
 
 @finanz_staff_member_required
 def form_aufgabe(request: AuthWSGIRequest, aufgabe_id: Optional[int] = None) -> HttpResponse:
-    aufgabe_obj: Optional[Aufgabe] = None
+    aufgabe: Optional[Aufgabe] = None
     if aufgabe_id:
-        aufgabe_obj = get_object_or_404(Aufgabe, pk=aufgabe_id)
+        aufgabe = get_object_or_404(Aufgabe, pk=aufgabe_id)
 
-    form = AufgabeForm(request.POST or None, request.FILES, initial={"zustaendig": request.user}, instance=aufgabe_obj)
+    form = AufgabeForm(request.POST or None, request.FILES, initial={"zustaendig": request.user}, instance=aufgabe)
     if request.POST and form.is_valid():
         aufgabe_new: Aufgabe = form.save()
-        return redirect("aufgaben:aufgabe", aufgabe_id=aufgabe_new.pk)
+        return redirect("aufgaben:view_aufgabe", aufgabe_id=aufgabe_new.pk)
 
     context = {
         "form": form,
-        "aufgabe": aufgabe_obj,
+        "aufgabe": aufgabe,
     }
 
     return render(request, "aufgaben/aufgaben/form_aufgabe.html", context)
@@ -51,7 +51,7 @@ def form_aufgabenart(request: AuthWSGIRequest, aufgabenart_id: Optional[int] = N
 
         if form.is_valid():
             form.save()
-            return redirect("aufgaben:neu")
+            return redirect("aufgaben:add_aufgabe")
     else:
         form = AufgabenartForm()
 
@@ -64,16 +64,16 @@ def form_aufgabenart(request: AuthWSGIRequest, aufgabenart_id: Optional[int] = N
 
 
 @finanz_staff_member_required
-def alle(request: AuthWSGIRequest) -> HttpResponse:
+def list_aufgaben(request: AuthWSGIRequest) -> HttpResponse:
     alle_aufgaben = Aufgabe.objects.all().order_by("-frist")
     context = {
         "alle_aufgaben": alle_aufgaben,
     }
-    return render(request, "aufgaben/aufgaben/alle.html", context)
+    return render(request, "aufgaben/aufgaben/list_aufgaben.html", context)
 
 
 @finanz_staff_member_required
-def aufgabe(request: AuthWSGIRequest, aufgabe_id: int) -> HttpResponse:
+def view_aufgabe(request: AuthWSGIRequest, aufgabe_id: int) -> HttpResponse:
     _aufgabe = get_object_or_404(Aufgabe, pk=aufgabe_id)
 
     form = forms.Form(request.POST or None)
@@ -83,10 +83,15 @@ def aufgabe(request: AuthWSGIRequest, aufgabe_id: int) -> HttpResponse:
         elif "erledigt" in request.POST:
             _aufgabe.erledigt = True
         _aufgabe.save()
-        return redirect("aufgaben:aufgabe", aufgabe_id=_aufgabe.pk)
+        return redirect("aufgaben:view_aufgabe", aufgabe_id=_aufgabe.pk)
 
     context = {
         "aufgabe": _aufgabe,
         "form": form,
     }
-    return render(request, "aufgaben/aufgaben/aufgabe.html", context)
+    return render(request, "aufgaben/aufgaben/view_aufgabe.html", context)
+
+
+@finanz_staff_member_required
+def dashboard(request: AuthWSGIRequest) -> HttpResponse:
+    pass  # TODO

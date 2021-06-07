@@ -44,12 +44,12 @@
             <tr class="{% if not rechnung.erledigt %}table-danger{% else %}table-active{% endif %}">
                 <td></td>
                 <th>
-                    <a href="{% url 'rechnung:rechnung' rechnung.id %}">
+                    <a href="{% url "rechnung:rechnung" rechnung.id %}">
                         {{ rechnung }}
                     </a>
                 </th>
                 <td>
-                    <a href="{% url 'rechnung:kunde' rechnung.kunde.id %}">
+                    <a href="{% url "rechnung:view_kunde" rechnung.kunde.id %}">
                         {{ rechnung.kunde.knr|unlocalize }}
                     </a>
                 </td>
@@ -61,7 +61,7 @@
             {% for mahnung in rechnung.mahnungen %}
             <tr>
                 <td>{% include "snippets/true_false_span.html" with value=mahnung.geschickt %}</td>
-                <td class="ps-2"><a href="{% url 'rechnung:mahnung' mahnung.rechnung.id mahnung.id %}">
+                <td class="ps-2"><a href="{% url "rechnung:mahnung" mahnung.rechnung.id mahnung.id %}">
                         {{ mahnung.wievielte }}. Mahnung
                     </a>
                 </td>

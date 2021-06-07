@@ -66,7 +66,7 @@
             <tr>
                 <th>Kunde</th>
                 <td>
-                    <a href="{% url 'rechnung:kunde' mahnung.rechnung.kunde.id %}">
+                    <a href="{% url "rechnung:view_kunde" mahnung.rechnung.kunde.id %}">
                         {{ mahnung.rechnung.kunde }}
                     </a>
                 </td>
@@ -120,7 +120,7 @@
         </table>
     </div>
     <div class="col-lg-6">
-        <h3><a href="{% url 'rechnung:rechnung' rechnung.id %}">Original Rechnung</a></h3>
+        <h3><a href="{% url "rechnung:rechnung" rechnung.id %}">Original Rechnung</a></h3>
         <br />
         <table class="table table-striped">
             <tr>
@@ -154,7 +154,7 @@
         {% for m in rechnung.mahnungen %}
         <h4>
             <b>
-                <a href="{% url 'rechnung:mahnung' m.rechnung.id m.id %}">
+                <a href="{% url "rechnung:mahnung" m.rechnung.id m.id %}">
                     {{ m.wievielte }}. Mahnung
                 </a>
             </b>

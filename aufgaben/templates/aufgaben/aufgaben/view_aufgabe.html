@@ -44,7 +44,7 @@
 <form method="POST">{% csrf_token %}
     <a
         class="btn btn-primary"
-        href="{% url "aufgaben:aendern" aufgabe.id %}"
+        href="{% url "aufgaben:edit_aufgabe" aufgabe.id %}"
     >Bearbeiten</a>
     {% bootstrap_form form %}
     {% if aufgabe.erledigt %}

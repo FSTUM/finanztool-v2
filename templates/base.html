@@ -70,7 +70,7 @@
             <div class="container-fluid">
                 <a
                     class="navbar-brand"
-                    href="{% url "common:willkommen" %}"
+                    href="{% url "common:dashboard" %}"
                 ><img
                         src="{% static "piggy-bank-fill.svg" %}"
                         alt="piggy-bank Logo"
@@ -96,25 +96,25 @@
                     <nav class="navbar-nav me-auto mb-2 mb-lg-0">
                         {% if user.is_authenticated %}
                         <a
-                            class="nav-link {% active_link 'schluessel:index' %}"
-                            href="{% url 'schluessel:index' %}"
+                            class="nav-link {% active_link "schluessel:index" %}"
+                            href="{% url "schluessel:index" %}"
                         >Schlüssel</a>
                         {% if user.is_superuser %}
                         <a
-                            class="nav-link {% active_link 'rechnung:index' %}"
-                            href="{% url 'rechnung:index' %}"
+                            class="nav-link {% active_link "rechnung:index" %}"
+                            href="{% url "rechnung:index" %}"
                         >Rechnungen und Kunden</a>
                         <a
-                            class="nav-link {% active_link 'aufgaben:index' %}"
-                            href="{% url 'aufgaben:index' %}"
+                            class="nav-link {% active_link "aufgaben:index" %}"
+                            href="{% url "aufgaben:index" %}"
                         >Aufgaben</a>
                         <a
-                            class="nav-link {% active_link 'konto:index' %}"
+                            class="nav-link {% active_link "konto:index" %}"
                             href="{% url "konto:index" %}"
                         >Konto</a>
                         {% endif %}
                         <a
-                            class="nav-link {% active_link 'common:management' %}{% active_link 'two_factor:profile' %}"
+                            class="nav-link {% active_link "common:management" %}{% active_link "two_factor:profile" %}"
                             href="{% url "common:management" %}"
                         >Mails and Einstellungen</a>
                         {% endif %}
@@ -160,11 +160,11 @@
         <div class="container-md">
             <nav class="navbar-nav text-nowrap overflow-auto mx-auto">
                 <a
-                    class="nav-link {% active_link '' %}"
+                    class="nav-link"
                     href="https://fs.tum.de/datenschutz/"
                 >Datenschutz</a>
                 <a
-                    class="nav-link {% active_link '' %}"
+                    class="nav-link"
                     href="https://fs.tum.de/impressum/"
                 >Impressum</a>
             </nav>

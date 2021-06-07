@@ -22,7 +22,7 @@ Kunde {% if kunde.knr %}bearbeiten{% else %}hinzufügen{% endif %}
     {% if kunde.pk %}
     <a
         class="btn btn-secondary"
-        href="{% url "rechnung:kunde" kunde_id=kunde.pk %}"
+        href="{% url "rechnung:view_kunde" kunde_id=kunde.pk %}"
     ><span class="bi bi-arrow-left"></span> Zurück zum Kunden</a>
     {% endif %}
     <button

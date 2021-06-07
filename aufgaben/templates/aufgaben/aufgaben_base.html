@@ -6,21 +6,21 @@
 {% block finanz_common_navigation %}
 <h4 class="navbar-text">Aufgaben</h4>
 <a
-    class="nav-link {% active_link "aufgaben:unerledigt" %}"
-    href="{% url "aufgaben:unerledigt" %}"
+    class="nav-link {% active_link "aufgaben:list_aufgaben_unerledigt" %}"
+    href="{% url "aufgaben:list_aufgaben_unerledigt" %}"
 >Unerledigte Aufgaben</a>
 <a
-    class="nav-link {% active_link "aufgaben:alle" %}"
-    href="{% url "aufgaben:alle" %}"
+    class="nav-link {% active_link "aufgaben:list_aufgaben" %}"
+    href="{% url "aufgaben:list_aufgaben" %}"
 >Alle Aufgaben</a>
 <a
-    class="nav-link {% active_link "aufgaben:neu" %}"
-    href="{% url "aufgaben:neu" %}"
+    class="nav-link {% active_link "aufgaben:add_aufgabe" %}"
+    href="{% url "aufgaben:add_aufgabe" %}"
 >Aufgaben hinzufügen</a>
 
 <h4 class="navbar-text">Aufgabenarten</h4>
 <a
-    class="nav-link {% active_link "aufgaben:neu_aufgabenart" %}"
-    href="{% url "aufgaben:neu_aufgabenart" %}"
+    class="nav-link {% active_link "aufgaben:add_aufgabenart" %}"
+    href="{% url "aufgaben:add_aufgabenart" %}"
 >Aufgabenart hinzufügen</a>
 {% endblock %}
