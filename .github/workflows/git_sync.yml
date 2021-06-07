@@ -1,0 +1,20 @@
+name: Syncs this repo with the one hosted on private gitlab
+
+on:
+    push:
+        branches:
+            - 'main'
+    workflow_dispatch:
+
+jobs:
+    git-sync:
+        runs-on: ubuntu-latest
+        steps:
+            - name: git-sync
+              uses: wei/git-sync@v3
+              with:
+                  source_repo: 'git@github.com:CommanderStorm/finanztool-v2.git'
+                  source_branch: 'main'
+                  destination_repo: 'git@git.fs.tum.de:elsinga/finanz.git'
+                  destination_branch: 'master'
+                  ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
