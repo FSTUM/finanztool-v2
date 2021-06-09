@@ -109,7 +109,7 @@ def del_referent(request: AuthWSGIRequest, referent_pk: int) -> HttpResponse:
         referent.delete()
         return redirect("konto:list_referenten")
     context = {"form": form, "referent": referent}
-    return render(request, "konto/referenten/edit_referenten.html", context)
+    return render(request, "konto/referenten/del_referenten.html", context)
 
 
 @finanz_staff_member_required

@@ -71,5 +71,5 @@ def auto_del_qr_code_on_delete(sender, instance, **_kwargs):
     when corresponding `QRCode` object is deleted.
     """
     _ = sender  # sender is needed, for api. it cannot be renamed, but is unused here.
-    if instance.counter_image and os.path.isfile(instance.qr_code.path):
-        os.remove(instance.qr_code.path)
+    if instance.counter_image and os.path.isfile(instance.counter_image.path):
+        os.remove(instance.counter_image.path)
