@@ -5,6 +5,90 @@
 {% block finanz_common_headercontent %}Rechnungs-Dashboard{% endblock %}
 {% block title %}Rechnungs-Dashboard{% endblock %}
 
+{% block head %}
+<script src="https://cdn.plot.ly/plotly-2.0.0.min.js"></script>
+{% endblock %}
+
 {% block finanz_common_content %}
-n.A.
+<div class='row'>
+    <div
+        class='col-xl'
+        id="gestellt_nicht_bezahlt_rechnungen"
+    ></div>
+    <div
+        class='col-xl'
+        id="kategorien_cnt"
+    ></div>
+</div>
+{% endblock %}
+
+{% block defered_script %}
+<script>
+    /* global Plotly */
+    const settings = { modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d'], responsive: true };
+
+    const backgroundColor = [
+        '#1dd1a1',
+        '#48dbfb',
+        '#feca57',
+        '#70a1ff',
+        '#ff6b6b',
+        '#badc58',
+        '#ff9ff3',
+        '#c8d6e5',
+        '#f6e58d',
+        '#00d2d3',
+        '#54a0ff',
+        '#ff7979',
+        '#ffbe76',
+        '#7ed6df',
+        '#95afc0',
+        '#ff7f50',
+        '#eccc68',
+        '#7bed9f',
+        '#2ed573',
+        '#a4b0be',
+        '#f1f2f6',
+    ];
+
+    Plotly.newPlot(
+        document.getElementById('gestellt_nicht_bezahlt_rechnungen'),
+        [
+            {
+                type: 'pie',
+                values: {{ nicht_bezahlt_rechnungen_values }},
+                labels: {{ nicht_bezahlt_rechnungen_labels|safe }},
+                marker: { colors: backgroundColor },
+                hoverinfo: 'label',
+                textinfo: 'none',
+            },
+        ],
+        {
+            title: 'Unbezahlte, gestellte Rechnungen',
+            font: { size: 18 },
+            legend: { orientation: 'h' },
+        },
+        settings,
+    );
+
+    Plotly.newPlot(
+        document.getElementById('kategorien_cnt'),
+        [
+            {
+                type: 'pie',
+                values: {{ kategorien_cnt_values }},
+                labels: {{ kategorien_cnt_labels|safe }},
+                marker: { colors: backgroundColor },
+                hoverinfo: 'value+label',
+                textinfo: 'label',
+            },
+        ],
+        {
+            title: 'Rechnnungsanzahl je Kategorie',
+            font: { size: 18 },
+            legend: { orientation: 'h' },
+        },
+        settings,
+    );
+    </script>
 {% endblock %}

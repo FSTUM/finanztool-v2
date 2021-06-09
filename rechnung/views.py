@@ -21,9 +21,29 @@ from .forms import FilterRechnungenForm, KategorieForm, KundeForm, MahnungForm, 
 from .models import Kategorie, Kunde, Mahnung, Posten, Rechnung
 
 
+def get_nicht_bezahlt_rechnungen():
+    nicht_bezahlt_rechnungen = Rechnung.objects.filter(gestellt=True, bezahlt=False).values_list("name", flat=True)
+    return list(nicht_bezahlt_rechnungen), [1] * nicht_bezahlt_rechnungen.count()
+
+
+def get_kategorien_cnt():
+    kat_cnt = Rechnung.objects.values("kategorie__name").annotate(kategorie_count=Count("kategorie__name"))
+    return (
+        list(kat_cnt.values_list("kategorie__name", flat=True)),
+        list(kat_cnt.values_list("kategorie_count", flat=True)),
+    )
+
+
 @finanz_staff_member_required
 def dashboard(request: AuthWSGIRequest) -> HttpResponse:
-    context = {"placholder": True}  # TODO
+    kategorien_cnt_labels, kategorien_cnt_values = get_kategorien_cnt()
+    nicht_bezahlt_rechnungen_labels, nicht_bezahlt_rechnungen_values = get_nicht_bezahlt_rechnungen()
+    context = {
+        "nicht_bezahlt_rechnungen_values": nicht_bezahlt_rechnungen_values,
+        "nicht_bezahlt_rechnungen_labels": nicht_bezahlt_rechnungen_labels,
+        "kategorien_cnt_values": kategorien_cnt_values,
+        "kategorien_cnt_labels": kategorien_cnt_labels,
+    }
     return render(request, "rechnung/rechnung_dashboard.html", context)
 
 
