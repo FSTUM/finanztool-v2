@@ -28,6 +28,7 @@
         <thead>
             <tr>
                 <th>Kategorie</th>
+                <th>Anzahl</th>
                 <th>Aktionen</th>
             </tr>
         </thead>
@@ -37,6 +38,7 @@
                 <td>
                     <a href="{% url "rechnung:list_rechnungen_filter" kategorie.pk %}">{{ kategorie.name }}</a>
                 </td>
+                <td>{{ kategorie.rechnung_set.count }}</td>
                 <td>
                     <a href="{% url "rechnung:edit_kategorie" kategorie.pk %}"><span class="bi bi-pencil"></span></a>
                     <a href="{% url "rechnung:del_kategorie" kategorie.pk %}"><span class="bi bi-trash-fill"></span></a>
