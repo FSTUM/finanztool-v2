@@ -125,10 +125,10 @@ de_formats.SHORT_DATE_FORMAT = "d.m."
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "node_modules"),
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "staticfiles"),
 ]
 
 # Database stuff
@@ -144,7 +144,7 @@ CRONJOBS = [
 
 # Media files (aufgaben.attachments, ...)
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # sftp transfer to valhalla
 SFTP_STORAGE_HOST = "valhalla.fs.tum.de"
