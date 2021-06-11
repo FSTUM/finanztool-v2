@@ -1,3 +1,4 @@
+{% load logo %}
 {% load active_link_tags %}
 {% load static %}
 {% load i18n %}
@@ -71,12 +72,7 @@
                 <a
                     class="navbar-brand"
                     href="{% url "common:dashboard" %}"
-                ><img
-                        src="{% static "piggy-bank-fill.svg" %}"
-                        alt="piggy-bank Logo"
-                        height="24"
-                        class="d-inline-block align-text-top"
-                    > Finanztool</a>
+                >{% fslogo %}</a>
                 <button
                     aria-controls="navbarSupportedContent"
                     aria-expanded="false"
