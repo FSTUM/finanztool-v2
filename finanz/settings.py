@@ -32,18 +32,19 @@ INSTALLED_APPS = [
     "active_link",
     "django_crontab",
     "storages",
-    "rechnung",
-    "konto",
-    "aufgaben",
-    "schluessel",
-    "getraenke",
-    "common",
     # 2FA
     "django_otp",
     "django_otp.plugins.otp_static",
     "django_otp.plugins.otp_totp",
     "two_factor",
     "otp_yubikey",
+    # views
+    "rechnung",
+    "konto",
+    "aufgaben",
+    "schluessel",
+    "getraenke",
+    "common",
 ]
 
 MIDDLEWARE = [
