@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
-    "bootstrap5",
+    "django_bootstrap5",
     "bootstrap_datepicker_plus",
     "active_link",
     "django_crontab",
