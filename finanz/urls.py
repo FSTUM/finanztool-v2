@@ -2,14 +2,13 @@ from django.conf import settings
 from django.conf.urls import include
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 from django.views.generic import RedirectView
-from two_factor.urls import urlpatterns as tf_urls
 
 urlpatterns = [
     # Auth
-    path("", include(tf_urls)),
+    path("login/", LoginView.as_view(template_name="login.html"), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
     # Views
     path("common/", include("common.urls")),

@@ -16,7 +16,7 @@ from common.models import Mail, QRCode, Settings
 from rechnung.models import Rechnung
 from schluessel.models import Key
 
-finanz_staff_member_required: Callable = staff_member_required(login_url="two_factor:login")
+finanz_staff_member_required: Callable = staff_member_required(login_url="login")
 
 
 class AuthWSGIRequest(WSGIRequest):
@@ -99,7 +99,7 @@ def edit_settings(request: AuthWSGIRequest) -> HttpResponse:
     return render(request, "common/settings/edit_settings.html", context)
 
 
-@login_required(login_url="two_factor:login")
+@login_required(login_url="login")
 def dashboard(request: AuthWSGIRequest) -> HttpResponse:
     rechnungen = Rechnung.objects.filter(gestellt=True, erledigt=False).all()
     offene_rechnungen_cnt: int = rechnungen.count()

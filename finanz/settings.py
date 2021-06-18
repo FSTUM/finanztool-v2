@@ -38,12 +38,6 @@ INSTALLED_APPS = [
     "schluessel",
     "getraenke",
     "common",
-    # 2FA
-    "django_otp",
-    "django_otp.plugins.otp_static",
-    "django_otp.plugins.otp_totp",
-    "two_factor",
-    "otp_yubikey",
 ]
 
 MIDDLEWARE = [
@@ -52,7 +46,6 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django_otp.middleware.OTPMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -60,9 +53,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "finanz.urls"
 LOGIN_REDIRECT_URL = "common:index"
-LOGOUT_REDIRECT_URL = "two_factor:login"
-LOGIN_URL = "two_factor:login"
-LOGOUT_URL = "logout"
+LOGOUT_REDIRECT_URL = "login"
+LOGIN_URL = "login/"
+LOGOUT_URL = "logout/"
 
 TEMPLATES = [
     {
