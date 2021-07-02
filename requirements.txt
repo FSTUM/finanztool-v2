@@ -6,4 +6,4 @@ django-crontab~=0.7.1
 django-storages~=1.11.1
 paramiko~=2.7.2
 Pillow~=8.2.0
-qrcode~=6.1
+qrcode~=7.0
