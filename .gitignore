@@ -27,3 +27,4 @@ Session.vim
 /.mypy_cache/
 /node_modules/
 /static/
+/staging/.env

@@ -1,5 +1,12 @@
 # Installation
 
+0. Clone and go into the cloned directory
+
+```
+git clone https://github.com/FSTUM/finanztool-v2.git
+cd finanztool-v2
+```
+
 1. Install system dependencies
 
 ```bash
@@ -91,3 +98,34 @@ This operation might take a few seconds. Don't worry.
 If you want to add a dependency that is in `pip` add it to the appropriate `requirements`-file.  
 If you want to add a dependency that is in `npm` run `npm i DEPENDENCY`. **Make shure that you do only commit the
 nessesary files to git.**
+
+# Staging
+
+An staging environment is offered at finanz.frank.elsinga.de
+The username is password
+The password is username
+
+## Building and running the dockerfile for local developement
+
+1. you need to save your enveronmment variables in an `.env`-file.
+   The further guide assumes content simmilar to the following in `staging/.env`.
+
+```
+DJANGO_DEBUG=True
+DJANGO_SECRET_KEY=CHOOSE_A_SAVE_PASSWORD
+DJANGO_ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1
+```
+
+2. Build the dockerfile
+
+```
+docker build -t finanztool-staging:v1 .
+```
+
+3. Run the Dockerfile
+
+```
+docker run --env-file staging/.env -p 8080:8000 finanztool-staging:v1
+```
+
+The Staging instance is now availibe at [`127.0.0.1:8080`](http://127.0.0.1:8080/) and is pushed to the Github Container Registry for convinience.
