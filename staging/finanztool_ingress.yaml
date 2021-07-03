@@ -1,14 +1,14 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-  name: argocd-server
+    name: argocd-server
     labels:
         app: finanztool
     namespace: finanztool
 spec:
-  routes:
-    - kind: Rule
-      match: Host(`finanz.frank.elsinga.de`)
-      services:
-        - name: finanztool-app
-          port: 8000
+    routes:
+        - kind: Rule
+          match: Host(`finanz.frank.elsinga.de`)
+          services:
+              - name: finanztool-app
+                port: 8000
