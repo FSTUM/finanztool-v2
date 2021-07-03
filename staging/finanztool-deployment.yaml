@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: finanztool-app
+    labels:
+        app: finanztool
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: finanztool
+    template:
+        metadata:
+            labels:
+                app: finanztool
+        spec:
+            containers:
+                - name: finanztool
+                  image: ghcr.io/fstum/finanztool-v2-staging:main
+                  imagePullPolicy: Always
+                  imagePullSecrets:
+                      - name: dockerconfigjson-github-com
+                  envFrom:
+                      - configMapRef:
+                            name: finanztool-config
+                  ports:
+                      - containerPort: 8000
+                        name: gunicorn
