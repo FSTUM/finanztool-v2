@@ -21,6 +21,8 @@ spec:
                   imagePullSecrets:
                       - name: dockerconfigjson-github-com
                   envFrom:
+                      - secretRef:
+                            name: finanztool-secret
                       - configMapRef:
                             name: finanztool-config
                   ports:
