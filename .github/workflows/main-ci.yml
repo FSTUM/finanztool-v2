@@ -10,8 +10,6 @@ on:
 jobs:
     test:
         runs-on: ubuntu-latest
-        strategy:
-            max-parallel: 4
 
         steps:
             - uses: actions/checkout@v2
@@ -32,9 +30,6 @@ jobs:
                   python manage.py test
     pre-commit:
         runs-on: ubuntu-latest
-        strategy:
-            max-parallel: 4
-
         steps:
             - uses: actions/checkout@v2
               with:
