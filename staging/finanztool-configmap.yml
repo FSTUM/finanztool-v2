@@ -2,6 +2,9 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
     name: finanztool-config
+    labels:
+        app: finanztool
+    namespace: finanztool
 data:
     DJANGO_ALLOWED_HOSTS: 'finanz.frank.elsinga.de'
     DEBUG: 'False'

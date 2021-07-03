@@ -4,6 +4,7 @@ metadata:
     name: finanztool-app
     labels:
         app: finanztool
+    namespace: finanztool
 spec:
     replicas: 1
     selector:
