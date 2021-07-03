@@ -26,7 +26,7 @@ WORKDIR /code/
 ADD . /code/
 
 # Add any static environment variables needed by Django or your settings file here:
-ENV DJANGO_SETTINGS_MODULE=finanz.staging_settings
+ENV DJANGO_SETTINGS_MODULE=staging.staging_settings
 
 RUN python manage.py collectstatic --noinput \
     && rm -f *.sqlite3 \
@@ -35,4 +35,4 @@ RUN python manage.py collectstatic --noinput \
 
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", ":8000", "--workers", "3", "finanz.staging_wsgi:application"]
+CMD ["gunicorn", "--bind", ":8000", "--workers", "3", "staging.staging_wsgi:application"]
