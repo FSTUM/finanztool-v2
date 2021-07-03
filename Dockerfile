@@ -9,7 +9,7 @@ RUN set -ex \
     && RUN_DEPS=" \
     mime-support \
     python3-pip python3-venv \
-    texlive-base texlive-lang-german texlive-fonts-recommended \
+    texlive-base texlive-lang-german texlive-fonts-recommended texlive-latex-extra \
     postgresql-client \
     " \
     && seq 1 8 | xargs -I{} mkdir -p /usr/share/man/man{} \
@@ -25,13 +25,15 @@ RUN mkdir /code/
 WORKDIR /code/
 ADD . /code/
 
-# Add any static environment variables needed by Django or your settings file here:
-ENV DJANGO_SETTINGS_MODULE=staging.staging_settings
+ENV DJANGO_SETTINGS_MODULE=finanz.settings
 
 RUN python manage.py collectstatic --noinput \
     && rm -f *.sqlite3 \
     && python manage.py migrate  --noinput|grep -v "... OK" \
     && echo "import common.fixture as fixture;fixture.showroom_fixture_state_no_confirmation()"|python manage.py shell
+
+
+ENV DJANGO_SETTINGS_MODULE=staging.staging_settings
 
 EXPOSE 8000
 

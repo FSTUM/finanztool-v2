@@ -2,17 +2,12 @@
 # pylint: skip-file
 # type: ignore
 
-import random
-import string
-
 from finanz.settings import *
 
-
-def get_random_secret() -> str:
-    letters = string.printable
-    return "".join(random.choice(letters) for _ in range(50))  # nosec: This is a staging fallback
-
-
 DEBUG = bool(os.getenv("DJANGO_DEBUG", False))
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret())
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
+
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
+# generate your own secret key using
+# import random, string
+# print("".join(random.choice(string.printable) for _ in range(50)))

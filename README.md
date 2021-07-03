@@ -111,9 +111,9 @@ The password is username
    The further guide assumes content simmilar to the following in `staging/.env`.
 
 ```
-DJANGO_DEBUG=True
-DJANGO_SECRET_KEY=CHOOSE_A_SAVE_PASSWORD
-DJANGO_ALLOWED_HOSTS=0.0.0.0,localhost,127.0.0.1
+DJANGO_DEBUG="True"
+DJANGO_SECRET_KEY="CHOOSE_A_SAVE_PASSWORD"
+DJANGO_ALLOWED_HOSTS="0.0.0.0,localhost,127.0.0.1"
 ```
 
 2. Build the dockerfile
