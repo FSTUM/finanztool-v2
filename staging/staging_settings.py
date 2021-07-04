@@ -4,7 +4,8 @@
 
 from finanz.settings import *
 
-DEBUG = bool(os.getenv("DJANGO_DEBUG", False))
+
+DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
 
 SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
