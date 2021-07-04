@@ -16,9 +16,11 @@ RUN set -ex \
     && apt-get update && apt-get install -y --no-install-recommends $RUN_DEPS \
     && rm -rf /var/lib/apt/lists/*
 
-ADD requirements.txt /requirements.txt
+ADD requirements_staging.txt /requirements_staging.txt
+RUN pip install --no-cache-dir -r /requirements_staging.txt
 
-RUN pip install --no-cache-dir -r /requirements.txt gunicorn lorem
+ADD requirements.txt /requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
 
 # Copy your application code to the container (make sure you create a .dockerignore file if any large files or directories should be excluded)
 RUN mkdir /code/

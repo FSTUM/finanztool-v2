@@ -11,3 +11,7 @@ SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 # generate your own secret key using
 # import random, string
 # print("".join(random.choice(string.printable) for _ in range(50)))
+
+# staticfiles
+MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
