@@ -18,6 +18,7 @@ spec:
             containers:
                 - name: finanztool
                   image: ghcr.io/fstum/finanztool-v2-staging:main
+                  imagePullPolicy: Always
                   envFrom:
                       - secretRef:
                             name: finanztool-secret
