@@ -10,5 +10,5 @@ spec:
         - kind: Rule
           match: Host(`finanz.frank.elsinga.de`)
           services:
-              - name: finanztool-app
+              - name: finanztool-svc
                 port: 8000
