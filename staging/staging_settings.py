@@ -17,5 +17,5 @@ MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 print("Staging has successfully loaded.")
-print(f"\t{ALLOWED_HOSTS=}")
-print(f"\t{DEBUG=}")
+print(f"\tALLOWED_HOSTS={ALLOWED_HOSTS}")
+print(f"\tDEBUG={DEBUG}")
