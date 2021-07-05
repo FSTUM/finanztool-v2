@@ -62,6 +62,11 @@ def showroom_fixture_state_no_confirmation():  # nosec: this is only used in a f
     # _generate_schluessel_saved_key_change()
 
 
+def showroom_fixture_state_no_confirmation_staging():
+    showroom_fixture_state_no_confirmation()
+    m_common.QRCode.objects.delete()  # staticfiles are not handled correctly in the staging environment
+
+
 def rand_company_name():  # nosec: this is only used in a fixture
     return random.choice(
         [
@@ -179,10 +184,10 @@ def _generate_rechnung_rechnung():  # nosec: this is only used in a fixture
             rdatum=date.today()
             if random.choice((True, True, False))
             else date.today()
-            + timedelta(
+                 + timedelta(
                 days=random.randint(0, 32),
             )
-            - timedelta(days=random.randint(0, 32)),
+                 - timedelta(days=random.randint(0, 32)),
             ldatum=random.choice(
                 (
                     date.today(),

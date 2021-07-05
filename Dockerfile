@@ -32,7 +32,7 @@ ENV DJANGO_SETTINGS_MODULE=finanz.settings
 RUN python manage.py collectstatic --noinput \
     && rm -f *.sqlite3 \
     && python manage.py migrate  --noinput|grep -v "... OK" \
-    && echo "import common.fixture as fixture;fixture.showroom_fixture_state_no_confirmation()"|python manage.py shell
+    && echo "import common.fixture as fixture;fixture.showroom_fixture_state_no_confirmation_staging()"|python manage.py shell
 
 
 ENV DJANGO_SETTINGS_MODULE=staging.staging_settings
