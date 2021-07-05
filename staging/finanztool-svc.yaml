@@ -9,5 +9,7 @@ spec:
     selector:
         app: finanztool
     ports:
+        - port: 7000
+          targetPort: 7000
         - port: 8000
           targetPort: 8000

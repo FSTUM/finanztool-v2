@@ -15,7 +15,19 @@ spec:
             labels:
                 app: finanztool
         spec:
+            volumes:
+                - name: shared-mediafiles
+                  persistentVolumeClaim:
+                      claimName: finanztool-mediafiles-pvc
             containers:
+                - name: nginx-container
+                  image: nginx
+                  ports:
+                      - containerPort: 7000
+                        name: mediafiles-server
+                  volumeMounts:
+                      - name: shared-mediafiles
+                        mountPath: /usr/share/nginx/html
                 - name: finanztool
                   image: ghcr.io/fstum/finanztool-v2-staging:main
                   imagePullPolicy: Always
@@ -27,3 +39,6 @@ spec:
                   ports:
                       - containerPort: 8000
                         name: gunicorn
+                  volumeMounts:
+                      - name: shared-mediafiles
+                        mountPath: /code/media

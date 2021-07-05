@@ -8,7 +8,14 @@ metadata:
 spec:
     routes:
         - kind: Rule
+          match: Host(`finanz.frank.elsinga.de`) && PathPrefix(`/media/`)
+          priority: 11
+          services:
+              - name: finanztool-svc
+                port: 7000
+        - kind: Rule
           match: Host(`finanz.frank.elsinga.de`)
+          priority: 10
           services:
               - name: finanztool-svc
                 port: 8000

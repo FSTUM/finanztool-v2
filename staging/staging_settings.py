@@ -20,10 +20,7 @@ MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 
 # logging
 LOGGING_CONFIG = None
-
-# Get loglevel from env
 LOGLEVEL = os.getenv("DJANGO_LOGLEVEL", "info").upper()
-
 logging.config.dictConfig(
     {
         "version": 1,
