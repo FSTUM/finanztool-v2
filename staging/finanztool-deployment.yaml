@@ -24,7 +24,7 @@ spec:
                   image: nginx
                   ports:
                       - containerPort: 7000
-                        name: mediafiles-server
+                        name: mediafiles-srv
                   volumeMounts:
                       - name: shared-mediafiles
                         mountPath: /usr/share/nginx/html

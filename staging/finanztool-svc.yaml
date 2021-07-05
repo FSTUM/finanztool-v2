@@ -9,7 +9,9 @@ spec:
     selector:
         app: finanztool
     ports:
-        - port: 7000
+        - name: mediafiles-srv
+          port: 7000
           targetPort: 7000
-        - port: 8000
+        - name: gunicorn
+          port: 8000
           targetPort: 8000
