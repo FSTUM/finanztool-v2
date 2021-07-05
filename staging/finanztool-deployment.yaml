@@ -27,7 +27,7 @@ spec:
                         name: mediafiles-srv
                   volumeMounts:
                       - name: shared-mediafiles
-                        mountPath: /usr/share/nginx/html
+                        mountPath: /usr/share/nginx/html/media
                 - name: finanztool
                   image: ghcr.io/fstum/finanztool-v2-staging:main
                   imagePullPolicy: Always
