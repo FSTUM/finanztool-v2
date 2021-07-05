@@ -10,6 +10,7 @@ spec:
     storageClassName: manual
     capacity:
         storage: 100Mi
+    Retain: Delete
     accessModes:
         - ReadWriteOnce
     hostPath:
