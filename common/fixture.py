@@ -64,7 +64,7 @@ def showroom_fixture_state_no_confirmation():  # nosec: this is only used in a f
 
 def showroom_fixture_state_no_confirmation_staging():
     showroom_fixture_state_no_confirmation()
-    m_common.QRCode.objects.delete()  # staticfiles are not handled correctly in the staging environment
+    m_common.QRCode.objects.all().delete()  # staticfiles are not handled correctly in the staging environment
 
 
 def rand_company_name():  # nosec: this is only used in a fixture
