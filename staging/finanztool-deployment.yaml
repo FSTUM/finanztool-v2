@@ -23,7 +23,7 @@ spec:
                 - name: nginx-container
                   image: nginx
                   ports:
-                      - containerPort: 7000
+                      - containerPort: 80
                         name: mediafiles-srv
                   volumeMounts:
                       - name: shared-mediafiles
