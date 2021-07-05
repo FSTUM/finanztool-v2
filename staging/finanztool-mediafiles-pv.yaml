@@ -10,7 +10,7 @@ spec:
     storageClassName: manual
     capacity:
         storage: 100Mi
-    Retain: Delete
+    persistentVolumeReclaimPolicy: Delete
     accessModes:
         - ReadWriteOnce
     hostPath:
