@@ -183,11 +183,7 @@ def _generate_rechnung_rechnung():  # nosec: this is only used in a fixture
             name=lorem.sentence()[: random.randint(0, 50)] if random.choice((True, True, False)) else "",
             rdatum=date.today()
             if random.choice((True, True, False))
-            else date.today()
-                 + timedelta(
-                days=random.randint(0, 32),
-            )
-                 - timedelta(days=random.randint(0, 32)),
+            else date.today() + timedelta(days=random.randint(0, 32)) - timedelta(days=random.randint(0, 32)),
             ldatum=random.choice(
                 (
                     date.today(),

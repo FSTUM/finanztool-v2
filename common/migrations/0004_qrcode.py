@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 def clreate_initial_vip_qr_code(apps, _):
     QRCode = apps.get_model("common", "QRCode")
-    rr_content = ("https://www.yo" "utub" "e.com/" "wat" "ch?v=dQw4w" "9WgXcQ",)
+    rr_content = "https://www.yo" "utub" "e.com/" "wat" "ch?v=dQw4w" "9WgXcQ"
     QRCode.objects.create(pk=0, content=rr_content)
 
 

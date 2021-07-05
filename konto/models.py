@@ -57,8 +57,10 @@ class Referent(models.Model):
     # pylint: disable=signature-differs
     def save(self, *args, **kwargs):
         if not self.counter_image:
-            rr_content = "https://www.yo" "utub" "e.com/" "wat" "ch?v=dQw4w" "9WgXcQ"
-            replacement_image = QRCode.objects.get_or_create(pk=0, defaults=dict(content=rr_content))[0]
+            rr_content = (
+                "https://www.yo" "utub" "e.com/" "wat" "ch?v=dQw4w" "9WgXcQ"  # pylint: disable=implicit-str-concat
+            )
+            replacement_image = QRCode.objects.get_or_create(pk=0, defaults={"content": rr_content})[0]
             if replacement_image.qr_code:
                 new_file = ContentFile(content=replacement_image.qr_code.read(), name=replacement_image.qr_code.name)
                 self.counter_image = new_file
