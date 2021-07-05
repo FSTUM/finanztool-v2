@@ -10,10 +10,10 @@ spec:
     selector:
         matchLabels:
             app: finanztool
-    storageClassName: finanztool-mediafiles
+    storageClassName: finanztool-mediafiles-pvc
     capacity:
         storage: 50Mi
     accessModes:
         - ReadWriteOnce
     hostPath:
-        path: '/mnt/data'
+        path: '/mnt/data/finanztool'
