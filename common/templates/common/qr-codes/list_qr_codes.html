@@ -42,13 +42,14 @@
                     </a>
                 </td>
                 <td><a href='{{ qr_code.qr_code.url }}'>{{ request.scheme }}://set.mpi.fs.tum.de{{ qr_code.qr_code.url }}</a></td>
-
-                {% if qr_code.pk != 0 %}
-                <td><a
+                <td>
+                    {% if qr_code.pk != 0 %}
+                    <a
                         class='btn btn-block btn-warning'
                         href='{% url "common:del_qr_code" qr_code.id %}'
-                    >{% trans "Delete QR-Code" %}</a></td>
-                {% endif %}
+                    >{% trans "Delete QR-Code" %}</a>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
