@@ -22,4 +22,4 @@ spec:
               - name: finanztool-svc
                 port: 8000
     tls:
-        - secretName: finanz.frank.elsinga.de
+        secretName: finanz.frank.elsinga.de
