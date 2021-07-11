@@ -8,7 +8,6 @@ metadata:
 spec:
     entryPoints:
         - websecure
-        - web
     routes:
         - kind: Rule
           match: Host(`finanz.frank.elsinga.de`) && PathPrefix(`/media/`)
@@ -16,15 +15,27 @@ spec:
           services:
               - name: finanztool-svc
                 port: 7000
-          middlewares:
-              - name: https
         - kind: Rule
           match: Host(`finanz.frank.elsinga.de`)
           priority: 10
           services:
               - name: finanztool-svc
                 port: 8000
-          middlewares:
-              - name: https
     tls:
         secretName: finanz.frank.elsinga.de
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+    name: finanztool-ingress-http
+    labels:
+        app: finanztool
+    namespace: finanztool
+spec:
+    entryPoints:
+        - web
+    routes:
+        - kind: Rule
+          match: Host(`finanz.frank.elsinga.de`)
+          middlewares:
+              - name: https
