@@ -10,16 +10,21 @@ spec:
         - websecure
         - web
     routes:
-        - match: Host(`finanz.frank.elsinga.de`) && PathPrefix(`/media/`)
+        - kind: Rule
+          match: Host(`finanz.frank.elsinga.de`) && PathPrefix(`/media/`)
           priority: 11
           services:
               - name: finanztool-svc
                 port: 7000
+          middlewares:
+              - name: https
         - kind: Rule
           match: Host(`finanz.frank.elsinga.de`)
           priority: 10
           services:
               - name: finanztool-svc
                 port: 8000
+          middlewares:
+              - name: https
     tls:
-        - secretName: finanz.frank.elsinga.de
+        secretName: finanz.frank.elsinga.de
