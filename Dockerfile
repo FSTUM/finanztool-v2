@@ -31,7 +31,11 @@ ENV DJANGO_SETTINGS_MODULE=finanz.settings
 
 RUN python manage.py collectstatic --noinput \
     && rm -f *.sqlite3 \
-    && python manage.py migrate  --noinput|grep -v "... OK" \
+    && rm -f ./getraenke/migrations/0001_initial.py \
+    && sed -i '/managed = False/d' ./getraenke/models.py \
+    && python manage.py makemigrations --noinput \
+    && python manage.py migrate --noinput --database=getraenke getraenke|grep -v "... OK" \
+    && python manage.py migrate --noinput|grep -v "... OK" \
     && echo "import common.fixture as fixture;fixture.showroom_fixture_state_no_confirmation_staging()"|python manage.py shell
 
 
