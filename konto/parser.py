@@ -92,8 +92,12 @@ def pre_process_entry(counter: int, row: Any, errors: List[str]) -> Optional[Ent
     try:
         datum = datetime.datetime.strptime(row["Buchungstag"], "%d.%m.%y").date()
     except ValueError:
-        errors.append(f"Zeile {counter}: Ungültiges Datum: {row[1]}")
-        return None
+        try:
+            # if a file is opened in exel this is converted this way..
+            datum = datetime.datetime.strptime(row["Buchungstag"], "%d.%m.%Y").date()
+        except ValueError:
+            errors.append(f"Zeile {counter}: Ungültiges Datum: {row[1]}")
+            return None
 
     betrag = row["Betrag"]
     try:
