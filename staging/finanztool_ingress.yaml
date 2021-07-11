@@ -37,5 +37,8 @@ spec:
     routes:
         - kind: Rule
           match: Host(`finanz.frank.elsinga.de`)
+          services:
+              - name: noop@internal
+                kind: TraefikService
           middlewares:
               - name: https
