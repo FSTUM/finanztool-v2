@@ -23,22 +23,3 @@ spec:
                 port: 8000
     tls:
         secretName: finanz.frank.elsinga.de
----
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-    name: finanztool-ingress-http
-    labels:
-        app: finanztool
-    namespace: finanztool
-spec:
-    entryPoints:
-        - web
-    routes:
-        - kind: Rule
-          match: Host(`finanz.frank.elsinga.de`)
-          services:
-              - name: noop@internal
-                kind: TraefikService
-          middlewares:
-              - name: https
