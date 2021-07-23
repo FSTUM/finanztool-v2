@@ -44,7 +44,7 @@
             <tr class="{% if not rechnung.erledigt %}table-danger{% else %}table-active{% endif %}">
                 <td></td>
                 <th>
-                    <a href="{% url "rechnung:rechnung" rechnung.id %}">
+                    <a href="{% url "rechnung:view_rechnung" rechnung.id %}">
                         {{ rechnung }}
                     </a>
                 </th>

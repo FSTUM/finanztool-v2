@@ -99,7 +99,7 @@ def view_rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpResponse:
         if "gestellt" in request.POST and form.is_valid():
             rechnung.gestellt = True
             rechnung.save()
-            return redirect("rechnung:rechnung", rechnung_id=rechnung.pk)
+            return redirect("rechnung:view_rechnung", rechnung_id=rechnung.pk)
 
     context = {"form": form, "rechnung": rechnung, "mahnungen": mahnungen}
     return render(request, "rechnung/rechnungen/view_rechnung.html", context)
@@ -117,7 +117,7 @@ def form_rechnung(request: AuthWSGIRequest, rechnung_id: Optional[int] = None) -
         rechnung_form: Rechnung = form.save()
         if rechnung_form.erledigt:
             gen_rechnung_upload_to_sftp(request, rechnung_form.id)
-        return redirect("rechnung:rechnung", rechnung_id=rechnung_form.pk)
+        return redirect("rechnung:view_rechnung", rechnung_id=rechnung_form.pk)
 
     context = {"form": form, "rechnung": rechnung}
     return render(request, "rechnung/rechnungen/form_rechnung.html", context)
@@ -148,7 +148,7 @@ def duplicate_rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpRespon
                 anzahl=new_posten.anzahl,
             )
 
-        return redirect("rechnung:rechnung", rechnung_id=rechnung_neu.pk)
+        return redirect("rechnung:view_rechnung", rechnung_id=rechnung_neu.pk)
 
     return render(
         request,
@@ -287,7 +287,7 @@ def form_exist_posten(request: AuthWSGIRequest, posten_id: int) -> HttpResponse:
     rechnung_obj = posten.rechnung
 
     if rechnung_obj.gestellt:
-        return redirect("rechnung:rechnung", rechnung_id=rechnung_obj.pk)
+        return redirect("rechnung:view_rechnung", rechnung_id=rechnung_obj.pk)
 
     form = PostenForm(request.POST or None, instance=posten)
     if request.method == "POST":
@@ -295,7 +295,7 @@ def form_exist_posten(request: AuthWSGIRequest, posten_id: int) -> HttpResponse:
             posten.delete()
         elif form.is_valid():
             form.save()
-        return redirect("rechnung:rechnung", rechnung_id=rechnung_obj.pk)
+        return redirect("rechnung:view_rechnung", rechnung_id=rechnung_obj.pk)
     context = {"form": form, "rechnung": rechnung_obj, "posten": posten}
     return render(request, "rechnung/posten/edit_posten.html", context)
 
@@ -306,7 +306,7 @@ def form_rechnung_posten(request: AuthWSGIRequest, rechnung_id: int) -> HttpResp
     rechnung: Rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
     if rechnung.gestellt:
-        return redirect("rechnung:rechnung", rechnung_id=rechnung.pk)
+        return redirect("rechnung:view_rechnung", rechnung_id=rechnung.pk)
     if request.method == "POST":
         form = PostenForm(request.POST, instance=Posten())
 
@@ -315,7 +315,7 @@ def form_rechnung_posten(request: AuthWSGIRequest, rechnung_id: int) -> HttpResp
             posten_obj.rechnung = rechnung
             posten_obj.save()
             if "zurueck" in request.POST:
-                return redirect("rechnung:rechnung", rechnung_id=rechnung.pk)
+                return redirect("rechnung:view_rechnung", rechnung_id=rechnung.pk)
             return redirect("rechnung:add_posten", rechnung_id=rechnung.pk)
     posten_suggestions = Posten.objects.filter(rechnung__kategorie=rechnung.kategorie)
 

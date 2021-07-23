@@ -63,7 +63,7 @@
         <tbody>
             {% for rechnung in rechnungen_liste %}
             <tr>
-                <td><a href="{% url "rechnung:rechnung" rechnung.id %}">RE {{ rechnung.rnr_string }}</a>
+                <td><a href="{% url "rechnung:view_rechnung" rechnung.id %}">RE {{ rechnung.rnr_string }}</a>
                 </td>
                 <td>{{ rechnung.name }}</td>
                 <td>{{ rechnung.kategorie }}</td>

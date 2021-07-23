@@ -9,7 +9,7 @@
     {% bootstrap_form form %}
     <a
         class="btn btn-secondary"
-        href="{% url "rechnung:rechnung" rechnung.id %}"
+        href="{% url "rechnung:view_rechnung" rechnung.id %}"
     >Zurück zur Rechnung</a>
     <button
         type="button"
@@ -40,7 +40,7 @@
                 </div>
                 <div class="modal-body">
                     <p>Bestätigung, den Posten {{ posten }} wirklich bearbeiten willst.</p>
-                    <p>Die zugehöreige Rechnung ist <a href="{% url "rechnung:rechnung" rechnung.id %}">{{ rechnung}}</a></p>
+                    <p>Die zugehöreige Rechnung ist <a href="{% url "rechnung:view_rechnung" rechnung.id %}">{{ rechnung}}</a></p>
                 </div>
                 <div class="modal-footer">
                     <button
@@ -87,7 +87,7 @@
                 </div>
                 <div class="modal-body">
                     <p>Bestätigung, den Posten {{ posten }} wirklich löschen willst.</p>
-                    <p>Die zugehöreige Rechnung ist <a href="{% url "rechnung:rechnung" rechnung.id %}">{{ rechnung}}</a></p>
+                    <p>Die zugehöreige Rechnung ist <a href="{% url "rechnung:view_rechnung" rechnung.id %}">{{ rechnung}}</a></p>
 
                 </div>
                 <div class="modal-footer">

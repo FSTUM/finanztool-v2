@@ -2,7 +2,7 @@
 {% load django_bootstrap5 %}
 
 {% block finanz_common_headercontent %}{{ mahnung.wievielte }}. Mahnung zur
-<a href="{% url "rechnung:rechnung" mahnung.rechnung.id %}">
+<a href="{% url "rechnung:view_rechnung" mahnung.rechnung.id %}">
     RE {{ mahnung.rechnung.rnr_string }} ({{ mahnung.rechnung.name }})
 </a>
 {% endblock %}
@@ -120,7 +120,7 @@
         </table>
     </div>
     <div class="col-lg-6">
-        <h3><a href="{% url "rechnung:rechnung" rechnung.id %}">Original Rechnung</a></h3>
+        <h3><a href="{% url "rechnung:view_rechnung" rechnung.id %}">Original Rechnung</a></h3>
         <br />
         <table class="table table-striped">
             <tr>

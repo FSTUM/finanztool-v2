@@ -33,7 +33,7 @@ urlpatterns = [
                     ),
                 ),
                 path("add/", views.form_rechnung, name="add_rechnung"),
-                path("view/<int:rechnung_id>/", views.view_rechnung, name="rechnung"),
+                path("view/<int:rechnung_id>/", views.view_rechnung, name="view_rechnung"),
                 path("edit/<int:rechnung_id>/", views.form_rechnung, name="edit_rechnung"),
                 path("duplizieren/<int:rechnung_id>/", views.duplicate_rechnung, name="rechnung_duplizieren"),
             ],
