@@ -71,7 +71,7 @@
                 <td>{% include "snippets/true_false_span.html" with value=rechnung.erledigt %}</td>
                 <td>
                     {% for mahnung in rechnung.mahnungen %}
-                    <a href="{% url "rechnung:mahnung" rechnung.id mahnung.id %}">
+                    <a href="{% url "rechnung:view_mahnung" rechnung.id mahnung.id %}">
                         {{ mahnung.wievielte }}. Mahnung
                     </a>
                     <br>
