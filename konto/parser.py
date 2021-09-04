@@ -60,7 +60,7 @@ def parse_camt_csv(csvfile):
         regex_usernames[user] = re.compile(fr"(.*\W)?{user.user}(\W.*)?")
 
     try:
-        zuletzt_einlesen: Optional[datetime.date] = EinzahlungsLog.objects.latest("konto_einlesen").konto_einlesen
+        zuletzt_einlesen: Optional[datetime.date] = EinzahlungsLog.objects.latest("konto_einlesen").konto_einlesen.date()
     except EinzahlungsLog.DoesNotExist:
         zuletzt_einlesen = None
 
@@ -152,14 +152,14 @@ def suche_user(
     entry: Entry,
     users: QuerySet[Schulden],
     regex_usernames: Dict[Schulden, Pattern[str]],
-    zuletzt_einlesen: Optional[datetime.date],
+    zuletzt_einlesen_date: Optional[datetime.date],
     errors: List[str],
 ) -> None:
     user: Schulden
     for user in users:
         tmp = regex_usernames[user].fullmatch(entry.verwendungszweck)
         if tmp:
-            if zuletzt_einlesen and zuletzt_einlesen < entry.datum:
+            if zuletzt_einlesen_date and zuletzt_einlesen_date < entry.datum:
                 if entry.mapped_user is not None:
                     # If there is a user that was already previously matched,
                     # print a duplicate match error and abort the search.
@@ -171,11 +171,11 @@ def suche_user(
                     return
                 # Enter the new user
                 entry.mapped_user = user
-            elif zuletzt_einlesen and zuletzt_einlesen >= entry.datum:
+            elif zuletzt_einlesen_date and zuletzt_einlesen_date >= entry.datum:
                 # Print an error that this transaction lies beyond the date of the last transaction.
                 errors.append(
                     f"Letzte Einzahlung von {user.user} am {entry.datum} liegt nach der "
-                    f"Einzahlung vom {zuletzt_einlesen}.",
+                    f"Einzahlung vom {zuletzt_einlesen_date}.",
                 )
             else:
                 # zuletzt_eingetragen is None:
