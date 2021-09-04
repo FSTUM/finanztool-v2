@@ -3,7 +3,8 @@ import re
 from csv import DictReader
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
-from typing import Any, Dict, List, Optional, Pattern
+from io import TextIOWrapper
+from typing import Any, Dict, List, Optional, Pattern, Tuple
 
 from django.db.models import QuerySet
 
@@ -42,7 +43,7 @@ class Entry:  # pylint: disable=too-many-instance-attributes
         )
 
 
-def parse_camt_csv(csvfile):
+def parse_camt_csv(csvfile: TextIOWrapper) -> Tuple[List[Entry], List[str]]:
     results: List[Entry] = []
     errors: List[str] = []
 
@@ -67,11 +68,11 @@ def parse_camt_csv(csvfile):
     for counter, row in enumerate(csvcontents):
         buchungstext: str = row["Buchungstext"]
         if buchungstext in ["GUTSCHR. UEBERWEISUNG", "ECHTZEIT-GUTSCHRIFT"]:
-            entry: Optional[Entry] = pre_process_entry(counter, row, errors)
+            entry: Optional[Entry] = _pre_process_entry(counter, row, errors)
             if entry:
-                suche_rechnung(entry, offene_rechnungen, regex_cache)
+                _suche_rechnung(entry, offene_rechnungen, regex_cache)
                 if not entry.mapped_rechnung:
-                    suche_user(entry, users, regex_usernames, zuletzt_einlesen_date, errors)
+                    _suche_user(entry, users, regex_usernames, zuletzt_einlesen_date, errors)
                 results.append(entry)
         elif buchungstext in [
             "ENTGELTABSCHLUSS",
@@ -94,7 +95,7 @@ def _generate_regex_cache(offene_rechnungen: QuerySet[Rechnung]) -> Dict[Rechnun
     return regex_cache
 
 
-def pre_process_entry(counter: int, row: Any, errors: List[str]) -> Optional[Entry]:
+def _pre_process_entry(counter: int, row: Any, errors: List[str]) -> Optional[Entry]:
     try:
         datum = datetime.datetime.strptime(row["Buchungstag"], "%d.%m.%y").date()
     except ValueError:
@@ -126,7 +127,7 @@ def pre_process_entry(counter: int, row: Any, errors: List[str]) -> Optional[Ent
     )
 
 
-def suche_rechnung(
+def _suche_rechnung(
     entry: Entry,
     offene_rechnungen: QuerySet[Rechnung],
     regex_cache: Dict[Rechnung, Pattern[str]],
@@ -154,7 +155,7 @@ def suche_rechnung(
                 entry.erwarteter_betrag = rechnung.gesamtsumme
 
 
-def suche_user(
+def _suche_user(
     entry: Entry,
     users: QuerySet[Schulden],
     regex_usernames: Dict[Schulden, Pattern[str]],
