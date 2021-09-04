@@ -23,9 +23,7 @@
                 <th>{% trans "Link to" %}</th>
                 <th>{% trans "QR-Code" %}</th>
                 <th>{% trans "QR-Code stored at" %}</th>
-                {% if perms.set %}
                 <th>{% trans "Delete QR-Code" %}</th>
-                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -41,7 +39,7 @@
                         >
                     </a>
                 </td>
-                <td><a href='{{ qr_code.qr_code.url }}'>{{ request.scheme }}://set.mpi.fs.tum.de{{ qr_code.qr_code.url }}</a></td>
+                <td><a href='{{ qr_code.qr_code.url }}'>{{ request.scheme }}://finanz.mpi.fs.tum.de{{ qr_code.qr_code.url }}</a></td>
                 <td>
                     {% if qr_code.pk != 0 %}
                     <a
