@@ -128,6 +128,7 @@ def duplicate_rechnung(request: AuthWSGIRequest, rechnung_id: int) -> HttpRespon
     rechnung: Rechnung = get_object_or_404(Rechnung, pk=rechnung_id)
 
     initial = {
+        "ersteller": request.user,
         "name": rechnung.name,
         "kunde": rechnung.kunde,
         "einleitung": rechnung.einleitung,
