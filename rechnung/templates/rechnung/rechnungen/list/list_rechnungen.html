@@ -14,9 +14,7 @@
                 decimal: ',',
                 thousands: '.',
             },
-            order: [
-                [0, 'desc'],
-            ],
+            order: [[0, 'desc']],
             paging: false,
         });
     });
@@ -76,10 +74,12 @@
                 <td>{% include "snippets/true_false_span.html" with value=rechnung.gestellt %}</td>
                 {% if rechnung.gestellt %}
                 <td class="align-content-end">{{ rechnung.gesamtsumme }}€</td>
-                <td data-sort="{{ rechnung.fdatum|date:"Y-m-d" }}"
-                        class="{% if rechnung.faellig and rechnung.erledigt %}table-success
+                <td
+                    data-sort="{{ rechnung.fdatum|date:"Y-m-d" }}"
+                    class="{% if rechnung.faellig and rechnung.erledigt %}table-success
                            {% elif rechnung.faellig and not rechnung.erledigt %}table-danger
-                           {% endif %}">
+                           {% endif %}"
+                >
                     {{ rechnung.fdatum }}
                 </td>
                 <td>{% include "snippets/true_false_span.html" with value=rechnung.bezahlt %}</td>

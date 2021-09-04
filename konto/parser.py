@@ -48,10 +48,7 @@ def parse_camt_csv(csvfile):
 
     # hole alle offenen rechnungen
     offene_rechnungen: QuerySet[Rechnung] = Rechnung.objects.filter(gestellt=True, erledigt=False).all()
-    regex_cache: Dict[Rechnung, Pattern[str]] = {}
-    rechnung: Rechnung
-    for rechnung in offene_rechnungen:
-        regex_cache[rechnung] = re.compile(fr"(.*\D)?{rechnung.rnr_string}(\D.*)?")
+    regex_cache = _generate_regex_cache(offene_rechnungen)
 
     users: QuerySet[Schulden] = Schulden.objects.all()
     regex_usernames: Dict[Schulden, Pattern[str]] = {}
@@ -60,11 +57,10 @@ def parse_camt_csv(csvfile):
         regex_usernames[user] = re.compile(fr"(.*\W)?{user.user}(\W.*)?")
 
     try:
-        zuletzt_einlesen: Optional[datetime.date] = (
-            EinzahlungsLog.objects.latest("konto_einlesen").konto_einlesen.date()
-        )
+        zuletzt_einlesen: datetime.datetime = EinzahlungsLog.objects.latest("konto_einlesen").konto_einlesen
+        zuletzt_einlesen_date: Optional[datetime.date] = zuletzt_einlesen.date()
     except EinzahlungsLog.DoesNotExist:
-        zuletzt_einlesen = None
+        zuletzt_einlesen_date = None
 
     # read CSV file
     csvcontents = DictReader(csvfile, delimiter=";")
@@ -75,7 +71,7 @@ def parse_camt_csv(csvfile):
             if entry:
                 suche_rechnung(entry, offene_rechnungen, regex_cache)
                 if not entry.mapped_rechnung:
-                    suche_user(entry, users, regex_usernames, zuletzt_einlesen, errors)
+                    suche_user(entry, users, regex_usernames, zuletzt_einlesen_date, errors)
                 results.append(entry)
         elif buchungstext in [
             "ENTGELTABSCHLUSS",
@@ -88,6 +84,14 @@ def parse_camt_csv(csvfile):
         else:
             errors.append(f"Transaktion in Zeile {counter} mit Typ {buchungstext} nicht erkannt")
     return results, errors
+
+
+def _generate_regex_cache(offene_rechnungen: QuerySet[Rechnung]) -> Dict[Rechnung, Pattern[str]]:
+    regex_cache: Dict[Rechnung, Pattern[str]] = {}
+    rechnung: Rechnung
+    for rechnung in offene_rechnungen:
+        regex_cache[rechnung] = re.compile(fr"(.*\D)?{rechnung.rnr_string}(\D.*)?")
+    return regex_cache
 
 
 def pre_process_entry(counter: int, row: Any, errors: List[str]) -> Optional[Entry]:
