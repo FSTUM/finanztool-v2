@@ -60,7 +60,9 @@ def parse_camt_csv(csvfile):
         regex_usernames[user] = re.compile(fr"(.*\W)?{user.user}(\W.*)?")
 
     try:
-        zuletzt_einlesen: Optional[datetime.date] = EinzahlungsLog.objects.latest("konto_einlesen").konto_einlesen.date()
+        zuletzt_einlesen: Optional[datetime.date] = (
+            EinzahlungsLog.objects.latest("konto_einlesen").konto_einlesen.date()
+        )
     except EinzahlungsLog.DoesNotExist:
         zuletzt_einlesen = None
 

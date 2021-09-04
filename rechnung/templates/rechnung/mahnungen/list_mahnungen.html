@@ -68,6 +68,7 @@
                 {% if mahnung.geschickt %}
                 <td></td>
                 <td
+                    data-sort="{{ mahnung.mfdatum|date:"Y-m-d" }}"
                     {% if mahnung.faellig and not rechnung.erledigt %}class="table-danger"
                     {% endif %}
                 >

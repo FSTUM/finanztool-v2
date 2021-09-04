@@ -59,11 +59,11 @@
                 <td>
                     <a href="{% url "rechnung:view_kunde" rechnung.kunde.id %}">{{ rechnung.kunde.knr|unlocalize }}</a>
                 </td>
-                <td>{{ rechnung.rdatum }}</td>
+                <td data-sort="{{ rechnung.rdatum|date:"Y-m-d" }}">{{ rechnung.rdatum }}</td>
                 <td>{% include "snippets/true_false_span.html" with value=rechnung.gestellt %}</td>
                 {% if rechnung.gestellt %}
                 <td class="align-content-end">{{ rechnung.gesamtsumme }}€</td>
-                <td>
+                <td data-sort="{{ rechnung.fdatum|date:"Y-m-d" }}">
                     <span class="{% if rechnung.faellig and rechnung.erledigt %}text-success{% elif rechnung.faellig %}text-danger{% endif %}">
                         {{ rechnung.fdatum }}
                     </span>

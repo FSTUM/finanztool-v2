@@ -14,6 +14,9 @@
                 decimal: ',',
                 thousands: '.',
             },
+            order: [
+                [4, 'desc'],
+            ],
             paging: false,
         });
     });
@@ -68,12 +71,13 @@
                 <td>{{ rechnung.name }}</td>
                 <td>{{ rechnung.kategorie }}</td>
                 <td><a href="{% url "rechnung:view_kunde" rechnung.kunde.id %}">{{ rechnung.kunde.knr|unlocalize }}</a></td>
-                <td>{{ rechnung.rdatum }}</td>
+                <td data-sort="{{ rechnung.rdatum|date:"Y-m-d" }}">{{ rechnung.rdatum }}</td>
                 <td>{{ rechnung.ersteller.get_short_name }}</td>
                 <td>{% include "snippets/true_false_span.html" with value=rechnung.gestellt %}</td>
                 {% if rechnung.gestellt %}
                 <td class="align-content-end">{{ rechnung.gesamtsumme }}€</td>
-                <td class="{% if rechnung.faellig and rechnung.erledigt %}table-success
+                <td data-sort="{{ rechnung.fdatum|date:"Y-m-d" }}"
+                        class="{% if rechnung.faellig and rechnung.erledigt %}table-success
                            {% elif rechnung.faellig and not rechnung.erledigt %}table-danger
                            {% endif %}">
                     {{ rechnung.fdatum }}
