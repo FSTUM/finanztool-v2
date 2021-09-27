@@ -304,6 +304,7 @@ def list_key_changes(request: AuthWSGIRequest) -> HttpResponse:
     context = {
         "keys": keys,
         "form": form,
+        "settings": Settings.load(),
     }
 
     return render(request, "schluessel/key_change/list_key_changes.html", context)
