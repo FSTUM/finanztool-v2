@@ -30,6 +30,7 @@ class AufgabeForm(forms.ModelForm):
             "erledigt",
             "attachment",
         )
+        localized_fields = "__all__"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -57,6 +58,7 @@ class AufgabenartForm(forms.ModelForm):
             "name": "Überdefinition einer Aufgabe, z.B. Umfrageabrechnung",
         }
         fields = ("name",)
+        localized_fields = "__all__"
 
 
 class AufgabeErledigtForm(forms.Form):

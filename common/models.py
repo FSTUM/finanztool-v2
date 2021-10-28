@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 import qrcode
 from django.core.cache import cache
 from django.core.files import File
-from django.core.mail import EmailMessage, send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.db import models
 from django.db.models import ForeignKey
 from django.dispatch import receiver
@@ -134,13 +134,18 @@ class Mail(models.Model):
 
         if subject_matches is not None or text_matches is not None:
             return False
-        if attachments is None:
-            send_mail(subject, text, Mail.FINANZ, recipients, fail_silently=False)
-        else:
-            mail = EmailMessage(subject, text, Mail.FINANZ, recipients)
+        email = EmailMultiAlternatives(
+            subject=subject,
+            body=text,
+            from_email=Mail.FINANZ,
+            to=recipients,
+            cc=[Mail.FINANZ],
+            reply_to=[Mail.FINANZ],
+        )
+        if attachments is not None:
             for (filename, content, mimetype) in [clean_attachable(attach) for attach in attachments]:
-                mail.attach(filename, content, mimetype)
-            mail.send(fail_silently=False)
+                email.attach(filename, content, mimetype)
+        email.send(fail_silently=False)
         return True
 
 

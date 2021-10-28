@@ -111,6 +111,8 @@ USE_I18N = False
 USE_L10N = True
 USE_TZ = True
 USE_THOUSAND_SEPARATOR = True
+DECIMAL_SEPARATOR = ","
+THOUSAND_SEPARATOR = "."
 
 de_formats.DATETIME_FORMAT = "d.m.Y H:i:s"
 de_formats.DATE_FORMAT = "d.m.Y"
