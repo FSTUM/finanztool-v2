@@ -33,6 +33,7 @@ class RechnungForm(forms.ModelForm):
             "gestellt",
             "bezahlt",
         )
+        localized_fields = "__all__"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -88,6 +89,7 @@ class MahnungForm(forms.ModelForm):
             "einleitung",
             "gerichtlich",
         )
+        localized_fields = "__all__"
 
     def __init__(self, *args, **kwargs):
         self.rechnung = kwargs.pop("rechnung")
@@ -135,6 +137,7 @@ class PostenForm(forms.ModelForm):
             "einzelpreis": forms.widgets.TextInput(attrs={"list": "einzelpreisDataList"}),
             "anzahl": forms.widgets.TextInput(attrs={"list": "anzahlDataList"}),
         }
+        localized_fields = "__all__"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -165,6 +168,7 @@ class KundeForm(forms.ModelForm):
             "land",
             "kommentar",
         )
+        localized_fields = "__all__"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -193,6 +197,7 @@ class KategorieForm(forms.ModelForm):
     class Meta:
         model = Kategorie
         fields = ["name"]
+        localized_fields = "__all__"
 
 
 class FilterRechnungenForm(forms.Form):

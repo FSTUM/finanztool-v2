@@ -39,12 +39,14 @@ class KeyForm(forms.ModelForm):
     class Meta:
         model = Key
         exclude = ("person",)
+        localized_fields = "__all__"
 
 
 class PersonForm(forms.ModelForm):
     class Meta:
         model = Person
-        fields = "__all__"
+        exclude: List[str] = []
+        localized_fields = "__all__"
 
 
 class FilterKeysForm(forms.Form):
@@ -87,3 +89,4 @@ class KeyTypeForm(forms.ModelForm):
     class Meta:
         model = KeyType
         exclude: List[str] = []
+        localized_fields = "__all__"

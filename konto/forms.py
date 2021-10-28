@@ -62,3 +62,4 @@ class ReferentForm(forms.ModelForm):
     class Meta:
         model = Referent
         exclude: List[str] = []
+        localized_fields = "__all__"
