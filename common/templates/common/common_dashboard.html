@@ -25,6 +25,55 @@
 <br>
 <h3>Neuerungen</h3>
 <ul>
+    <li>2021/10/28 - v2.3:
+        <ul>
+            <li>Bugfixes:
+                <ul>
+                    <li>#39 The Decimal-Separator used in this tool is now consistent</li>
+                    <li>#41 Mails for Keycards no longer trigger an latex error if <code>_</code> is used in them.</li>
+                </ul>
+            </li>
+            <li>UX improvements:
+                <ul>
+                    <li>#40 Every mail send by this tool is also send to the main finanz mail adress</li>
+                    <li>#41 Button beim Emailversenden für Schüsseltypänderungen hat nun ein bestätigungsmodal wie rechung->bezahlt</li>
+                </ul>
+            </li>
+            <li>Minor:
+                <ul>
+                    <li>some dependency-version bumps</li>
+                    <li><code>UEBERTRAG (GUTSCHR. UEBERW)</code>, which sometimes comes up in <code>CAMT-CSV</code> is now supported</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li>2021/09/04 - v2.2:
+        <ul>
+            <li>Bugfixes:
+                <ul>
+                    <li>#38 fixed 500 on konto load</li>
+                </ul>
+            </li>
+            <li>UX improvements:
+                <ul>
+                    <li>#38 fixed 500 on konto load</li>
+                    <li>#37 duplacate_rechnung view now also has the request.user as an "Ersteller"</li>
+                    <li>#36 "Alle Rechnungen" is now Rechnungsnummer-desc</li>
+                </ul>
+            </li>
+            <li>Minor:
+                <ul>
+                    <li>non critical dependency-version bumps</li>
+                    <li>added .mailmap configuration</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li>2021/08/03 - v2.1:
+        <ul>
+            <li>Dependency Upgrades</li>
+        </ul>
+    </li>
     <li>2021/07/13 - v2.0:
         <ul>
             <li>Removed 2FA due to pending rollout by centralised keycloak 2FA from Compref</li>
