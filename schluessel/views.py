@@ -257,6 +257,7 @@ def apply_key_change(request: AuthWSGIRequest, key_pk: Optional[int] = None) -> 
         "cur_key": key,
         "keys": keys,
         "form": form,
+        "settings": Settings.load(),
     }
 
     return render(request, "schluessel/key_change/apply_key_change.html", context)
