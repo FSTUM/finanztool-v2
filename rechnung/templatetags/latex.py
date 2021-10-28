@@ -14,7 +14,7 @@ LATEX_ESCAPES = OrderedDict(
         ("%", "\\% "),
         ("&", "\\& "),
         ("^", "\\textasciicircum "),
-        ("_", "\\_ "),
+        ("_", "\\textunderscore "),
         ("{", "\\{ "),
         ("}", "\\} "),
         ("~", "\\textasciitilde "),
