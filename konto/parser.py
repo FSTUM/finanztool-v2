@@ -67,7 +67,7 @@ def parse_camt_csv(csvfile: TextIOWrapper) -> Tuple[List[Entry], List[str]]:
     csvcontents = DictReader(csvfile, delimiter=";")
     for counter, row in enumerate(csvcontents):
         buchungstext: str = row["Buchungstext"]
-        if buchungstext in ["GUTSCHR. UEBERWEISUNG", "ECHTZEIT-GUTSCHRIFT"]:
+        if buchungstext in ["ECHTZEIT-GUTSCHRIFT", "GUTSCHR. UEBERWEISUNG"]:
             entry: Optional[Entry] = _pre_process_entry(counter, row, errors)
             if entry:
                 _suche_rechnung(entry, offene_rechnungen, regex_cache)
@@ -75,11 +75,12 @@ def parse_camt_csv(csvfile: TextIOWrapper) -> Tuple[List[Entry], List[str]]:
                     _suche_user(entry, users, regex_usernames, zuletzt_einlesen_date, errors)
                 results.append(entry)
         elif buchungstext in [
+            "BARGELDAUSZAHLUNG KASSE",
             "ENTGELTABSCHLUSS",
+            "FOLGELASTSCHRIFT",
             "ONLINE-UEBERWEISUNG",
             "RECHNUNG",
-            "FOLGELASTSCHRIFT",
-            "BARGELDAUSZAHLUNG KASSE",
+            "UEBERTRAG (GUTSCHR. UEBERW)",
         ]:
             pass
         else:
