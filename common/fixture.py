@@ -28,7 +28,7 @@ def showroom_fixture_state_no_confirmation():
     run(["python3", "manage.py", "flush", "--noinput"], check=True)
 
     # user
-    _generate_superuser_frank()
+    _generate_superusers()
     _generate_users()
 
     # app common
@@ -298,18 +298,23 @@ def _generate_common_mails() -> None:
         )
 
 
-def _generate_superuser_frank():
-    get_user_model().objects.create(
-        username="frank",
-        password="pbkdf2_sha256$216000$DHqZuXE7LQwJ$i8iIEB3qQN+NXMUTuRxKKFgYYC5XqlOYdSz/0om1FmE=",
-        first_name="Frank",
-        last_name="Elsinga",
-        is_superuser=True,
-        is_staff=True,
-        is_active=True,
-        email="elsinga@fs.tum.de",
-        date_joined=django.utils.timezone.make_aware(datetime.today()),
-    )
+def _generate_superusers():
+    users = [
+        ("frank", "130120", "Frank", "Elsinga", "elsinga@example.com"),
+        ("password", "username", "Nelson 'Big Head'", "Bighetti", "bighetti@example.com"),
+    ]
+    for username, password, first_name, last_name, email in users:
+        get_user_model().objects.create(
+            username=username,
+            password=make_password(password),
+            first_name=first_name,
+            last_name=last_name,
+            is_superuser=True,
+            is_staff=True,
+            is_active=True,
+            email=email,
+            date_joined=django.utils.timezone.make_aware(datetime.today()),
+        )
 
 
 def _generate_users():
