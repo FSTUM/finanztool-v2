@@ -68,57 +68,24 @@ def showroom_fixture_state_no_confirmation_staging():
 
 
 def rand_company_name():
-    return random.choice(
-        [
-            "Scattershot",
-            "Scrapper",
-            "Streetwise",
-            "Arcana",
-            "Thundercracker",
-            "Grax",
-            "Caliburst",
-            "Broadside",
-            "Drag Strip",
-            "Warpath",
-            "Ironhide",
-            "Chromedome",
-            "Stylor",
-            "Recoil",
-            "Spectro",
-            "Camshaft",
-            "Slag",
-            "Haywire",
-            "Snarl",
-            "Starscream",
-        ],
-    )
+    cool_names = ["Caliburst", "Ironhide", "Stylor", "Spectro", "Camshaft", "Haywire", "Snarl", "Starscream"]
+    violent_names = ["Warpath", "Recoil", "Broadside", "Scattershot", "Thundercracker"]
+    lame_names = ["Scrapper", "Streetwise", "Arcana", "Grax", "Drag Strip", "Chromedome", "Slag"]
+    return random.choice(cool_names + violent_names + lame_names)
 
 
-def rand_name():
-    return random.choice(
-        [
-            ("Wolfgang", "Essert"),
-            ("Agnes", "Fenstermacher"),
-            ("Walter", "Simons"),
-            ("Loke", "Hofer"),
-            ("Waldemar", "Gross"),
-            ("Felicitas", "Achterberg"),
-            ("Emma", "Bergmann"),
-            ("Simone", "Reich"),
-            ("Linda", "Mangold"),
-            ("Adam", "Sander"),
-            ("Gunda", "Lorentz"),
-            ("Sylvia", "Hoffmann"),
-            ("Karla", "Peters"),
-            ("Hartmut", "Werner"),
-            ("Erika", "Hennig"),
-            ("Jochen", "Beyer"),
-            ("Erika", "Hochberg"),
-            ("Severin", "Bruhn"),
-            ("Elmar", "Mohren"),
-            ("Miriam", "Schlosser"),
-        ],
-    )
+def rand_firstname():
+    male_names = ["Wolfgang", "Walter", "Loke", "Waldemar", "Adam", "Gunda", "Hartmut", "Jochen", "Severin", "Elmar"]
+    female_names = ["Agnes", "Sylvia", "Karla", "Erika", "Felicitas", "Emma", "Simone", "Linda", "Erika", "Miriam"]
+    return random.choice(male_names + female_names)
+
+
+def rand_last_name():
+    ger_last_names = ["Fenstermacher", "Achterberg", "Bergmann", "Reich", "Werner", "Hochberg", "Bruhn", "Schlosser"]
+    common_last_names = ["Peters", "Hofer"]
+    last_names = ["Essert", "Simons", "Gross", "Mangold", "Sander", "Lorentz", "Hoffmann", "Hennig", "Beyer"]
+    return random.choice(ger_last_names + common_last_names + last_names)
+
 
 
 def _generate_qrcodes_posten():
@@ -223,12 +190,12 @@ def _generate_rechnung_kunde():
             ),
             anrede=random.choice(m_rechnung.Kunde.GESCHLECHT)[0] if random.choice((True, True, False)) else "",
             titel=lorem.sentence()[: random.randint(0, 50)] if random.choice((True, True, False)) else "",
-            name=rand_name()[1] if random.choice((True, True, False)) else "",
-            vorname=rand_name()[0] if random.choice((True, True, False)) else "",
+            name=rand_last_name() if random.choice((True, True, False)) else "",
+            vorname=rand_firstname() if random.choice((True, True, False)) else "",
             strasse=lorem.sentence()[: random.randint(0, 100)],
             plz=random.choice(("48323", "42368", "86735", "028412", "081231")),
             stadt=lorem.paragraph()[: random.randint(0, 200)],
-            land="Deutschland" if random.choice((True, True, False)) else rand_name()[1] + "land",
+            land="Deutschland" if random.choice((True, True, False)) else rand_firstname() + "land",
             kommentar=lorem.sentence()[: random.randint(0, 1000)] if random.choice((True, False, False)) else "",
         )
 
@@ -319,8 +286,8 @@ def _generate_superusers():
 
 def _generate_users():
     for i in range(random.randint(10, 20)):
-        firstname: str = rand_name()[0]
-        lastname: str = rand_name()[1]
+        firstname: str = rand_firstname()
+        lastname: str = rand_last_name()
         get_user_model().objects.create(
             username=f"{lastname.lower()}{i}",
             password=make_password(lorem.sentence()),
@@ -329,7 +296,7 @@ def _generate_users():
             is_superuser=random.choice((True, True, False)),
             is_staff=random.choice((True, True, False)),
             is_active=random.choice((True, True, False)),
-            email=f"{lastname}@fs.tum.de",
+            email=f"{lastname}@example.com",
             date_joined=django.utils.timezone.make_aware(
                 random.choice(
                     (
