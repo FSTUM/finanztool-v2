@@ -150,20 +150,32 @@
     </main>
     {% block after_content %}{% endblock %}
 
+
     <footer class="footer navbar navbar-expand navbar-dark bg-dark">
         <div class="container-md">
-            <nav class="navbar-nav text-nowrap overflow-auto mx-auto">
-                <a
-                    class="nav-link"
-                    href="https://fs.tum.de/datenschutz/"
-                >Datenschutz</a>
-                <a
-                    class="nav-link"
-                    href="https://fs.tum.de/impressum/"
-                >Impressum</a>
-            </nav>
+            <ul class="navbar-nav text-nowrap overflow-auto mx-auto">
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="https://fs.tum.de/datenschutz/"
+                    >{% trans "Data protection" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="https://github.com/FSTUM/finanztool-v2"
+                    ><span class="bi bi-github"></span></a>
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link"
+                        href="https://fs.tum.de/impressum/"
+                    >{% trans "Imprint" %}</a>
+                </li>
+            </ul>
         </div>
     </footer>
+
     <script type="text/javascript">
         /* global Choices */
         /* eslint no-new: off */
