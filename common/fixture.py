@@ -24,7 +24,7 @@ def showroom_fixture_state():
     showroom_fixture_state_no_confirmation()
 
 
-def showroom_fixture_state_no_confirmation():  # nosec: this is only used in a fixture
+def showroom_fixture_state_no_confirmation():
     run(["python3", "manage.py", "flush", "--noinput"], check=True)
 
     # user
@@ -67,7 +67,7 @@ def showroom_fixture_state_no_confirmation_staging():
     m_common.QRCode.objects.all().delete()  # staticfiles are not handled correctly in the staging environment
 
 
-def rand_company_name():  # nosec: this is only used in a fixture
+def rand_company_name():
     return random.choice(
         [
             "Scattershot",
@@ -94,7 +94,7 @@ def rand_company_name():  # nosec: this is only used in a fixture
     )
 
 
-def rand_name():  # nosec: this is only used in a fixture
+def rand_name():
     return random.choice(
         [
             ("Wolfgang", "Essert"),
@@ -121,7 +121,7 @@ def rand_name():  # nosec: this is only used in a fixture
     )
 
 
-def _generate_qrcodes_posten():  # nosec: this is only used in a fixture
+def _generate_qrcodes_posten():
     m_common.QRCode.objects.create(pk=0, content="https://www.yo" "utub" "e.com/" "wat" "ch?v=dQw4w" "9WgXcQ")
     links = [
         "https://www.google.com",
@@ -132,7 +132,7 @@ def _generate_qrcodes_posten():  # nosec: this is only used in a fixture
         m_common.QRCode.objects.create(content=link)
 
 
-def _generate_rechnung_posten():  # nosec: this is only used in a fixture
+def _generate_rechnung_posten():
     rechnungen = list(m_rechnung.Rechnung.objects.all())
     for rechnung in rechnungen:
         for _ in range(random.randint(0, 7)):
@@ -145,13 +145,13 @@ def _generate_rechnung_posten():  # nosec: this is only used in a fixture
             )
 
 
-def _generate_rechnung_kategorie():  # nosec: this is only used in a fixture
+def _generate_rechnung_kategorie():
     names = {lorem.text()[: random.randint(10, 100)] for _ in range(5)}
     for name in names:
         m_rechnung.Kategorie.objects.create(name=name)
 
 
-def _generate_rechnung_mahnung():  # nosec: this is only used in a fixture
+def _generate_rechnung_mahnung():
     users = list(get_user_model().objects.all())
     rechnungen = list(m_rechnung.Rechnung.objects.all())
     for rechnung in rechnungen:
@@ -174,7 +174,7 @@ def _generate_rechnung_mahnung():  # nosec: this is only used in a fixture
                 )
 
 
-def _generate_rechnung_rechnung():  # nosec: this is only used in a fixture
+def _generate_rechnung_rechnung():
     users = list(get_user_model().objects.all())
     kunden = list(m_rechnung.Kunde.objects.all())
     kategorien = list(m_rechnung.Kategorie.objects.all())
@@ -207,7 +207,7 @@ def _generate_rechnung_rechnung():  # nosec: this is only used in a fixture
         )
 
 
-def _generate_rechnung_kunde():  # nosec: this is only used in a fixture
+def _generate_rechnung_kunde():
     for _ in range(random.randint(10, 20)):
         m_rechnung.Kunde.objects.create(
             organisation=f"{rand_company_name()} {random.choice(('AG', 'UG', 'KG', 'OHG', 'GmbH'))}"
@@ -233,7 +233,7 @@ def _generate_rechnung_kunde():  # nosec: this is only used in a fixture
         )
 
 
-def _generate_schluessel_key_type():  # nosec: this is only used in a fixture
+def _generate_schluessel_key_type():
     for i in range(5):
         m_schluessel.KeyType.objects.create(
             shortname=f"{lorem.sentence()[:random.randint(3, 18)]}{i}",
@@ -243,7 +243,7 @@ def _generate_schluessel_key_type():  # nosec: this is only used in a fixture
         )
 
 
-def _generate_schluessel_person():  # nosec: this is only used in a fixture
+def _generate_schluessel_person():
     users = list(get_user_model().objects.all())
     for user in users:
         if random.choice((True, False)):
@@ -259,7 +259,7 @@ def _generate_schluessel_person():  # nosec: this is only used in a fixture
             )
 
 
-def _generate_schluessel_key():  # nosec: this is only used in a fixture
+def _generate_schluessel_key():
     personen = list(m_schluessel.Person.objects.all())
     keytypes = list(m_schluessel.KeyType.objects.all())
 
@@ -281,7 +281,7 @@ def _generate_schluessel_saved_key_change():
     pass
 
 
-def _generate_common_settings() -> None:  # nosec: this is only used in a fixture
+def _generate_common_settings() -> None:
     all_mail = list(m_common.Mail.objects.all())
     m_common.Settings.objects.create(
         ueberfaellige_rechnung_mail=random.choice(all_mail) if random.choice((True, True, False)) else None,
@@ -289,7 +289,7 @@ def _generate_common_settings() -> None:  # nosec: this is only used in a fixtur
     )
 
 
-def _generate_common_mails() -> None:  # nosec: this is only used in a fixture
+def _generate_common_mails() -> None:
     for _ in range(random.randint(10, 20)):
         m_common.Mail.objects.create(
             subject=lorem.text()[: random.randint(10, 200)],
@@ -298,7 +298,7 @@ def _generate_common_mails() -> None:  # nosec: this is only used in a fixture
         )
 
 
-def _generate_superuser_frank():  # nosec: this is only used in a fixture
+def _generate_superuser_frank():
     get_user_model().objects.create(
         username="frank",
         password="pbkdf2_sha256$216000$DHqZuXE7LQwJ$i8iIEB3qQN+NXMUTuRxKKFgYYC5XqlOYdSz/0om1FmE=",
@@ -312,7 +312,7 @@ def _generate_superuser_frank():  # nosec: this is only used in a fixture
     )
 
 
-def _generate_users():  # nosec: this is only used in a fixture
+def _generate_users():
     for i in range(random.randint(10, 20)):
         firstname: str = rand_name()[0]
         lastname: str = rand_name()[1]
@@ -336,12 +336,12 @@ def _generate_users():  # nosec: this is only used in a fixture
         )
 
 
-def _generate_aufgaben_aufgabenart():  # nosec: this is only used in a fixture
+def _generate_aufgaben_aufgabenart():
     for _ in range(random.randint(5, 15)):
         m_aufgaben.Aufgabenart.objects.create(name=lorem.sentence()[: random.randint(10, 50)])
 
 
-def _generate_aufgaben_aufgabe():  # nosec: this is only used in a fixture
+def _generate_aufgaben_aufgabe():
     aufgabenarten = m_aufgaben.Aufgabenart.objects.all()
     users = get_user_model().objects.all()
     for _ in range(random.randint(5, 15)):
