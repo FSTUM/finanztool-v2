@@ -4,6 +4,7 @@ from io import BytesIO
 from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 
 import qrcode
+from django.conf import settings
 from django.core.cache import cache
 from django.core.files import File
 from django.core.mail import EmailMultiAlternatives
@@ -14,7 +15,6 @@ from django.http import HttpResponse
 from django.template import Context, Template
 from PIL import Image
 
-import finanz.settings as main_settings
 from schluessel.models import KeyType
 
 SingletonType = TypeVar("SingletonType", bound="SingletonModel")
@@ -225,7 +225,7 @@ class QRCode(models.Model):
         with Image.new("RGB", (qr_image.pixel_size, qr_image.pixel_size), "white") as canvas:
             canvas.paste(qr_image)
 
-            logo_path = os.path.join(main_settings.STATIC_ROOT, "eule_squared.png")
+            logo_path = os.path.join(settings.STATIC_ROOT, "eule_squared.png")
             with Image.open(logo_path) as logo:
                 total_usable_height = qr_image.pixel_size - qr_image.box_size * qr_image.border * 2
                 usable_height = total_usable_height * 0.3
