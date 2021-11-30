@@ -87,7 +87,6 @@ def rand_last_name():
     return random.choice(ger_last_names + common_last_names + last_names)
 
 
-
 def _generate_qrcodes_posten():
     m_common.QRCode.objects.create(pk=0, content="https://www.yo" "utub" "e.com/" "wat" "ch?v=dQw4w" "9WgXcQ")
     links = [
