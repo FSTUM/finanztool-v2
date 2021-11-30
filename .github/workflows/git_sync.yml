@@ -18,6 +18,6 @@ jobs:
               with:
                   source_repo: 'CommanderStorm/finanztool-v2'
                   source_branch: 'main'
-                  destination_repo: 'git@git.fs.tum.de:elsinga/finanz.git'
-                  destination_branch: 'main'
+                  destination_repo: 'git@git.fs.tum.de:fsmpi/finanz.git'
+                  destination_branch: 'dev'
                   ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
