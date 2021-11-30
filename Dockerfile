@@ -27,9 +27,10 @@ RUN mkdir /code/
 WORKDIR /code/
 ADD . /code/
 
-ENV DJANGO_SETTINGS_MODULE=finanz.settings
+ENV DJANGO_SETTINGS_MODULE=finanz.settings.staging_settings
 
-RUN python manage.py collectstatic --noinput \
+ENV DJANGO_SECRET_KEY=not-needed-in-docker
+RUN python manage.py collectstatic --noinput --force-color \
     && rm -f *.sqlite3 \
     && rm -f ./getraenke/migrations/0001_initial.py \
     && sed -i '/managed = False/d' ./getraenke/models.py \
@@ -37,9 +38,7 @@ RUN python manage.py collectstatic --noinput \
     && python manage.py migrate --noinput --database=getraenke getraenke|grep -v "... OK" \
     && python manage.py migrate --noinput|grep -v "... OK" \
     && echo "import common.fixture as fixture;fixture.showroom_fixture_state_no_confirmation_staging()"|python manage.py shell
-
-
-ENV DJANGO_SETTINGS_MODULE=staging.staging_settings
+ENV DJANGO_SECRET_KEY=
 
 EXPOSE 8000
 

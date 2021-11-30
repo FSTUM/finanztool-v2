@@ -1,10 +1,10 @@
-import os
-from typing import Dict, List
+from pathlib import Path
+from typing import Dict, List, Optional
 
 from django.conf.locale.de import formats as de_formats
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -52,8 +52,11 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "finanz.urls"
+
+# Auth
 LOGIN_REDIRECT_URL = "common:index"
 LOGOUT_REDIRECT_URL = "login"
+LOGIN_REDIRECT_URL_FAILURE = "/login/failed"
 LOGIN_URL = "login/"
 LOGOUT_URL = "logout/"
 
@@ -81,11 +84,11 @@ WSGI_APPLICATION = "finanz.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "NAME": BASE_DIR / "db.sqlite3",
     },
     "getraenke": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "getraenke.sqlite3"),
+        "NAME": BASE_DIR / "getraenke.sqlite3",
     },
 }
 
@@ -98,6 +101,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
+USE_KEYCLOAK: Optional[bool] = None
 
 SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
 SESSION_ENGINE = "django.contrib.sessions.backends.db"  # default, but important due to pickle
@@ -120,10 +124,10 @@ de_formats.SHORT_DATE_FORMAT = "d.m."
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = BASE_DIR / "static"
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "node_modules"),
-    os.path.join(BASE_DIR, "staticfiles"),
+    BASE_DIR / "node_modules",
+    BASE_DIR / "staticfiles",
 ]
 
 # Database stuff
@@ -139,7 +143,7 @@ CRONJOBS = [
 
 # Media files (aufgaben.attachments, ...)
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = BASE_DIR / "media"
 
 # sftp transfer to valhalla
 SFTP_STORAGE_HOST = "valhalla.fs.tum.de"
