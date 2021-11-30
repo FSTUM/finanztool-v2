@@ -3,6 +3,9 @@
 {% load static %}
 {% load i18n %}
 {% load django_bootstrap5 %}
+{% load auth_methods %}
+
+{% get_keycloak_status as keycloak_status %}
 
 <!DOCTYPE html>
 <html lang="de">
@@ -126,7 +129,7 @@
                             {% else %}
                             <a
                                 class="nav-link"
-                                href="{% url "login" %}"
+                                href="{% if keycloak_status %}{% url "oidc_authentication_init" %}{% else %}{% url "login" %}{% endif %}"
                             >Login</a>
                             {% endif %}
                         </nav>

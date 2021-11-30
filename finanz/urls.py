@@ -6,10 +6,9 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 from django.views.generic import RedirectView
 
+import common.views
+
 urlpatterns = [
-    # Auth
-    path("login/", LoginView.as_view(template_name="login.html"), name="login"),
-    path("logout/", LogoutView.as_view(), name="logout"),
     # Views
     path("common/", include("common.urls")),
     path("rechnung/", include("rechnung.urls")),
@@ -22,5 +21,18 @@ urlpatterns = [
     path("", RedirectView.as_view(pattern_name="common:dashboard")),
 ]
 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # type: ignore
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # type: ignore
+if settings.USE_KEYCLOAK:
+    urlpatterns += [
+        # Auth
+        path("logout/", LogoutView.as_view(), name="logout"),
+        path("oidc/", include("mozilla_django_oidc.urls")),
+        path("login/failed/", common.views.login_failed),
+    ]
+else:
+    urlpatterns += [
+        # Auth
+        path("login/", LoginView.as_view(template_name="login.html"), name="login"),
+        path("logout/", LogoutView.as_view(next_page="/"), name="logout"),
+    ]

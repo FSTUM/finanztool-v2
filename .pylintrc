@@ -1,8 +1,8 @@
 [MASTER]
-ignore=static
+ignore=static,manage.py,finanz.settings
 jobs=1
 load-plugins=pylint_django
-django-settings-module=finanz.settings
+django-settings-module=finanz.settings.dev_settings
 
 [MESSAGES CONTROL]
 disable=missing-function-docstring, # too much work
