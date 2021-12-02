@@ -28,4 +28,4 @@ def fslogo(context):
 
 @register.simple_tag
 def fslogo_path():
-    return f'{{{os.path.join(settings.STATIC_ROOT, "eule_original.png")}}}'
+    return f'{{{os.path.join(settings.STATIC_ROOT, "logo", "eule_original.png")}}}'
