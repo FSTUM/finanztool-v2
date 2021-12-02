@@ -4,7 +4,6 @@ from tempfile import mkdtemp, mkstemp
 from typing import List, Optional
 
 from django import forms
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
@@ -546,10 +545,8 @@ def create_pdf(request: AuthWSGIRequest, key_pk: int, doc: str) -> HttpResponse:
     tmplatex = mkdtemp()
     latex_file, latex_filename = mkstemp(suffix=".tex", dir=tmplatex)
 
-    logo_path = os.path.join(settings.BASE_DIR, "static/logo")
-
     # Pass TeX template through Django templating engine and into the temp file
-    context = {"key": key, "user": request.user, "logo_path": logo_path}
+    context = {"key": key, "user": request.user}
 
     rendered_template = render_to_string(f"schluessel/tex/latex_{doc}.tex", context).encode("utf8")
     os.write(latex_file, rendered_template)

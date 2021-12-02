@@ -1,0 +1,47 @@
+{% load logo %}
+\documentclass[a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{ngerman}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{scrextend}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{etoolbox}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage[breaklinks=true]{hyperref}
+\usepackage[absolute,overlay]{textpos}
+\usepackage[left=2.00cm, right=2.00cm, top=2.00cm, bottom=2.00cm]{geometry}
+\usepackage{wasysym}
+
+\hypersetup{
+  pdfauthor   = {Finanzreferat der Fachschaft Mathe/Physik/Informatik},
+  pdfkeywords = {Finanz},
+  pdftitle    = {Finanzreferat der Fachschaft Mathe/Physik/Informatik}
+}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\begin{document}
+    \begin{tabular}{ p{2cm} p{3.9cm} r l }
+    \makecell[l]{ {% block datum %}Datum: {% now "d.m.y" %}{% endblock %} \\ \\ \\ \\ \\ } & &
+    \makecell[r]{
+        Fachschaft Mathematik/Physik/Informatik\\
+        Technische Universität München\\
+        Boltzmannstraße 3\\
+        85748 Garching bei München\\
+        E-Mail: \href{mailto:finanz@fs.tum.de}{finanz@fs.tum.de}
+    } &
+    \makecell{ \includegraphics[width=2.3cm]{% fslogo_path %} }
+    \end{tabular}
+
+    {% block superheader %}{% endblock %}
+    \section*{ { \fontfamily{cmss}\selectfont {% block header %}{% endblock %} } }
+    {% block content %}{% endblock %}
+
+\end{document}

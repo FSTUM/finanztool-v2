@@ -1,48 +1,15 @@
-{% autoescape off %}
-{% load l10n latex %}
+{% extends "tex/base.tex" %}
+{% load latex %}
+{% load l10n %}
 
-\documentclass[12pt,ngerman]{letter}
-\usepackage[utf8]{inputenc}
-\usepackage{a4wide}
-\usepackage[ngerman]{babel}
-\usepackage{graphicx}
-\usepackage[rflt]{floatflt}
-\usepackage[a4paper]{geometry}
-\thispagestyle{empty}
-\setlength{\topmargin}{-0.0cm}
-\setlength{\oddsidemargin}{-0.0cm}
-\setlength{\evensidemargin}{-0.0cm}
-\setlength{\textheight}{26.7cm}
-\setlength{\textwidth}{16.0cm}
-\setlength{\headsep}{0.0cm}
-\setlength{\headheight}{0.0cm}
-\setlength{\topskip}{0.0cm}
-\begin{document}
-\begin{minipage}{0.5\textwidth}
-Fachschaft Mathematik/Physik/Informatik\\
-Boltzmannstr. 3\\
-85747 Garching bei München\\
-E-Mail: finanz@fs.tum.de
-\end{minipage}
-\hfill
-\begin{minipage}{7cm}
-\includegraphics[width=7cm,keepaspectratio=true]{%
-{{ logo_path }}}
-\end{minipage}
+{% block header %} Schlüsselquittung {% endblock %}
 
-\vspace{2cm}
+{% block content %}
 
-{\huge Schlüsselquittung}
-
-\vspace{2cm}
-
+\vspace{0.5cm}
 \noindent
-\begin{tabular}{p{4cm}p{7cm}}
-{% if key.keytype.keycard %}%
-Schließkarten-Nr.:
-{% else %}%
-Schlüssel-Nr.:
-{% endif %}%
+\begin{tabular}{r l}
+{% if key.keytype.keycard %}Schließkarten{% else %}Schlüssel{% endif %}-Nr.:
 & {\bf {{ key | latex_escape }}}\\
  & \\
 Name: & {{ key.person.firstname | latex_escape }} {{ key.person.name | latex_escape }}\\
@@ -56,54 +23,32 @@ Mobil: & {{ key.person.mobile | latex_escape }}\\
 E-Mail-Adresse: & {{ key.person.email | latex_escape }}\\
 \end{tabular}
 
-\vspace{1.5cm}
-
-{% if key.keytype.keycard %}%
-Die ausgehändigte Schließkarte
-{% else %}%
-Der ausgehändigte Schlüssel
-{% endif %}%
+\large
+\vspace{1cm}
+\noindent
+{% if key.keytype.keycard %}Die ausgehändigte Schließkarte{% else %}Der ausgehändigte Schlüssel{% endif %}
 bleibt Eigentum der Fachschaft MPI bzw.
-{% if key.keytype.keycard %}%
-der Rechnerbetriebsgruppe.
-{% else %}%
-der Firma Hochtief.
-{% endif %}%
-
-
-Ein etwaiger Verlust muss unverzüglich dem Finanzreferat gemeldet
-werden.
-
-
+{% if key.keytype.keycard %}der Rechnerbetriebsgruppe{% else %}der Firma Hochtief{% endif %}.\newline
+Ein etwaiger Verlust muss unverzüglich dem Finanzreferat gemeldet werden.\newline
 Die Rückzahlung der Kaution in Höhe von {{ key.keytype.deposit|floatformat:2 | latex_escape }}
 Euro erfolgt nur bei Rückgabe
-{% if key.keytype.keycard %}%
-der ausgehändigten Schließkarte
-{% else %}%
-des ausgehändigten Schlüssels
-{% endif %}%
-und dieser Schlüsselquittung.
-
-
+{% if key.keytype.keycard %}der ausgehändigten Schließkarte{% else %}des ausgehändigten Schlüssels{% endif %}
+und dieser Schlüsselquittung.\newline
 Bis zur Rückgabe
-{% if key.keytype.keycard %}%
-der Schließkarte
-{% else %}%
-des Schlüssels
-{% endif %}%
+{% if key.keytype.keycard %}der Schließkarte{% else %}des Schlüssels{% endif %}
 verbleibt ein Durchschlag dieser Quittung bei der Fachschaft MPI.
+\normalsize
 
-\vspace{1.5cm}
+\vspace{1,5cm}
+\noindent
+\textbf{\large  {{ key.typename }} erhalten: }\\
 
-\begin{tabular}{p{5cm}p{5cm}}
-Ort, Datum: & Garching, den {% now "DATE_FORMAT" %}\\
- & \\
-{{ key.typename }} erhalten: & \hrulefill \\
-  & \multicolumn{1}{c}{ {{ key.person | latex_escape }} }\\
- & \\
-Kaution erhalten: & \hrulefill \\
-  & \multicolumn{1}{c}{ {{ user.get_full_name | latex_escape }} }\\
-\end{tabular}
-\end{document}
+{% include "tex/signature.tex" with from=key.person|latex_escape id=1 %}
 
-{% endautoescape %}
+
+\vspace{0.5cm}
+\noindent
+\textbf{\large Kaution erhalten: }\\
+
+{% include "tex/signature.tex" with from=user.get_full_name|latex_escape id=2 %}
+{% endblock %}

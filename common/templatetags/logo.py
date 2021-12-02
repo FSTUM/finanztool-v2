@@ -1,6 +1,8 @@
+import os
 import random
 
 from django import template
+from django.conf import settings
 from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 
@@ -22,3 +24,8 @@ def fslogo(context):
         f"src='{static('piggy-bank-fill.svg')}' "
         "alt='Logo'> Finanztool",
     )
+
+
+@register.simple_tag
+def fslogo_path():
+    return f'{{{os.path.join(settings.STATIC_ROOT, "eule_original.png")}}}'
