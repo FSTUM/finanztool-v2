@@ -19,7 +19,7 @@ from .forms import FilterKeysForm, KeyForm, KeyTypeForm, PersonForm, SaveKeyChan
 from .models import Key, KeyLogEntry, KeyType, Person, SavedKeyChange
 
 
-@login_required(login_url="login")
+@login_required()
 def view_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
@@ -310,7 +310,7 @@ def list_key_changes(request: AuthWSGIRequest) -> HttpResponse:
     return render(request, "schluessel/key_change/list_key_changes.html", context)
 
 
-@login_required(login_url="login")
+@login_required()
 def return_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
@@ -345,7 +345,7 @@ def return_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     return render(request, "schluessel/key/return_key.html", context)
 
 
-@login_required(login_url="login")
+@login_required()
 def give_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
@@ -371,7 +371,7 @@ def give_key(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     return render(request, "schluessel/key/give_key.html", context)
 
 
-@login_required(login_url="login")
+@login_required()
 def give_key_confirm(request: AuthWSGIRequest, key_pk: int, person_pk: int) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
@@ -407,7 +407,7 @@ def give_key_confirm(request: AuthWSGIRequest, key_pk: int, person_pk: int) -> H
     return render(request, "schluessel/key/give_key_confirm.html", context)
 
 
-@login_required(login_url="login")
+@login_required()
 def view_person(request: AuthWSGIRequest, person_pk: int) -> HttpResponse:
     person = get_object_or_404(Person, pk=person_pk)
 
@@ -424,7 +424,7 @@ def view_person(request: AuthWSGIRequest, person_pk: int) -> HttpResponse:
     return render(request, "schluessel/person/view_person.html", context)
 
 
-@login_required(login_url="login")
+@login_required()
 def add_person(request: AuthWSGIRequest) -> HttpResponse:
     form = PersonForm(request.POST or None)
     if form.is_valid():
@@ -446,7 +446,7 @@ def add_person(request: AuthWSGIRequest) -> HttpResponse:
     return render(request, "schluessel/person/add_person.html", context)
 
 
-@login_required(login_url="login")
+@login_required()
 def give_add_person(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     form = PersonForm(request.POST or None)
     if form.is_valid():
@@ -468,7 +468,7 @@ def give_add_person(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     return render(request, "schluessel/person/add_person.html", context)
 
 
-@login_required(login_url="login")
+@login_required()
 def edit_person(request: AuthWSGIRequest, person_pk: int) -> HttpResponse:
     person = get_object_or_404(Person, pk=person_pk)
 
@@ -493,7 +493,7 @@ def edit_person(request: AuthWSGIRequest, person_pk: int) -> HttpResponse:
     return render(request, "schluessel/person/edit_person.html", context)
 
 
-@login_required(login_url="login")
+@login_required()
 def give_edit_person(request: AuthWSGIRequest, key_pk: int, person_pk: int) -> HttpResponse:
     person = get_object_or_404(Person, pk=person_pk)
 
@@ -518,17 +518,17 @@ def give_edit_person(request: AuthWSGIRequest, key_pk: int, person_pk: int) -> H
     return render(request, "schluessel/person/edit_person.html", context)
 
 
-@login_required(login_url="login")
+@login_required()
 def get_kaution(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     return create_pdf(request, key_pk, doc="Kaution")
 
 
-@login_required(login_url="login")
+@login_required()
 def get_quittung(request: AuthWSGIRequest, key_pk: int) -> HttpResponse:
     return create_pdf(request, key_pk, doc="Quittung")
 
 
-@login_required(login_url="login")
+@login_required()
 def create_pdf(request: AuthWSGIRequest, key_pk: int, doc: str) -> HttpResponse:
     key = get_object_or_404(Key, pk=key_pk)
 
@@ -584,7 +584,7 @@ def create_pdf(request: AuthWSGIRequest, key_pk: int, doc: str) -> HttpResponse:
     return response
 
 
-@login_required(login_url="login")
+@login_required()
 def list_keys(request: AuthWSGIRequest) -> HttpResponse:
     keys = Key.objects.filter(active=True).order_by(
         "keytype__shortname",
@@ -616,7 +616,7 @@ def list_keys(request: AuthWSGIRequest) -> HttpResponse:
     return render(request, "schluessel/key/list_keys.html", context)
 
 
-@login_required(login_url="login")
+@login_required()
 def list_persons(request: AuthWSGIRequest) -> HttpResponse:
     persons = Person.objects.order_by("name", "firstname")
 
