@@ -31,7 +31,7 @@ OIDC_USERNAME_ALGO = "django_compref_keycloak.backend.generate_username"
 COMPREF_KEYCLOAK_FEDERATED_IDP = {
     "fs.tum.de-internal": {
         "enabled": True,
-        "active_groups": ["compref", "finanz"],
+        "active_groups": ["compref", "finanz", "schluessel"],
         "staff_groups": ["compref", "finanz"],
         "superuser_groups": ["compref", "finanz"],
         "sync_groups": True,
