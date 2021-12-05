@@ -1,10 +1,8 @@
-# Create your views here.
 from typing import Callable
 
 from django import forms
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
@@ -118,7 +116,7 @@ def dashboard(request: AuthWSGIRequest) -> HttpResponse:
     else:
         # required, because we need at least one view for unauthenticated users.
         messages.warning(request, "Bitte logge dich ein, um alles zu sehen")
-        return render(request, "common/common_dashboard.html")
+        return render(request, "base.html")
 
 
 @finanz_staff_member_required
@@ -163,4 +161,4 @@ def del_qr_code(request: WSGIRequest, qr_code_pk: int) -> HttpResponse:
 
 def login_failed(request: WSGIRequest) -> HttpResponse:
     messages.error(request, "You are not allowed to login to the application.")
-    return redirect("main-view")
+    return render(request, "base.html")

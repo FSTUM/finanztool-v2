@@ -3,7 +3,6 @@
 {% block title %}Finanztool{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
 <h2>{% if user.first_name %}
     Hallo {{ user.first_name|capfirst }}!
     {% else %}
@@ -145,5 +144,4 @@
     </li>
 </ul>
 <i>Und wie immer: Falls dir etwas auffällt oder unverständlich ist, melde dich bitte!</i>
-{% endif %}
 {% endblock %}
