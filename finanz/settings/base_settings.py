@@ -54,7 +54,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = "finanz.urls"
 
 # Auth
-LOGIN_REDIRECT_URL = "common:index"
+LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/login/"
 LOGIN_REDIRECT_URL_FAILURE = "/login/failed"
 LOGIN_URL = "login/"
