@@ -9,7 +9,6 @@ from django.contrib.auth.models import User  # pylint: disable=imported-auth-use
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils.translation import gettext as _
 
 from aufgaben.models import Aufgabe
 from common.forms import MailForm, QRCodeForm, SettingsForm
@@ -163,5 +162,5 @@ def del_qr_code(request: WSGIRequest, qr_code_pk: int) -> HttpResponse:
 
 
 def login_failed(request: WSGIRequest) -> HttpResponse:
-    messages.error(request, _("You are not allowed to login to the application."))
+    messages.error(request, "You are not allowed to login to the application.")
     return redirect("main-view")

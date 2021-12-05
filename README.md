@@ -28,7 +28,7 @@ python3 -m pip install -r requirements.txt
 1. Install additional dependencies after you installed the dependencies listed in [Installation](#installation)
 
 ```bash
-sudo apt-get install -y gettext npm
+sudo apt-get install -y npm
 python3 -m pip install -r requirements_dev.txt
 ```
 
