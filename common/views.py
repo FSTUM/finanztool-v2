@@ -97,26 +97,25 @@ def edit_settings(request: AuthWSGIRequest) -> HttpResponse:
     return render(request, "common/settings/edit_settings.html", context)
 
 
-def dashboard(request: AuthWSGIRequest) -> HttpResponse:
-    if request.user.is_authenticated:
-        rechnungen = Rechnung.objects.filter(gestellt=True, erledigt=False).all()
-        offene_rechnungen_cnt: int = rechnungen.count()
-        faellige_rechnungen_cnt: int = len([r for r in rechnungen if r.faellig])
-        eigene_aufgaben_cnt: int = Aufgabe.objects.filter(erledigt=False, zustaendig=request.user).count()
-        schluessel_cnt: int = Key.objects.filter(active=True).count()
-        verfuegbare_schluessel_cnt: int = Key.objects.filter(active=True, person=None).count()
-        context = {
-            "offene_rechnungen": offene_rechnungen_cnt,
-            "faellige_rechnungen": faellige_rechnungen_cnt,
-            "eigene_aufgaben": eigene_aufgaben_cnt,
-            "schluessel": schluessel_cnt,
-            "verfuegbare_schluessel": verfuegbare_schluessel_cnt,
-        }
-        return render(request, "common/common_dashboard.html", context)
-    else:
+def dashboard(request: WSGIRequest) -> HttpResponse:
+    if not request.user.is_authenticated:
         # required, because we need at least one view for unauthenticated users.
         messages.warning(request, "Bitte logge dich ein, um alles zu sehen")
         return render(request, "base.html")
+    rechnungen = Rechnung.objects.filter(gestellt=True, erledigt=False).all()
+    offene_rechnungen_cnt: int = rechnungen.count()
+    faellige_rechnungen_cnt: int = len([r for r in rechnungen if r.faellig])
+    eigene_aufgaben_cnt: int = Aufgabe.objects.filter(erledigt=False, zustaendig=request.user).count()
+    schluessel_cnt: int = Key.objects.filter(active=True).count()
+    verfuegbare_schluessel_cnt: int = Key.objects.filter(active=True, person=None).count()
+    context = {
+        "offene_rechnungen": offene_rechnungen_cnt,
+        "faellige_rechnungen": faellige_rechnungen_cnt,
+        "eigene_aufgaben": eigene_aufgaben_cnt,
+        "schluessel": schluessel_cnt,
+        "verfuegbare_schluessel": verfuegbare_schluessel_cnt,
+    }
+    return render(request, "common/common_dashboard.html", context)
 
 
 @finanz_staff_member_required
