@@ -13,6 +13,7 @@ import aufgaben.models as m_aufgaben
 import common.models as m_common
 import rechnung.models as m_rechnung
 import schluessel.models as m_schluessel
+import konto.models as m_konto
 
 
 def showroom_fixture_state():
@@ -60,6 +61,32 @@ def showroom_fixture_state_no_confirmation():
     _generate_schluessel_key()
     # _generate_schluessel_key_log_entry()
     # _generate_schluessel_saved_key_change()
+
+    # app konto
+    _generate_schluessel_einzalungs_log()
+
+
+def _generate_schluessel_einzalungs_log():
+    for i in range(1, 30):
+        einzahlung = random.choice((True, True, False))
+
+        einlese_ofset = timedelta(days=random.randint(10, 365 * 2), minutes=random.randint(0, 60), hours=random.randint(0, 24))
+        konto_einlesen = datetime.now() - einlese_ofset
+        if einzahlung:
+            einzahlung_betrag = Decimal(f"{random.randint(0, 300)}.{random.randint(0, 99)}")
+            verwendungszweck = lorem.sentence()
+            last_einzahlung = konto_einlesen - timedelta(days=random.randint(0, 9), minutes=random.randint(0, 60),
+                                                         hours=random.randint(0, 24))
+            last_einzahlung = last_einzahlung.date()
+        else:
+            einzahlung_betrag = verwendungszweck = last_einzahlung = None
+        m_konto.EinzahlungsLog.objects.create(
+            user=random.choice(list(get_user_model().objects.all())),
+            konto_einlesen=konto_einlesen,
+            konto_last_einzahlung=last_einzahlung,
+            latest_einzahlung_verwendungszweck=verwendungszweck,
+            latest_einzahlung_betrag=einzahlung_betrag,
+        )
 
 
 def showroom_fixture_state_no_confirmation_staging():
