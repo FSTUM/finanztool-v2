@@ -30,6 +30,11 @@ class Entry:  # pylint: disable=too-many-instance-attributes
 
     mapped_user: Optional[Schulden] = None
 
+    @property
+    def cleaned_verwendungszweck(self):
+        tmp = self.verwendungszweck.replace(" AWV-MELDEPFLICHT BEACHTEN HOTLINE BUNDESBANK (0800) 1234-111", "")
+        return tmp.lower().strip()
+
     def __repr__(self):
         if self.mapped_rechnung:
             rnr = self.mapped_rechnung.rnr_string
@@ -117,7 +122,6 @@ def _pre_process_entry(counter: int, row: Any, errors: List[str]) -> Optional[En
     if waehrung != "EUR":
         errors.append(f"Zeile {counter}: Eintrag in anderer Währung als Euro")
         return None
-
     return Entry(
         verwendungszweck=row["Verwendungszweck"],
         zahlungspflichtiger=row["Beguenstigter/Zahlungspflichtiger"],
@@ -165,15 +169,15 @@ def _suche_user(
 ) -> None:
     user: Schulden
     for user in users:
-        tmp = regex_usernames[user].fullmatch(entry.verwendungszweck)
+        tmp = regex_usernames[user].fullmatch(entry.cleaned_verwendungszweck)
         if tmp:
             if zuletzt_einlesen_date and zuletzt_einlesen_date < entry.datum:
                 if entry.mapped_user is not None:
                     # If there is a user that was already previously matched,
                     # print a duplicate match error and abort the search.
                     errors.append(
-                        f'Einzahlung "{entry.verwendungszweck}" vom {entry.datum} hat mehrere Benutzer gematcht: '
-                        f"{entry.mapped_user}, {user}.",
+                        f'Einzahlung "{entry.verwendungszweck}" (cleaned="{entry.cleaned_verwendungszweck}") '
+                        f"vom {entry.datum} hat mehrere Benutzer gematcht: {entry.mapped_user}, {user}.",
                     )
                     entry.mapped_user = None
                     return
