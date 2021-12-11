@@ -42,11 +42,11 @@
         <tbody>
             {% for einzahlung in einzahlungen %}
             <tr>
-                <td>{{ user|default:"-" }}</td>
-                <td>{{ konto_einlesen }}</td>
-                <td>{{ konto_last_einzahlung|default:"?" }}</td>
-                <td>{{ latest_einzahlung_verwendungszweck|default:"?" }}</td>
-                <td>{{ latest_einzahlung_betrag|default:"?" }}€</td>
+                <td>{{ einzahlung.user|default:"-" }}</td>
+                <td data-sort="{{ einzahlung.konto_einlesen|date:"c" }}">{{ einzahlung.konto_einlesen }}</td>
+                <td>{{ einzahlung.konto_last_einzahlung|default:"?" }}</td>
+                <td>{{ einzahlung.latest_einzahlung_verwendungszweck|default:"?" }}</td>
+                <td>{{ einzahlung.latest_einzahlung_betrag|default:"?" }}€</td>
             </tr>
             {% endfor %}
         </tbody>
