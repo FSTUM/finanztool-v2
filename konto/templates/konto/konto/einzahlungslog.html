@@ -34,19 +34,19 @@
             <tr>
                 <th>User</th>
                 <th>Zeitpunkt des Einlesens</th>
-                <th>Zeitpunk der letzten eingelesenen Transaktion</th>
+                <th>Datum der letzten eingelesenen Transaktion</th>
                 <th>Betreff der letzten eingelesenen Transaktion</th>
-                <th>Summe der letzten eingelesenen Transaktion</th>
+                <th>Betrag der letzten eingelesenen Transaktion</th>
             </tr>
         </thead>
         <tbody>
             {% for einzahlung in einzahlungen %}
             <tr>
                 <td>{{ einzahlung.user|default:"-" }}</td>
-                <td data-sort="{{ einzahlung.konto_einlesen|date:"c" }}">{{ einzahlung.konto_einlesen }}</td>
+                <td data-sort="{{ einzahlung.konto_einlesen|date:"c" }}">{{ einzahlung.konto_einlesen|date:"SHORT_DATETIME_FORMAT" }}</td>
                 <td>{{ einzahlung.konto_last_einzahlung|default:"?" }}</td>
                 <td>{{ einzahlung.latest_einzahlung_verwendungszweck|default:"?" }}</td>
-                <td>{{ einzahlung.latest_einzahlung_betrag|default:"?" }}€</td>
+                <td>{{ einzahlung.latest_einzahlung_betrag|floatformat:2|default:"?" }}€</td>
             </tr>
             {% endfor %}
         </tbody>
