@@ -19,7 +19,7 @@
         {% for mahnung in mahnungen %}
         <h4>
             <b>
-                <a href="{% url "rechnung:mahnung" rechnung.id mahnung.id %}">
+                <a href="{% url "rechnung:view_mahnung" rechnung.id mahnung.id %}">
                     {{ mahnung.wievielte }}. Mahnung
                 </a>
             </b>
