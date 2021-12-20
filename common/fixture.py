@@ -11,9 +11,9 @@ from django.utils.datetime_safe import datetime
 
 import aufgaben.models as m_aufgaben
 import common.models as m_common
+import konto.models as m_konto
 import rechnung.models as m_rechnung
 import schluessel.models as m_schluessel
-import konto.models as m_konto
 
 
 def showroom_fixture_state():
@@ -67,16 +67,23 @@ def showroom_fixture_state_no_confirmation():
 
 
 def _generate_schluessel_einzalungs_log():
-    for i in range(1, 30):
+    for _ in range(1, 30):
         einzahlung = random.choice((True, True, False))
 
-        einlese_ofset = timedelta(days=random.randint(10, 365 * 2), minutes=random.randint(0, 60), hours=random.randint(0, 24))
+        einlese_ofset = timedelta(
+            days=random.randint(10, 365 * 2),
+            minutes=random.randint(0, 60),
+            hours=random.randint(0, 24),
+        )
         konto_einlesen = datetime.now() - einlese_ofset
         if einzahlung:
             einzahlung_betrag = Decimal(f"{random.randint(0, 300)}.{random.randint(0, 99)}")
             verwendungszweck = lorem.sentence()
-            last_einzahlung = konto_einlesen - timedelta(days=random.randint(0, 9), minutes=random.randint(0, 60),
-                                                         hours=random.randint(0, 24))
+            last_einzahlung = konto_einlesen - timedelta(
+                days=random.randint(0, 9),
+                minutes=random.randint(0, 60),
+                hours=random.randint(0, 24),
+            )
             last_einzahlung = last_einzahlung.date()
         else:
             einzahlung_betrag = verwendungszweck = last_einzahlung = None
@@ -190,6 +197,13 @@ def _generate_rechnung_rechnung():
             )
             if random.choice((True, True, False))
             else None,
+            fdatum=random.choice(
+                (
+                    date.today(),
+                    date.today() + timedelta(days=random.randint(0, 32)) - timedelta(days=random.randint(0, 32)),
+                    date.today() + timedelta(days=random.randint(0, 32)),
+                ),
+            ),
             gestellt=random.choice((True, False)),
             bezahlt=random.choice((True, False)),
             erledigt=random.choice((True, False)),
