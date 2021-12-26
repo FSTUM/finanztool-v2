@@ -26,7 +26,7 @@ urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # 
 if settings.USE_KEYCLOAK:
     urlpatterns += [
         # Auth
-        path("logout/", LogoutView.as_view(), name="logout"),
+        path("logout/", RedirectView.as_view(pattern_name="oidc_logout"), name="logout"),
         path("oidc/", include("mozilla_django_oidc.urls")),
         path("login/failed/", common.views.login_failed),
     ]

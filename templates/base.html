@@ -5,8 +5,6 @@
 {% load django_bootstrap5 %}
 {% load auth_methods %}
 
-{% get_keycloak_status as keycloak_status %}
-
 <!DOCTYPE html>
 <html lang="de">
 
@@ -121,10 +119,11 @@
                     {# login #}
                     <div class="d-flex">
                         <nav class="navbar-nav me-2">
+                            {% get_keycloak_status as keycloak_status %}
                             {% if user.is_authenticated %}
                             <a
                                 class="nav-link"
-                                href="{% url "logout" %}"
+                                href="{% if keycloak_status %}{% url "oidc_logout" %}{% else %}{% url "logout" %}{% endif %}"
                             >Logout</a>
                             {% else %}
                             <a
