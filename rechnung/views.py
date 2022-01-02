@@ -412,7 +412,7 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
     return response
 
 
-def gen_context(rechnung_id: int,mahnung_id: Optional[int] = None) -> tuple[dict[str, Any], str]:
+def gen_context(rechnung_id: int, mahnung_id: Optional[int] = None) -> tuple[dict[str, Any], str]:
     rechnung_obj = get_object_or_404(Rechnung, pk=rechnung_id)
     context: dict[str, Any] = {"rechnung": rechnung_obj}
     proposed_filename = f"RE{rechnung_obj.rnr_string}_{rechnung_obj.kunde.knr}"
