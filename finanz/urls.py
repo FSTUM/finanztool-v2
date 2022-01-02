@@ -21,8 +21,8 @@ urlpatterns = [
     path("", RedirectView.as_view(pattern_name="common:dashboard")),
 ]
 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # type: ignore
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)  # type: ignore
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.USE_KEYCLOAK:
     urlpatterns += [
         # Auth

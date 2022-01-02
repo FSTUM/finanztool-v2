@@ -1,5 +1,4 @@
 from decimal import Decimal
-from typing import List
 
 from django import forms
 
@@ -61,5 +60,5 @@ class MappingConfirmationForm(forms.Form):
 class ReferentForm(forms.ModelForm):
     class Meta:
         model = Referent
-        exclude: List[str] = []
+        exclude: list[str] = []
         localized_fields = "__all__"

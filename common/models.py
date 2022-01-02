@@ -1,7 +1,7 @@
 import os
 import re
 from io import BytesIO
-from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
+from typing import Any, Optional, Tuple, TypeVar, Union
 
 import qrcode
 from django.conf import settings
@@ -42,7 +42,7 @@ class SingletonModel(models.Model):
         return obj
 
 
-def clean_attachable(response: Union[HttpResponse, Tuple[str, Any, str]]) -> Tuple[str, Any, str]:
+def clean_attachable(response: Union[HttpResponse, tuple[str, Any, str]]) -> tuple[str, Any, str]:
     if not isinstance(response, HttpResponse):
         return response
     content_type = response.get("Content-Type", "text/text")
@@ -53,9 +53,9 @@ def clean_attachable(response: Union[HttpResponse, Tuple[str, Any, str]]) -> Tup
 class Mail(models.Model):
     FINANZ = "Finanz-Referat FSMPI <finanz@fs.tum.de>"
     # ["{{template}}", "description"]
-    general_placeholders: List[Tuple[str, str]] = []
+    general_placeholders: list[Tuple[str, str]] = []
     # ["{{template}}", "description", "contition"]
-    conditional_placeholders: List[Tuple[str, str, str]] = [
+    conditional_placeholders: list[Tuple[str, str, str]] = [
         (
             "{% for rechnung in rechnungen %}...",
             "Alle überfälligen Rechnungen",
@@ -100,7 +100,7 @@ class Mail(models.Model):
             return f"{self.subject} ({self.comment})"
         return str(self.subject)
 
-    def get_mail(self, context: Union[Context, Dict[str, Any], None]) -> Tuple[str, str]:
+    def get_mail(self, context: Union[Context, dict[str, Any], None]) -> tuple[str, str]:
         if not isinstance(context, Context):
             context = Context(context or {})
 
@@ -114,9 +114,9 @@ class Mail(models.Model):
 
     def send_mail(
         self,
-        context: Union[Context, Dict[str, Any], None],
-        recipients: Union[List[str], str],
-        attachments: Optional[Union[HttpResponse, List[Tuple[str, Any, str]]]] = None,
+        context: Union[Context, dict[str, Any], None],
+        recipients: Union[list[str], str],
+        attachments: Optional[Union[HttpResponse, list[Tuple[str, Any, str]]]] = None,
     ) -> bool:
         if isinstance(recipients, str):
             recipients = [recipients]

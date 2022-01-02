@@ -1,7 +1,7 @@
 import os
 import subprocess  # nosec: fully defined
 from tempfile import mkdtemp, mkstemp
-from typing import List, Optional
+from typing import Optional
 
 from django import forms
 from django.contrib import messages
@@ -681,7 +681,7 @@ def del_key_typ(request: AuthWSGIRequest, schluessel_typ_pk: int) -> HttpRespons
     return render(request, "schluessel/key-typen/del_key-typen.html", context)
 
 
-def get_key_status(is_keycard: bool) -> List[int]:
+def get_key_status(is_keycard: bool) -> list[int]:
     aktive_keys = Key.objects.filter(active=True, keytype__keycard=is_keycard)
 
     key_change_event = SavedKeyChange.objects.filter(key=OuterRef("pk"))

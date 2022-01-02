@@ -1,5 +1,3 @@
-from typing import List
-
 from django import forms
 
 from .models import Key, KeyType, Person
@@ -45,7 +43,7 @@ class KeyForm(forms.ModelForm):
 class PersonForm(forms.ModelForm):
     class Meta:
         model = Person
-        exclude: List[str] = []
+        exclude: list[str] = []
         localized_fields = "__all__"
 
 
@@ -88,5 +86,5 @@ class FilterPersonsForm(forms.Form):
 class KeyTypeForm(forms.ModelForm):
     class Meta:
         model = KeyType
-        exclude: List[str] = []
+        exclude: list[str] = []
         localized_fields = "__all__"

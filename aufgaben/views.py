@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from django.forms import forms
 from django.http import HttpResponse
@@ -98,7 +98,7 @@ def dashboard(request: AuthWSGIRequest) -> HttpResponse:
     return render(request, "aufgaben/aufgaben_dashboard.html", context)
 
 
-def get_aufgabenstatus() -> List[int]:
+def get_aufgabenstatus() -> list[int]:
     erledigte_aufgaben_cnt = Aufgabe.objects.filter(erledigt=True).count()
     unerledigte_aufgaben = Aufgabe.objects.filter(erledigt=False)
     faellige_unerledigte_aufgaben_cnt = len([a for a in unerledigte_aufgaben if a.faellig()])

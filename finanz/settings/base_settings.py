@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 from django.conf.locale.de import formats as de_formats
 
@@ -15,7 +15,7 @@ SECRET_KEY = "!yz#260hqbx*yum@&70z+dpf4ryuyb!ibohfg-vy2*&6y*@-h("  # nosec: not 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS: List[str] = []
+ALLOWED_HOSTS: list[str] = []
 
 # Application definition
 
@@ -148,7 +148,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 # sftp transfer to valhalla
 SFTP_STORAGE_HOST = "valhalla.fs.tum.de"
 SFTP_STORAGE_ROOT = "/group/finanz/01-Ausgang/Rechnung/"
-SFTP_STORAGE_PARAMS: Dict[str, str] = {}
+SFTP_STORAGE_PARAMS: dict[str, str] = {}
 SFTP_STORAGE_INTERACTIVE = False
 SFTP_STORAGE_FILE_MODE = 660
 SFTP_STORAGE_DIR_MODE = 770

@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess  # nosec: fully defined
 from tempfile import mkdtemp, mkstemp
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 from django.contrib import messages
 from django.db.models import Count, QuerySet
@@ -412,12 +412,9 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
     return response
 
 
-def gen_context(
-    rechnung_id: int,
-    mahnung_id: Optional[int] = None,
-) -> Tuple[Dict[str, Any], str]:
+def gen_context(rechnung_id: int,mahnung_id: Optional[int] = None) -> tuple[dict[str, Any], str]:
     rechnung_obj = get_object_or_404(Rechnung, pk=rechnung_id)
-    context: Dict[str, Any] = {"rechnung": rechnung_obj}
+    context: dict[str, Any] = {"rechnung": rechnung_obj}
     proposed_filename = f"RE{rechnung_obj.rnr_string}_{rechnung_obj.kunde.knr}"
     if mahnung_id:
         mahnung_obj = get_object_or_404(Mahnung, pk=mahnung_id)
@@ -433,7 +430,7 @@ def gen_context(
     return context, proposed_filename
 
 
-def gen_rechnung(context: Dict[str, Any]) -> Tuple[str, str]:
+def gen_rechnung(context: dict[str, Any]) -> tuple[str, str]:
     # create temporary files
     tmplatex = mkdtemp()
     latex_file, latex_filename = mkstemp(suffix=".tex", dir=tmplatex)

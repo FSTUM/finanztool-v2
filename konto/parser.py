@@ -4,7 +4,7 @@ from csv import DictReader
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
 from io import TextIOWrapper
-from typing import Any, Dict, List, Optional, Pattern, Tuple
+from typing import Any, Optional
 
 from django.db.models import QuerySet
 
@@ -48,16 +48,16 @@ class Entry:  # pylint: disable=too-many-instance-attributes
         )
 
 
-def parse_camt_csv(csvfile: TextIOWrapper) -> Tuple[List[Entry], List[str]]:
-    results: List[Entry] = []
-    errors: List[str] = []
+def parse_camt_csv(csvfile: TextIOWrapper) -> tuple[list[Entry], list[str]]:
+    results: list[Entry] = []
+    errors: list[str] = []
 
     # hole alle offenen rechnungen
     offene_rechnungen: QuerySet[Rechnung] = Rechnung.objects.filter(gestellt=True, erledigt=False).all()
     regex_cache = _generate_regex_cache(offene_rechnungen)
 
     users: QuerySet[Schulden] = Schulden.objects.all()
-    regex_usernames: Dict[Schulden, Pattern[str]] = {}
+    regex_usernames: dict[Schulden, re.Pattern[str]] = {}
     user: Schulden
     for user in users:
         regex_usernames[user] = re.compile(fr"(.*\W)?{user.user}(\W.*)?")
@@ -93,15 +93,15 @@ def parse_camt_csv(csvfile: TextIOWrapper) -> Tuple[List[Entry], List[str]]:
     return results, errors
 
 
-def _generate_regex_cache(offene_rechnungen: QuerySet[Rechnung]) -> Dict[Rechnung, Pattern[str]]:
-    regex_cache: Dict[Rechnung, Pattern[str]] = {}
+def _generate_regex_cache(offene_rechnungen: QuerySet[Rechnung]) -> dict[Rechnung, re.Pattern[str]]:
+    regex_cache: dict[Rechnung, re.Pattern[str]] = {}
     rechnung: Rechnung
     for rechnung in offene_rechnungen:
         regex_cache[rechnung] = re.compile(fr"(.*\D)?{rechnung.rnr_string}(\D.*)?")
     return regex_cache
 
 
-def _pre_process_entry(counter: int, row: Any, errors: List[str]) -> Optional[Entry]:
+def _pre_process_entry(counter: int, row: Any, errors: list[str]) -> Optional[Entry]:
     try:
         datum = datetime.datetime.strptime(row["Buchungstag"], "%d.%m.%y").date()
     except ValueError:
@@ -135,7 +135,7 @@ def _pre_process_entry(counter: int, row: Any, errors: List[str]) -> Optional[En
 def _suche_rechnung(
     entry: Entry,
     offene_rechnungen: QuerySet[Rechnung],
-    regex_cache: Dict[Rechnung, Pattern[str]],
+    regex_cache: dict[Rechnung, re.Pattern[str]],
 ) -> None:
     rechnung: Rechnung
     for rechnung in offene_rechnungen:
@@ -163,9 +163,9 @@ def _suche_rechnung(
 def _suche_user(
     entry: Entry,
     users: QuerySet[Schulden],
-    regex_usernames: Dict[Schulden, Pattern[str]],
+    regex_usernames: dict[Schulden, re.Pattern[str]],
     zuletzt_einlesen_date: Optional[datetime.date],
-    errors: List[str],
+    errors: list[str],
 ) -> None:
     user: Schulden
     for user in users:
