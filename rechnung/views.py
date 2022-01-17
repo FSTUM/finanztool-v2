@@ -1,8 +1,9 @@
+import logging
 import os
 import shutil
 import subprocess  # nosec: fully defined
 from tempfile import mkdtemp, mkstemp
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from django.contrib import messages
 from django.db.models import Count, QuerySet
@@ -458,6 +459,30 @@ def gen_rechnung(context: dict[str, Any]) -> tuple[str, str]:
 sftp = SFTPStorage()
 
 
+def _report_rechnung_error(
+    request: AuthWSGIRequest,
+    message: str,
+    proposed_filename: str,
+    error: Union[
+        subprocess.CalledProcessError,
+        ImproperlyConfigured,
+        AuthenticationException,
+        IOError,
+    ],
+) -> None:
+    """log an formatted errror-message both to messages.error and logging.exception"""
+    base_msg: str = f"Beim versuch die datei '{proposed_filename}' {message} ist der folgende Fehler aufgetreten:\n"
+    error_msg = base_msg + f"{error}\n"
+    messages.error(request, error_msg)
+    # add more debug-infos and log to logging.exception
+    debug_info = f"""
+request=\t{request};\t{repr(request)}
+user=\t{request.user};\t{repr(request.user)}"""
+
+    log: logging.Logger = logging.getLogger(__name__)
+    log.exception(error_msg + debug_info)
+
+
 def gen_rechnung_upload_to_sftp(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional[int] = None) -> None:
     context, proposed_filename = gen_context(rechnung_id, mahnung_id)
     tmplatex = ""  # happy now, mypy?
@@ -471,17 +496,8 @@ def gen_rechnung_upload_to_sftp(request: AuthWSGIRequest, rechnung_id: int, mahn
         with open(path_to_pdf, "rb") as pdf:
             sftp.save(remote_path_to_pdf, pdf)
         messages.success(request, f"Die {data_type} '{remote_path_to_pdf}' wurde zu valhalla hinzugefügt.")
-
     except subprocess.CalledProcessError as error:
-        messages.error(
-            request,
-            f"Beim versuch die datei '{proposed_filename}' zu generieren ist der folgende Fehler "
-            f"aufgetreten:\n{error}",
-        )
+        _report_rechnung_error(request, "zu generieren", proposed_filename, error)
     except (ImproperlyConfigured, AuthenticationException, IOError) as error:
-        messages.error(
-            request,
-            f"Beim versuch die datei '{proposed_filename}' auf valhalla hochzuladen ist der "
-            f"folgende Fehler aufgetragen:\n{error}",
-        )
+        _report_rechnung_error(request, "auf valhalla hochzuladen", proposed_filename, error)
     shutil.rmtree(tmplatex, ignore_errors=True)
