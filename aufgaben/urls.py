@@ -8,6 +8,7 @@ app_name = "aufgaben"
 urlpatterns = [
     path("", RedirectView.as_view(pattern_name="aufgaben:list_aufgaben"), name="index"),
     path("dashboard/", views.dashboard, name="dashboard"),
+    path("shoppingcart/", views.edit_shoppingcart, name="edit_shoppingcart"),
     path(
         "aufgabe/",
         include(

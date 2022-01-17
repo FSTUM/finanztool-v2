@@ -13,7 +13,7 @@ class MailForm(forms.ModelForm):
 class SettingsForm(forms.ModelForm):
     class Meta:
         model = Settings
-        exclude: list[str] = []
+        exclude: list[str] = ["officediscount_shoppingcart"]
         localized_fields = "__all__"
 
 

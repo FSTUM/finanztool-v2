@@ -1,0 +1,18 @@
+{% extends 'aufgaben/aufgaben_base.html' %}
+{% load django_bootstrap5 %}
+
+{% block finanz_common_headercontent %}Merkliste ändern{% endblock %}
+{% block title %}Merkliste ändern{% endblock %}
+
+{% block finanz_common_content %}
+<form
+    method="POST"
+    action=""
+>{% csrf_token %}
+    {% bootstrap_form form %}
+    <button
+        class="btn btn-primary"
+        type="submit"
+    >Officediscount Merkliste speichern</button>
+</form>
+{% endblock %}

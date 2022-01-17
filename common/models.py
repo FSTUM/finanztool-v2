@@ -196,6 +196,10 @@ class Settings(SingletonModel):
         null=True,
         blank=True,
     )
+    officediscount_shoppingcart = models.TextField(
+        verbose_name="Merkliste einer (Officediscount) Bestellung",
+        default="Protokollschokolade",
+    )
 
     def __str__(self):
         return (

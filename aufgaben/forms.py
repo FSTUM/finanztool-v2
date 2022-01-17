@@ -2,7 +2,15 @@ from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django import forms
 from django.contrib.auth import get_user_model
 
+from common.models import Settings
+
 from .models import Aufgabe, Aufgabenart
+
+
+class ShoppingcartForm(forms.ModelForm):
+    class Meta:
+        model = Settings
+        fields: list[str] = ["officediscount_shoppingcart"]
 
 
 class AufgabeForm(forms.ModelForm):

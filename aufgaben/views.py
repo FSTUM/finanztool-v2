@@ -1,12 +1,14 @@
 from typing import Optional
 
+from django.contrib import messages
 from django.forms import forms
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from common.models import Settings
 from common.views import AuthWSGIRequest, finanz_staff_member_required
 
-from .forms import AufgabeForm, AufgabenartForm
+from .forms import AufgabeForm, AufgabenartForm, ShoppingcartForm
 from .models import Aufgabe, Aufgabenart
 
 
@@ -19,6 +21,26 @@ def list_aufgaben_unerledigt(request: AuthWSGIRequest) -> HttpResponse:
         "meine_aufgaben": meine_aufgaben,
     }
     return render(request, "aufgaben/aufgaben/list_aufgaben_unerledigt.html", context)
+
+
+@finanz_staff_member_required
+def edit_shoppingcart(request: AuthWSGIRequest) -> HttpResponse:
+    settings: Settings = Settings.load()
+    form = ShoppingcartForm(request.POST or None, instance=settings)
+    if form.is_valid():
+        form.save()
+        messages.success(request, "Die Merkliste wurde erfolgreich gespeichert.")
+        return redirect("aufgaben:edit_shoppingcart")
+    messages.warning(
+        request,
+        "Dieses Formular ist nicht gegen einen mehrbenutzerbetrieb gesichert. "
+        "Lediglich eine Person darf zu einer Zeit dieses Formular bearbeiten, "
+        "da sonnst die Arbeit von anderen Personen überschrieben wird.",
+    )
+    context = {
+        "form": form,
+    }
+    return render(request, "aufgaben/aufgaben/form_shoppingcart.html", context)
 
 
 @finanz_staff_member_required
