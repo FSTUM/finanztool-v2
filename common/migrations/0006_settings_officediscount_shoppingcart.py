@@ -14,7 +14,8 @@ class Migration(migrations.Migration):
             model_name="settings",
             name="officediscount_shoppingcart",
             field=models.TextField(
-                default="Protokollschokolade", verbose_name="Merkliste einer (Officediscount) Bestellung"
+                default="Protokollschokolade",
+                verbose_name="Merkliste einer (Officediscount) Bestellung",
             ),
         ),
     ]

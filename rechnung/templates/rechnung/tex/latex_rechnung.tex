@@ -11,7 +11,9 @@
     \usepackage{fancyhdr}
     \usepackage{longtable}
     \usepackage{tabularx}
+    \usepackage{multirow}
     \usepackage[absolute]{textpos}
+    \usepackage{graphicx}
     \geometry{margin=2cm}
     \pagestyle{fancy}
     \renewcommand{\headrulewidth}{0pt}
@@ -92,7 +94,12 @@
 
     %Infofeld%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \hfill{\parbox[c]{7.5cm}{
+        \vspace{-150px}
         \begin{tabular}{ll}
+            {% if rechnung.epc_qr_code and not mahnung %}
+                Zahlungsdetails als & \multirow{6}{*}{ \includegraphics[width=.15\textwidth]{ {{rechnung.epc_qr_code.path}} } }\\
+                EPC-QR-Code:&                \\\\\\\\\\
+            {% endif %}
             Kundennummer: &{{ rechnung.kunde.knr|unlocalize }} \\[-0.5ex]
             Rechnungsnummer: & {{ rechnung.rnr_string }} \\[-0.5ex]
             {% if mahnung %}

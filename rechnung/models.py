@@ -1,10 +1,20 @@
+import os
 from datetime import date, timedelta
 from decimal import Decimal
+from io import BytesIO
 
+import qrcode
 from django.contrib.auth import get_user_model
+from django.core.files import File
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Max
+from django.dispatch import receiver
+from django.http import Http404
 from django.utils import timezone
+from PIL import Image, ImageDraw
+
+from common.models import Settings
 
 
 def get_faelligkeit_default():
@@ -80,6 +90,7 @@ class Rechnung(models.Model):
         "Kategorie",
         models.CASCADE,
     )
+    epc_qr_code = models.ImageField(upload_to="epc_qr_code", blank=True)
 
     def __str__(self):
         return f"{self.rnr_string} ({self.name})"
@@ -89,8 +100,41 @@ class Rechnung(models.Model):
         return f"RE{self.rnr:05}"
 
     @property
-    def rnr_string(self):
-        return str(self.rnr).zfill(5)
+    def _at_04_amount(self) -> str:
+        """AT-04 Amount of the Credit Transfer in Euro
+        Amount must be 0.01 or more and 999999999.99 or less"""
+        gesamtsumme = self.gesamtsumme
+        if gesamtsumme < Decimal(0.01):
+            raise Http404("AT-04 Amount of the Credit Transfer in Euro must be EUR0.01 or more")
+        if gesamtsumme > Decimal(999999999.99):
+            raise Http404("AT-04 Amount of the Credit Transfer in Euro must be EUR999999999.99 or less")
+
+        return f"EUR{gesamtsumme}"
+
+    @property
+    def _epc_qr_code_content(self):
+        settings = Settings.load()
+        if self.name:
+            verwendungszweck = f"{self.rnr_string} - {self.name}"
+        else:
+            verwendungszweck = self.rnr_string
+        content = [
+            "BCD",  # Service Tag
+            "002",  # Version
+            "1",  # Encoding UTF-8
+            "SCT",  # Identification code: Sepa Credit Transfer
+            settings.at_23_bic,  # AT-23 BIC of the Beneficiary Bank
+            # for SEPA payment transactions involving nonEEA countries.
+            settings.at_21_name,  # AT-21 Name of the Beneficiary
+            settings.at_20_iban,  # AT-20 Account number of the Beneficiary. Only IBAN is allowed.
+            self._at_04_amount,  # AT-20 Account number of the Beneficiary. Only IBAN is allowed.
+            settings.at_44_purpose,  # AT-44 Purpose of the Credit Transfer
+            settings.at_05_remittance_information,  # AT-05 Remittance Information (Structured) Creditor Reference
+            # (ISO 11649 RF Creditor Reference may be used)
+            verwendungszweck,  # "Verwendungszweck", unstructured text
+            f"Fälligkeitsdatum: {self.fdatum.strftime('%d.%m.%Y')}",  # Beneficiary to originator information
+        ]
+        return "\n".join(content)
 
     @property
     def zwischensumme(self):
@@ -113,12 +157,11 @@ class Rechnung(models.Model):
             summe = summe + (posten.summenetto * Decimal(0.19))
         return Decimal(round(summe, 2))
 
-    # durch addieren mit mwst berechnet
     @property
     def gesamtsumme(self):
-        summe = Decimal(
-            self.zwischensumme + self.summe_mwst_7 + self.summe_mwst_19,
-        )
+        """Gesamtsumme der Rechnung inkl. MwSt.
+        (zwischensumme + summe_mwst_7 + summe_mwst_19)"""
+        summe = Decimal(self.zwischensumme + self.summe_mwst_7 + self.summe_mwst_19)
         return Decimal(round(summe, 2))
 
     @property
@@ -136,6 +179,50 @@ class Rechnung(models.Model):
         self.bezahlt = True
         self.erledigt = True
         self.save()
+
+    def regen_epc_qr_code(self):
+        qr_code = qrcode.QRCode(
+            # version=13,  # max version according to epc spec
+            error_correction=qrcode.constants.ERROR_CORRECT_M,
+        )
+        qr_code.add_data(self._epc_qr_code_content)
+        qr_code.make(fit=True)
+        qr_image = qr_code.make_image(fill_color="black", back_color="white")
+        with Image.new("RGB", (qr_image.pixel_size, qr_image.pixel_size), "white") as canvas:
+            canvas.paste(qr_image)
+
+            # add a rounded rectangle to make it more obvious, that the code should be scanned
+            draw = ImageDraw.Draw(canvas)
+            draw.rounded_rectangle(((0, 0), canvas.size), radius=50, outline="black", width=15)
+
+            buffer = BytesIO()
+            if not self.epc_qr_code:
+                canvas.save(buffer, "PNG")
+                self.epc_qr_code.save(f"qr_code_{self.rnr_string}.png", File(buffer), save=False)
+                self.save()
+            else:
+                canvas.save(self.epc_qr_code.path)
+
+
+@receiver(models.signals.post_save, sender=Rechnung)
+def auto_regen_epc_qr_code_on_save(sender, instance, **_kwargs):
+    """
+    Regenerates the QR-Code, once the corresponding `Rechnung` object is updated.
+    """
+    _ = sender  # sender is needed, for api. it cannot be renamed, but is unused here.
+    if Decimal(0.1) < instance.gesamtsumme < Decimal(999999999.99):
+        instance.regen_epc_qr_code()
+
+
+@receiver(models.signals.post_delete, sender=Rechnung)
+def auto_del_epc_qr_code_on_delete(sender, instance, **_kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `Rechnung` object is deleted.
+    """
+    _ = sender  # sender is needed, for api. it cannot be renamed, but is unused here.
+    if instance.pk and instance.pk != 0 and instance.epc_qr_code and os.path.isfile(instance.epc_qr_code.path):
+        os.remove(instance.epc_qr_code.path)
 
 
 class Mahnung(models.Model):
@@ -338,6 +425,7 @@ class Posten(models.Model):
         verbose_name="Einzelpreis",
         decimal_places=5,
         max_digits=15,
+        help_text="Einzelpreis ohne MWSt in EUR",
     )
     MWSTSATZ = (
         (0, "0 %"),
@@ -351,6 +439,7 @@ class Posten(models.Model):
     )
     anzahl = models.IntegerField(
         verbose_name="Anzahl",
+        validators=[MinValueValidator(0)],
         default=1,
     )
 

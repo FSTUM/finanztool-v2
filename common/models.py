@@ -200,6 +200,37 @@ class Settings(SingletonModel):
         verbose_name="Merkliste einer (Officediscount) Bestellung",
         default="Protokollschokolade",
     )
+    at_23_bic = models.CharField(
+        verbose_name="AT-23 BIC of the Beneficiary Bank",
+        help_text="Used for generating an EPC-QR-Code",
+        default="BYLADEM1KMS",
+        max_length=11,
+    )
+    at_21_name = models.CharField(
+        verbose_name="AT-21 Name of the Beneficiary",
+        help_text="Used for generating an EPC-QR-Code",
+        default="Studienförderung der Fachschaft Mathematik/Physik/Informatik e. V.",
+        max_length=70,
+    )
+    at_20_iban = models.CharField(
+        verbose_name="AT-20 Account number of the Beneficiary. Only IBAN is allowed.",
+        help_text="Used for generating an EPC-QR-Code",
+        default="DE68702501500027003722",
+        max_length=34,
+    )
+    at_44_purpose = models.CharField(
+        verbose_name="AT-44 Purpose of the Credit Transfer",
+        help_text="Used for generating an EPC-QR-Code",
+        default="",
+        max_length=4,
+    )
+    at_05_remittance_information = models.CharField(
+        verbose_name="AT-05 Remittance Information (Structured) Creditor Reference "
+        "(ISO 11649 RF Creditor Reference may be used)",
+        help_text="Used for generating an EPC-QR-Code",
+        default="",
+        max_length=35,
+    )
 
     def __str__(self):
         return (
