@@ -8,8 +8,7 @@ from django.db import migrations, models
 def regenerate_epc_qr_codes(apps, schema_editor):
     Rechnung = apps.get_model("rechnung", "Rechnung")
     for rechnung in Rechnung.objects.all():
-        if Decimal(0.1) < rechnung.gesamtsumme < Decimal(999999999.99):
-            rechnung.regen_epc_qr_code()
+        rechnung.save()
 
 
 class Migration(migrations.Migration):
