@@ -1,7 +1,7 @@
 import os
 import re
 from io import BytesIO
-from typing import Any, Optional, Tuple, TypeVar, Union
+from typing import Any, Optional, TypeVar, Union
 
 import qrcode
 from django.conf import settings
@@ -11,12 +11,12 @@ from django.core.mail import EmailMultiAlternatives
 from django.db import models
 from django.db.models import ForeignKey
 from django.dispatch import receiver
-from django.http import HttpResponse
 from django.template import Context, Template
 from PIL import Image
 
 from schluessel.models import KeyType
 
+# pylint: disable-next=invalid-name
 SingletonType = TypeVar("SingletonType", bound="SingletonModel")
 
 
@@ -42,20 +42,12 @@ class SingletonModel(models.Model):
         return obj
 
 
-def clean_attachable(response: Union[HttpResponse, tuple[str, Any, str]]) -> tuple[str, Any, str]:
-    if not isinstance(response, HttpResponse):
-        return response
-    content_type = response.get("Content-Type", "text/text")
-    filename = response.get("Content-Disposition", "filename.txt").replace("inline; filename=", "")
-    return filename, response.content, content_type
-
-
 class Mail(models.Model):
     FINANZ = "Finanz-Referat FSMPI <finanz@fs.tum.de>"
     # ["{{template}}", "description"]
-    general_placeholders: list[Tuple[str, str]] = []
+    general_placeholders: list[tuple[str, str]] = []
     # ["{{template}}", "description", "contition"]
-    conditional_placeholders: list[Tuple[str, str, str]] = [
+    conditional_placeholders: list[tuple[str, str, str]] = [
         (
             "{% for rechnung in rechnungen %}...",
             "Alle überfälligen Rechnungen",
@@ -116,7 +108,7 @@ class Mail(models.Model):
         self,
         context: Union[Context, dict[str, Any], None],
         recipients: Union[list[str], str],
-        attachments: Optional[Union[HttpResponse, list[Tuple[str, Any, str]]]] = None,
+        attachments: Optional[list[tuple[str, Any, str]]] = None,
     ) -> bool:
         if isinstance(recipients, str):
             recipients = [recipients]
@@ -143,7 +135,7 @@ class Mail(models.Model):
             reply_to=[Mail.FINANZ],
         )
         if attachments is not None:
-            for (filename, content, mimetype) in [clean_attachable(attach) for attach in attachments]:
+            for (filename, content, mimetype) in attachments:
                 email.attach(filename, content, mimetype)
         email.send(fail_silently=False)
         return True
