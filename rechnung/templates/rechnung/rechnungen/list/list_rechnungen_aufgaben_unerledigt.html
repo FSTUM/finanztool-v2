@@ -53,7 +53,7 @@
             {% for rechnung in unerledigte_rechnungen %}
             <tr>
                 <td>
-                    <a href="{% url "rechnung:view_rechnung" rechnung.id %}">RE {{ rechnung.rnr_string }}</a>
+                    <a href="{% url "rechnung:view_rechnung" rechnung.id %}">{{ rechnung.rnr_string }}</a>
                 </td>
                 <td>{{ rechnung.name }}</td>
                 <td>

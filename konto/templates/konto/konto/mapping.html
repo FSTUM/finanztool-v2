@@ -94,12 +94,12 @@
                     <td>
                         {% if buchung.mapped_mahnung %}
                         <a href="{% url "rechnung:view_mahnung" buchung.mapped_rechnung.pk buchung.mapped_mahnung.pk %}">
-                            RE {{ buchung.mapped_rechnung.rnr_string }} ({{ buchung.mapped_mahnung.wievielte }}.
+                            {{ buchung.mapped_rechnung.rnr_string }} ({{ buchung.mapped_mahnung.wievielte }}.
                             Mahnung)
                         </a>
                         {% else %}
                         <a href="{% url "rechnung:view_rechnung" buchung.mapped_rechnung.pk %}">
-                            RE {{ buchung.mapped_rechnung.rnr_string }}
+                            {{ buchung.mapped_rechnung.rnr_string }}
                         </a>
                         {% endif %}
                     </td>

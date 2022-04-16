@@ -1,8 +1,8 @@
 {% extends 'rechnung/rechnung_base.html' %}
 {% load django_bootstrap5 %}
 
-{% block finanz_common_headercontent %}RE {{ rechnung.rnr_string }}: {{ rechnung.name }}{% endblock %}
-{% block title %}RE {{ rechnung.rnr_string }}{% endblock %}
+{% block finanz_common_headercontent %}{{ rechnung.rnr_string }}: {{ rechnung.name }}{% endblock %}
+{% block title %}{{ rechnung.rnr_string }}{% endblock %}
 
 {% block finanz_common_content %}
 {% if rechnung.gestellt and not rechnung.erledigt and rechnung.faellig %}

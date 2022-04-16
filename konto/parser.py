@@ -60,7 +60,7 @@ def parse_camt_csv(csvfile: TextIOWrapper) -> tuple[list[Entry], list[str]]:
     regex_usernames: dict[Schulden, re.Pattern[str]] = {}
     user: Schulden
     for user in users:
-        regex_usernames[user] = re.compile(fr"(.*\W)?{user.user}(\W.*)?")
+        regex_usernames[user] = re.compile(rf"(.*\W)?{user.user}(\W.*)?")
 
     try:
         zuletzt_einlesen: datetime.datetime = EinzahlungsLog.objects.latest("konto_einlesen").konto_einlesen
@@ -97,7 +97,9 @@ def _generate_regex_cache(offene_rechnungen: QuerySet[Rechnung]) -> dict[Rechnun
     regex_cache: dict[Rechnung, re.Pattern[str]] = {}
     rechnung: Rechnung
     for rechnung in offene_rechnungen:
-        regex_cache[rechnung] = re.compile(fr"(.*\D)?{rechnung.rnr_string}(\D.*)?")
+        # RE012345 (including separating whitespace)
+        # 012345 (no other digits around these)
+        regex_cache[rechnung] = re.compile(rf"(.*RE\s*{rechnung.rnr:05}.*)|(.*\D)?{rechnung.rnr:05}\D(.*)?")
     return regex_cache
 
 

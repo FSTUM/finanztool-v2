@@ -82,7 +82,11 @@ class Rechnung(models.Model):
     )
 
     def __str__(self):
-        return f"RE {self.rnr_string} ({self.name})"
+        return f"{self.rnr_string} ({self.name})"
+
+    @property
+    def rnr_string(self) -> str:
+        return f"RE{self.rnr:05}"
 
     @property
     def rnr_string(self):
@@ -217,7 +221,7 @@ class Mahnung(models.Model):
         self.rechnung.save()
 
     def __str__(self):
-        return f"RE{self.rechnung.rnr_string}_{self.rechnung.kunde.knr}_M{self.wievielte}"
+        return f"{self.rechnung.rnr_string}_{self.rechnung.kunde.knr}_M{self.wievielte}"
 
 
 class Kunde(models.Model):

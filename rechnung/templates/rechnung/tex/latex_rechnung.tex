@@ -174,7 +174,7 @@
         %Endtext%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         Bitte überweisen Sie den Rechnungsbetrag von {\bf {{ rechnung.gesamtsumme }}} \euro\ ohne Abzug bis zum
         {{ rechnung.fdatum }} auf das unten angegebene Konto mit Verwendungszweck
-                {\bf RE {{ rechnung.rnr_string }}}.\\[2ex]
+                \textbf{\texttt{ '{{ rechnung.rnr_string }}{%if rechnung.name %} - {{ rechnung.name }}{% endif %}'. }}\\[2ex]
 
     {% else %}
         %Mahnungen%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -185,7 +185,7 @@
             Posten & Datum & Fälligkeit am & Betrag\\
             \bottomrule\\[-1ex]
             \endhead
-            RE {{ rechnung.rnr_string }} &
+            {{ rechnung.rnr_string }} &
             {{ rechnung.rdatum }} &
             {{ rechnung.fdatum }} &
             {{ rechnung.gesamtsumme }} \euro\\
@@ -220,7 +220,7 @@
             Positionen bis zum
         {% endif %}%
             {\bf {{ mahnung.mfdatum }}} auf das unten angegebene Konto mit Verwendungszweck
-            {\bf RE {{ rechnung.rnr_string }}}.\\
+            {\bf {{ rechnung.rnr_string }}}.\\
             Sollte die Zahlung zwischenzeitlich erfolgt sein, betrachten Sie bitte
             dieses Schreiben als gegenstandslos. Sollte es Einwände gegen die
             Regulierung geben, bitten wir um kurze Information.\\[2ex]
