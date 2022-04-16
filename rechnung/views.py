@@ -397,10 +397,14 @@ def rechnungpdf(request: AuthWSGIRequest, rechnung_id: int, mahnung_id: Optional
     try:
         path_to_pdf, tmplatex = gen_rechnung(context)
     except subprocess.CalledProcessError as error:
+        try:
+            output = error.output.decode("utf-8")
+        except UnicodeError:
+            output = error.output
         return render(
             request,
             "rechnung/tex/rechnungpdf_error.html",
-            {"erroroutput": error.output},
+            {"erroroutput": output},
         )
 
     response = HttpResponse(content_type="application/pdf")
