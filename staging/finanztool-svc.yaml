@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-    name: finanztool-svc
-    labels:
-        app: finanztool
+  name: finanztool-svc
+  labels:
+    app: finanztool
 spec:
-    type: ClusterIP
-    selector:
-        app: finanztool
-    ports:
-        - name: mediafiles-srv
-          port: 7000
-          targetPort: 80
-        - name: gunicorn
-          port: 8000
-          targetPort: 8000
+  type: ClusterIP
+  selector:
+    app: finanztool
+  ports:
+    - name: mediafiles-srv
+      port: 7000
+      targetPort: 80
+    - name: gunicorn
+      port: 8000
+      targetPort: 8000

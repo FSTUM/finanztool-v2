@@ -1,25 +1,25 @@
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
-    name: finanztool-ingress
-    labels:
-        app: finanztool
-    namespace: finanztool
+  name: finanztool-ingress
+  labels:
+    app: finanztool
+  namespace: finanztool
 spec:
-    entryPoints:
-        - websecure
-    routes:
-        - kind: Rule
-          match: Host(`finanz.frank.elsinga.de`) && PathPrefix(`/media/`)
-          priority: 11
-          services:
-              - name: finanztool-svc
-                port: 7000
-        - kind: Rule
-          match: Host(`finanz.frank.elsinga.de`)
-          priority: 10
-          services:
-              - name: finanztool-svc
-                port: 8000
-    tls:
-        secretName: finanz.frank.elsinga.de
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`finanz.frank.elsinga.de`) && PathPrefix(`/media/`)
+      priority: 11
+      services:
+        - name: finanztool-svc
+          port: 7000
+    - kind: Rule
+      match: Host(`finanz.frank.elsinga.de`)
+      priority: 10
+      services:
+        - name: finanztool-svc
+          port: 8000
+  tls:
+    secretName: finanz.frank.elsinga.de

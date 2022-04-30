@@ -1,44 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: finanztool-app
-    labels:
-        app: finanztool
-    namespace: finanztool
+  name: finanztool-app
+  labels:
+    app: finanztool
+  namespace: finanztool
 spec:
-    replicas: 1
-    selector:
-        matchLabels:
-            app: finanztool
-    template:
-        metadata:
-            labels:
-                app: finanztool
-        spec:
-            volumes:
-                - name: shared-mediafiles
-                  persistentVolumeClaim:
-                      claimName: finanztool-mediafiles-pvc
-            containers:
-                - name: nginx-container
-                  image: nginx
-                  ports:
-                      - containerPort: 80
-                        name: mediafiles-srv
-                  volumeMounts:
-                      - name: shared-mediafiles
-                        mountPath: /usr/share/nginx/html/media
-                - name: finanztool
-                  image: ghcr.io/fstum/finanztool-v2-staging:main
-                  imagePullPolicy: Always
-                  envFrom:
-                      - secretRef:
-                            name: finanztool-secret
-                      - configMapRef:
-                            name: finanztool-config
-                  ports:
-                      - containerPort: 8000
-                        name: gunicorn
-                  volumeMounts:
-                      - name: shared-mediafiles
-                        mountPath: /code/media
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finanztool
+  template:
+    metadata:
+      labels:
+        app: finanztool
+    spec:
+      volumes:
+        - name: shared-mediafiles
+          persistentVolumeClaim:
+            claimName: finanztool-mediafiles-pvc
+      containers:
+        - name: nginx-container
+          image: nginx
+          ports:
+            - containerPort: 80
+              name: mediafiles-srv
+          volumeMounts:
+            - name: shared-mediafiles
+              mountPath: /usr/share/nginx/html/media
+        - name: finanztool
+          image: ghcr.io/fstum/finanztool-v2-staging:main
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: finanztool-secret
+            - configMapRef:
+                name: finanztool-config
+          ports:
+            - containerPort: 8000
+              name: gunicorn
+          volumeMounts:
+            - name: shared-mediafiles
+              mountPath: /code/media

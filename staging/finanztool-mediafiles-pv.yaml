@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-    name: finanztool-pv
-    namespace: finanztool
-    labels:
-        app: finanztool
-        type: local
+  name: finanztool-pv
+  namespace: finanztool
+  labels:
+    app: finanztool
+    type: local
 spec:
-    storageClassName: manual
-    capacity:
-        storage: 100Mi
-    persistentVolumeReclaimPolicy: Delete
-    accessModes:
-        - ReadWriteOnce
-    hostPath:
-        path: '/mnt/data/finanztool'
+  storageClassName: manual
+  capacity:
+    storage: 100Mi
+  persistentVolumeReclaimPolicy: Delete
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: '/mnt/data/finanztool'

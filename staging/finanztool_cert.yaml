@@ -1,13 +1,13 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-    name: finanz.frank.elsinga.de
-    namespace: finanztool
+  name: finanz.frank.elsinga.de
+  namespace: finanztool
 spec:
-    commonName: finanz.frank.elsinga.de
-    dnsNames:
-        - finanz.frank.elsinga.de
-    secretName: finanz.frank.elsinga.de
-    issuerRef:
-        name: letsencrypt-production
-        kind: ClusterIssuer
+  commonName: finanz.frank.elsinga.de
+  dnsNames:
+    - finanz.frank.elsinga.de
+  secretName: finanz.frank.elsinga.de
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
