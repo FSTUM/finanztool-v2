@@ -10,6 +10,21 @@
         "type": "git",
         "url": "https://git.fs.tum.de/fsmpi/finanz"
     },
+    "eslintConfig": {
+        "extends": [
+            "@paulhfischer/eslint-config-javascript"
+        ],
+        "env": {
+            "browser": true,
+            "jquery": true
+        }
+    },
+    "prettier": "@paulhfischer/prettier-config",
+    "stylelint": {
+        "extends": [
+            "@paulhfischer/stylelint-config"
+        ]
+    },
     "author": "Finanz-Referat FSMPI",
     "license": "AGPL-3.0-or-later",
     "dependencies": {

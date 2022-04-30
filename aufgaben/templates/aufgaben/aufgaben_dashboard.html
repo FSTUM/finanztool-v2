@@ -23,7 +23,10 @@
 {% block defered_script %}
 <script>
     /* global Plotly */
-    const settings = { modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d'], responsive: true };
+    const settings = {
+        modeBarButtonsToRemove: ['zoom2d', 'pan2d', 'select2d', 'lasso2d'],
+        responsive: true,
+    };
 
     const layout = {
         title: 'Aufgaben nach Aufgabenstatus',
