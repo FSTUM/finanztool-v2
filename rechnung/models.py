@@ -93,7 +93,9 @@ class Rechnung(models.Model):
     epc_qr_code = models.ImageField(upload_to="epc_qr_code", blank=True)
 
     def __str__(self):
-        return f"{self.rnr_string} ({self.name})"
+        if self.name:
+            return f"{self.rnr_string} ({self.name})"
+        return self.rnr_string
 
     @property
     def rnr_string(self) -> str:
@@ -114,10 +116,6 @@ class Rechnung(models.Model):
     @property
     def _epc_qr_code_content(self):
         settings = Settings.load()
-        if self.name:
-            verwendungszweck = f"{self.rnr_string} - {self.name}"
-        else:
-            verwendungszweck = self.rnr_string
         content = [
             "BCD",  # Service Tag
             "002",  # Version
@@ -131,7 +129,7 @@ class Rechnung(models.Model):
             settings.at_44_purpose,  # AT-44 Purpose of the Credit Transfer
             settings.at_05_remittance_information,  # AT-05 Remittance Information (Structured) Creditor Reference
             # (ISO 11649 RF Creditor Reference may be used)
-            verwendungszweck,  # "Verwendungszweck", unstructured text
+            self.rnr_string,  # "Verwendungszweck", unstructured text
             f"Fälligkeitsdatum: {self.fdatum.strftime('%d.%m.%Y')}",  # Beneficiary to originator information
         ]
         return "\n".join(content)

@@ -3,7 +3,7 @@
 
 {% block finanz_common_headercontent %}{{ mahnung.wievielte }}. Mahnung zur
 <a href="{% url "rechnung:view_rechnung" mahnung.rechnung.id %}">
-    {{ mahnung.rechnung.rnr_string }} ({{ mahnung.rechnung.name }})
+    {{ mahnung.rechnung.rnr_string }}{% if mahnung.rechnung.name %} ({{ mahnung.rechnung.name }}){% endif %}
 </a>
 {% endblock %}
 {% block title %}{{ mahnung.wievielte }}. Mahnung zur {{ mahnung.rechnung.rnr_string }}{% endblock %}
