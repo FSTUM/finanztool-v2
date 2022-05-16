@@ -196,14 +196,13 @@ class Rechnung(models.Model):
             buffer = BytesIO()
             if not self.epc_qr_code:
                 canvas.save(buffer, "PNG")
-                self.epc_qr_code.save(f"qr_code_{self.rnr_string}.png", File(buffer), save=False)
-                self.save()
+                self.epc_qr_code.save(f"qr_code_{self.rnr_string}.png", File(buffer))
             else:
                 canvas.save(self.epc_qr_code.path)
 
 
 @receiver(models.signals.post_save, sender=Rechnung)
-def auto_regen_epc_qr_code_on_save(sender, instance, **_kwargs):
+def auto_regen_epc_qr_code_on_rechnung_save(sender, instance, **_kwargs):
     """
     Regenerates the QR-Code, once the corresponding `Rechnung` object is updated.
     """
@@ -459,3 +458,14 @@ class Posten(models.Model):
 
     def __str__(self):
         return self.name
+
+
+@receiver(models.signals.post_save, sender=Posten)
+def auto_regen_epc_qr_code_on_posten_save(sender, instance, **_kwargs):
+    """
+    Regenerates the QR-Code, once the corresponding `Rechnung` object is updated.
+    """
+    _ = sender  # sender is needed, for api. it cannot be renamed, but is unused here.
+    rechnung = instance.rechnung
+    if Decimal(0.1) < rechnung.gesamtsumme < Decimal(999999999.99):
+        rechnung.regen_epc_qr_code()
