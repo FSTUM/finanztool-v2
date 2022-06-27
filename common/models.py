@@ -211,16 +211,16 @@ class Settings(SingletonModel):
         max_length=34,
     )
     at_44_purpose = models.CharField(
-        verbose_name="AT-44 Purpose of the Credit Transfer",
+        verbose_name="AT-44 Purpose of the Credit Transfer. See 'EXTERNAL PURPOSE CODES LIST (ISO 20022)'",
         help_text="Used for generating an EPC-QR-Code",
-        default="",
+        default="RCPT",
         max_length=4,
     )
     at_05_remittance_information = models.CharField(
-        verbose_name="AT-05 Remittance Information (Structured) Creditor Reference "
-        "(ISO 11649 RF Creditor Reference may be used)",
+        verbose_name="AT-05 Remittance Information (Structured) Creditor Reference (ISO 11649 may be used)",
         help_text="Used for generating an EPC-QR-Code",
         default="",
+        blank=True,
         max_length=35,
     )
 
