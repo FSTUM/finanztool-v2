@@ -696,6 +696,41 @@ def get_key_status(is_keycard: bool) -> list[int]:
     return [assigned_keys_count, no_person_cnt]
 
 
+def get_key_usage_statistic_by_key_type():
+    logs = KeyLogEntry.objects.order_by("date").values("date", "key_keytype", "operation", "key").all()
+    key_types = KeyType.objects.all()
+    key_asignement = {}
+    key_asignement_cnt = {kt.pk: 0 for kt in key_types}
+    key_avaliability_cnt = {kt.pk: 0 for kt in key_types}
+    usage_statistic = {kt.pk: ([], []) for kt in key_types}
+    for log in logs:
+        operation, keytype, key = log["operation"], log["key_keytype"], log["key"]
+
+        # adjust avaliable key count
+        if operation == KeyLogEntry.EDIT and key_asignement[key] != keytype:
+            key_avaliability_cnt[key_asignement[key]] -= 1
+            key_asignement[key] = keytype
+            key_avaliability_cnt[keytype] += 1
+        if operation == KeyLogEntry.CREATE:
+            key_avaliability_cnt[keytype] += 1
+
+        if operation == KeyLogEntry.GIVE:
+            key_asignement[key] = keytype
+            key_asignement_cnt[keytype] += 1
+        if operation == KeyLogEntry.RETURN:
+            del key_asignement[key]
+            key_asignement_cnt[keytype] -= 1
+
+        usage_statistic[keytype][0].append(log["date"].strftime("%Y-%m-%d %H:%M"))
+        if (key_avaliability_cnt[keytype]) == 0:
+            # make it obvious, that the
+            usage_statistic[keytype][1].append(-key_asignement_cnt[keytype])
+        else:
+            usage_statistic[keytype][1].append(100 * key_asignement_cnt[keytype] / key_avaliability_cnt[keytype])
+
+    return [(get_object_or_404(KeyType, pk=key), dates, values) for key, (dates, values) in usage_statistic.items()]
+
+
 def get_key_tpye_cnt_by_key_type():
     aktive_keys = Key.objects.filter(active=True)
     kt_cnts = aktive_keys.values("keytype").annotate(keytype_count=Count("keytype"))
@@ -711,10 +746,14 @@ def dashboard(request: AuthWSGIRequest) -> HttpResponse:
     key_card_status = get_key_status(True)
     key_status = get_key_status(False)
     key_types_values, key_types_labels = get_key_tpye_cnt_by_key_type()
+    KeyLogEntry.objects.values("key__keytype", "date")
+    dates = list(KeyLogEntry.objects.values_list("date", flat=True))
     context = {
         "key_card_status": key_card_status,
         "key_status": key_status,
         "key_types_values": key_types_values,
         "key_types_labels": key_types_labels,
+        "usage_statistic": get_key_usage_statistic_by_key_type(),
+        "date_range": [min(dates).strftime("%Y-%m-%d %H:%M"), max(dates).strftime("%Y-%m-%d %H:%M")],
     }
     return render(request, "schluessel/schluessel_dashboard.html", context)
