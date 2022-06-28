@@ -707,10 +707,14 @@ def get_key_usage_statistic_by_key_type():
         operation, keytype, key = log["operation"], log["key_keytype"], log["key"]
 
         # adjust avaliable key count
-        if operation == KeyLogEntry.EDIT and key_asignement[key] != keytype:
-            key_avaliability_cnt[key_asignement[key]] -= 1
-            key_asignement[key] = keytype
-            key_avaliability_cnt[keytype] += 1
+        if operation == KeyLogEntry.EDIT:
+            if key not in key_asignement:
+                raise RuntimeError(f"Key {key} was edited before initial assignment to a person. "
+                                   f"This violates an assumption")
+            if key_asignement[key] != keytype:
+                key_avaliability_cnt[key_asignement[key]] -= 1
+                key_asignement[key] = keytype
+                key_avaliability_cnt[keytype] += 1
         if operation == KeyLogEntry.CREATE:
             key_avaliability_cnt[keytype] += 1
 
