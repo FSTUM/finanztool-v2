@@ -19,7 +19,7 @@ def einlesen(request: AuthWSGIRequest) -> HttpResponse:
 
     if form.is_valid():
         csv_file: Optional[UploadedFile] = request.FILES.get("csv_file")
-        if not csv_file:
+        if not (csv_file and csv_file.file):
             raise Http404("You did not attach a file")
         csv_file_text = TextIOWrapper(csv_file.file, encoding="iso-8859-1")
         results, errors = parse_camt_csv(csv_file_text)
