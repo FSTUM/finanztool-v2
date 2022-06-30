@@ -699,10 +699,7 @@ def get_key_status(is_keycard: bool) -> list[int]:
 def get_key_usage_statistic_by_key_type():
     # key=Null means that this is a person being created
     logs = (
-        KeyLogEntry.objects.filter(key__isnull=True)
-        .order_by("date")
-        .values("date", "key_keytype", "operation", "key")
-        .all()
+        KeyLogEntry.objects.exclude(key=None).order_by("date").values("date", "key_keytype", "operation", "key").all()
     )
     key_types = KeyType.objects.all()
     key_asignement = {}
