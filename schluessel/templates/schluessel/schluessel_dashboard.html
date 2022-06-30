@@ -23,7 +23,7 @@
     <div class='row'>
         <div
                 class='col-xl'
-                id="usage_statistic"
+                id="sk2_usage_statistic"
         ></div>
     </div>
 {% endblock %}
@@ -114,9 +114,9 @@
         );
 
         Plotly.newPlot(
-            document.getElementById('usage_statistic'),
+            document.getElementById('sk2_usage_statistic'),
             [
-                {% for keytype, dates,values in usage_statistic %}
+                {% for keytype, dates,values in sk2_usage_statistic %}
                 {
                     type: 'scatter',
                     mode: 'lines',
@@ -128,7 +128,7 @@
                 {% endfor %}
             ],
             {
-                title: 'Schlüssel(karten) ausleihrate (in %) in einem "Histogramm"',
+                title: 'SK2 Schlüsselkarten Ausleihrate (in %) in einem "Histogramm"',
                 xaxis: {
                     autorange: true,
                     range: {{ date_range|safe }},

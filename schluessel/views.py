@@ -696,7 +696,7 @@ def get_key_status(is_keycard: bool) -> list[int]:
     return [assigned_keys_count, no_person_cnt]
 
 
-def get_key_usage_statistic_by_key_type():
+def get_sk2_usage_statistic_by_key_type():
     # key=Null means that this is a person being created
     logs = (
         KeyLogEntry.objects.exclude(key=None).order_by("date").values("date", "key_keytype", "operation", "key").all()
@@ -706,15 +706,18 @@ def get_key_usage_statistic_by_key_type():
     key_asignement_cnt = {kt.pk: 0 for kt in key_types}
     key_avaliability_cnt = {kt.pk: 0 for kt in key_types}
     usage_statistic = {kt.pk: ([], []) for kt in key_types}
+    # we only want to show SK2 Keycards.
+    # There is invalid data in previous versions of the system, which breaks some assumptions
+    key_types_pks = {kt.pk for kt in key_types if kt.shortname.startswith("SK2")}
     for log in logs:
         operation, keytype, key = log["operation"], log["key_keytype"], log["key"]
+        if keytype not in key_types_pks:
+            continue
 
         # adjust avaliable key count
         if operation == KeyLogEntry.EDIT:
             if key not in key_asignement:
-                raise RuntimeError(
-                    f"Key {key} was edited before initial assignment to a person. " f"This violates an assumption",
-                )
+                raise RuntimeError(f"Key {key} was edited before assignment to a person. This violates an assumption")
             if key_asignement[key] != keytype:
                 key_avaliability_cnt[key_asignement[key]] -= 1
                 key_asignement[key] = keytype
@@ -726,6 +729,8 @@ def get_key_usage_statistic_by_key_type():
             key_asignement[key] = keytype
             key_asignement_cnt[keytype] += 1
         if operation == KeyLogEntry.RETURN:
+            if key not in key_asignement:
+                raise RuntimeError(f"Key {key} was deleted before assignment to a person. This violates an assumption")
             del key_asignement[key]
             key_asignement_cnt[keytype] -= 1
 
@@ -761,7 +766,7 @@ def dashboard(request: AuthWSGIRequest) -> HttpResponse:
         "key_status": key_status,
         "key_types_values": key_types_values,
         "key_types_labels": key_types_labels,
-        "usage_statistic": get_key_usage_statistic_by_key_type(),
+        "sk2_usage_statistic": get_sk2_usage_statistic_by_key_type(),
         "date_range": [min(dates).strftime("%Y-%m-%d %H:%M"), max(dates).strftime("%Y-%m-%d %H:%M")],
     }
     return render(request, "schluessel/schluessel_dashboard.html", context)
