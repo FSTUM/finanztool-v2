@@ -697,7 +697,13 @@ def get_key_status(is_keycard: bool) -> list[int]:
 
 
 def get_key_usage_statistic_by_key_type():
-    logs = KeyLogEntry.objects.order_by("date").values("date", "key_keytype", "operation", "key").all()
+    # key=Null means that this is a person being created
+    logs = (
+        KeyLogEntry.objects.filter(key__isnull=True)
+        .order_by("date")
+        .values("date", "key_keytype", "operation", "key")
+        .all()
+    )
     key_types = KeyType.objects.all()
     key_asignement = {}
     key_asignement_cnt = {kt.pk: 0 for kt in key_types}
@@ -709,8 +715,9 @@ def get_key_usage_statistic_by_key_type():
         # adjust avaliable key count
         if operation == KeyLogEntry.EDIT:
             if key not in key_asignement:
-                raise RuntimeError(f"Key {key} was edited before initial assignment to a person. "
-                                   f"This violates an assumption")
+                raise RuntimeError(
+                    f"Key {key} was edited before initial assignment to a person. " f"This violates an assumption",
+                )
             if key_asignement[key] != keytype:
                 key_avaliability_cnt[key_asignement[key]] -= 1
                 key_asignement[key] = keytype
