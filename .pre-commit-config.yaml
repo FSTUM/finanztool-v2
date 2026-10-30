@@ -24,7 +24,7 @@ repos:
         language: system
         pass_filenames: false
   - repo: https://github.com/paulhfischer/prettier-config
-    rev: 43761bfa6003999a64e1497180022fe07a33e244
+    rev: v2.1.0
     hooks:
       - id: lint
   - repo: https://github.com/paulhfischer/stylelint-config
@@ -32,7 +32,7 @@ repos:
     hooks:
       - id: lint
   - repo: https://github.com/paulhfischer/eslint-config-javascript
-    rev: v2.1.0
+    rev: v2.2.0
     hooks:
       - id: lint
   - repo: https://github.com/PyCQA/isort
@@ -61,7 +61,7 @@ repos:
         language: system
         types: [python]
   - repo: https://github.com/PyCQA/flake8
-    rev: 7.4.1
+    rev: 7.5.0
     hooks:
       - id: flake8
         additional_dependencies:
