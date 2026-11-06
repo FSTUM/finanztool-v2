@@ -28,15 +28,15 @@ repos:
     hooks:
       - id: lint
   - repo: https://github.com/paulhfischer/stylelint-config
-    rev: v2.1.0
+    rev: v2.1.1
     hooks:
       - id: lint
   - repo: https://github.com/paulhfischer/eslint-config-javascript
-    rev: v2.2.0
+    rev: v2.3.0
     hooks:
       - id: lint
   - repo: https://github.com/PyCQA/isort
-    rev: 10.0.0b1
+    rev: 10.0.0b2
     hooks:
       - id: isort
   - repo: https://github.com/asottile/add-trailing-comma
